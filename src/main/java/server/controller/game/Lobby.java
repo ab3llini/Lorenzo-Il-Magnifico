@@ -4,6 +4,7 @@ package server.controller.game;
  * Created by alberto on 10/05/17.
  */
 
+import server.controller.network.AbstractClientHandler;
 import server.model.Player;
 
 import java.util.HashMap;
@@ -15,9 +16,9 @@ import java.util.HashMap;
 public class Lobby {
 
     //This table maps each clientHandler to it relative player object in the model
-    HashMap<ClientHandlerInterface, Player> players;
+    HashMap<AbstractClientHandler, Player> players;
 
-    //Match Controller
+    //Match controller
 
     //Start timeout
     Integer timeout;

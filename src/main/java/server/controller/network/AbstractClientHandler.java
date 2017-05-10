@@ -23,7 +23,7 @@ public abstract class AbstractClientHandler {
      * This method is going to be called both by RMI and Socket
      * @param action The action performed
      */
-    abstract public void onClientAction(Action action, AbstractClientHandler sender);
+    abstract public void onClientAction(Action action);
 
     /**
      * The method is fired when a player makes a move

@@ -21,7 +21,7 @@ public class SocketClientHandler extends AbstractClientHandler implements Runnab
         //Loop to listen for incoming "messages"
     }
 
-    public void onClientAction(Action action, AbstractClientHandler sender) {
+    public void onClientAction(Action action) {
 
     }
 

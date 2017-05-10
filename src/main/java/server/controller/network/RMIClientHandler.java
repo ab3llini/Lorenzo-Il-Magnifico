@@ -9,7 +9,7 @@ import server.model.Player;
 
 public class RMIClientHandler extends AbstractClientHandler implements RemoteClientHandlerInterface {
 
-    public void onClientAction(Action action, AbstractClientHandler sender) {
+    public void onClientAction(Action action) {
 
     }
 
