@@ -17,5 +17,5 @@ public class BuildingDvptCard extends DvptCard {
 
         this.cost = cost;
 
-    }
+}
 }
