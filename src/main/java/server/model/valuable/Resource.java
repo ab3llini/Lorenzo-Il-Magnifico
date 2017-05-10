@@ -6,7 +6,7 @@ package server.model.valuable;
 public class Resource extends Valuable {
     private ResourceType type;
 
-    public Resource(Integer amount, ResourceType type) {
+    public Resource(ResourceType type, Integer amount) {
         super(amount);
         this.type = type;
     }

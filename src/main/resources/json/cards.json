@@ -1,0 +1,2791 @@
+{
+  "1": {
+    "type": "territory",
+    "period": 1,
+    "name": "Avamposto Commerciale",
+    "effects": {
+      "permanent": {
+        "minForce": 1,
+        "surplus": {
+          "resources": {
+            "coins": 1
+          }
+        }
+      }
+    }
+  },
+  "2": {
+    "type": "territory",
+    "period": 1,
+    "name": "Bosco",
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "wood": 1
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 2,
+        "surplus": {
+          "resources": {
+            "wood": 1
+          }
+        }
+      }
+    }
+  },
+  "3": {
+    "type": "territory",
+    "period": 1,
+    "name": "Borgo",
+    "effects": {
+      "permanent": {
+        "minForce": 3,
+        "surplus": {
+          "resources": {
+            "coins": 1,
+            "servants": 1
+          }
+        }
+      }
+    }
+  },
+  "4": {
+    "type": "territory",
+    "period": 1,
+    "name": "Cava di Ghiaia",
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "stones": 2
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 4,
+        "surplus": {
+          "resources": {
+            "stones": 2
+          }
+        }
+      }
+    }
+  },
+  "5": {
+    "type": "territory",
+    "period": 1,
+    "name": "Foresta",
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "wood": 1
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 5,
+        "surplus": {
+          "resources": {
+            "wood": 3
+          }
+        }
+      }
+    }
+  },
+  "6": {
+    "type": "territory",
+    "period": 1,
+    "name": "Monastero",
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "servants": 1
+          },
+          "points": {
+            "military": 2
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 6,
+        "surplus": {
+          "resources": {
+            "stones": 1
+          },
+          "points": {
+            "faith": 1
+          }
+        }
+      }
+    }
+  },
+  "7": {
+    "type": "territory",
+    "period": 1,
+    "name": "Rocca",
+    "effects": {
+      "permanent": {
+        "minForce": 5,
+        "surplus": {
+          "resources": {
+            "stones": 1
+          },
+          "points": {
+            "military": 2
+          }
+        }
+      }
+    }
+  },
+  "8": {
+    "type": "territory",
+    "period": 1,
+    "name": "Città",
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "coins": 3
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 6,
+        "surplus": {
+          "council": 1
+        }
+      }
+    }
+  },
+  "9" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Miniera d'Oro",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+            "coins" : 1
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 1,
+		"surplus" : {
+		  "resources" : {
+			"coins" : 2
+		  }
+      }
+    }
+  }
+ },
+  "10" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Villaggio Montano",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+            "servants" : 1
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 3,
+		"surplus" : {
+		  "resources" : {
+			"wood"  : 2
+		  }, 
+		  "points" : {
+			"military" : 1
+		  }
+		}
+    }
+  }
+ },
+ "11" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Villaggio Minerario",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+			"stones": 1,
+            "servants" : 2
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 4,
+		"surplus" : {
+		  "resources" : {
+			"stones"  : 2,
+			"servants" : 1
+		  } 
+		}
+    }
+  }
+ },
+  "12" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Cava di Pietra",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+			"wood": 1
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 3,
+		"surplus" : {
+		  "resources" : {
+			"stones"  : 3
+		  } 
+		}
+    }
+  }
+ },
+  "13" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Possedimento",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+			"wood": 1,
+            "servants" : 2
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 4,
+		"surplus" : {
+		  "resources" : {
+			"coins"  : 1,
+			"wood" : 2
+		  } 
+		}
+    }
+  }
+ },
+  "14" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Eremo",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "faith" : 1
+          }
+        }
+       },
+      "permanent" : {
+        "minForce" : 2,
+		"surplus" : {
+		  "points" : {
+			"faith" : 1
+		  }
+		}
+      }
+    }
+  },
+  "15" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Maniero",
+    "effects" : {
+      "permanent" : {
+        "minForce" : 5,
+		"surplus" : {
+		  "resources" : {
+			"servants" : 2
+		  }, 
+		  "points" : {
+			"military" : 2
+		  }
+		 }
+      }
+    }
+  },
+    "16" : {
+    "type" : "territory",
+	"period":2,
+    "name" : "Ducato",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+			"coins": 4
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 6,
+		"surplus" : {
+		  "resources" : {
+		    "coins" : 1,
+			"wood"  : 2,
+			"stones"  : 1
+		  } 
+		}
+    }
+  }
+ },
+ "17" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Città Mercantile",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources":{
+            "coins": 1,
+            "servants": 1
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 1,
+        "surplus" : {
+          "resources" : {
+            "coins" : 3
+          }
+        }
+      }
+    }
+  },
+  
+  "18" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Tenuta",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources":{
+            "wood": 1
+          },
+          "points" : {
+            "victory" : 1
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 3,
+        "surplus" : {
+          "resources" : {
+            "wood" : 2
+          }, 
+          "points" : {
+            "victory" : 2
+          }
+        }
+      }
+    }
+  },
+  
+  "19" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Colonia",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "military" : 2
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 5,
+        "surplus" : {
+          "resources" : {
+            "wood" : 1
+          }, 
+          "points" : {
+            "victory" : 4
+          }
+        }
+      }
+    }
+  },
+  
+  "20" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Cava di Marmo",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "victory" : 3
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 2,
+        "surplus" : {
+          "resources" : {
+            "stones" : 2
+          }, 
+          "points" : {
+            "victory" : 1
+          }
+        }
+      }
+    }
+  },
+  
+  "21" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Provincia",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+            "stones" : 1
+          }
+        },
+        "council" : 1
+      },
+      "permanent" : {
+        "minForce" : 6,
+        "surplus" : {
+          "resources" : {
+            "stones" : 1
+          }, 
+          "points" : {
+            "victory" : 4
+          }
+        }
+      }
+    }
+  },
+  
+  "22" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Santurario",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "faith" : 1
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 1,
+        "surplus" : {
+          "resources" : {
+            "coins" : 1
+          }, 
+          "points" : {
+            "faith" : 1
+          }
+        }
+      }
+    }
+  },
+  
+  "23" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Castello",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources" : {
+            "coins" : 2
+          }, 
+          "points" : {
+            "victory" : 2
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 4,
+        "surplus" : {
+          "resources" : {
+            "servants" : 1
+          }, 
+          "points" : {
+            "military" : 3
+          }
+        }
+      }
+    }
+  },
+  
+  "24" : {
+    "type" : "territory",
+    "period": 3,
+    "name" : "Città Fortificata",
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "resources":{
+            "servants": 1
+          },
+          "points" : {
+            "military" : 2
+          }
+        }
+      },
+      "permanent" : {
+        "minForce" : 2,
+        "surplus" : {
+          "resources" : {
+            "servants" : 2
+          }, 
+          "points" : {
+            "military" : 1
+          }
+        }
+      }
+    }
+  },
+  "25": {
+    "type": "building",
+    "period": 1,
+    "name": "Zecca",
+    "cost": [
+      {
+        "resources": {
+          "wood": 1,
+          "stones": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 5
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 5,
+        "type": "multiplier",
+        "multiplier": {
+          "what": "card",
+          "type": "building",
+          "multiplied": "victory",
+          "coefficient": 1
+        }
+      }
+    }
+  },
+  "26": {
+    "type": "building",
+    "period": 1,
+    "name": "Esattoria",
+    "cost": [
+      {
+        "resources": {
+          "wood": 3,
+          "stones": 1
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 5
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 5,
+        "type": "multiplier",
+        "multiplier": {
+          "what": "card",
+          "type": "territory",
+          "multiplied": "coins",
+          "coefficient": 1
+        }
+      }
+    }
+  },
+  "27": {
+    "type": "building",
+    "period": 1,
+    "name": "Arco di Trionfo",
+    "cost": [
+      {
+        "resources": {
+          "coins": 2,
+          "stones": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 6
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 6,
+        "type": "multiplier",
+        "multiplier": {
+          "what": "card",
+          "type": "venture",
+          "multiplied": "victory",
+          "coefficient": 1
+        }
+      }
+    }
+  },
+  "28": {
+    "type": "building",
+    "period": 1,
+    "name": "Teatro",
+    "cost": [
+      {
+        "resources": {
+          "coins": 2,
+          "wood": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 6
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 6,
+        "type": "multiplier",
+        "multiplier": {
+          "what": "card",
+          "type": "character",
+          "multiplied": "victory",
+          "coefficient": 1
+        }
+      }
+    }
+  },
+  "29": {
+    "type": "building",
+    "period": 1,
+    "name": "Falegnameria",
+    "cost": [
+      {
+        "resources": {
+          "coins": 1,
+          "wood": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 3
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 4,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "wood",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "coins",
+                "amount": 3
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "what": "wood",
+                "amount": 2
+              }
+            ],
+            "to": [
+              {
+                "what": "coins",
+                "amount": 5
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "30": {
+    "type": "building",
+    "period": 1,
+    "name": "Tagliapietre",
+    "cost": [
+      {
+        "resources": {
+          "coins": 1,
+          "stones": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 2
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 3,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "stones",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "coins",
+                "amount": 3
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "what": "stones",
+                "amount": 2
+              }
+            ],
+            "to": [
+              {
+                "what": "coins",
+                "amount": 5
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "31": {
+    "type": "building",
+    "period": 1,
+    "name": "Cappella",
+    "cost": [
+      {
+        "resources": {
+          "wood": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 1
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 2,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "coins",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "faith",
+                "amount": 1
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "32": {
+    "type": "building",
+    "period": 1,
+    "name": "Residenza",
+    "cost": [
+      {
+        "resources": {
+          "stones": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 1
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 1,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "coins",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "council",
+                "amount": 1
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "33": {
+    "type": "building",
+    "period": 2,
+    "name": "Mercato",
+    "cost": [
+      {
+        "resources": {
+          "wood": 2,
+          "stones": 1
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 3
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 3,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "coins",
+                "amount": 3
+              }
+            ],
+            "to": [
+              {
+                "what": "wood",
+                "amount": 2
+              },
+              {
+                "what": "stones",
+                "amount": 2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "34": {
+    "type": "building",
+    "period": 2,
+    "name": "Tesoriera",
+    "cost": [
+      {
+        "resources": {
+          "wood": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 4
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 3,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "coins",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "victory",
+                "amount": 3
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "what": "coins",
+                "amount": 2
+              }
+            ],
+            "to": [
+              {
+                "what": "victory",
+                "amount": 5
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "35": {
+    "type": "building",
+    "period": 2,
+    "name": "Gilda di Pittori",
+    "cost": [
+      {
+        "resources": {
+          "wood": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 5
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 4,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "wood",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "victory",
+                "amount": 3
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "what": "wood",
+                "amount": 3
+              }
+            ],
+            "to": [
+              {
+                "what": "victory",
+                "amount": 7
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "36": {
+    "type": "building",
+    "period": 2,
+    "name": "Gilda di Scultori",
+    "cost": [
+      {
+        "resources": {
+          "stones": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 6
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 5,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "stones",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "victory",
+                "amount": 3
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "what": "stones",
+                "amount": 3
+              }
+            ],
+            "to": [
+              {
+                "what": "victory",
+                "amount": 7
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "37": {
+    "type": "building",
+    "period": 2,
+    "name": "Gilda dei Costruttori",
+    "cost": [
+      {
+        "resources": {
+          "stones": 2,
+          "wood": 1
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 4
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 4,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "stones",
+                "amount": 1
+              },
+              {
+                "what": "servants",
+                "amount": 1
+              },
+              {
+                "what": "wood",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "victory",
+                "amount": 6
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "38": {
+    "type": "building",
+    "period": 2,
+    "name": "Battistero",
+    "cost": [
+      {
+        "resources": {
+          "stones": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 2,
+            "faith": 1
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 2,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "faith",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "coins",
+                "amount": 2
+              },
+              {
+                "what": "victory",
+                "amount": 2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "39": {
+    "type": "building",
+    "period": 2,
+    "name": "Caserma",
+    "cost": [
+      {
+        "resources": {
+          "stones": 1,
+          "wood": 1
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 3
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 1,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "servants",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "military",
+                "amount": 3
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "40": {
+    "type": "building",
+    "period": 2,
+    "name": "Fortezza",
+    "cost": [
+      {
+        "resources": {
+          "stones": 2,
+          "wood": 2,
+          "coins": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 8
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 6,
+        "type": "surplus",
+        "surplus": {
+          "points": {
+            "military": 2,
+            "victory": 2
+          }}
+      }
+    }
+  }
+,
+  "41": {
+    "type": "building",
+    "period": 3,
+    "name": "Banca",
+    "cost": [
+      {
+        "resources": {
+          "stones": 3,
+          "wood": 1,
+          "coins": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 7
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 2,
+        "type": "surplus",
+        "surplus": {
+          "resources": {
+            "coins": 5
+          }
+        }
+      }
+    }
+  },
+  "42": {
+    "type": "building",
+    "period": 3,
+    "name": "Fiera",
+    "cost": [
+      {
+        "resources": {
+          "wood": 3,
+          "coins": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 8
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 4,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "coins",
+                "amount": 4
+              }
+            ],
+            "to": [
+              {
+                "what": "wood",
+                "amount": 3
+              },
+              {
+                "what": "stones",
+                "amount": 3
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "43": {
+    "type": "building",
+    "period": 3,
+    "name": "Giardino",
+    "cost": [
+      {
+        "resources": {
+          "stones": 2,
+          "wood": 4,
+          "servants": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 10
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 1,
+        "type": "surplus",
+        "surplus": {
+          "points": {
+            "victory": 3
+          }
+        }
+      }
+    }
+  },
+  "44": {
+    "type": "building",
+    "period": 3,
+    "name": "Castelletto",
+    "cost": [
+      {
+        "resources": {
+          "stones": 4,
+          "wood": 2,
+          "coins": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 9
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 5,
+        "type": "surplus",
+        "surplus": {
+          "coiuncil": 1,
+          "points": {
+            "victory": 2
+          }
+        }
+      }
+    }
+  },
+  "45": {
+    "type": "building",
+    "period": 3,
+    "name": "Palazzo",
+    "cost": [
+      {
+        "resources": {
+          "wood": 3,
+          "coins": 3,
+          "stones": 1
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 9
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 6,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "coins",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "servants",
+                "amount": 2
+              },
+              {
+                "what": "victory",
+                "amount": 4
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "46": {
+    "type": "building",
+    "period": 3,
+    "name": "Basilica",
+    "cost": [
+      {
+        "resources": {
+          "stones": 4,
+          "wood": 1
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 5,
+            "faith": 1
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 1,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "stones",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "faith",
+                "amount": 2
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "what": "wood",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "faith",
+                "amount": 2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "47": {
+    "type": "building",
+    "period": 3,
+    "name": "Accademia Militare",
+    "cost": [
+      {
+        "resources": {
+          "wood": 2,
+          "servants": 1,
+          "stones": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 7
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 3,
+        "type": "conversion",
+        "conversion": [
+          {
+            "from": [
+              {
+                "what": "servants",
+                "amount": 1
+              }
+            ],
+            "to": [
+              {
+                "what": "military",
+                "amount": 3
+              },
+              {
+                "what": "victory",
+                "amount": 1
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "48": {
+    "type": "building",
+    "period": 3,
+    "name": "Cattedrale",
+    "cost": [
+      {
+        "resources": {
+          "stones": 4,
+          "wood": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "victory": 7,
+            "faith": 3
+          }
+        }
+      },
+      "permanent": {
+        "minForce": 2,
+        "type": "surplus",
+        "surplus": {
+          "points": {
+            "victory": 1
+          }
+        }
+      }
+    }
+  },
+  "49" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Condottiero",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 2
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "military" : 3
+          }
+        }
+       },
+      "permanent" : {
+			"target" : "card", 
+			"type" : "territory",
+			"forceBonus" : 2
+		}
+	 }
+   },
+   "50" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Costruttore",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }
+    ],
+    "effects" : {
+      "permanent" : {
+			"target" : "card", 
+			"type" : "building",
+			"forceBonus" : 2,
+			"discount" : [
+				{
+				  "wood":1
+				},
+				{
+				  "stones":1
+				}
+			  ]
+		}
+    }
+  },
+   "51" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Dama",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }
+    ],
+    "effects" : {
+      "permanent" : {
+			"target" : "card", 
+			"type" : "character",
+			"forceBonus" : 2,
+			"discount" : [
+				{
+				  "coins":1
+				}
+			  ]
+		}
+    }
+  },
+   "52" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Cavaliere",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 2
+		  }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+         "surplus" : {
+          "council" : 1
+        }
+	},
+      "permanent" : {
+        "target" : "card", 
+		"type" : "venture",
+		"forceBonus" : 2
+			  }
+    }
+  },
+  "53" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Contadino",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 3
+        }
+      }
+    ],
+    "effects" : {
+      "permanent" : {
+			"target" : "harvest", 
+			"forceBonus" : 2
+		}
+    }
+  },
+  "54" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Artigiano",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 3
+        }
+      }
+    ],
+    "effects" : {
+      "permanent" : {
+			"target" : "production", 
+			"forceBonus" : 2
+		}
+    }
+  },
+  "55" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Predicatore",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 2
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+		"surplus" : {
+          "points" : {
+            "faith" : 4
+          }
+        }
+         },
+      "permanent" : {
+        "penality" : true
+      }
+    }
+  },
+  "56" : {
+    "type" : "character",
+	"period":1,
+    "name" : "Badessa",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 3
+        }
+	}
+    ],
+    "effects" : {
+      "immediate" : {
+          "surplus" : {
+          "points" : {
+            "faith" : 1
+          }
+        },
+        "action" : {
+          "target" : "card", 
+          "force" : 4
+        }
+      }
+    }
+  },
+  "57" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Capitano",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+          "surplus" : {
+          "points" : {
+            "military" : 2
+          }
+        },
+        "action" : {
+          "target" : "card", 
+          "type" : "territory",
+          "force" : 6
+        }
+      }
+    }
+  },
+    "58" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Architetto",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }  
+			],
+    "effects" : {
+      "immediate" : {
+        "action" : {
+          "target" : "card", 
+          "type" : "building",
+          "force" : 6,
+          "discount" : [
+            {
+              "wood":1,
+			  "stones":1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "59" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Mecenate",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 3
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "action" : {
+          "target" : "card", 
+          "type" : "character",
+          "force" : 6,
+          "discount" : [
+            {
+              "coins":2
+            }
+          ]
+        }
+      }
+    }
+  },
+  "60" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Eroe",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "council" : 1
+        },
+        "action" : {
+          "target" : "card", 
+          "type" : "venture",
+          "force" : 6
+        }
+       }
+      }
+    },
+"61" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Fattore",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }
+    ],
+    "effects" : {
+      "permanent" : {
+			"target" : "harvest", 
+			"forceBonus" : 3
+		}
+    }
+  },
+"62" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Studioso",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }
+    ],
+    "effects" : {
+      "permanent" : {
+			"target" : "production", 
+			"forceBonus" : 3
+		}
+    }
+  },
+  "63" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Messo Papale",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 5
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+          "surplus" : {
+          "points" : {
+            "faith" : 3
+          }
+        }
+       }
+    }
+  },
+  "64" : {
+    "type" : "character",
+	"period":2,
+    "name" : "Messo Reale",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 5
+		  }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+         "surplus" : {
+          "council" : 3
+        }
+	  }
+    }
+  },
+    "65" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Nobile",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 6
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "multiplier" : {
+              "what" : "territory",
+              "coefficient" : 2
+            }
+          }
+        }
+      }
+     }
+  },
+    "66" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Governatore",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 6
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "multiplier" : {
+              "what" : "building",
+              "coefficient" : 2
+            }
+          }
+        }
+      }
+     }
+  },
+      "67" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Cortigiana",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 7
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "multiplier" : {
+              "what" : "character",
+              "coefficient" : 2
+            }
+          }
+        }
+      }
+     }
+  },
+      "68" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Araldo",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 6
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "multiplier" : {
+              "what" : "venture",
+              "coefficient" : 2
+            }
+          }
+        }
+      }
+     }
+  },
+  "69" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Cardinale",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 4
+        }
+      }
+	  ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "faith" : 2
+          }
+        },
+        "action" : {
+          "target" : "harvest", 
+          "force" : 4
+        }
+      }
+    }
+  },
+"70" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Vescovo",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 5
+        }
+      }
+	  ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "faith" : 1
+          }
+        },
+        "action" : {
+          "target" : "production", 
+          "force" : 4
+        }
+      }
+    }
+  },
+  "71" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Generale",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 5
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "points" : {
+            "multiplier" : {
+              "what" : "military",
+              "coefficient" : 0.5
+            }
+          }
+        }
+       }
+      }
+    },
+  "72" : {
+    "type" : "character",
+	"period":3,
+    "name" : "Ambasciatore",
+    "cost" : [
+      {
+        "resources" : {
+          "coins" : 6
+        }
+      }
+    ],
+    "effects" : {
+      "immediate" : {
+        "surplus" : {
+          "council" : 1
+        },
+        "action" : {
+          "target" : "card", 
+          "force" : 7
+        }
+      }
+    }
+  },
+  "73": {
+    "type": "venture",
+    "period": 1,
+    "name": "Ingaggiare Reclute",
+    "cost": [
+      {
+        "resources": {
+          "coins": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "points": {
+            "military": 5
+        }
+      },
+      "permanent": {
+        "vpoints": 4
+      }
+    }
+  },
+  
+  "74": {
+    "type": "venture",
+    "period": 1,
+    "name": "Riparare la Chiesa",
+    "cost": [
+      {
+        "resources": {
+          "coins": 1,
+          "wood": 1,
+          "stones": 1
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 1
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 5
+      }
+    }
+  },
+  
+  "75": {
+    "type": "venture",
+    "period": 1,
+    "name": "Costruire le Mura",
+    "cost": [
+      {
+        "resources": {
+          "stones": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "military": 2
+          }
+        },
+        "council": 1
+      },
+      "permanent": {
+        "vpoints": 3
+      }
+    }
+  },
+  
+  
+  "76": {
+    "type": "venture",
+    "period": 1,
+    "name": "Innalzare una Statua",
+    "cost": [
+      {
+        "resources": {
+          "stones": 2,
+          "wood": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "council": 2
+      },
+      "permanent": {
+        "vpoints": 4
+      }
+    }
+  },
+  
+  "77": {
+    "type": "venture",
+    "period": 1,
+    "name": "Campagna Militare",
+    "cost": [
+      {
+        "military": {
+          "required": 3,
+          "malus": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "coins": 3
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 5
+      }
+    }
+  },
+  
+  "78": {
+    "type": "venture",
+    "period": 1,
+    "name": "Ospitare i Mendicanti",
+    "cost": [
+      {
+        "resources": {
+          "wood": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "servants": 4
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 4
+      }
+    }
+  },
+  
+  "79": {
+      "type": "venture",
+    "period": 1,
+    "name": "Combattere le Eresie",
+    "cost": [
+      {
+        "military": {
+          "required": 5,
+          "malus": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 2
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 5
+      }
+    }
+  },
+  
+  "80": {
+    "type": "venture",
+    "period": 1,
+    "name": "Sostegno al Vescovo",
+    "cost": [
+      {
+        "resources": {
+          "coins": 2,
+          "wood": 1,
+          "stones": 1
+        }
+      },
+      {
+        "military": {
+          "required": 4,
+          "malus": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 3
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 1
+      }
+    }
+  },
+  
+  "81": {
+    "type": "venture",
+    "period": 2,
+    "name": "Ingaggiare Soldati",
+    "cost": [
+      {
+        "resources": {
+          "coins": 6
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "miltary": 6
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 5
+      }
+    }
+  },
+  
+  "82": {
+    "type": "venture",
+    "period": 2,
+    "name": "Riparare l'Abbazia",
+    "cost": [
+      {
+        "resources": {
+          "coins": 2,
+          "wood": 2,
+          "stones": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 2
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 6
+      }
+    }
+  },
+  
+  "83": {
+    "type": "venture",
+    "period": 2,
+    "name": "Costruire i Bastioni",
+    "cost": [
+      {
+        "resources": {
+          "stones": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "military": 3
+          },
+          "council": 1
+        }
+      },
+      "permanent": {
+        "vpoints": 2
+      }
+    }
+  },
+  
+  "84": {
+    "type": "venture",
+    "period": 2,
+    "name": "Supporto al Re",
+    "cost": [
+      {
+        "military": {
+          "required": 6,
+          "malus": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "coins": 5
+          }
+        },
+        "council": 1
+      },
+      "permanent": {
+        "vpoints": 3
+      }
+    }
+  },
+  
+  "85": {
+    "type": "venture",
+    "period": 2,
+    "name": "Scavare Canalizzazioni",
+    "cost": [
+      {
+        "resources": {
+          "coins": 3,
+          "servants": 2
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "action": {
+            "target": "harvest",
+            "force": 4
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 5
+      }
+    }
+  },
+  
+  "86": {
+      "type": "venture",
+    "period": 2,
+    "name": "Accogliere gli Stranieri",
+    "cost": [
+      {
+        "resources": {
+          "wood": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "servants": 5
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 4
+      }
+    }
+  },
+  
+  "87": {
+    "type": "venture",
+    "period": 2,
+    "name": "Crociata",
+    "cost": [
+      {
+        "military": {
+          "required": 8,
+          "malus": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "coins": 5
+          },
+          "points": {
+            "faith": 1
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 5
+      }
+    }
+  },
+  
+  "88": {
+    "type": "venture",
+    "period": 2,
+    "name": "Sostegno al Cardinale",
+    "cost": [
+      {
+        "resources": {
+          "coins": 3,
+          "wood": 2,
+          "stones": 2
+        }
+      },
+      {
+        "military": {
+          "required": 7,
+          "malus": 4
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "points": {
+            "faith": 3
+        }
+      },
+      "permanent": {
+        "vpoints": 4
+      }
+    }
+  },
+  
+  "89": {
+    "type": "venture",
+    "period": 3,
+    "name": "Ingaggiare Mercenari",
+    "cost": [
+      {
+        "resources": {
+          "coins": 8
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "points": {
+            "military": 7
+        }
+      },
+      "permanent": {
+        "vpoints": 6
+      }
+    }
+  },
+  
+  "90": {
+    "type": "venture",
+    "period": 3,
+    "name": "Riparare la Cattedrale",
+    "cost": [
+      {
+        "resources": {
+          "coins": 3,
+          "wood": 3,
+          "stones": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 1
+          }
+        },
+        "action": {
+          "target": "card",
+          "force": 7
+        }
+      },
+      "permanent": {
+        "vpoints": 5
+      }
+    }
+  },
+  
+  "91": {
+    "type": "venture",
+    "period": 3,
+    "name": "Costruire le Torri",
+    "cost": [
+      {
+        "resources": {
+          "stones": 6
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "military": 4
+          }
+        },
+        "council": 1
+      },
+      "permanent": {
+        "vpoints": 4
+      }
+    }
+  },
+  
+  "92": {
+    "type": "venture",
+    "period": 3,
+    "name": "Commissionare Arte Sacra",
+    "cost": [
+      {
+        "resources": {
+          "wood": 6
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 3
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 3
+      }
+    }
+  },
+  
+  "93": {
+    "type": "venture",
+    "period": 3,
+    "name": "Conquista Militare",
+    "cost": [
+      {
+      "military": {
+          "required": 12,
+            "malus": 6
+          }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "resources": {
+            "coins": 3,
+            "wood": 3,
+            "stones": 3
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 7
+      }
+    }
+  },
+  
+  "94": {
+    "type": "venture",
+    "period": 3,
+    "name": "Migliorare le Strade",
+    "cost": [
+      {
+        "resources": {
+          "coins": 4,
+          "servants": 3
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+         "action": {
+            "target": "production",
+            "force": 3
+        }
+      },
+      "permanent": {
+        "vpoints": 3
+      }
+    }
+  },
+  
+  "95": {
+    "type": "venture",
+    "period": 3,
+    "name": "Guerra Santa",
+    "cost": [
+      {
+          "military": {
+            "required": 15,
+            "malus": 8
+          }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 4
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 8
+      }
+    }
+  },
+  
+  "96": {
+    "type": "venture",
+    "period": 3,
+    "name": "Sostegno al Papa",
+    "cost": [
+      {
+        "resources": {
+          "coins": 4,
+          "wood": 3,
+          "stones": 3
+        }
+      },
+      {
+        "military": {
+          "required": 10,
+          "malus": 5
+        }
+      }
+    ],
+    "effects": {
+      "immediate": {
+        "surplus": {
+          "points": {
+            "faith": 2
+          }
+        }
+      },
+      "permanent": {
+        "vpoints": 10
+      }
+    }
+  }
+}
