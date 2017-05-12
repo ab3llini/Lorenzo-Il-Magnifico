@@ -582,9 +582,8 @@
         "minForce": 5,
         "type": "multiplier",
         "multiplier": {
-          "what": "card",
-          "type": "building",
-          "multiplied": "victory",
+          "what": "building",
+          "result": "victory",
           "coefficient": 1
         }
       }
@@ -614,9 +613,8 @@
         "minForce": 5,
         "type": "multiplier",
         "multiplier": {
-          "what": "card",
-          "type": "territory",
-          "multiplied": "coins",
+          "what": "territory",
+          "result": "coins",
           "coefficient": 1
         }
       }
@@ -646,9 +644,8 @@
         "minForce": 6,
         "type": "multiplier",
         "multiplier": {
-          "what": "card",
-          "type": "venture",
-          "multiplied": "victory",
+          "what": "venture",
+          "result": "victory",
           "coefficient": 1
         }
       }
@@ -678,9 +675,8 @@
         "minForce": 6,
         "type": "multiplier",
         "multiplier": {
-          "what": "card",
-          "type": "character",
-          "multiplied": "victory",
+          "what": "character",
+          "result": "victory",
           "coefficient": 1
         }
       }
@@ -1970,6 +1966,7 @@
           "points" : {
             "multiplier" : {
               "what" : "territory",
+			  "result": "victory",
               "coefficient" : 2
             }
           }
@@ -1994,6 +1991,7 @@
           "points" : {
             "multiplier" : {
               "what" : "building",
+			  "result": "victory",
               "coefficient" : 2
             }
           }
@@ -2018,6 +2016,7 @@
           "points" : {
             "multiplier" : {
               "what" : "character",
+			  "result": "victory",
               "coefficient" : 2
             }
           }
@@ -2042,6 +2041,7 @@
           "points" : {
             "multiplier" : {
               "what" : "venture",
+			  "result": "victory",
               "coefficient" : 2
             }
           }
@@ -2116,6 +2116,7 @@
           "points" : {
             "multiplier" : {
               "what" : "military",
+			  "result": "victory",
               "coefficient" : 0.5
             }
           }

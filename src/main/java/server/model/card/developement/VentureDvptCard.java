@@ -11,7 +11,7 @@ public class VentureDvptCard extends DvptCard {
 
     private final ArrayList<Cost> cost;
 
-    public VentureDvptCard(Integer id, String name, ArrayList<Cost> cost, Integer period, ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
+    public VentureDvptCard(Integer id, String name,Integer period, ArrayList<Cost> cost,  ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
 
         super(id, DvptCardType.Venture, name, period, immediateEffect, permanentEffect);
 

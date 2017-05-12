@@ -8,8 +8,9 @@ public class Point extends Valuable {
     private PointType type;
     private Multiplier multiplier;
 
-    public Point(Integer amount, PointType type) {
+    public Point(PointType type,Integer amount, Multiplier multiplier) {
         super(amount);
         this.type = type;
+        this.multiplier=multiplier;
     }
 }

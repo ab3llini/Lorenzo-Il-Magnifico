@@ -5,11 +5,13 @@ package server.model.card.developement;/*
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
+import java.util.ArrayList;
+
 public class CharacterDvptCard extends DvptCard {
 
-    private final Cost cost;
+    private final ArrayList<Cost> cost;
 
-    public CharacterDvptCard(Integer id, String name, Cost cost, Integer period, ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
+    public CharacterDvptCard(Integer id, String name, Integer period, ArrayList<Cost> cost, ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
 
         super(id, DvptCardType.Character, name, period, immediateEffect, permanentEffect);
 
