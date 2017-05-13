@@ -1393,7 +1393,7 @@
         "minForce": 5,
         "type": "surplus",
         "surplus": {
-          "coiuncil": 1,
+          "council": 1,
           "points": {
             "victory": 2
           }

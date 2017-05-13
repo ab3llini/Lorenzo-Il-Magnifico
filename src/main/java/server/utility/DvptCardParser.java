@@ -177,7 +177,56 @@ public class DvptCardParser {
     }
 
     private static PermanentEffect getPermanentEffect(JsonObject effect){
-        return null;
+        Integer minForce=null;
+        Integer vpoints=null;
+        EffectSurplus surplus=null;
+        Multiplier multiplier=null;
+        ArrayList<EffectConversion> conversion=null;
+        EffectPermanentAction action=null;
+        Boolean penality=false;
+
+        //extract permanent from JsonObject effect
+        JsonObject permanent = effect.getAsJsonObject("permanent");
+
+        //get keys from permanent (minforce || type || surplus || conversion || action || discount || penality)
+        ArrayList<String> effectKeys = DvptCardParser.getKeys(permanent);
+
+        //get effectSurplus and effectAction..so i have both 'items' to create the cost
+        for (String effectKey : effectKeys) {
+
+            if (effectKey.equals("vpoints")) {
+                vpoints = permanent.get("vpoints").getAsInt();
+            }
+
+            if (effectKey.equals("minForce")) {
+                vpoints = permanent.get("minForce").getAsInt();
+            }
+
+            if (effectKey.equals("surplus")) {
+                surplus = getEffectSurplus(permanent);
+            }
+
+            if(effectKey.equals("forceBonus")){
+                action=getEffectPermanentAction(permanent);
+            }
+
+            if(effectKey.equals("conversion")){
+                conversion=getEffectConversion(permanent);
+            }
+
+            if(effectKey.equals("multiplier")){
+                multiplier=getMultiplier(permanent);
+            }
+
+            if(effectKey.equals("penality")){
+                penality=true;
+            }
+
+        }
+
+
+
+        return new PermanentEffect(minForce,vpoints,surplus,conversion,multiplier,action,penality);
     }
 
     private static ArrayList<Resource> getResourceCost(JsonObject costo){
@@ -268,6 +317,44 @@ public class DvptCardParser {
 
         }
     return new EffectAction(target,type,force,discount);
+    }
+
+    private static EffectPermanentAction getEffectPermanentAction(JsonObject permanent){
+
+        ActionType target=null;
+        DvptCardType type=null;
+        Integer forceBonus=0;
+        ArrayList<Resource> discount=new ArrayList<Resource>();
+
+        //get keys from permanent (minForce || type || surplus || conversion || action || discount || penality)
+        ArrayList<String> permanentKeys = DvptCardParser.getKeys(permanent);
+        System.out.println(permanentKeys);
+        //get effectSurplus and effectAction..so i have both 'items' to create the cost
+        for (String permanentKey : permanentKeys) {
+
+            if (permanentKey.equals("target")) {
+                target = ActionType.valueOf(permanent.get("target").getAsString());
+            }
+
+            if (permanentKey.equals("type")) {
+                type = DvptCardType.valueOf(permanent.get("type").getAsString());
+            }
+
+            if (permanentKey.equals("forceBonus")) {
+                forceBonus = permanent.get("forceBonus").getAsInt();
+            }
+
+            if (permanentKey.equals("discount")) {
+                discount = getDiscount(permanent);
+            }
+        }
+
+        return new EffectPermanentAction(target,type,forceBonus,discount);
+
+    }
+
+    private static ArrayList<EffectConversion> getEffectConversion(JsonObject permanent){
+        return null;
     }
 
     private static ArrayList<Resource> getResourceSurplus(JsonObject surplus){

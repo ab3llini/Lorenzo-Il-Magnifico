@@ -1,17 +1,15 @@
 package server.model.effect;
 
-import server.model.valuable.Valuable;
-
 /**
- * Created by Federico on 10/05/2017.
+ * Created by LBARCELLA on 13/05/2017.
  */
 public class EffectConversion {
-    private Valuable from;
-    private Valuable to;
 
+    private EffectSurplus from;
+    private EffectSurplus to;
 
-    private EffectConversion (Valuable from, Valuable to){
-        this.from = from;
-        this.to = to;
+    public EffectConversion(EffectSurplus from, EffectSurplus to){
+        this.from=from;
+        this.to=to;
     }
 }

@@ -5,8 +5,8 @@ package server.model.valuable;
  */
 public enum MultipliedType {
     military,
-    territoryCard,
-    characterCard,
-    buildingCard,
-    ventureCard
+    territory,
+    character,
+    building,
+    venture
 }
