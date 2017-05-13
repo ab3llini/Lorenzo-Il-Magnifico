@@ -13,7 +13,7 @@ public class VentureDvptCard extends DvptCard {
 
     public VentureDvptCard(Integer id, String name,Integer period, ArrayList<Cost> cost,  ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
 
-        super(id, DvptCardType.Venture, name, period, immediateEffect, permanentEffect);
+        super(id, DvptCardType.venture, name, period, immediateEffect, permanentEffect);
 
         this.cost = cost;
 

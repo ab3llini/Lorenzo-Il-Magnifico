@@ -8,10 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import server.model.card.developement.*;
-import server.model.effect.EffectAction;
-import server.model.effect.EffectSurplus;
-import server.model.effect.ImmediateEffect;
-import server.model.effect.PermanentEffect;
+import server.model.effect.*;
 import server.model.valuable.*;
 
 
@@ -28,6 +25,9 @@ public class DvptCardParser {
      *
      * @return
      */
+
+    private DvptCardParser(){
+    }
 
     public static ArrayList<DvptCard> parse() throws IOException, URISyntaxException {
 
@@ -53,26 +53,26 @@ public class DvptCardParser {
 
             //foreach key extract his value
             for (String key : keys) {
-                if (key.equals("name"))
-                    name = getName(card);
+                if (key.equals("name")){
+                    name = getName(card);}
 
-                if (key.equals("period"))
-                    period = getPeriod(card);
+                if (key.equals("period")){
+                    period = getPeriod(card);}
 
-                if (key.equals("type"))
-                    type = getType(card);
+                if (key.equals("type")){
+                    type = getType(card);}
 
-                if (key.equals("cost"))
-                    cost = getCost(card);
+                if (key.equals("cost")){
+                    cost = getCost(card);}
 
-                if (key.equals("effect")) {
+                if (key.equals("effects")) {
 
-                    JsonObject effect = card.getAsJsonObject("effect");
+                    JsonObject effect = card.getAsJsonObject("effects");
 
                     //effects can be immediate and permanent
                     for (String effectKey : DvptCardParser.getKeys(effect)) {
-                        if (effectKey.equals("immediate"))
-                            immediateEffect = getImmediateEffect(effect);
+                        if (effectKey.equals("immediate")){
+                            immediateEffect = getImmediateEffect(effect);}
 
                         if (effectKey.equals("permanent")) {
                             permanentEffect = getPermanentEffect(effect);
@@ -165,11 +165,11 @@ public class DvptCardParser {
         for (String effectKey : effectKeys) {
 
             if (effectKey.equals("surplus")) {
-                effectSurplus = getEffectSurplus(effect);
+                effectSurplus = getEffectSurplus(immediate);
             }
 
-            if (effectKey.equals("actions")) {
-                effectAction = getEffectAction(effect);
+            if (effectKey.equals("action")) {
+                effectAction = getEffectAction(immediate);
             }
         }
 
@@ -190,14 +190,14 @@ public class DvptCardParser {
         ArrayList<String> resourceKeys = DvptCardParser.getKeys(resources);
 
         for (String resourceKey:resourceKeys) {
-            if(resourceKey.equals("coins"))
-                resourceCost.add(new Resource(ResourceType.Coins,resources.get("coins").getAsInt()));
-            if(resourceKey.equals("wood"))
-                resourceCost.add(new Resource(ResourceType.Wood,resources.get("wood").getAsInt()));
-            if(resourceKey.equals("stones"))
-                resourceCost.add(new Resource(ResourceType.Stones,resources.get("stones").getAsInt()));
-            if(resourceKey.equals("servants"))
-                resourceCost.add(new Resource(ResourceType.Servants,resources.get("servants").getAsInt()));
+            if(resourceKey.equals("coins")){
+                resourceCost.add(new Resource(ResourceType.Coins,resources.get("coins").getAsInt()));}
+            if(resourceKey.equals("wood")){
+                resourceCost.add(new Resource(ResourceType.Wood,resources.get("wood").getAsInt()));}
+            if(resourceKey.equals("stones")){
+                resourceCost.add(new Resource(ResourceType.Stones,resources.get("stones").getAsInt()));}
+            if(resourceKey.equals("servants")){
+                resourceCost.add(new Resource(ResourceType.Servants,resources.get("servants").getAsInt()));}
         }
         return resourceCost;
     }
@@ -221,32 +221,88 @@ public class DvptCardParser {
         return new MilitaryCost(militaryRequired,militaryMalus);
     }
 
-    private static EffectSurplus getEffectSurplus (JsonObject surplus){
+    private static EffectSurplus getEffectSurplus (JsonObject immediate){
         ArrayList<Resource> resources=new ArrayList<Resource>();      //ArrayList to save surplus in resources
         ArrayList<Point> points=new ArrayList<Point>();               //ArrayList to save surplus in points
         Integer council=0;                                            //Integer to save surplus in council privilege
+
+        //get JsonObject surplus from immediate
+        JsonObject surplus=immediate.getAsJsonObject("surplus");
 
         //get keys from surplus(resources || points || council) that identify all the different kind of surplus
         ArrayList<String> surplusKeys = DvptCardParser.getKeys(surplus);
 
         for (String surplusKey:surplusKeys) {
-            if(surplusKey.equals("resources"))
-                resources=getResourceSurplus(surplus);
-            if(surplusKey.equals("points"))
-                points=getPoints(surplus);
-            if(surplusKey.equals("council"))
-                council=getCouncil(surplus);
+            if(surplusKey.equals("resources")){
+                resources=getResourceSurplus(surplus);}
+            if(surplusKey.equals("points")){
+                points=getPoints(surplus);}
+            if(surplusKey.equals("council")){
+                council=getCouncil(surplus);}
         }
 
         return new EffectSurplus(resources,points,council);
     }
 
-    private static EffectAction getEffectAction (JsonObject action){
-    return null;
+    private static EffectAction getEffectAction (JsonObject immediate){
+        ActionType target=null;
+        DvptCardType type=null;
+        Integer force=null;
+        ArrayList<Resource> discount=new ArrayList<Resource>();
+
+        //get JsonObject surplus from immediate
+        JsonObject actions=immediate.getAsJsonObject("action");
+
+        //get keys from actions(target || type || force || discount) that identify all the different keys of action
+        ArrayList<String> actionKeys = DvptCardParser.getKeys(actions);
+
+        for (String actionKey: actionKeys) {
+            if(actionKey.equals("target")){
+                target= ActionType.valueOf(actions.get("target").getAsString());}
+            if(actionKey.equals("type")){
+                type=DvptCardType.valueOf(actions.get("type").getAsString());}
+            if(actionKey.equals("force")){
+                force=actions.get("force").getAsInt();}
+            if(actionKey.equals("discount")){
+                discount=getDiscount(actions);}
+
+        }
+    return new EffectAction(target,type,force,discount);
     }
 
     private static ArrayList<Resource> getResourceSurplus(JsonObject surplus){
         return getResourceCost(surplus);
+    }
+
+    private static ArrayList<Resource> getDiscount(JsonObject actions){
+
+        ArrayList<Resource> discount=new ArrayList<Resource>();
+        //extract arrayDiscount from JsonObject
+        JsonArray arrayDiscount = actions.getAsJsonArray("discount");
+
+        for (int j = 0; j < arrayDiscount.size(); j++) {
+            //extract JsonObject ObjectDiscount from actions
+            JsonObject ObjectDiscount = arrayDiscount.get(j).getAsJsonObject();
+
+            //foreach key of ObjectDiscount get his value
+            for (String discountKey:getKeys(ObjectDiscount)) {
+                if(discountKey.equals("coins")){
+                    discount.add(new Resource(ResourceType.Coins,ObjectDiscount.get("coins").getAsInt()));
+                }
+                if(discountKey.equals("wood")){
+                    discount.add(new Resource(ResourceType.Wood,ObjectDiscount.get("wood").getAsInt()));
+                }
+                if(discountKey.equals("stones")){
+                    discount.add(new Resource(ResourceType.Stones,ObjectDiscount.get("stones").getAsInt()));
+                }
+                if(discountKey.equals("servants")){
+                    discount.add(new Resource(ResourceType.Servants,ObjectDiscount.get("servants").getAsInt()));
+                }
+
+            }
+
+        }
+        return discount;
     }
 
     private static ArrayList<Point> getPoints (JsonObject surplus){
@@ -279,7 +335,7 @@ public class DvptCardParser {
     private static Multiplier getMultiplier(JsonObject pointsObject){
         MultipliedType what=null;
         ResultType result=null;
-        Integer coefficient=0;
+        Float coefficient=null;
 
         //extract JsonObject points from pointsObject
         JsonObject multiplier = pointsObject.getAsJsonObject("multiplier");
@@ -294,10 +350,10 @@ public class DvptCardParser {
             }
 
             if(multiplierKey.equals("result")){
-                result = ResultType.valueOf(multiplier.get("what").getAsString());}
+                result = ResultType.valueOf(multiplier.get("result").getAsString());}
 
             if(multiplierKey.equals("coefficient")){
-                coefficient=multiplier.get("coefficient").getAsInt();}
+                coefficient=multiplier.get("coefficient").getAsFloat();}
 
         }
 

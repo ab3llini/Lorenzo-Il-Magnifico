@@ -6,9 +6,9 @@ package server.model.valuable;
 public class Multiplier {
     private MultipliedType what;
     private ResultType result;
-    private Integer coefficient;
+    private Float coefficient;
 
-    public Multiplier(MultipliedType what, ResultType result, Integer coefficient){
+    public Multiplier(MultipliedType what, ResultType result, Float coefficient){
         this.what=what;
         this.result=result;
         this.coefficient=coefficient;

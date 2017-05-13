@@ -8,6 +8,6 @@ import server.model.effect.PermanentEffect;
 
 public class TerritoryDvptCard extends DvptCard {
     public TerritoryDvptCard(Integer id, String name, Integer period, ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
-        super(id, DvptCardType.Territory, name, period, immediateEffect, permanentEffect);
+        super(id, DvptCardType.territory, name, period, immediateEffect, permanentEffect);
     }
 }

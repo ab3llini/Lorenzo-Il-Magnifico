@@ -3,8 +3,8 @@ package server.model.card.developement;/*
  */
 
 public enum DvptCardType {
-    Territory,
-    Character,
-    Building,
-    Venture
+    territory,
+    character,
+    building,
+    venture
 }
