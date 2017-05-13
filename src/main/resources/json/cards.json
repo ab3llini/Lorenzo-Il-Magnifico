@@ -164,7 +164,7 @@
   },
   "9" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Miniera d'Oro",
     "effects" : {
       "immediate" : {
@@ -176,17 +176,17 @@
       },
       "permanent" : {
         "minForce" : 1,
-		"surplus" : {
-		  "resources" : {
-			"coins" : 2
-		  }
+        "surplus" : {
+          "resources" : {
+            "coins" : 2
+          }
+        }
       }
     }
-  }
- },
+  },
   "10" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Villaggio Montano",
     "effects" : {
       "immediate" : {
@@ -198,90 +198,90 @@
       },
       "permanent" : {
         "minForce" : 3,
-		"surplus" : {
-		  "resources" : {
-			"wood"  : 2
-		  }, 
-		  "points" : {
-			"military" : 1
-		  }
-		}
+        "surplus" : {
+          "resources" : {
+            "wood"  : 2
+          },
+          "points" : {
+            "military" : 1
+          }
+        }
+      }
     }
-  }
- },
- "11" : {
+  },
+  "11" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Villaggio Minerario",
     "effects" : {
       "immediate" : {
         "surplus" : {
           "resources" : {
-			"stones": 1,
+            "stones": 1,
             "servants" : 2
           }
         }
       },
       "permanent" : {
         "minForce" : 4,
-		"surplus" : {
-		  "resources" : {
-			"stones"  : 2,
-			"servants" : 1
-		  } 
-		}
+        "surplus" : {
+          "resources" : {
+            "stones"  : 2,
+            "servants" : 1
+          }
+        }
+      }
     }
-  }
- },
+  },
   "12" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Cava di Pietra",
     "effects" : {
       "immediate" : {
         "surplus" : {
           "resources" : {
-			"wood": 1
+            "wood": 1
           }
         }
       },
       "permanent" : {
         "minForce" : 3,
-		"surplus" : {
-		  "resources" : {
-			"stones"  : 3
-		  } 
-		}
+        "surplus" : {
+          "resources" : {
+            "stones"  : 3
+          }
+        }
+      }
     }
-  }
- },
+  },
   "13" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Possedimento",
     "effects" : {
       "immediate" : {
         "surplus" : {
           "resources" : {
-			"wood": 1,
+            "wood": 1,
             "servants" : 2
           }
         }
       },
       "permanent" : {
         "minForce" : 4,
-		"surplus" : {
-		  "resources" : {
-			"coins"  : 1,
-			"wood" : 2
-		  } 
-		}
+        "surplus" : {
+          "resources" : {
+            "coins"  : 1,
+            "wood" : 2
+          }
+        }
+      }
     }
-  }
- },
+  },
   "14" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Eremo",
     "effects" : {
       "immediate" : {
@@ -290,60 +290,60 @@
             "faith" : 1
           }
         }
-       },
+      },
       "permanent" : {
         "minForce" : 2,
-		"surplus" : {
-		  "points" : {
-			"faith" : 1
-		  }
-		}
+        "surplus" : {
+          "points" : {
+            "faith" : 1
+          }
+        }
       }
     }
   },
   "15" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Maniero",
     "effects" : {
       "permanent" : {
         "minForce" : 5,
-		"surplus" : {
-		  "resources" : {
-			"servants" : 2
-		  }, 
-		  "points" : {
-			"military" : 2
-		  }
-		 }
+        "surplus" : {
+          "resources" : {
+            "servants" : 2
+          },
+          "points" : {
+            "military" : 2
+          }
+        }
       }
     }
   },
-    "16" : {
+  "16" : {
     "type" : "territory",
-	"period":2,
+    "period":2,
     "name" : "Ducato",
     "effects" : {
       "immediate" : {
         "surplus" : {
           "resources" : {
-			"coins": 4
+            "coins": 4
           }
         }
       },
       "permanent" : {
         "minForce" : 6,
-		"surplus" : {
-		  "resources" : {
-		    "coins" : 1,
-			"wood"  : 2,
-			"stones"  : 1
-		  } 
-		}
+        "surplus" : {
+          "resources" : {
+            "coins" : 1,
+            "wood"  : 2,
+            "stones"  : 1
+          }
+        }
+      }
     }
-  }
- },
- "17" : {
+  },
+  "17" : {
     "type" : "territory",
     "period": 3,
     "name" : "Città Mercantile",
@@ -366,7 +366,7 @@
       }
     }
   },
-  
+
   "18" : {
     "type" : "territory",
     "period": 3,
@@ -387,7 +387,7 @@
         "surplus" : {
           "resources" : {
             "wood" : 2
-          }, 
+          },
           "points" : {
             "victory" : 2
           }
@@ -395,7 +395,7 @@
       }
     }
   },
-  
+
   "19" : {
     "type" : "territory",
     "period": 3,
@@ -413,7 +413,7 @@
         "surplus" : {
           "resources" : {
             "wood" : 1
-          }, 
+          },
           "points" : {
             "victory" : 4
           }
@@ -421,7 +421,7 @@
       }
     }
   },
-  
+
   "20" : {
     "type" : "territory",
     "period": 3,
@@ -439,7 +439,7 @@
         "surplus" : {
           "resources" : {
             "stones" : 2
-          }, 
+          },
           "points" : {
             "victory" : 1
           }
@@ -447,7 +447,7 @@
       }
     }
   },
-  
+
   "21" : {
     "type" : "territory",
     "period": 3,
@@ -457,16 +457,16 @@
         "surplus" : {
           "resources" : {
             "stones" : 1
-          }
-        },
-        "council" : 1
+          },
+          "council": 1
+        }
       },
       "permanent" : {
         "minForce" : 6,
         "surplus" : {
           "resources" : {
             "stones" : 1
-          }, 
+          },
           "points" : {
             "victory" : 4
           }
@@ -474,7 +474,7 @@
       }
     }
   },
-  
+
   "22" : {
     "type" : "territory",
     "period": 3,
@@ -492,7 +492,7 @@
         "surplus" : {
           "resources" : {
             "coins" : 1
-          }, 
+          },
           "points" : {
             "faith" : 1
           }
@@ -500,7 +500,7 @@
       }
     }
   },
-  
+
   "23" : {
     "type" : "territory",
     "period": 3,
@@ -510,7 +510,7 @@
         "surplus" : {
           "resources" : {
             "coins" : 2
-          }, 
+          },
           "points" : {
             "victory" : 2
           }
@@ -521,7 +521,7 @@
         "surplus" : {
           "resources" : {
             "servants" : 1
-          }, 
+          },
           "points" : {
             "military" : 3
           }
@@ -529,7 +529,7 @@
       }
     }
   },
-  
+
   "24" : {
     "type" : "territory",
     "period": 3,
@@ -550,7 +550,7 @@
         "surplus" : {
           "resources" : {
             "servants" : 2
-          }, 
+          },
           "points" : {
             "military" : 1
           }
@@ -1586,7 +1586,7 @@
   },
   "49" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Condottiero",
     "cost" : [
       {
@@ -1602,17 +1602,17 @@
             "military" : 3
           }
         }
-       },
+      },
       "permanent" : {
-			"target" : "card", 
-			"type" : "territory",
-			"forceBonus" : 2
-		}
-	 }
-   },
-   "50" : {
+        "target" : "card",
+        "type" : "territory",
+        "forceBonus" : 2
+      }
+    }
+  },
+  "50" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Costruttore",
     "cost" : [
       {
@@ -1623,23 +1623,23 @@
     ],
     "effects" : {
       "permanent" : {
-			"target" : "card", 
-			"type" : "building",
-			"forceBonus" : 2,
-			"discount" : [
-				{
-				  "wood":1
-				},
-				{
-				  "stones":1
-				}
-			  ]
-		}
+        "target" : "card",
+        "type" : "building",
+        "forceBonus" : 2,
+        "discount" : [
+          {
+            "wood":1
+          },
+          {
+            "stones":1
+          }
+        ]
+      }
     }
   },
-   "51" : {
+  "51" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Dama",
     "cost" : [
       {
@@ -1650,44 +1650,44 @@
     ],
     "effects" : {
       "permanent" : {
-			"target" : "card", 
-			"type" : "character",
-			"forceBonus" : 2,
-			"discount" : [
-				{
-				  "coins":1
-				}
-			  ]
-		}
+        "target" : "card",
+        "type" : "character",
+        "forceBonus" : 2,
+        "discount" : [
+          {
+            "coins":1
+          }
+        ]
+      }
     }
   },
-   "52" : {
+  "52" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Cavaliere",
     "cost" : [
       {
         "resources" : {
           "coins" : 2
-		  }
+        }
       }
     ],
     "effects" : {
       "immediate" : {
-         "surplus" : {
+        "surplus" : {
           "council" : 1
         }
-	},
+      },
       "permanent" : {
-        "target" : "card", 
-		"type" : "venture",
-		"forceBonus" : 2
-			  }
+        "target" : "card",
+        "type" : "venture",
+        "forceBonus" : 2
+      }
     }
   },
   "53" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Contadino",
     "cost" : [
       {
@@ -1698,14 +1698,14 @@
     ],
     "effects" : {
       "permanent" : {
-			"target" : "harvest", 
-			"forceBonus" : 2
-		}
+        "target" : "harvest",
+        "forceBonus" : 2
+      }
     }
   },
   "54" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Artigiano",
     "cost" : [
       {
@@ -1716,14 +1716,14 @@
     ],
     "effects" : {
       "permanent" : {
-			"target" : "production", 
-			"forceBonus" : 2
-		}
+        "target" : "production",
+        "forceBonus" : 2
+      }
     }
   },
   "55" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Predicatore",
     "cost" : [
       {
@@ -1734,12 +1734,12 @@
     ],
     "effects" : {
       "immediate" : {
-		"surplus" : {
+        "surplus" : {
           "points" : {
             "faith" : 4
           }
         }
-         },
+      },
       "permanent" : {
         "penality" : true
       }
@@ -1747,24 +1747,24 @@
   },
   "56" : {
     "type" : "character",
-	"period":1,
+    "period":1,
     "name" : "Badessa",
     "cost" : [
       {
         "resources" : {
           "coins" : 3
         }
-	}
+      }
     ],
     "effects" : {
       "immediate" : {
-          "surplus" : {
+        "surplus" : {
           "points" : {
             "faith" : 1
           }
         },
         "action" : {
-          "target" : "card", 
+          "target" : "card",
           "force" : 4
         }
       }
@@ -1772,7 +1772,7 @@
   },
   "57" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Capitano",
     "cost" : [
       {
@@ -1783,40 +1783,40 @@
     ],
     "effects" : {
       "immediate" : {
-          "surplus" : {
+        "surplus" : {
           "points" : {
             "military" : 2
           }
         },
         "action" : {
-          "target" : "card", 
+          "target" : "card",
           "type" : "territory",
           "force" : 6
         }
       }
     }
   },
-    "58" : {
+  "58" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Architetto",
     "cost" : [
       {
         "resources" : {
           "coins" : 4
         }
-      }  
-			],
+      }
+    ],
     "effects" : {
       "immediate" : {
         "action" : {
-          "target" : "card", 
+          "target" : "card",
           "type" : "building",
           "force" : 6,
           "discount" : [
             {
               "wood":1,
-			  "stones":1
+              "stones":1
             }
           ]
         }
@@ -1825,7 +1825,7 @@
   },
   "59" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Mecenate",
     "cost" : [
       {
@@ -1837,7 +1837,7 @@
     "effects" : {
       "immediate" : {
         "action" : {
-          "target" : "card", 
+          "target" : "card",
           "type" : "character",
           "force" : 6,
           "discount" : [
@@ -1851,7 +1851,7 @@
   },
   "60" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Eroe",
     "cost" : [
       {
@@ -1866,16 +1866,16 @@
           "council" : 1
         },
         "action" : {
-          "target" : "card", 
+          "target" : "card",
           "type" : "venture",
           "force" : 6
         }
-       }
       }
-    },
-"61" : {
+    }
+  },
+  "61" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Fattore",
     "cost" : [
       {
@@ -1886,14 +1886,14 @@
     ],
     "effects" : {
       "permanent" : {
-			"target" : "harvest", 
-			"forceBonus" : 3
-		}
+        "target" : "harvest",
+        "forceBonus" : 3
+      }
     }
   },
-"62" : {
+  "62" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Studioso",
     "cost" : [
       {
@@ -1904,14 +1904,14 @@
     ],
     "effects" : {
       "permanent" : {
-			"target" : "production", 
-			"forceBonus" : 3
-		}
+        "target" : "production",
+        "forceBonus" : 3
+      }
     }
   },
   "63" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Messo Papale",
     "cost" : [
       {
@@ -1922,36 +1922,36 @@
     ],
     "effects" : {
       "immediate" : {
-          "surplus" : {
+        "surplus" : {
           "points" : {
             "faith" : 3
           }
         }
-       }
+      }
     }
   },
   "64" : {
     "type" : "character",
-	"period":2,
+    "period":2,
     "name" : "Messo Reale",
     "cost" : [
       {
         "resources" : {
           "coins" : 5
-		  }
+        }
       }
     ],
     "effects" : {
       "immediate" : {
-         "surplus" : {
+        "surplus" : {
           "council" : 3
         }
-	  }
+      }
     }
   },
-    "65" : {
+  "65" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Nobile",
     "cost" : [
       {
@@ -1966,17 +1966,17 @@
           "points" : {
             "multiplier" : {
               "what" : "territory",
-			  "result": "victory",
+              "result": "victory",
               "coefficient" : 2
             }
           }
         }
       }
-     }
+    }
   },
-    "66" : {
+  "66" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Governatore",
     "cost" : [
       {
@@ -1991,17 +1991,17 @@
           "points" : {
             "multiplier" : {
               "what" : "building",
-			  "result": "victory",
+              "result": "victory",
               "coefficient" : 2
             }
           }
         }
       }
-     }
+    }
   },
-      "67" : {
+  "67" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Cortigiana",
     "cost" : [
       {
@@ -2016,17 +2016,17 @@
           "points" : {
             "multiplier" : {
               "what" : "character",
-			  "result": "victory",
+              "result": "victory",
               "coefficient" : 2
             }
           }
         }
       }
-     }
+    }
   },
-      "68" : {
+  "68" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Araldo",
     "cost" : [
       {
@@ -2041,17 +2041,17 @@
           "points" : {
             "multiplier" : {
               "what" : "venture",
-			  "result": "victory",
+              "result": "victory",
               "coefficient" : 2
             }
           }
         }
       }
-     }
+    }
   },
   "69" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Cardinale",
     "cost" : [
       {
@@ -2059,7 +2059,7 @@
           "coins" : 4
         }
       }
-	  ],
+    ],
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -2068,15 +2068,15 @@
           }
         },
         "action" : {
-          "target" : "harvest", 
+          "target" : "harvest",
           "force" : 4
         }
       }
     }
   },
-"70" : {
+  "70" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Vescovo",
     "cost" : [
       {
@@ -2084,7 +2084,7 @@
           "coins" : 5
         }
       }
-	  ],
+    ],
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -2093,7 +2093,7 @@
           }
         },
         "action" : {
-          "target" : "production", 
+          "target" : "production",
           "force" : 4
         }
       }
@@ -2101,7 +2101,7 @@
   },
   "71" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Generale",
     "cost" : [
       {
@@ -2116,17 +2116,17 @@
           "points" : {
             "multiplier" : {
               "what" : "military",
-			  "result": "victory",
+              "result": "victory",
               "coefficient" : 0.5
             }
           }
         }
-       }
       }
-    },
+    }
+  },
   "72" : {
     "type" : "character",
-	"period":3,
+    "period":3,
     "name" : "Ambasciatore",
     "cost" : [
       {
@@ -2141,7 +2141,7 @@
           "council" : 1
         },
         "action" : {
-          "target" : "card", 
+          "target" : "card",
           "force" : 7
         }
       }
@@ -2161,7 +2161,7 @@
     "effects": {
       "immediate": {
         "points": {
-            "military": 5
+          "military": 5
         }
       },
       "permanent": {
@@ -2169,7 +2169,7 @@
       }
     }
   },
-  
+
   "74": {
     "type": "venture",
     "period": 1,
@@ -2196,7 +2196,7 @@
       }
     }
   },
-  
+
   "75": {
     "type": "venture",
     "period": 1,
@@ -2213,17 +2213,17 @@
         "surplus": {
           "points": {
             "military": 2
-          }
-        },
-        "council": 1
+          },
+          "council": 1
+        }
       },
       "permanent": {
         "vpoints": 3
       }
     }
   },
-  
-  
+
+
   "76": {
     "type": "venture",
     "period": 1,
@@ -2238,14 +2238,16 @@
     ],
     "effects": {
       "immediate": {
-        "council": 2
-      },
-      "permanent": {
-        "vpoints": 4
+        "surplus": {
+          "council": 2
+        },
+        "permanent": {
+          "vpoints": 4
+        }
       }
     }
   },
-  
+
   "77": {
     "type": "venture",
     "period": 1,
@@ -2271,7 +2273,7 @@
       }
     }
   },
-  
+
   "78": {
     "type": "venture",
     "period": 1,
@@ -2296,9 +2298,9 @@
       }
     }
   },
-  
+
   "79": {
-      "type": "venture",
+    "type": "venture",
     "period": 1,
     "name": "Combattere le Eresie",
     "cost": [
@@ -2322,7 +2324,7 @@
       }
     }
   },
-  
+
   "80": {
     "type": "venture",
     "period": 1,
@@ -2355,7 +2357,7 @@
       }
     }
   },
-  
+
   "81": {
     "type": "venture",
     "period": 2,
@@ -2380,7 +2382,7 @@
       }
     }
   },
-  
+
   "82": {
     "type": "venture",
     "period": 2,
@@ -2407,7 +2409,7 @@
       }
     }
   },
-  
+
   "83": {
     "type": "venture",
     "period": 2,
@@ -2433,7 +2435,7 @@
       }
     }
   },
-  
+
   "84": {
     "type": "venture",
     "period": 2,
@@ -2451,16 +2453,16 @@
         "surplus": {
           "resources": {
             "coins": 5
-          }
-        },
-        "council": 1
+          },
+          "council": 1
+        }
       },
       "permanent": {
         "vpoints": 3
       }
     }
   },
-  
+
   "85": {
     "type": "venture",
     "period": 2,
@@ -2487,9 +2489,9 @@
       }
     }
   },
-  
+
   "86": {
-      "type": "venture",
+    "type": "venture",
     "period": 2,
     "name": "Accogliere gli Stranieri",
     "cost": [
@@ -2512,7 +2514,7 @@
       }
     }
   },
-  
+
   "87": {
     "type": "venture",
     "period": 2,
@@ -2541,7 +2543,7 @@
       }
     }
   },
-  
+
   "88": {
     "type": "venture",
     "period": 2,
@@ -2564,7 +2566,7 @@
     "effects": {
       "immediate": {
         "points": {
-            "faith": 3
+          "faith": 3
         }
       },
       "permanent": {
@@ -2572,7 +2574,7 @@
       }
     }
   },
-  
+
   "89": {
     "type": "venture",
     "period": 3,
@@ -2587,7 +2589,7 @@
     "effects": {
       "immediate": {
         "points": {
-            "military": 7
+          "military": 7
         }
       },
       "permanent": {
@@ -2595,7 +2597,7 @@
       }
     }
   },
-  
+
   "90": {
     "type": "venture",
     "period": 3,
@@ -2626,7 +2628,7 @@
       }
     }
   },
-  
+
   "91": {
     "type": "venture",
     "period": 3,
@@ -2643,16 +2645,16 @@
         "surplus": {
           "points": {
             "military": 4
-          }
-        },
-        "council": 1
+          },
+          "council": 1
+        }
       },
       "permanent": {
         "vpoints": 4
       }
     }
   },
-  
+
   "92": {
     "type": "venture",
     "period": 3,
@@ -2677,17 +2679,17 @@
       }
     }
   },
-  
+
   "93": {
     "type": "venture",
     "period": 3,
     "name": "Conquista Militare",
     "cost": [
       {
-      "military": {
+        "military": {
           "required": 12,
-            "malus": 6
-          }
+          "malus": 6
+        }
       }
     ],
     "effects": {
@@ -2705,7 +2707,7 @@
       }
     }
   },
-  
+
   "94": {
     "type": "venture",
     "period": 3,
@@ -2720,9 +2722,9 @@
     ],
     "effects": {
       "immediate": {
-         "action": {
-            "target": "production",
-            "force": 3
+        "action": {
+          "target": "production",
+          "force": 3
         }
       },
       "permanent": {
@@ -2730,17 +2732,17 @@
       }
     }
   },
-  
+
   "95": {
     "type": "venture",
     "period": 3,
     "name": "Guerra Santa",
     "cost": [
       {
-          "military": {
-            "required": 15,
-            "malus": 8
-          }
+        "military": {
+          "required": 15,
+          "malus": 8
+        }
       }
     ],
     "effects": {
@@ -2756,7 +2758,7 @@
       }
     }
   },
-  
+
   "96": {
     "type": "venture",
     "period": 3,

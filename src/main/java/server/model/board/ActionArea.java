@@ -15,4 +15,11 @@ public class ActionArea {
         this.secondaryPlace = secondaryPlace;
     }
 
+    public ActionType getType() {
+        return type;
+    }
+
+    public void setType(ActionType type) {
+        this.type = type;
+    }
 }
