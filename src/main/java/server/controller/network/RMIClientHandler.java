@@ -10,12 +10,11 @@ import server.model.Player;
 
 public class RMIClientHandler extends AbstractClientHandler {
 
-    private RMIClientInterface clientRef;
+    private volatile RMIClientInterface clientRef;
 
     public RMIClientHandler(RMIClientInterface clientRef, String username) {
 
         super(username);
-
         //Assign the reference to the RMI Client in order to make callbacks
         this.clientRef = clientRef;
 

@@ -7,6 +7,7 @@ package client;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -34,18 +35,32 @@ public class ConnectionController {
     private RadioButton socketRadioButton; // Value injected by FXMLLoader
 
     @FXML
-    void connect() {
+    void connect(ActionEvent e) {
 
         RMIClient rmiClient;
+
+        Button sender = ((Button)e.getSource());
 
         try {
 
             rmiClient = new RMIClient(hostTextField.getText(), Integer.parseInt(portTextField.getText()), "server");
 
-        }
-        catch (RemoteException e) {
+            if (rmiClient.getServerRef().register(rmiClient, usernameTextField.getText())) {
 
-            e.printStackTrace();
+               sender.setText("Connected..");
+               sender.setDisable(true);
+
+            }
+            else {
+
+                sender.setText("Username already taken");
+
+            }
+
+        }
+        catch (RemoteException ex) {
+
+            ex.printStackTrace();
 
             return;
 

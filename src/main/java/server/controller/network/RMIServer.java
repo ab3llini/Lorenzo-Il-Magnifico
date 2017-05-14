@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class RMIServer extends UnicastRemoteObject implements RMIServerInterface {
 
     //The RMI client handlers
-    private transient ArrayList<RMIClientHandler> clientHandlers;
+    private transient ArrayList<RMIClientHandler> clientHandlers = new ArrayList<RMIClientHandler>();
 
     //The RMI registry
     private transient Registry registry;
@@ -81,25 +81,34 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
     public boolean register(RMIClientInterface clientRef, String username) {
 
-        System.out.println("New register request from " + clientRef);
+        System.out.println("New RMI registration request");
 
-        if (!this.engine.getRmiServer().doesExistClientWithUsername(username)) {
+        if (!this.doesExistClientWithUsername(username)) {
 
             this.clientHandlers.add(new RMIClientHandler(clientRef, username));
+
+            System.out.println("New RMI client added: " + username);
+
+            return true;
 
         }
         else {
 
-            //Unable to register the client with the provided username
             try {
+
                 clientRef.registrationFailed();
+
+                System.out.println("Registration for new RMI client failed, username '"+username+"' is already in use");
+
             } catch (RemoteException e) {
-                System.out.println("Unable to inform client of the failed registration.");
+
+                System.out.println(e.getMessage());
+
             }
 
-        }
+            return false;
 
-        return true;
+        }
 
     }
 
