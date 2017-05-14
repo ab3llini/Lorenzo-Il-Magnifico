@@ -9,14 +9,14 @@ import server.model.Player;
  */
 public abstract class AbstractClientHandler {
 
-    //A reference to the relative server (RMI or Socket)
-    private AbstractServer server;
-
-    //A representative id
-    private Integer id;
-
     //A representative username
-    private String username;
+    protected String username;
+
+    public AbstractClientHandler(String username) {
+
+       this.username = username;
+
+    }
 
     /**
      * Triggered method on client interaction

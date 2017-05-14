@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ConnectionController">
+   <children>
+      <TextField fx:id="portTextField" layoutX="119.0" layoutY="440.0" prefHeight="27.0" prefWidth="200.0" text="1099" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="20.0" />
+      <Label layoutX="20.0" layoutY="418.0" text="Host" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="20.0" />
+      <Label layoutX="33.0" layoutY="455.0" text="Port" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="20.0" />
+      <TextField fx:id="hostTextField" layoutX="73.0" layoutY="418.0" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" promptText="x.y.z.w" text="127.0.0.1" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="20.0" />
+      <Label layoutX="18.0" layoutY="26.0" text="Lorenzo il Magnifico" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="119.0" layoutY="130.0" text="Username" textAlignment="CENTER" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="150.0" />
+      <TextField fx:id="usernameTextField" alignment="CENTER" layoutX="50.0" layoutY="179.0" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" promptText="Insert a username" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="180.0" />
+      <RadioButton fx:id="rmiRadioButton" layoutX="20.0" layoutY="356.0" mnemonicParsing="false" selected="true" text="RMI" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="20.0">
+         <toggleGroup>
+            <ToggleGroup fx:id="connectionType" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="socketRadioButton" layoutX="20.0" layoutY="330.0" mnemonicParsing="false" text="Socket" toggleGroup="$connectionType" AnchorPane.bottomAnchor="130.0" AnchorPane.leftAnchor="20.0" />
+      <Button layoutX="180.0" layoutY="223.0" mnemonicParsing="false" onAction="#connect" text="Connect" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="220.0" />
+   </children>
+</AnchorPane>

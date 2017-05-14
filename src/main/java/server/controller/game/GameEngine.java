@@ -5,7 +5,6 @@ package server.controller.game;
  */
 
 import server.controller.network.AbstractClientHandler;
-import server.controller.network.ServerInterface;
 import server.controller.network.RMIServer;
 import server.controller.network.SocketServer;
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Rappresenta il server di gioco.
  */
-public class GameEngine implements ServerInterface {
+public class GameEngine {
 
     //Il server in ascolto per nuove connessioni TCP su socket
     SocketServer socketServer;
@@ -26,11 +25,19 @@ public class GameEngine implements ServerInterface {
     ArrayList<Lobby> lobbies;
 
 
-    public void onClientAction(AbstractClientHandler clientHandler, Action action) {
+    public void onClientAction(Action action, AbstractClientHandler clientHandler) {
 
     }
 
     public void dispatchClientAction(Lobby lobby, AbstractClientHandler clientHandler, Action action) {
 
+    }
+
+    public RMIServer getRmiServer() {
+        return rmiServer;
+    }
+
+    public SocketServer getSocketServer() {
+        return socketServer;
     }
 }
