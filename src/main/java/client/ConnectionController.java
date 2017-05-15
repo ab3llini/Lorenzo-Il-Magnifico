@@ -12,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import netobject.Message;
+import netobject.MessageType;
 
 import java.rmi.RemoteException;
 
@@ -73,7 +75,13 @@ public class ConnectionController implements RMIClientObserver {
 
         try {
 
-            if (rmiClient.getServerRef().register(rmiClient, usernameTextField.getText())) {
+            if (rmiClient.getServerRef().register(
+                    rmiClient,
+                    new Message(
+                            MessageType.Registration,
+                            usernameTextField.getText()
+                    )
+            )) {
 
                 System.out.println("Connected..");
 

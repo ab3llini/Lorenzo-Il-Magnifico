@@ -8,6 +8,8 @@ import client.RMIClientInterface;
 import exception.NotRegisteredException;
 import exception.UsernameAlreadyInUseException;
 import netobject.Action;
+import netobject.Message;
+import netobject.MessageType;
 import server.controller.game.GameEngine;
 
 import java.rmi.AlreadyBoundException;
@@ -84,14 +86,20 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
     }
 
-    public boolean register(RMIClientInterface clientRef, String username) throws RemoteException, UsernameAlreadyInUseException {
+    public boolean register(RMIClientInterface clientRef, Message m) throws RemoteException, UsernameAlreadyInUseException {
+
+        if (m.type != MessageType.Registration) {
+
+            return false;
+
+        }
 
         System.out.println("New RMI registration request");
 
-        if (!this.doesExistClientWithUsername(username)) {
+        if (!this.doesExistClientWithUsername(m.value)) {
 
             //Create a new RMI client handler
-            RMIClientHandler rch = new RMIClientHandler(clientRef, username);
+            RMIClientHandler rch = new RMIClientHandler(clientRef, m.value);
 
             //Register the RMI server as observer
             rch.addEventListener(this);
@@ -99,16 +107,16 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
             //Add the client handler to the list
             this.clientHandlers.add(rch);
 
-            System.out.println("New RMI client added: " + username);
+            System.out.println("New RMI client added: " + m.value);
 
             return true;
 
         }
         else {
 
-            System.out.println("Registration for new RMI client failed, username '"+username+"' is already in use");
+            System.out.println("Registration for new RMI client failed, username '"+ m.value +"' is already in use");
 
-            throw new UsernameAlreadyInUseException("The username " + username + " is not available");
+            throw new UsernameAlreadyInUseException("The username " + m.value + " is not available");
 
         }
 
