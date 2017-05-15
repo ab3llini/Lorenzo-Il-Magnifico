@@ -14,6 +14,10 @@ public class SocketClientHandler extends AbstractClientHandler implements Runnab
     //The socket of the handler
     Socket socket;
 
+    public SocketClientHandler(String username) {
+        super(username);
+    }
+
     /**
      * Runnable interface implementation of run()
      */

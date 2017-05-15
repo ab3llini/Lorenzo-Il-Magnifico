@@ -7,6 +7,7 @@ import server.model.valuable.Resource;
 import java.util.ArrayList;
 
 public class Cost {
+
     private ArrayList<Resource> resources;
     private MilitaryCost military;
 

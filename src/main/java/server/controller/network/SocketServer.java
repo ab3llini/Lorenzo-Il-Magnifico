@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * The server which handles the clients connected via socket.
  * It implements runnable due to the fact that the listing is a blocking procedure
  */
-public class SocketServer extends AbstractServer implements Runnable {
+public class SocketServer implements Runnable {
 
     //The socket to perform the asynchronous listening on
     Socket listener;

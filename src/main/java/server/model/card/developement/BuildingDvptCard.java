@@ -1,4 +1,6 @@
-package server.model.card.developement;/*
+package server.model.card.developement;
+
+/*
  * Created by alberto on 09/05/17.
  */
 
@@ -17,5 +19,5 @@ public class BuildingDvptCard extends DvptCard {
 
         this.cost = cost;
 
-}
+    }
 }
