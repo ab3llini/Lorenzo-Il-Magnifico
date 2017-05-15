@@ -5,20 +5,30 @@ package server.controller.network;
  */
 
 import client.RMIClientInterface;
-import server.controller.game.Action;
+import netobject.Action;
 import server.model.Player;
 
 public class RMIClientHandler extends AbstractClientHandler {
 
     private  RMIClientInterface clientRef;
 
+    /**
+     * Constructor
+     * @param clientRef The proxy reference to the client
+     * @param username The username of the client
+     */
     public RMIClientHandler(RMIClientInterface clientRef, String username) {
 
-        super(username);
+        //Assign the username
+        this.username = username;
         //Assign the reference to the RMI Client in order to make callbacks
         this.clientRef = clientRef;
 
     }
+
+    /*
+    Interface methods
+     */
 
     public void onClientAction(Action action) {
 
@@ -28,9 +38,9 @@ public class RMIClientHandler extends AbstractClientHandler {
 
     }
 
-    public void performAction(Action action) {
-
-    }
+    /*
+    Getters and setters
+     */
 
     public RMIClientInterface getClientRef() {
         return clientRef;

@@ -2,6 +2,8 @@ package client;
 
 import com.sun.org.apache.regexp.internal.RE;
 import exception.UsernameAlreadyInUseException;
+import netobject.Message;
+import netobject.MessageType;
 import server.controller.network.RMIServerInterface;
 
 import java.rmi.RemoteException;
@@ -86,7 +88,7 @@ public class RMIClient extends Thread implements RMIClientInterface {
             RMIClient rmic = new RMIClient("127.0.0.1" , 1099, "server");
 
             rmic.prepareRmiConnection();
-            if(rmic.getServerRef().register(rmic, "alberto")) {
+            if(rmic.getServerRef().register(rmic, new Message(MessageType.Registration, "Alberto"))) {
 
                 System.out.println("Connected");
 
@@ -96,17 +98,15 @@ public class RMIClient extends Thread implements RMIClientInterface {
 
         catch (UsernameAlreadyInUseException e) {
 
-            System.out.println("Username : " + e.getClass());
+            System.out.println("Username already in use");
 
         }
 
         catch (RemoteException e) {
 
-            System.out.println("Class : " + e.getClass());
+            System.out.println("RemoteException:  " + e.getMessage());
 
         }
-
-
 
     }
 
