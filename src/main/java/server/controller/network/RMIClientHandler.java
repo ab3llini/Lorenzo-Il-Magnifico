@@ -10,7 +10,7 @@ import server.model.Player;
 
 public class RMIClientHandler extends AbstractClientHandler {
 
-    private volatile RMIClientInterface clientRef;
+    private  RMIClientInterface clientRef;
 
     public RMIClientHandler(RMIClientInterface clientRef, String username) {
 
@@ -30,5 +30,9 @@ public class RMIClientHandler extends AbstractClientHandler {
 
     public void performAction(Action action) {
 
+    }
+
+    public RMIClientInterface getClientRef() {
+        return clientRef;
     }
 }

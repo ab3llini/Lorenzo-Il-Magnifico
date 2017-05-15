@@ -1,6 +1,8 @@
 package server.controller.network;
 
 import client.RMIClientInterface;
+import exception.NotRegisteredException;
+import exception.UsernameAlreadyInUseException;
 import server.controller.game.Action;
 
 import java.rmi.Remote;
@@ -19,7 +21,7 @@ public interface RMIServerInterface extends Remote {
      * @return Upon success returns true, otherwise false.
      * @throws RemoteException Needed for RMI Pattern
      */
-    boolean register(RMIClientInterface clientRef, String username) throws RemoteException;
+    boolean register(RMIClientInterface clientRef, String username) throws RemoteException, UsernameAlreadyInUseException;
 
     /**
      * Attempt to perform an action
@@ -28,6 +30,6 @@ public interface RMIServerInterface extends Remote {
      * @return Upon success returns true, otherwise false.
      * @throws RemoteException Needed for RMI Pattern
      */
-    boolean performAction(RMIClientInterface clientRef, Action action) throws RemoteException;
+    boolean performAction(RMIClientInterface clientRef, Action action) throws RemoteException, NotRegisteredException;
 
 }

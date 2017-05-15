@@ -5,6 +5,7 @@ package client;
  * @since   14/05/17.
  */
 
+import exception.UsernameAlreadyInUseException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,7 +15,7 @@ import javafx.scene.control.ToggleGroup;
 
 import java.rmi.RemoteException;
 
-public class ConnectionController {
+public class ConnectionController implements RMIClientObserver {
 
     @FXML // fx:id="portTextField"
     private TextField portTextField; // Value injected by FXMLLoader
@@ -34,40 +35,63 @@ public class ConnectionController {
     @FXML // fx:id="socketRadioButton"
     private RadioButton socketRadioButton; // Value injected by FXMLLoader
 
+    @FXML // fx:id="connectButton"
+    private Button connectButton; // Value injected by FXMLLoader
+
+    RMIClient rmiClient;
+
+    boolean RMIConnectionReady = false;
+
+
     @FXML
-    void connect(ActionEvent e) {
+    void connect() {
 
-        RMIClient rmiClient;
-
-        Button sender = ((Button)e.getSource());
+        connectButton.setText("Connecting.. See log");
 
         try {
 
-            rmiClient = new RMIClient(hostTextField.getText(), Integer.parseInt(portTextField.getText()), "server");
+            //Initialize the RMI client
+            rmiClient = new RMIClient("localhost", 1099, "server");
+
+        }
+        catch (RemoteException r) {
+
+            connectButton.setText("Error");
+
+        }
+
+        //Register our self as observer
+        rmiClient.addObserver(this);
+
+        //Begin lookup
+        rmiClient.start();
+
+
+    }
+
+    public void RMIConnectionReady() {
+
+        try {
 
             if (rmiClient.getServerRef().register(rmiClient, usernameTextField.getText())) {
 
-               sender.setText("Connected..");
-               sender.setDisable(true);
+                System.out.println("Connected..");
 
             }
             else {
 
-                sender.setText("Username already taken");
+                System.out.println("Username already taken");
 
             }
 
         }
         catch (RemoteException ex) {
 
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
 
-            return;
-
+        } catch (UsernameAlreadyInUseException e) {
+            e.printStackTrace();
         }
 
-
-
     }
-
 }

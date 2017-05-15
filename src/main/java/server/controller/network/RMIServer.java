@@ -5,6 +5,9 @@ package server.controller.network;
  */
 
 import client.RMIClientInterface;
+import com.sun.tools.corba.se.idl.constExpr.Not;
+import exception.NotRegisteredException;
+import exception.UsernameAlreadyInUseException;
 import server.controller.game.Action;
 import server.controller.game.GameEngine;
 
@@ -79,7 +82,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
     }
 
-    public boolean register(RMIClientInterface clientRef, String username) {
+    public boolean register(RMIClientInterface clientRef, String username) throws RemoteException, UsernameAlreadyInUseException {
 
         System.out.println("New RMI registration request");
 
@@ -94,27 +97,33 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
         }
         else {
 
-            try {
+            System.out.println("Registration for new RMI client failed, username '"+username+"' is already in use");
 
-                clientRef.registrationFailed();
-
-                System.out.println("Registration for new RMI client failed, username '"+username+"' is already in use");
-
-            } catch (RemoteException e) {
-
-                System.out.println(e.getMessage());
-
-            }
-
-            return false;
+            throw new UsernameAlreadyInUseException("The username " + username + " is not available");
 
         }
 
     }
 
-    public boolean performAction(RMIClientInterface clientRef, Action action) throws RemoteException {
+    public boolean performAction(RMIClientInterface clientRef, Action action) throws RemoteException, NotRegisteredException {
 
-        return false;
+        //Get the handler
+        RMIClientHandler handler = this.getClientHandler(clientRef);
+
+        //If the client never authenticated throw an exception
+        if (handler == null) {
+
+            throw new NotRegisteredException("No such handler for the provided client");
+
+        }
+        else {
+
+            //Cool stuff
+            System.out.println("Action performed by " + handler.username);
+
+            return true;
+
+        }
 
     }
 
@@ -123,7 +132,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
      * @param username the username to check
      * @return True or False
      */
-    public Boolean doesExistClientWithUsername(String username) {
+    private Boolean doesExistClientWithUsername(String username) {
 
         for (RMIClientHandler client : this.clientHandlers) {
 
@@ -136,6 +145,25 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
         return false;
 
     }
+
+    /**
+     * Returns the matching client handler with the provided stub reference
+     * @param clientRef The stub reference for the client
+     * @return The corresponding client handler
+     */
+    private RMIClientHandler getClientHandler(RMIClientInterface clientRef) {
+
+        for (RMIClientHandler handler : this.clientHandlers) {
+
+            if (handler.getClientRef() == clientRef) {
+                return handler;
+            }
+        }
+
+        return null;
+
+    }
+
 
     public static void main(String[] args) {
 

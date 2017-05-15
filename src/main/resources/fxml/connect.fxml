@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ConnectionController">
    <children>
       <TextField fx:id="portTextField" layoutX="119.0" layoutY="440.0" prefHeight="27.0" prefWidth="200.0" text="1099" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="20.0" />
@@ -28,6 +27,6 @@
          </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="socketRadioButton" layoutX="20.0" layoutY="330.0" mnemonicParsing="false" text="Socket" toggleGroup="$connectionType" AnchorPane.bottomAnchor="130.0" AnchorPane.leftAnchor="20.0" />
-      <Button layoutX="180.0" layoutY="223.0" mnemonicParsing="false" onAction="#connect" text="Connect" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="220.0" />
+      <Button fx:id="connectButton" layoutX="180.0" layoutY="223.0" mnemonicParsing="false" onAction="#connect" text="Connect" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="220.0" />
    </children>
 </AnchorPane>
