@@ -22,4 +22,19 @@ public class EffectPermanentAction {
         this.forceBonus=forceBonus;
     }
 
+    public DvptCardType getType() {
+        return type;
+    }
+
+    public ActionType getTarget() {
+        return target;
+    }
+
+    public ArrayList<Resource> getDiscount() {
+        return discount;
+    }
+
+    public Integer getForceBonus() {
+        return forceBonus;
+    }
 }

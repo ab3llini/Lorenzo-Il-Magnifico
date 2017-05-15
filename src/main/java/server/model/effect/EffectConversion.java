@@ -12,4 +12,12 @@ public class EffectConversion {
         this.from=from;
         this.to=to;
     }
+
+    public EffectSurplus getFrom() {
+        return from;
+    }
+
+    public EffectSurplus getTo() {
+        return to;
+    }
 }

@@ -10,4 +10,9 @@ public class Resource extends Valuable {
         super(amount);
         this.type = type;
     }
+
+
+    public ResourceType getType() {
+        return type;
+    }
 }

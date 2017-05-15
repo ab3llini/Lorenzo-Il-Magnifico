@@ -21,4 +21,20 @@ public class EffectAction {
         this.force=force;
         this.discount=discount;
     }
+
+    public DvptCardType getType() {
+        return type;
+    }
+
+    public ActionType getTarget() {
+        return target;
+    }
+
+    public Integer getForce() {
+        return force;
+    }
+
+    public ArrayList<Resource> getDiscount() {
+        return discount;
+    }
 }

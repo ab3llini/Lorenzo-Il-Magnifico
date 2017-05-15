@@ -14,4 +14,21 @@ public class SingleActionPlace extends ActionPlace {
         this.place = place;
         this.occupied = occupied;
     }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public FamilyMember getPlace() {
+        return place;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
+    }
+
+    public void setPlace(FamilyMember place) {
+        this.place = place;
+    }
+    
 }

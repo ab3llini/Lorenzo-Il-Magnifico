@@ -13,4 +13,16 @@ public class Multiplier {
         this.result=result;
         this.coefficient=coefficient;
     }
+
+    public Float getCoefficient() {
+        return coefficient;
+    }
+
+    public MultipliedType getWhat() {
+        return what;
+    }
+
+    public ResultType getResult() {
+        return result;
+    }
 }

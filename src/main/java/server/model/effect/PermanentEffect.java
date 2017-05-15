@@ -26,4 +26,31 @@ public class PermanentEffect {
         this.penality = penality;
     }
 
+    public Integer getMinForce() {
+        return minForce;
+    }
+
+    public Integer getvPoints() {
+        return vPoints;
+    }
+
+    public EffectSurplus getSurplus() {
+        return surplus;
+    }
+
+    public ArrayList<EffectConversion> getConversion() {
+        return conversion;
+    }
+
+    public Multiplier getMultiplier() {
+        return multiplier;
+    }
+
+    public EffectPermanentAction getAction() {
+        return action;
+    }
+
+    public boolean isPenality() {
+        return penality;
+    }
 }

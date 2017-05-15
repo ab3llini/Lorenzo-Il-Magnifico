@@ -6,9 +6,9 @@ import server.model.effect.ImmediateEffect;
  * Created by Federico on 11/05/2017.
  */
 public class ActionPlace {
-    private ImmediateEffect immediateEffect;
-    private Integer entryForce;
-    private Integer minPlayers;
+    protected ImmediateEffect immediateEffect;
+    protected Integer entryForce;
+    protected Integer minPlayers;
 
 
     public ActionPlace(ImmediateEffect immediateEffect, Integer entryForce, Integer minPlayers){

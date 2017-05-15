@@ -15,4 +15,12 @@ public class EffectDiscount {
         this.type = type;
         this.what = what;
     }
+
+    public DvptCardType getType() {
+        return type;
+    }
+
+    public Valuable getWhat() {
+        return what;
+    }
 }

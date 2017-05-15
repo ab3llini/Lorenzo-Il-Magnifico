@@ -11,4 +11,12 @@ public class Dice {
         this.color = color;
         this.value = value;
     }
+
+    public ColorType getColor() {
+        return color;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
 }

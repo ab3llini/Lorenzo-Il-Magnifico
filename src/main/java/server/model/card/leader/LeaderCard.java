@@ -14,4 +14,20 @@ public class LeaderCard {
         this.requirement = requirement;
         this.leaderEffect = leaderEffect;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Requirement getRequirement() {
+        return requirement;
+    }
+
+    public LeaderEffect getLeaderEffect() {
+        return leaderEffect;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

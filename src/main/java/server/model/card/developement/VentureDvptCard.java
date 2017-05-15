@@ -18,5 +18,9 @@ public class VentureDvptCard extends DvptCard {
         this.cost = cost;
 
     }
+
+    public ArrayList<Cost> getCost() {
+        return cost;
+    }
 }
 

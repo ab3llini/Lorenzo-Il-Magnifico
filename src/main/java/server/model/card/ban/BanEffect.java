@@ -21,4 +21,33 @@ public class BanEffect {
         this.noFirstActionMalus = noFirstActionMalus;
         this.noMarketMalus = noMarketMalus;
     }
+
+    public DiceMalus getDiceMalus() {
+        return diceMalus;
+    }
+
+    public NoPointsMalus getNoPointsMalus() {
+        return noPointsMalus;
+    }
+
+    public boolean isNoFirstActionMalus() {
+        return noFirstActionMalus;
+    }
+
+    public PointMalus getPointMalus() {
+        return pointMalus;
+    }
+
+    public boolean isServantsPowerMalus() {
+        return servantsPowerMalus;
+    }
+
+    public boolean isNoMarketMalus() {
+        return noMarketMalus;
+    }
+
+    public VictoryMalus getVictoryMalus() {
+        return victoryMalus;
+    }
+    
 }

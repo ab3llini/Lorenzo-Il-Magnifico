@@ -16,4 +16,12 @@ public class Cost {
         this.resources = resources;
         this.military = military;
     }
+
+    public MilitaryCost getMilitary() {
+        return military;
+    }
+
+    public ArrayList<Resource> getResources() {
+        return resources;
+    }
 }

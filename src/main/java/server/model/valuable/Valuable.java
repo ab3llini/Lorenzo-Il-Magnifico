@@ -10,4 +10,8 @@ public class Valuable {
     public Valuable(Integer amount) {
         this.amount = amount;
     }
+
+    public Integer getAmount() {
+        return amount;
+    }
 }

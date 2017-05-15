@@ -12,4 +12,12 @@ public class MilitaryCost {
         this.malus = malus;
         this.required = required;
     }
+
+    public Integer getMalus() {
+        return malus;
+    }
+
+    public Integer getRequired() {
+        return required;
+    }
 }

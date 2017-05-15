@@ -18,4 +18,21 @@ public class DiceMalus {
         this.RoundDiceMalus = RoundDiceMalus;
         this.malus = malus;
     }
+
+    public ActionType getTarget() {
+        return target;
+    }
+
+    public DvptCardType getType() {
+        return type;
+    }
+
+    public boolean isRoundDiceMalus() {
+        return RoundDiceMalus;
+    }
+
+    public Integer getMalus() {
+        return malus;
+    }
+    
 }

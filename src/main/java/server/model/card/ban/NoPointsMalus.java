@@ -11,4 +11,8 @@ public class NoPointsMalus {
     public NoPointsMalus (DvptCard target){
         this.target = target;
     }
+
+    public DvptCard getTarget() {
+        return target;
+    }
 }

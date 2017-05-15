@@ -16,4 +16,18 @@ public class EffectSurplus {
         this.points = points;
         this.council = council;
     }
+
+    public ArrayList<Resource> getResources() {
+        return resources;
+    }
+
+    public ArrayList<Point> getPoints() {
+        return points;
+    }
+
+    public Integer getCouncil() {
+        return council;
+    }
+
+
 }

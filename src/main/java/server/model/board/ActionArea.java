@@ -22,4 +22,13 @@ public class ActionArea {
     public void setType(ActionType type) {
         this.type = type;
     }
+
+    public PHCompositeActionPlace getSecondaryPlace() {
+        return secondaryPlace;
+    }
+
+    public SingleActionPlace getMainPlace() {
+        return mainPlace;
+    }
+
 }

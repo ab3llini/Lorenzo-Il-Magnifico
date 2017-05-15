@@ -13,4 +13,13 @@ public class Point extends Valuable {
         this.type = type;
         this.multiplier=multiplier;
     }
+
+
+    public Multiplier getMultiplier() {
+        return multiplier;
+    }
+
+    public PointType getType() {
+        return type;
+    }
 }

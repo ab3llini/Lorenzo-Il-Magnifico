@@ -13,4 +13,12 @@ public class PointMalus {
         this.what = what;
         this.malus = malus;
     }
+
+    public Integer getMalus() {
+        return malus;
+    }
+
+    public PointType getWhat() {
+        return what;
+    }
 }

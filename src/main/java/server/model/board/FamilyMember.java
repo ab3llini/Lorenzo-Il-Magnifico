@@ -14,4 +14,12 @@ public class FamilyMember {
         this.player = player;
         this.color = color;
     }
+
+    public ColorType getColor() {
+        return color;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
 }

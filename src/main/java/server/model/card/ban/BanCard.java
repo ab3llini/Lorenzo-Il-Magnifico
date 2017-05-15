@@ -7,10 +7,21 @@ public class BanCard {
     private Integer period;
     private BanEffect banEffect;
 
-public BanCard(Integer id, Integer period, BanEffect banEffect) {
-    this.id = id;
-    this.period = period;
-    this.banEffect = banEffect;
-}
+    public BanCard(Integer id, Integer period, BanEffect banEffect) {
+        this.id = id;
+        this.period = period;
+        this.banEffect = banEffect;
+    }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getPeriod() {
+        return period;
+    }
+
+    public BanEffect getBanEffect() {
+        return banEffect;
+    }
 }

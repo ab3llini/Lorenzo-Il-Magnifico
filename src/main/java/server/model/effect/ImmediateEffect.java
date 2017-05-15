@@ -13,4 +13,12 @@ public class ImmediateEffect {
         this.surplus = surplus;
         this.effectAction = effectAction;
     }
+
+    public EffectAction getEffectAction() {
+        return effectAction;
+    }
+
+    public EffectSurplus getSurplus() {
+        return surplus;
+    }
 }

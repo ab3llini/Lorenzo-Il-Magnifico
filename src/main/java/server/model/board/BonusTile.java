@@ -14,4 +14,13 @@ public class BonusTile {
         this.harvestSurplus = harvestSurplus;
         this.productionSurplus = productionSurplus;
     }
+
+    public EffectSurplus getHarvestSurplus() {
+        return harvestSurplus;
+    }
+
+    public void setProductionSurplus(EffectSurplus productionSurplus) {
+        this.productionSurplus = productionSurplus;
+    }
+    
 }

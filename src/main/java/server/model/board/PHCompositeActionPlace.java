@@ -15,4 +15,13 @@ public class PHCompositeActionPlace extends CompositeActionPlace {
         super(immediateEffect, entryForce, minPlayers, places);
         this.forceMalus = forceMalus;
     }
+
+    public Integer getForceMalus() {
+        return forceMalus;
+    }
+
+
+    public void setForceMalus(Integer forceMalus) {
+        this.forceMalus = forceMalus;
+    }
 }

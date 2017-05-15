@@ -18,6 +18,9 @@ public class BuildingDvptCard extends DvptCard {
         super(id, DvptCardType.venture, name, period, immediateEffect, permanentEffect);
 
         this.cost = cost;
+    }
 
+    public ArrayList<Cost> getCost() {
+        return cost;
     }
 }

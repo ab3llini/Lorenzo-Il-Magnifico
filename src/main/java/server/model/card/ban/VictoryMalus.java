@@ -20,4 +20,21 @@ public class VictoryMalus {
         this.malus = malus;
         this.isRelatedToBuilding = isRelatedToBuilding;
     }
+
+    public Integer getMalus() {
+        return malus;
+    }
+
+    public ArrayList<ResourceType> getCausedbyResources() {
+        return causedbyResources;
+    }
+
+    public boolean isRelatedToBuilding() {
+        return isRelatedToBuilding;
+    }
+
+    public Point getCausedbyPoints() {
+        return causedbyPoints;
+    }
+
 }
