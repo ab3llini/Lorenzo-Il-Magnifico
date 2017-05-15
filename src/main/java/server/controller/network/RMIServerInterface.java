@@ -3,7 +3,7 @@ package server.controller.network;
 import client.RMIClientInterface;
 import exception.NotRegisteredException;
 import exception.UsernameAlreadyInUseException;
-import server.controller.game.Action;
+import netobject.Action;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

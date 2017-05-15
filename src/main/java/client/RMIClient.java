@@ -96,17 +96,15 @@ public class RMIClient extends Thread implements RMIClientInterface {
 
         catch (UsernameAlreadyInUseException e) {
 
-            System.out.println("Username : " + e.getClass());
+            System.out.println("Username already in use");
 
         }
 
         catch (RemoteException e) {
 
-            System.out.println("Class : " + e.getClass());
+            System.out.println("RemoteException:  " + e.getMessage());
 
         }
-
-
 
     }
 

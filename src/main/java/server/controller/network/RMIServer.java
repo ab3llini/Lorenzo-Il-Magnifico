@@ -5,10 +5,9 @@ package server.controller.network;
  */
 
 import client.RMIClientInterface;
-import com.sun.tools.corba.se.idl.constExpr.Not;
 import exception.NotRegisteredException;
 import exception.UsernameAlreadyInUseException;
-import server.controller.game.Action;
+import netobject.Action;
 import server.controller.game.GameEngine;
 
 import java.rmi.AlreadyBoundException;
@@ -21,13 +20,13 @@ import java.util.ArrayList;
 
 /**
  * The RMI Server.
- * Extends UnicastRemoteObject in order to be binded with the RMI registry
+ * Extends UnicastRemoteObject in order to be bound with the RMI registry
  * Implements RMIServerInterface to implement remote methods
  */
-public class RMIServer extends UnicastRemoteObject implements RMIServerInterface {
+public class RMIServer extends UnicastRemoteObject implements RMIServerInterface, AbstractClientListener {
 
     //The RMI client handlers
-    private transient ArrayList<RMIClientHandler> clientHandlers = new ArrayList<RMIClientHandler>();
+    private transient ArrayList<RMIClientHandler> clientHandlers;
 
     //The RMI registry
     private transient Registry registry;
@@ -43,15 +42,18 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
      * @param bindName The name to bind the remote object with.
      * @throws RemoteException UnicastRemoteObject throws this exception.
      */
-    RMIServer(GameEngine engine, String bindName) throws RemoteException {
+    RMIServer(GameEngine engine, int port,  String bindName) throws RemoteException {
 
         //Assign the game engine
         this.engine = engine;
 
+        //Initialize handlers
+        this.clientHandlers = new ArrayList<RMIClientHandler>();
+
         //Try to fetch the registry. Remember to turn it on throughout cli.
         try {
 
-            this.registry = LocateRegistry.getRegistry();
+            this.registry = LocateRegistry.createRegistry(port);
             System.out.println("Located registry..");
 
         }
@@ -88,7 +90,14 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
         if (!this.doesExistClientWithUsername(username)) {
 
-            this.clientHandlers.add(new RMIClientHandler(clientRef, username));
+            //Create a new RMI client handler
+            RMIClientHandler rch = new RMIClientHandler(clientRef, username);
+
+            //Register the RMI server as observer
+            rch.addEventListener(this);
+
+            //Add the client handler to the list
+            this.clientHandlers.add(rch);
 
             System.out.println("New RMI client added: " + username);
 
@@ -164,14 +173,25 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
     }
 
+    public void onDisconnect(AbstractClientHandler handler) {
+
+    }
+
+    public void onAction(AbstractClientHandler handler, Action action) {
+
+        //Propagate the action to the game engine.. toward the lobby
+        System.out.println("The client " + handler + " performed the action " + action);
+
+    }
 
     public static void main(String[] args) {
 
         try {
-            RMIServer server = new RMIServer(null, "server");
+            RMIServer server = new RMIServer(null, 1099, "server");
         } catch (RemoteException e) {
             System.out.println("Error : " + e.getMessage());
         }
 
     }
+
 }
