@@ -32,12 +32,35 @@ public class Board {
         this.territoryCards = territoryCards;
         this.ventureCards = ventureCards;
         this.buildingTower = buildingTower;
+        this.territoryTower = territoryTower;
+        this.characterTower = characterTower:
+        this.ventureTower = ventureTower;
         this.cathedral = cathedral;
         this.councilPalace = councilPalace;
         this.dices = dices;
         this.productionArea = productionArea;
         this.harvestArea = harvestArea;
         this.market = market;
+    }
+
+    public ArrayList<TowerSlot> getTerritoryTower() {
+        return territoryTower;
+    }
+    public void setTerritoryTower(ArrayList<TowerSlot> territoryTower){
+        this.territoryTower = territoryTower;
+    }
+    public ArrayList<TowerSlot> getBuildingTower() {
+        return buildingTower;
+    }
+    public void setBuildingTower(ArrayList<TowerSlot> buildingTowerTower){
+        this.buildingTower = buildingTower;
+    }
+    public ArrayList<TowerSlot> getCharacterTower() {
+        return characterTower;
+    }
+
+    public ArrayList<TowerSlot> getVentureTower() {
+        return ventureTower;
     }
 
 }

@@ -7,12 +7,12 @@ import server.model.effect.PermanentEffect;
 
 public abstract class DvptCard {
 
-    protected final Integer id;
-    protected final DvptCardType type;
-    protected final String name;
-    protected final Integer period;
-    protected final ImmediateEffect immediateEffect;
-    protected final PermanentEffect permanentEffect;
+    private final Integer id;
+    private final DvptCardType type;
+    private final String name;
+    private final Integer period;
+    private final ImmediateEffect immediateEffect;
+    private final PermanentEffect permanentEffect;
 
 
     protected DvptCard(Integer id, DvptCardType type, String name, Integer period, ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
@@ -27,6 +27,9 @@ public abstract class DvptCard {
     public Integer getId() {
         return id;
     }
+    public Integer getPeriod() {
+        return period;
+    }
 
     public DvptCardType getType() {
         return type;
@@ -36,17 +39,5 @@ public abstract class DvptCard {
         return name;
     }
 
-    public Integer getPeriod() {
-        return period;
-    }
-
-    public ImmediateEffect getImmediateEffect() {
-        return immediateEffect;
-    }
-
-    public PermanentEffect getPermanentEffect() {
-        return permanentEffect;
-    }
-    
 }
 
