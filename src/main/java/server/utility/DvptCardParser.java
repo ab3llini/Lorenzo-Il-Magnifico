@@ -34,7 +34,7 @@ public class DvptCardParser {
         ArrayList<DvptCard> allCards = new ArrayList<DvptCard>();    //this arrayList contains all the dvpmCard already parsed
         String name = null;
         Integer period = 0;
-        String type = null;
+        DvptCardType type = null;
         ArrayList<Cost> cost = new ArrayList<Cost>();
         ImmediateEffect immediateEffect = null;
         PermanentEffect permanentEffect = null;
@@ -82,19 +82,19 @@ public class DvptCardParser {
 
             }
             //add the new card to the arrayList
-            if (type.equals("territory")) {
+            if (type==DvptCardType.territory) {
                 allCards.add(new TerritoryDvptCard(Integer.parseInt(cardId), name, period, immediateEffect, permanentEffect));
             }
 
-            if (type.equals("building")) {
+            if (type==DvptCardType.building) {
                 allCards.add(new BuildingDvptCard(Integer.parseInt(cardId), name, period, cost, immediateEffect, permanentEffect));
             }
 
-            if (type.equals("character")) {
+            if (type==DvptCardType.character) {
                 allCards.add(new CharacterDvptCard(Integer.parseInt(cardId), name, period, cost, immediateEffect, permanentEffect));
             }
 
-            if (type.equals("venture")) {
+            if (type==DvptCardType.venture) {
                 allCards.add(new VentureDvptCard(Integer.parseInt(cardId), name, period, cost, immediateEffect, permanentEffect));
             }
         }
@@ -111,8 +111,8 @@ public class DvptCardParser {
         return card.get("period").getAsInt();
     }
 
-    private static String getType(JsonObject card) {
-        return card.get("type").getAsString();
+    private static DvptCardType getType(JsonObject card) {
+        return DvptCardType.valueOf(card.get("type").getAsString());
     }
 
     private static ArrayList<Cost> getCost(JsonObject card) {
@@ -199,7 +199,7 @@ public class DvptCardParser {
             }
 
             if (effectKey.equals("minForce")) {
-                vpoints = permanent.get("minForce").getAsInt();
+                minForce = permanent.get("minForce").getAsInt();
             }
 
             if (effectKey.equals("surplus")) {
@@ -278,6 +278,13 @@ public class DvptCardParser {
         //get JsonObject surplus from immediate
         JsonObject surplus=immediate.getAsJsonObject("surplus");
 
+        return getSurplus(surplus);
+    }
+
+    private static EffectSurplus getSurplus(JsonObject surplus){
+        ArrayList<Resource> resources=new ArrayList<Resource>();      //ArrayList to save surplus in resources
+        ArrayList<Point> points=new ArrayList<Point>();               //ArrayList to save surplus in points
+        Integer council=0;
         //get keys from surplus(resources || points || council) that identify all the different kind of surplus
         ArrayList<String> surplusKeys = DvptCardParser.getKeys(surplus);
 
@@ -354,7 +361,19 @@ public class DvptCardParser {
     }
 
     private static ArrayList<EffectConversion> getEffectConversion(JsonObject permanent){
-        return null;
+        ArrayList<EffectConversion> conversions =new ArrayList<EffectConversion>();
+
+        //extract conversion array from JSon Object permanent
+        JsonArray conversion=permanent.getAsJsonArray("conversion");
+
+        //consider all the possible conversion
+        for(int i=0;i<conversion.size();i++){
+            JsonObject ObjectConversion = conversion.get(i).getAsJsonObject();
+            EffectSurplus from=getSurplus(ObjectConversion.get("from").getAsJsonObject());
+            EffectSurplus to=getSurplus(ObjectConversion.get("to").getAsJsonObject());
+            conversions.add(new EffectConversion(from,to));
+        }
+        return conversions;
     }
 
     private static ArrayList<Resource> getResourceSurplus(JsonObject surplus){

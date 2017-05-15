@@ -707,32 +707,30 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "wood",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "coins",
-                "amount": 3
-              }
-            ]
+            "from":  {
+              "resources": {
+				"wood": 1
+				}
+			}
+            ,
+            "to":  {
+              "resources": {
+				"coins": 3
+				}
+			}
           },
           {
-            "from": [
-              {
-                "what": "wood",
-                "amount": 2
-              }
-            ],
-            "to": [
-              {
-                "what": "coins",
-                "amount": 5
-              }
-            ]
+            "from":  {
+              "resources": {
+				"wood": 2
+				}
+			}
+            ,
+            "to":  {
+              "resources": {
+				"coins": 5
+				}
+			}
           }
         ]
       }
@@ -763,32 +761,30 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "stones",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "coins",
-                "amount": 3
-              }
-            ]
+            "from":  {
+              "resources": {
+				"stones": 1
+				}
+			}
+            ,
+            "to":  {
+              "resources": {
+				"coins": 3
+				}
+			}
           },
           {
-            "from": [
-              {
-                "what": "stones",
-                "amount": 2
-              }
-            ],
-            "to": [
-              {
-                "what": "coins",
-                "amount": 5
-              }
-            ]
+            "from":  {
+              "resources": {
+				"stones": 2
+				}
+			}
+            ,
+            "to":  {
+              "resources": {
+				"coins": 5
+				}
+			}
           }
         ]
       }
@@ -818,19 +814,18 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "coins",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "faith",
-                "amount": 1
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"coins": 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"faith" : 1
+				}
+			  }
+			}
         ]
       }
     }
@@ -859,19 +854,16 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "coins",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "council",
-                "amount": 1
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"coins": 1
+				}
+			}
+            ,
+            "to":  {
+              "council": 1
+				}
+			}
         ]
       }
     }
@@ -901,23 +893,19 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "coins",
-                "amount": 3
-              }
-            ],
-            "to": [
-              {
-                "what": "wood",
-                "amount": 2
-              },
-              {
-                "what": "stones",
-                "amount": 2
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"coins": 3
+				}
+			}
+            ,
+            "to":  {
+              "resources": {
+				"wood": 2,
+				"stones":2
+				}
+			}
+		  }
         ]
       }
     }
@@ -946,33 +934,31 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "coins",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "victory",
-                "amount": 3
-              }
-            ]
-          },
+            "from":  {
+              "resources": {
+				"coins": 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":3
+				}
+			}
+		  },
           {
-            "from": [
-              {
-                "what": "coins",
-                "amount": 2
-              }
-            ],
-            "to": [
-              {
-                "what": "victory",
-                "amount": 5
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"coins": 2
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":5
+				}
+			}
+		  }
         ]
       }
     }
@@ -1001,33 +987,31 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "wood",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "victory",
-                "amount": 3
-              }
-            ]
-          },
+            "from":  {
+              "resources": {
+				"wood": 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":3
+				}
+			}
+		  },
           {
-            "from": [
-              {
-                "what": "wood",
-                "amount": 3
-              }
-            ],
-            "to": [
-              {
-                "what": "victory",
-                "amount": 7
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"wood": 3
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":7
+				}
+			}
+		  }
         ]
       }
     }
@@ -1056,33 +1040,31 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "stones",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "victory",
-                "amount": 3
-              }
-            ]
-          },
+            "from":  {
+              "resources": {
+				"stones": 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":3
+				}
+			}
+		  },
           {
-            "from": [
-              {
-                "what": "stones",
-                "amount": 3
-              }
-            ],
-            "to": [
-              {
-                "what": "victory",
-                "amount": 7
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"stones": 3
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":7
+				}
+			}
+		  }
         ]
       }
     }
@@ -1112,27 +1094,20 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "stones",
-                "amount": 1
-              },
-              {
-                "what": "servants",
-                "amount": 1
-              },
-              {
-                "what": "wood",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "victory",
-                "amount": 6
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"wood": 1,
+				"stones": 1,
+				"servants": 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":6
+				}
+			}
+		  }
         ]
       }
     }
@@ -1162,23 +1137,21 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "faith",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "coins",
-                "amount": 2
-              },
-              {
-                "what": "victory",
-                "amount": 2
-              }
-            ]
-          }
+            "from":  {
+              "points": {
+				"faith":1
+				}
+			}
+            ,
+            "to":  {
+			  "resources":{
+				"coins":2
+				},
+              "points": {
+				"victory":2
+				}
+			}
+		  }
         ]
       }
     }
@@ -1208,19 +1181,18 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "servants",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "military",
-                "amount": 3
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"servants": 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"military":3
+				}
+			}
+		  }
         ]
       }
     }
@@ -1315,23 +1287,19 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "coins",
-                "amount": 4
-              }
-            ],
-            "to": [
-              {
-                "what": "wood",
-                "amount": 3
-              },
-              {
-                "what": "stones",
-                "amount": 3
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"coins" : 4
+				}
+			}
+            ,
+            "to":  {
+              "resources": {
+				"wood":3,
+				"stones":3
+				}
+			}
+		  }
         ]
       }
     }
@@ -1427,23 +1395,21 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "coins",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "servants",
-                "amount": 2
-              },
-              {
-                "what": "victory",
-                "amount": 4
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"coins" : 1
+				}
+			}
+            ,
+            "to":  {
+              "resources": {
+				"servants" : 2
+				},
+			  "points":{
+				"victory":4
+				}
+			}
+		  }
         ]
       }
     }
@@ -1474,36 +1440,34 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "stones",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "faith",
-                "amount": 2
-              }
-            ]
-          },
+            "from":  {
+              "resources": {
+				"stones" : 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"faith":2
+				}
+			}
+		  },
           {
-            "from": [
-              {
-                "what": "wood",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "faith",
-                "amount": 2
-              }
-            ]
-          }
-        ]
+            "from":  {
+              "resources": {
+				"wood" : 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"faith":2
+				}
+			}
+		  }
+         ]
+       }
       }
-    }
   },
   "47": {
     "type": "building",
@@ -1531,23 +1495,19 @@
         "type": "conversion",
         "conversion": [
           {
-            "from": [
-              {
-                "what": "servants",
-                "amount": 1
-              }
-            ],
-            "to": [
-              {
-                "what": "military",
-                "amount": 3
-              },
-              {
-                "what": "victory",
-                "amount": 1
-              }
-            ]
-          }
+            "from":  {
+              "resources": {
+				"servants" : 1
+				}
+			}
+            ,
+            "to":  {
+              "points": {
+				"victory":1,
+				"military":3
+				}
+			}
+		  }
         ]
       }
     }

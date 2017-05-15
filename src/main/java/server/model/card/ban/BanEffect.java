@@ -11,6 +11,7 @@ public class BanEffect {
     private boolean servantsPowerMalus;
     private boolean noFirstActionMalus;
     private boolean noMarketMalus;
+
     public BanEffect (DiceMalus diceMalus, NoPointsMalus noPointsMalus, VictoryMalus victoryMalus, PointMalus pointmalus, boolean servantsPowerMalus, boolean noFirstActionMalus){
         this.diceMalus = diceMalus;
         this.noPointsMalus = noPointsMalus;
