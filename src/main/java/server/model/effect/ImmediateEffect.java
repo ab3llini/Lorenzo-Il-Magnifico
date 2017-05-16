@@ -2,8 +2,6 @@ package server.model.effect;/*
  * Created by alberto on 09/05/17.
  */
 
-import javafx.scene.effect.Effect;
-
 public class ImmediateEffect {
     private EffectSurplus surplus;
     private EffectAction effectAction;
