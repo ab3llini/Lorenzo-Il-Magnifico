@@ -19,6 +19,10 @@ public class LeaderCard {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Requirement getRequirement() {
         return requirement;
     }
@@ -27,7 +31,5 @@ public class LeaderCard {
         return leaderEffect;
     }
 
-    public String getName() {
-        return name;
-    }
+
 }

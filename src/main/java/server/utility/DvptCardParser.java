@@ -3,20 +3,13 @@ package server.utility; /**
  */
 
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import server.model.card.developement.*;
 import server.model.effect.*;
 import server.model.valuable.*;
-
-
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DvptCardParser {
 

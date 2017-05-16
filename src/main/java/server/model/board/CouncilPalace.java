@@ -27,9 +27,13 @@ public class CouncilPalace extends CompositeActionPlace {
         return minPlayers;
     }
 
-    //returns an ordered arrayList of players that has their familiar in the CouncilPalace area
+    /**
+     * returns an ordered arrayList of players that has their familiar in the CouncilPalace area
+     * @return
+     */
     public ArrayList<Player> getCouncilPalaceOrder(){
         ArrayList<Player> playersOrder=new ArrayList<Player>();
+
         for (FamilyMember place:places) {
             if(!playersOrder.contains(place.getPlayer())){
                 playersOrder.add(place.getPlayer());
