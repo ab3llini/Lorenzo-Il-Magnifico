@@ -1,4 +1,6 @@
-package server.utility; /**
+package server.utility;
+
+/**
  * Created by LBARCELLA on 10/05/2017.
  */
 
@@ -109,10 +111,7 @@ public class DvptCardParser {
     }
 
     private static ArrayList<Cost> getCost(JsonObject card) {
-        //arrayList to save the cost in resources
-        //militaryCost to save the cost in military points(required and removed)
-        ArrayList<Resource> resourceCost = new ArrayList<Resource>();
-        MilitaryCost militaryCost = null;
+        //arrayList to all the possible cost
         ArrayList<Cost> cost = new ArrayList<Cost>();
 
         //extract arrayCost from JsonObject
@@ -125,17 +124,21 @@ public class DvptCardParser {
             //get keys from cost (resource || military)
             ArrayList<String> costoKeys = DvptCardParser.getKeys(costo);
 
+            //initialize two variables in order not to use null pointers
+            ArrayList<Resource> resourceCost = new ArrayList<Resource>();
+            MilitaryCost militaryCost = new MilitaryCost(0,0);
+
             //get resourceCost and militaryCost..so i have both 'items' to create the cost
             for (String costoKey : costoKeys) {
 
                 if (costoKey.equals("resources")) {
                     resourceCost = getResourceCost(costo);
-                    cost.add(new Cost(resourceCost, null));
+                    cost.add(new Cost(resourceCost, militaryCost));
                 }
 
                 if (costoKey.equals("military")) {
                     militaryCost = getMilitaryCost(costo);
-                    cost.add(new Cost(null, militaryCost));
+                    cost.add(new Cost(resourceCost, militaryCost));
                 }
             }
         }
@@ -328,7 +331,7 @@ public class DvptCardParser {
 
         //get keys from permanent (minForce || type || surplus || conversion || action || discount || penality)
         ArrayList<String> permanentKeys = DvptCardParser.getKeys(permanent);
-        System.out.println(permanentKeys);
+
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
         for (String permanentKey : permanentKeys) {
 
@@ -470,7 +473,7 @@ public class DvptCardParser {
      * @throws IOException
      */
 
-    private static JsonObject getJsonObjectFromFile(String filename) throws IOException, URISyntaxException {
+    public static JsonObject getJsonObjectFromFile(String filename) throws IOException, URISyntaxException {
         BufferedReader br = null;
         FileReader fr = null;
 
@@ -492,7 +495,7 @@ public class DvptCardParser {
      * @return
      */
 
-    private static ArrayList<String> getKeys(JsonObject o) {
+    public static ArrayList<String> getKeys(JsonObject o) {
 
         ArrayList<String> keys = new ArrayList<String>();
 

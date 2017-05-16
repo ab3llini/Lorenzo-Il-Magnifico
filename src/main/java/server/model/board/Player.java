@@ -1,8 +1,13 @@
 package server.model.board;
 
 import exception.*;
-
+import server.model.board.ColorType;
+import server.model.board.FamilyMember;
+import server.model.board.PersonalBoard;
+import server.model.valuable.PointType;
+import server.model.valuable.ResourceType;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * Created by alberto on 10/05/17.
@@ -10,20 +15,30 @@ import java.util.ArrayList;
 public class Player {
     private String username;
     private PersonalBoard personalBoard;
-    private Integer victoryPoints;
-    private Integer faithPoints;
-    private Integer militaryPoints;
-    private Integer coins;
-    private Integer stones;
-    private Integer wood;
-    private Integer servants;
+    private HashMap<ResourceType,Integer> resources;
+    private HashMap<PointType,Integer> points;
     private ArrayList<FamilyMember> familyMembers;
 
     public Player(String username){
+
         this.username=username;
-        this.faithPoints=0;
-        this.victoryPoints=0;
-        this.militaryPoints=0;
+
+        //initialize hashMap that contains all resources
+        resources=new HashMap<ResourceType, Integer>();
+
+        //put all kind of resource in the hashMap
+        resources.put(ResourceType.Coins,0);
+        resources.put(ResourceType.Servants,0);
+        resources.put(ResourceType.Stones,0);
+        resources.put(ResourceType.Servants,0);
+
+        //initialize hashMap that contains all points
+        points=new HashMap<PointType, Integer>();
+
+        //put all kind of points in the hashMap
+        points.put(PointType.Military,0);
+        points.put(PointType.Victory,0);
+        points.put(PointType.Faith,0);
     }
 
     public void setPersonalBoard(PersonalBoard personalBoard) {
@@ -31,55 +46,65 @@ public class Player {
     }
 
     public PersonalBoard getPersonalBoard() {
-        return personalBoard;
+        return this.personalBoard;
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
-    public Integer getCoins() {
-        return coins;
+    public Integer getCoins() {return this.resources.get(ResourceType.Coins);
     }
 
-    public void setCoins(Integer coins) {
-        this.coins = coins;
+    public void setCoins(Integer coins){this.resources.put(ResourceType.Coins,coins);
     }
 
     public Integer getServants() {
-        return servants;
+        return resources.get(ResourceType.Servants);
     }
 
     public void setServants(Integer servants) {
-        this.servants = servants;
+        this.resources.put(ResourceType.Servants,servants);
     }
 
     public Integer getStones() {
-        return stones;
+        return this.resources.get(ResourceType.Stones);
     }
 
     public void setStones(Integer stones) {
-        this.stones = stones;
+        this.resources.put(ResourceType.Stones,stones);
     }
 
     public Integer getWood() {
-        return wood;
+        return this.resources.get(ResourceType.Wood);
     }
 
     public void setWood(Integer wood) {
-        this.wood = wood;
+        this.resources.put(ResourceType.Wood,wood);
     }
 
     public Integer getMilitaryPoints() {
-        return militaryPoints;
+        return this.points.get(PointType.Military);
+    }
+
+    public void setMilitaryPoints(Integer militaryPoints){
+        this.points.put(PointType.Military,militaryPoints);
+    }
+
+    public void setVictoryPoints(Integer victoryPoints){
+        this.points.put(PointType.Victory,victoryPoints);
+    }
+
+    public void setFaithPoints(Integer faithPoints){
+        this.points.put(PointType.Faith,faithPoints);
     }
 
     public Integer getVictoryPoints() {
-        return victoryPoints;
+        return this.points.get(PointType.Victory);
     }
 
     public Integer getFaithPoints() {
-        return faithPoints;
+        return this.points.get(PointType.Faith);
     }
 
     public ArrayList<FamilyMember> getFamilyMembers() {
@@ -91,19 +116,31 @@ public class Player {
     }
 
     public void addCoins(Integer coinsPlus){
-        this.coins=this.coins+coinsPlus;
+        this.resources.put(ResourceType.Coins,getCoins()+coinsPlus);
     }
 
     public void addWood(Integer woodPlus){
-        this.wood=this.wood+woodPlus;
+        this.resources.put(ResourceType.Wood,getWood()+woodPlus);
     }
 
     public void addStones(Integer stonesPlus){
-        this.stones=this.stones+stonesPlus;
+        this.resources.put(ResourceType.Stones,getStones()+stonesPlus);
     }
 
     public void addServants(Integer servantsPlus){
-        this.servants=this.servants+servantsPlus;
+        this.resources.put(ResourceType.Servants,getServants()+servantsPlus);
+    }
+
+    public void addMilitaryPoints(Integer militaryPlus){
+        this.points.put(PointType.Military,getMilitaryPoints()+militaryPlus);
+    }
+
+    public void addVictoryPoints(Integer victoryPlus){
+        this.points.put(PointType.Victory,getVictoryPoints()+victoryPlus);
+    }
+
+    public void addFaithPoints(Integer faithPlus){
+        this.points.put(PointType.Faith,getFaithPoints()+faithPlus);
     }
 
     /**
@@ -112,7 +149,6 @@ public class Player {
      * @return
      * @throws FamilyMemberAlreadyInUseException
      */
-
     public FamilyMember getFamilymember(ColorType colorType) throws FamilyMemberAlreadyInUseException {
 
         FamilyMember memberWanted=null;
@@ -142,7 +178,7 @@ public class Player {
         ArrayList<FamilyMember> familyMembersSuitable=new ArrayList<FamilyMember>();
 
         for (FamilyMember member:familyMembers) {
-            if(member.getForce()>=(forceRequired-this.servants))
+            if(member.getForce()>=(forceRequired-this.resources.get(ResourceType.Servants)))
                 familyMembersSuitable.add(member);
         }
         return familyMembersSuitable;
@@ -155,8 +191,8 @@ public class Player {
      */
     public void subtractCoins(Integer coinsMalus) throws NotEnoughCoinsException{
 
-        if(this.coins>=coinsMalus){
-            this.coins=this.coins-coinsMalus;
+        if(this.resources.get(ResourceType.Coins)>=coinsMalus){
+            resources.put(ResourceType.Coins,getCoins()-coinsMalus);
         }
         else{
             throw new NotEnoughCoinsException("Not enough money to do this");
@@ -170,8 +206,8 @@ public class Player {
      */
     public void subtractWood(Integer woodMalus) throws NotEnoughWoodException {
 
-        if(this.wood>=woodMalus){
-            this.wood=this.wood-woodMalus;
+        if(this.resources.get(ResourceType.Wood)>=woodMalus){
+            this.resources.put(ResourceType.Wood,getWood()-woodMalus);
         }
         else{
             throw new NotEnoughWoodException("Not enough wood to do this");
@@ -185,8 +221,8 @@ public class Player {
      */
     public void subtractStones(Integer stonesMalus) throws NotEnoughStonesException {
 
-        if(this.stones>=stonesMalus){
-            this.stones=this.stones-stonesMalus;
+        if(this.resources.get(ResourceType.Stones)>=stonesMalus){
+            this.resources.put(ResourceType.Stones,getStones()-stonesMalus);
         }
         else {
             throw new NotEnoughStonesException("Not enough stones to do this");
@@ -200,11 +236,55 @@ public class Player {
      */
     public void subtractServants(Integer servantsMalus) throws NotEnoughServantsException {
 
-        if(this.servants>=servantsMalus){
-            this.servants=this.servants-servantsMalus;
+        if(this.resources.get(ResourceType.Servants)>=servantsMalus){
+            this.resources.put(ResourceType.Servants,getServants()-servantsMalus);
         }
         else {
             throw new NotEnoughServantsException("Not enough servants to do this");
+        }
+    }
+
+    /**
+     * this method subtract a militaryMalus if the player has enough military points
+     * @param militaryMalus
+     */
+    public void subtractMilitaryPoints(Integer militaryMalus) throws NotEnoughMilitaryPointsException{
+
+        if(this.points.get(PointType.Military)>=militaryMalus){
+            this.points.put(PointType.Military,getMilitaryPoints()-militaryMalus);
+        }
+        else{
+            throw  new NotEnoughMilitaryPointsException("Not enough military points to do this");
+        }
+    }
+
+    /**
+     * this method subtract a victoryMalus if the player has enough victory points
+     * @param victoryMalus
+     * @throws NotEnoughVictoryPointsException
+     */
+    public void subtractVictoryPoints(Integer victoryMalus) throws NotEnoughVictoryPointsException {
+
+        if(this.points.get(PointType.Victory)>=victoryMalus){
+            this.points.put(PointType.Victory,getVictoryPoints()-victoryMalus);
+        }
+        else{
+            throw  new NotEnoughVictoryPointsException("Not enough military points to do this");
+        }
+    }
+
+    /**
+     * this method subtract a faithMalus if the player has enough faith points
+     * @param faithMalus
+     * @throws NotEnoughFaithPointsException
+     */
+    public void subtractFaithPoints(Integer faithMalus) throws NotEnoughFaithPointsException {
+
+        if(this.points.get(PointType.Faith)>=faithMalus){
+            this.points.put(PointType.Faith,getFaithPoints()-faithMalus);
+        }
+        else {
+            throw new NotEnoughFaithPointsException("Not enough faith points to do this");
         }
     }
 }
