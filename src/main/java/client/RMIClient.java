@@ -85,6 +85,7 @@ public class RMIClient extends Thread implements RMIClientInterface {
     public static void main(String[] args) {
 
         try {
+
             RMIClient rmic = new RMIClient("127.0.0.1" , 1099, "server");
 
             rmic.prepareRmiConnection();
@@ -124,5 +125,9 @@ public class RMIClient extends Thread implements RMIClientInterface {
 
     public RMIServerInterface getServerRef() {
         return serverRef;
+    }
+
+    public void callback() throws RemoteException {
+        System.out.println("Callback successful");
     }
 }

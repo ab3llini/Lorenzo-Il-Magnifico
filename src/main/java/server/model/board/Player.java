@@ -1,9 +1,6 @@
-package server.model;
+package server.model.board;
 
 import exception.*;
-import server.model.board.ColorType;
-import server.model.board.FamilyMember;
-import server.model.board.PersonalBoard;
 
 import java.util.ArrayList;
 
@@ -115,6 +112,7 @@ public class Player {
      * @return
      * @throws FamilyMemberAlreadyInUseException
      */
+
     public FamilyMember getFamilymember(ColorType colorType) throws FamilyMemberAlreadyInUseException {
 
         FamilyMember memberWanted=null;

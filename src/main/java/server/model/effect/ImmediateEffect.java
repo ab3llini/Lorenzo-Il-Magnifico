@@ -3,6 +3,7 @@ package server.model.effect;/*
  */
 
 public class ImmediateEffect {
+
     private EffectSurplus surplus;
     private EffectAction effectAction;
 

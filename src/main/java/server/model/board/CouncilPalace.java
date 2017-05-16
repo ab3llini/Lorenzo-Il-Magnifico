@@ -1,6 +1,5 @@
 package server.model.board;
 
-import server.model.Player;
 import server.model.effect.ImmediateEffect;
 
 import java.util.ArrayList;

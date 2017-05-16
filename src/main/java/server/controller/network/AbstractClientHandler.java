@@ -2,9 +2,6 @@ package server.controller.network;
 
 
 import netobject.Action;
-import server.model.Player;
-
-import java.util.ArrayList;
 
 /*
  * @author  ab3llini
@@ -16,14 +13,7 @@ public abstract class AbstractClientHandler {
     protected String username;
 
     //The event listeners
-    protected ArrayList<AbstractClientListener> listeners = new ArrayList<AbstractClientListener>();
-
-    /**
-     * Triggered method on client interaction
-     * This method is going to be called both by RMI and Socket
-     * @param action The action performed
-     */
-    abstract public void onClientAction(Action action);
+    protected AbstractClientListener listener;
 
     /**
      * The method is fired when a player makes a move
@@ -31,7 +21,7 @@ public abstract class AbstractClientHandler {
      * @param action The action performed
      * @param sender The player who made the action
      */
-    abstract public void notifyPlayerForAction(Action action, Player sender);
+    abstract public void notifyPlayerForAction(Action action, AbstractClientHandler sender);
 
     /**
      * Adds an event listener
@@ -40,9 +30,10 @@ public abstract class AbstractClientHandler {
      */
     public final boolean addEventListener(AbstractClientListener listener) {
 
+
         //Check whether the listener is not null
         if (listener != null) {
-            this.listeners.add(listener);
+            this.listener = listener;
             return true;
         }
         else {
@@ -55,16 +46,17 @@ public abstract class AbstractClientHandler {
      * @param listener The listener to nbe removed
      * @return true upon success.
      */
-    public final boolean removeEventListener(AbstractClientListener listener) {
+    public final void removeEventListener() {
 
         //Check whether the listener is not null
-        if (listener != null) {
-            this.listeners.remove(listener);
-            return true;
-        }
-        else {
-            return false;
-        }
+        this.listener = null;
     }
 
+    public AbstractClientListener getListener() {
+        return listener;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 }

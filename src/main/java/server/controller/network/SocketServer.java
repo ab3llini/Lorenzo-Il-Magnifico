@@ -5,20 +5,20 @@ package server.controller.network;
  */
 
 
+import logger.Level;
+import logger.Logger;
 import netobject.Action;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * The server which handles the clients connected via socket.
  * It extends thread due to the fact that the listing is a blocking procedure
  */
-public class SocketServer implements Runnable, AbstractClientListener {
+public class SocketServer extends AbstractServer implements Runnable {
 
     //The socket to perform the asynchronous listening on
     private ServerSocket acceptor;
@@ -54,15 +54,27 @@ public class SocketServer implements Runnable, AbstractClientListener {
 
     public void run() {
 
+        //Block start method if no one registered as listener.
+        //There would be a null pointer exception when trying to raise an event
+        if (this.listener == null) {
+
+            Logger.log(logger.Level.SEVERE, "Server (Socket)", "The server can't run without a listener");
+
+            return;
+
+        }
+
         //Try to open a server socket
         try {
             this.acceptor = new ServerSocket(this.port);
 
-            System.out.println("Socket server up and running on port " + this.port);
+            Logger.log(logger.Level.INFO, "Server (Socket)", "Socket server up and running on port " + this.port);
 
         }
         catch (IOException e) {
-            System.out.println("Unable to open the acceptor socket");
+
+            Logger.log(logger.Level.SEVERE, "Server (Socket)", "Unable to open the acceptor socket", e);
+
             return;
         }
 
@@ -92,7 +104,7 @@ public class SocketServer implements Runnable, AbstractClientListener {
             }
             catch (Exception e) {
 
-                System.out.println("Exception while listening:" + e.getMessage());
+                Logger.log(logger.Level.SEVERE, "Server (Socket)", "Exception while listening", e);
 
             }
 
@@ -103,7 +115,7 @@ public class SocketServer implements Runnable, AbstractClientListener {
 
     public void onDisconnect(AbstractClientHandler handler) {
 
-        System.out.println("Server detected client disconnection. Stopping handler thread & removing");
+        Logger.log(Level.WARNING, "Server (Socket)", "Client disconnected " + handler);
 
         //Terminate the thread
         this.clientHandlers.get(handler).interrupt();
@@ -116,34 +128,19 @@ public class SocketServer implements Runnable, AbstractClientListener {
     public void onAction(AbstractClientHandler handler, Action action) {
 
         //Propagate the action to the game engine.. toward the lobby
-        System.out.println("The client " + handler + " performed the action " + action);
+        Logger.log(logger.Level.INFO, "Server (Socket)", "Client '"+handler+"' performed the action '"+action+"'");
 
     }
 
-    public boolean doesExistClientWithUsername(String username) {
+    public boolean existsClientWithUsername(String username) {
 
-        if (username == null) {
+        return this.listener.existsClientWithUsername(username);
 
-            return false;
+    }
 
-        }
 
-        for (Object o : this.clientHandlers.entrySet()) {
-
-            HashMap.Entry pair = (HashMap.Entry) o;
-
-            String uname = ((SocketClientHandler) pair.getKey()).username;
-
-            if (uname != null && uname.equals(username)) {
-
-                return true;
-
-            }
-
-        }
-
-        return false;
-
+    public HashMap<SocketClientHandler, Thread> getClientHandlers() {
+        return clientHandlers;
     }
 
     public static void main(String[] args) {

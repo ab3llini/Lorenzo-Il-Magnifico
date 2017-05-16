@@ -5,11 +5,11 @@ package server.controller.network;
  */
 
 
-import exception.UsernameAlreadyInUseException;
+import logger.Level;
+import logger.Logger;
 import netobject.Action;
 import netobject.Message;
 import netobject.MessageType;
-import server.model.Player;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -42,7 +42,11 @@ public class SocketClientHandler extends AbstractClientHandler implements Runnab
         try {
             socketIn = new ObjectInputStream(this.socket.getInputStream());
         } catch (IOException e) {
-            System.out.println("Unable to get input stream");
+
+            Logger.log(logger.Level.SEVERE, this.toString(), "Unable to get input stream", e);
+
+            return;
+
         }
 
         while (!this.socket.isClosed()) {
@@ -57,14 +61,10 @@ public class SocketClientHandler extends AbstractClientHandler implements Runnab
             }
             catch (EOFException e) {
 
-                System.out.println("Client disconnected");
+                Logger.log(Level.WARNING, "Client handler (Socket)", "Client disconnected " + this);
 
                 //Notify observers so that they can remove the handler
-                for (AbstractClientListener l : this.listeners) {
-
-                    l.onDisconnect(this);
-
-                }
+                this.listener.onDisconnect(this);
 
                 break;
 
@@ -73,12 +73,15 @@ public class SocketClientHandler extends AbstractClientHandler implements Runnab
 
                 System.out.println("IOException");
 
+                Logger.log(Level.SEVERE, "Client handler (Socket)", "Error while writing to the socket", e);
+
+
                 break;
 
             }
             catch (ClassNotFoundException e) {
 
-                System.out.println("Class not found");
+                Logger.log(Level.SEVERE, "Client handler (Socket)", "Class not found", e);
 
                 break;
             }
@@ -91,17 +94,18 @@ public class SocketClientHandler extends AbstractClientHandler implements Runnab
 
         if (m.type == MessageType.Registration) {
 
-            if (!this.server.doesExistClientWithUsername(m.value)) {
+            if (!this.listener.existsClientWithUsername(m.value)) {
 
                 //Assign the username
                 this.username = m.value;
 
-                System.out.println("New socket client registered with username " + m.value);
+                Logger.log(Level.INFO, "Client handler (Socket)", "New client added " + m.value);
 
             }
             else {
 
-                System.out.println("Registration for new Socket client failed, username '"+username+"' is already in use");
+                Logger.log(Level.WARNING, "Client handler (Socket)", "Registration failed, username '"+m.value+"' already in use");
+
 
             }
 
@@ -117,13 +121,17 @@ public class SocketClientHandler extends AbstractClientHandler implements Runnab
 
         }
 
+        if (obj instanceof Action) {
+
+            //Notify the listeners
+            this.listener.onAction(this, (Action)obj);
+
+        }
+
     }
 
-    public void onClientAction(Action action) {
 
-    }
-
-    public void notifyPlayerForAction(Action action, Player sender) {
+    public void notifyPlayerForAction(Action action, AbstractClientHandler sender) {
 
     }
 }

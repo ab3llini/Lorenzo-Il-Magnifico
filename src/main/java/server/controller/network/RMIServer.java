@@ -5,13 +5,17 @@ package server.controller.network;
  */
 
 import client.RMIClientInterface;
+
 import exception.NotRegisteredException;
 import exception.UsernameAlreadyInUseException;
+
 import netobject.Action;
 import netobject.Message;
 import netobject.MessageType;
-import server.controller.game.GameEngine;
 
+import logger.*;
+
+import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -20,49 +24,77 @@ import java.rmi.server.UnicastRemoteObject;
 
 import java.util.ArrayList;
 
+
 /**
  * The RMI Server.
  * Extends UnicastRemoteObject in order to be bound with the RMI registry
  * Implements RMIServerInterface to implement remote methods
  */
-public class RMIServer extends UnicastRemoteObject implements RMIServerInterface, AbstractClientListener {
+public class RMIServer extends AbstractServer implements RMIServerInterface {
 
     //The RMI client handlers
-    private transient ArrayList<RMIClientHandler> clientHandlers;
+    private transient final ArrayList<RMIClientHandler> clientHandlers;
 
     //The RMI registry
     private transient Registry registry;
 
-    //A reference to the game engine
-    private transient GameEngine engine;
+    //The port of the RMI registry
+    private transient final int port;
+
+    //The name to bind the remote object with
+    private transient final String bindName;
 
     /**
      * Constructor.
      * Takes care of registering the remote object into the registry.
      * Assigns the game engine to a local holder for further requests.
-     * @param engine The game engine.
      * @param bindName The name to bind the remote object with.
      * @throws RemoteException UnicastRemoteObject throws this exception.
      */
-    RMIServer(GameEngine engine, int port,  String bindName) throws RemoteException {
+    public RMIServer(int port,  String bindName) {
 
-        //Assign the game engine
-        this.engine = engine;
+        super();
 
         //Initialize handlers
         this.clientHandlers = new ArrayList<RMIClientHandler>();
 
-        //Try to fetch the registry. Remember to turn it on throughout cli.
+        //Init port
+        this.port = port;
+
+        //Init bind name
+        this.bindName = bindName;
+
+    }
+
+    public void start() {
+
+        //Block start method if no one registered as listener.
+        //There would be a null pointer exception when trying to raise an event
+        if (this.listener == null) {
+
+            Logger.log(logger.Level.SEVERE, "Server (RMI)", "The server can't run without a listener");
+
+            return;
+
+        }
+
+        //Try to fetch the registry.
         try {
 
-            this.registry = LocateRegistry.createRegistry(port);
-            System.out.println("Located registry..");
+            this.registry = LocateRegistry.createRegistry(this.port);
+
+            Logger.log(logger.Level.FINE, "Server (RMI)", "Registry created");
 
         }
         catch (RemoteException e) {
 
-            System.out.println("Unable to fetch RMI registry. Did you turned it on?");
-            System.out.println("The reported message was : " + e.getMessage());
+            Logger.log(logger.Level.SEVERE, "Server (RMI)", "Unable to create RMI registry", e);
+
+        }
+        finally {
+
+            //Notify the listener of an abnormal fault
+            this.listener.onServerFault(this);
 
         }
 
@@ -70,19 +102,50 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
         try {
 
             this.registry.bind(bindName, this);
-            System.out.println("Binded remote object as " + bindName + "..");
+            Logger.log(logger.Level.FINE, "Server (RMI)", "Bounded remote object as " + bindName);
 
         }
         catch (AlreadyBoundException e) {
 
-            System.out.println("The registry already has an entry for '" + e.getMessage() +"'. Replacing entry..");
+            Logger.log(logger.Level.INFO, "Server (RMI)", "The registry was already bound to object", e);
 
-            this.registry.rebind(bindName, this);
+            try {
+
+                this.registry.rebind(bindName, this);
+
+            } catch (RemoteException f) {
+
+                Logger.log(logger.Level.SEVERE, "Server (RMI)", "Unable to rebound the remote object to the registry", f);
+            }
+
+        }
+        catch (AccessException e) {
+
+            Logger.log(logger.Level.SEVERE, "Server (RMI)", "Access exception while binding", e);
 
         }
 
+        catch (RemoteException e) {
+
+            Logger.log(logger.Level.SEVERE, "Server (RMI)", "Unable to bind the remote object to the registry", e);
+
+        }
+
+        //Export the remote object
+        try {
+
+            UnicastRemoteObject.exportObject(this, 0);
+
+        } catch (RemoteException e) {
+
+            Logger.log(logger.Level.SEVERE, "Server (RMI)", "Unable to export the remote object", e);
+
+            //Notify the listener of an abnormal fault
+            this.listener.onServerFault(this);
+        }
+
         //If we reach this point, the server is up and running on port 1099 (default)
-        System.out.println("RMI Server up and running on port 1099");
+        Logger.log(logger.Level.INFO, "Server (RMI)", "Up and running on port " + this.port);
 
     }
 
@@ -94,9 +157,9 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
         }
 
-        System.out.println("New RMI registration request");
+        Logger.log(logger.Level.FINE, "Server (RMI)", "New registration request from " + clientRef);
 
-        if (!this.doesExistClientWithUsername(m.value)) {
+        if (!this.existsClientWithUsername(m.value)) {
 
             //Create a new RMI client handler
             RMIClientHandler rch = new RMIClientHandler(clientRef, m.value);
@@ -107,14 +170,14 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
             //Add the client handler to the list
             this.clientHandlers.add(rch);
 
-            System.out.println("New RMI client added: " + m.value);
+            Logger.log(logger.Level.INFO, "Server (RMI)", "New client added '" + m.value + "'");
 
             return true;
 
         }
         else {
 
-            System.out.println("Registration for new RMI client failed, username '"+ m.value +"' is already in use");
+            Logger.log(logger.Level.WARNING, "Server (RMI)", "Registration failed, username '"+m.value+"' already in use");
 
             throw new UsernameAlreadyInUseException("The username " + m.value + " is not available");
 
@@ -135,31 +198,12 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
         }
         else {
 
-            //Cool stuff
-            System.out.println("Action performed by " + handler.username);
+            //Propagate the action
+            this.onAction(handler, action);
 
             return true;
 
         }
-
-    }
-
-    /**
-     * Checks whether a client with the provided username exists or not.
-     * @param username the username to check
-     * @return True or False
-     */
-    private Boolean doesExistClientWithUsername(String username) {
-
-        for (RMIClientHandler client : this.clientHandlers) {
-
-            if (client.username.equals(username)) {
-                return true;
-            }
-
-        }
-
-        return false;
 
     }
 
@@ -183,23 +227,35 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
     public void onDisconnect(AbstractClientHandler handler) {
 
+        Logger.log(logger.Level.WARNING, "Server (RMI)", "Detected client disconnection. Removing client '"+handler+"'");
+
+        //Remove the client handler
+        this.clientHandlers.remove(handler);
+
     }
 
     public void onAction(AbstractClientHandler handler, Action action) {
 
-        //Propagate the action to the game engine.. toward the lobby
-        System.out.println("The client " + handler + " performed the action " + action);
+        Logger.log(logger.Level.INFO, "Server (RMI)", "Client '"+handler+"' performed the action '"+action+"'");
+
+        //Raise event
+        this.listener.onAction(handler, action);
+
+    }
+
+    public boolean existsClientWithUsername(String username) {
+
+        return this.listener.existsClientWithUsername(username);
 
     }
 
     public static void main(String[] args) {
 
-        try {
-            RMIServer server = new RMIServer(null, 1099, "server");
-        } catch (RemoteException e) {
-            System.out.println("Error : " + e.getMessage());
-        }
-
+        RMIServer server = new RMIServer(1099, "server");
+        server.start();
     }
 
+    public ArrayList<RMIClientHandler> getClientHandlers() {
+        return clientHandlers;
+    }
 }

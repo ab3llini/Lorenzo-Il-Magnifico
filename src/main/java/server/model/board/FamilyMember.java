@@ -1,7 +1,5 @@
 package server.model.board;
 
-import server.model.Player;
-
 /**
  * Created by Federico on 11/05/2017.
  */

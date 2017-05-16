@@ -48,7 +48,7 @@ public class ConnectionController implements RMIClientObserver {
     @FXML
     void connect() {
 
-        connectButton.setText("Connecting.. See log");
+        connectButton.setText("Connecting.. See logger");
 
         try {
 

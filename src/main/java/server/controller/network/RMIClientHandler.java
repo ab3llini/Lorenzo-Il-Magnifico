@@ -6,7 +6,6 @@ package server.controller.network;
 
 import client.RMIClientInterface;
 import netobject.Action;
-import server.model.Player;
 
 public class RMIClientHandler extends AbstractClientHandler {
 
@@ -26,22 +25,17 @@ public class RMIClientHandler extends AbstractClientHandler {
 
     }
 
-    /*
-    Interface methods
+    /**
+     * Interface methods
      */
-
-    public void onClientAction(Action action) {
+    public void notifyPlayerForAction(Action action, AbstractClientHandler sender) {
 
     }
 
-    public void notifyPlayerForAction(Action action, Player sender) {
 
-    }
-
-    /*
-    Getters and setters
+    /**
+     * Getters and setters
      */
-
     public RMIClientInterface getClientRef() {
         return clientRef;
     }
