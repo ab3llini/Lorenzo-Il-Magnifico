@@ -1,6 +1,7 @@
 package server.model;
 
 import server.model.board.Board;
+import server.model.board.Player;
 import server.model.board.TowerSlot;
 import server.model.card.developement.DvptCard;
 
