@@ -133,16 +133,15 @@ public class DvptCardParser {
 
                 if (costoKey.equals("resources")) {
                     resourceCost = getResourceCost(costo);
-                    cost.add(new Cost(resourceCost, militaryCost));
                 }
 
                 if (costoKey.equals("military")) {
                     militaryCost = getMilitaryCost(costo);
-                    cost.add(new Cost(resourceCost, militaryCost));
                 }
+                //create the cost and added to the arrayList
+                cost.add(new Cost(resourceCost, militaryCost));
             }
         }
-        //create the cost
 
         return cost;
     }
@@ -225,7 +224,7 @@ public class DvptCardParser {
         return new PermanentEffect(minForce,vpoints,surplus,conversion,multiplier,action,penality);
     }
 
-    private static ArrayList<Resource> getResourceCost(JsonObject costo){
+    public static ArrayList<Resource> getResourceCost(JsonObject costo){
         ArrayList<Resource> resourceCost=new ArrayList<Resource>();   //this arrayList contains all the resource required for the card
 
         //extract JsonObject resources from costo
@@ -407,7 +406,7 @@ public class DvptCardParser {
         return discount;
     }
 
-    private static ArrayList<Point> getPoints (JsonObject surplus){
+    public static ArrayList<Point> getPoints (JsonObject surplus){
         ArrayList<Point> points=new ArrayList<Point>();   //this arrayList contains all the points gained for the card
 
         //extract JsonObject points from surplus
@@ -477,7 +476,7 @@ public class DvptCardParser {
         BufferedReader br = null;
         FileReader fr = null;
 
-        File file = new File(DvptCardParser.class.getResource("/json/cards.json").toURI());
+        File file = new File(DvptCardParser.class.getResource(filename).toURI());
         br = new BufferedReader(new FileReader(file));
 
         //parse all file

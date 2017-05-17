@@ -1,17 +1,17 @@
 package server.model.card.leader;
 
-import server.model.effect.ImmediateEffect;
+import server.model.effect.OnceARoundEffect;
 import server.model.effect.PermanentLeaderEffectType;
 
 /**
- * Created by Federico on 10/05/2017.
+ * Created by LBARCELLA on 17/05/2017.
  */
 public class LeaderEffect {
-    ImmediateEffect OnceATurn;
+    OnceARoundEffect OnceARound;
     PermanentLeaderEffectType permanentEffect;
 
-    public LeaderEffect(ImmediateEffect onceATurn, PermanentLeaderEffectType permanentEffect){
-        this.OnceATurn=onceATurn;
+    public LeaderEffect(OnceARoundEffect onceARound, PermanentLeaderEffectType permanentEffect){
+        this.OnceARound=onceARound;
         this.permanentEffect=permanentEffect;
     }
 }

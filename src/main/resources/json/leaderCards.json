@@ -4,9 +4,7 @@
     "requirement" : {
         "cards":{
 		  "territory": 4,
-		  "character":0,
-		  "venture":2,
-		  "building":0
+		  "venture":2
 		}
 	},
     "effects" : {

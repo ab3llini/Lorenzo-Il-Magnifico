@@ -13,6 +13,7 @@ import java.util.HashMap;
  * Created by alberto on 10/05/17.
  */
 public class Player {
+
     private String username;
     private PersonalBoard personalBoard;
     private HashMap<ResourceType,Integer> resources;

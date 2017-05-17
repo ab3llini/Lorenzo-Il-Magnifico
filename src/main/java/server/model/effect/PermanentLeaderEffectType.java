@@ -7,6 +7,7 @@ public enum PermanentLeaderEffectType {
     cesareEffect,
     filippoEffect,
     lorenzoEffect,
+    lucreziaEffect,
     ariostoEffect,
     moroEffect,
     borgiaEffect,
