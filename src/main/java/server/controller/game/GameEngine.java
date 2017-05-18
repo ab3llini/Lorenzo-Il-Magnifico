@@ -5,17 +5,21 @@ package server.controller.game;
  */
 
 import exception.NoSuchLobbyException;
+import logger.Level;
 import logger.Logger;
-import netobject.Action;
 import server.controller.network.*;
+import server.controller.network.RMI.RMIClientHandler;
+import server.controller.network.RMI.RMIServer;
+import server.controller.network.Socket.SocketServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
  * Rappresenta il server di gioco.
  */
-public class GameEngine implements AbstractServerListener {
+public class GameEngine implements ServerObserver {
 
     //Il server in ascolto per nuove connessioni TCP su socket
     private SocketServer socketServer;
@@ -35,9 +39,9 @@ public class GameEngine implements AbstractServerListener {
         this.socketServer = new SocketServer(4545);
         this.rmiServer = new RMIServer(1099, "server");
 
-        //Register us as listeners
-        this.socketServer.addEventListener(this);
-        this.rmiServer.addEventListener(this);
+        //Register us as observer
+        this.socketServer.addObserver(this);
+        this.rmiServer.addObserver(this);
 
         //Start the servers
         this.rmiServer.start();
@@ -52,7 +56,7 @@ public class GameEngine implements AbstractServerListener {
      * @return An active lobby is returned when is found.
      * @throws NoSuchLobbyException
      */
-    private Lobby getLobbyForClientHanlder(AbstractClientHandler handler) throws NoSuchLobbyException {
+    private Lobby getLobbyForClientHanlder(ClientHandler handler) throws NoSuchLobbyException {
 
         //Lookup the lobby to which the client belongs
         for (Lobby lobby : this.lobbies) {
@@ -69,38 +73,26 @@ public class GameEngine implements AbstractServerListener {
 
     }
 
-    public void onDisconnect(AbstractClientHandler handler) {
+    public void onError(Server server) {
 
-        try {
-            this.getLobbyForClientHanlder(handler).onClientDisconnection(handler);
-        }
-        catch (NoSuchLobbyException e) {
-
-            Logger.log(logger.Level.SEVERE, "Game engine", "Lobby not found", e);
-
-        }
+        Logger.log(Level.SEVERE, "GameEngine", "Error encountered on server " + server.toString());
 
     }
 
-    public void onAction(AbstractClientHandler handler, Action action) {
+    public void onConnection(Server server, ClientHandler handler) {
 
-        try {
-            this.getLobbyForClientHanlder(handler).onClientAction(handler, action);
-        }
-        catch (NoSuchLobbyException e) {
-
-            Logger.log(logger.Level.SEVERE, "Game engine", "Lobby not found", e);
-
-        }
+        Logger.log(Level.FINE, "GameEngine", "New client connected, username = " + handler.getUsername());
 
     }
 
-    /**
-     * Checks whether exists a client with the provided username
-     * @param username The username to perform the check on
-     * @return Upon existence, true. False otherwise.
-     */
-    public boolean existsClientWithUsername(String username) {
+    public void onDisconnection(Server server, ClientHandler handler) {
+
+        Logger.log(Level.WARNING, "GameEngine", "New client disconnected, username = " + handler.getUsername());
+
+
+    }
+
+    public boolean onRegistrationRequest(Server server, String username) {
 
         if (username == null) {
 
@@ -122,7 +114,7 @@ public class GameEngine implements AbstractServerListener {
 
             HashMap.Entry pair = (HashMap.Entry) o;
 
-            String uname = ((SocketClientHandler) pair.getKey()).getUsername();
+            String uname = ((server.controller.network.Socket.SocketClientHandler) pair.getKey()).getUsername();
 
             if (uname != null && uname.equals(username)) {
 
@@ -133,10 +125,6 @@ public class GameEngine implements AbstractServerListener {
         }
 
         return false;
-    }
-
-    public void onServerFault(AbstractServer server) {
-
     }
 
     public static void main(String[] args) {

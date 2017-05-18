@@ -5,7 +5,7 @@ package server.controller.game;
  */
 
 import netobject.Action;
-import server.controller.network.AbstractClientHandler;
+import server.controller.network.ClientHandler;
 import server.model.board.Player;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class Lobby {
 
     //This table maps each clientHandler to it relative player object in the model
-    HashMap<AbstractClientHandler, Player> players = new HashMap<AbstractClientHandler, Player>();
+    HashMap<ClientHandler, Player> players = new HashMap<ClientHandler, Player>();
 
     //Match model
     //Match match = new Match();
@@ -28,13 +28,13 @@ public class Lobby {
     //Start timeout
     Integer timeout;
 
-    public boolean hasClientHandler(AbstractClientHandler handler) {
+    public boolean hasClientHandler(ClientHandler handler) {
 
         return this.players.containsKey(handler);
 
     }
 
-    public boolean onClientAction(AbstractClientHandler handler, Action action) {
+    public boolean onClientAction(ClientHandler handler, Action action) {
 
         //TODO: Map the handler to the player and forward the action to the match controller
 
@@ -42,7 +42,7 @@ public class Lobby {
 
     }
 
-    public boolean onClientDisconnection(AbstractClientHandler handler) {
+    public boolean onClientDisconnection(ClientHandler handler) {
 
         //TODO: Inform the controller, take right measures.
 

@@ -8,7 +8,7 @@ package logger;
 public class Logger {
 
     private static boolean silenced = false;
-    private static Level minLevel = Level.FINE;
+    private static int minLevel = Level.FINE;
 
     /**
      * Logs the message with the provided level and exception message
@@ -17,7 +17,7 @@ public class Logger {
      * @param message The message
      * @param e The exception
      */
-    public static void log(Level lv, String ctx, String message, Exception e) {
+    public static void log(int lv, String ctx, String message, Exception e) {
 
         parse(lv, ctx, message, e);
 
@@ -29,7 +29,7 @@ public class Logger {
      * @param ctx The context of the log, usually a description of the class that is logging
      * @param message The message
      */
-    public static void log(Level lv, String ctx, String message) {
+    public static void log(int lv, String ctx, String message) {
 
         parse(lv, ctx, message, null);
 
@@ -41,26 +41,26 @@ public class Logger {
      * @param message The message
      * @param e The exception (may be null)
      */
-    private static void parse(Level lv, String ctx, String message, Exception e) {
+    private static void parse(int lv, String ctx, String message, Exception e) {
 
-        if (lv.compareTo(minLevel) >= 0) {
+        if (lv >= minLevel) {
 
             switch (lv) {
 
-                case FINE:
-                    print("[FINE] " + ctx + " : " + message, e);
+                case Level.FINE:
+                    print(AnsiColors.ANSI_GREEN + "[FINE] " + ctx + " : " + message, e);
                     break;
 
-                case INFO:
-                    print("[INFO] " + ctx + " : " + message, e);
+                case Level.INFO:
+                    print(AnsiColors.ANSI_BLUE + "[INFO] " + ctx + " : " + message, e);
                     break;
 
-                case WARNING:
-                    print("[WARNING] " + ctx + " : " + message, e);
+                case Level.WARNING:
+                    print(AnsiColors.ANSI_YELLOW + "[WARNING] " + ctx + " : " + message, e);
                     break;
 
-                case SEVERE:
-                    print("[SEVERE] " + ctx + " : " + message, e);
+                case Level.SEVERE:
+                    print(AnsiColors.ANSI_RED + "[SEVERE] " + ctx + " : " + message, e);
                     break;
 
             }
@@ -107,7 +107,7 @@ public class Logger {
      * Sets the minimum logging level. The higher, the less loggings
      * @param minLevel The level
      */
-    public static void setMinLevel(Level minLevel) {
+    public static void setMinLevel(int minLevel) {
         Logger.minLevel = minLevel;
     }
 }

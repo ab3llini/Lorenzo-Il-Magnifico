@@ -6,14 +6,12 @@ package client;
  */
 
 import exception.UsernameAlreadyInUseException;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import netobject.Message;
-import netobject.MessageType;
+import netobject.RegistrationRequest;
 
 import java.rmi.RemoteException;
 
@@ -75,13 +73,10 @@ public class ConnectionController implements RMIClientObserver {
 
         try {
 
-            if (rmiClient.getServerRef().register(
+            if (rmiClient.getServerRef().performRegistrationRequest(
                     rmiClient,
-                    new Message(
-                            MessageType.Registration,
-                            usernameTextField.getText()
-                    )
-            )) {
+                    new RegistrationRequest(usernameTextField.getText())
+            ).success) {
 
                 System.out.println("Connected..");
 

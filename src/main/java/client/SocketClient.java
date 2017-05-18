@@ -1,7 +1,6 @@
 package client;
 
-import netobject.Message;
-import netobject.MessageType;
+import netobject.RegistrationRequest;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -43,7 +42,7 @@ public class SocketClient {
 
         socketOut.flush();
 
-        socketOut.writeObject(new Message(MessageType.Registration, "Alberto"));
+        socketOut.writeObject(new RegistrationRequest("Lorenzo"));
 
 
     }

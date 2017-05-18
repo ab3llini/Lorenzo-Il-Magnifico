@@ -1,10 +1,8 @@
 package client;
 
-import com.sun.org.apache.regexp.internal.RE;
 import exception.UsernameAlreadyInUseException;
-import netobject.Message;
-import netobject.MessageType;
-import server.controller.network.RMIServerInterface;
+import netobject.RegistrationRequest;
+import server.controller.network.RMI.RMIServerStub;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -25,10 +23,10 @@ interface RMIClientObserver {
 
 public class RMIClient extends Thread implements RMIClientInterface {
 
-    RMIServerInterface serverRef;
+    RMIServerStub serverRef;
     Registry registry;
 
-    ArrayList<RMIClientObserver> observers;
+    ArrayList<RMIClientObserver> observers = new ArrayList<RMIClientObserver>();
 
     String remoteName;
     String host;
@@ -53,7 +51,7 @@ public class RMIClient extends Thread implements RMIClientInterface {
         try {
 
             this.registry = LocateRegistry.getRegistry(host, port);
-            this.serverRef = (RMIServerInterface) registry.lookup(remoteName);
+            this.serverRef = (RMIServerStub) registry.lookup(remoteName);
 
             System.out.println("Remote stub obtained.");
 
@@ -89,7 +87,7 @@ public class RMIClient extends Thread implements RMIClientInterface {
             RMIClient rmic = new RMIClient("127.0.0.1" , 1099, "server");
 
             rmic.prepareRmiConnection();
-            if(rmic.getServerRef().register(rmic, new Message(MessageType.Registration, "Alberto"))) {
+            if(rmic.getServerRef().performRegistrationRequest(rmic, new RegistrationRequest("Alberto")).success) {
 
                 System.out.println("Connected");
 
@@ -123,7 +121,7 @@ public class RMIClient extends Thread implements RMIClientInterface {
     }
 
 
-    public RMIServerInterface getServerRef() {
+    public RMIServerStub getServerRef() {
         return serverRef;
     }
 
