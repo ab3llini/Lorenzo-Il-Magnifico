@@ -29,6 +29,12 @@ public class LeaderCardParser {
 
     }
 
+    /**
+     * this method parse leaderCards. receive a json file and returns an arrayList with all leaderCards
+     *
+     * @return
+     */
+
     public static ArrayList<LeaderCard> parse() throws IOException, URISyntaxException {
 
         // name,requirement,leaderEffect only at the moment null because all leader cards contains the keys name,requirement,effects

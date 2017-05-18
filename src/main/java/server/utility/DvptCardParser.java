@@ -265,7 +265,7 @@ public class DvptCardParser {
         return new MilitaryCost(militaryRequired,militaryMalus);
     }
 
-    private static EffectSurplus getEffectSurplus (JsonObject immediate){
+    public static EffectSurplus getEffectSurplus (JsonObject immediate){
         ArrayList<Resource> resources=new ArrayList<Resource>();      //ArrayList to save surplus in resources
         ArrayList<Point> points=new ArrayList<Point>();               //ArrayList to save surplus in points
         Integer council=0;                                            //Integer to save surplus in council privilege
