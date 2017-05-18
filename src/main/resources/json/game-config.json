@@ -1,0 +1,12 @@
+{
+  "player": {
+    "timeout": 30
+  },
+  "match": {
+    "timeout": 120
+  },
+  "server": {
+    "socket-port": 4545,
+    "rmi-port": 1099
+  }
+}

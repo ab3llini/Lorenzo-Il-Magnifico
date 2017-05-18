@@ -5,6 +5,10 @@ package server.controller.network;
  * @since   17/05/17.
  */
 
+/**
+ * This template describes a collection of methods that an observed element should implement
+ * @param <T> The observer type
+ */
 public interface Observable<T> {
 
     /**

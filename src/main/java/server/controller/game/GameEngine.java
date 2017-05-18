@@ -17,9 +17,13 @@ import java.util.HashMap;
 
 
 /**
- * Rappresenta il server di gioco.
+ * Represents the game engine.
  */
+
 public class GameEngine implements ServerObserver {
+
+    //The game configuration
+    private GameConfig config = GameConfig.getInstance();
 
     //Il server in ascolto per nuove connessioni TCP su socket
     private SocketServer socketServer;
@@ -36,8 +40,8 @@ public class GameEngine implements ServerObserver {
         this.lobbies = new ArrayList<Lobby>();
 
         //Initialize the servers
-        this.socketServer = new SocketServer(4545);
-        this.rmiServer = new RMIServer(1099, "server");
+        this.socketServer = new SocketServer(config.getSocketPort());
+        this.rmiServer = new RMIServer(config.getRmiPort(), "server");
 
         //Register us as observer
         this.socketServer.addObserver(this);
