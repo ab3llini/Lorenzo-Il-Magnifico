@@ -1,0 +1,121 @@
+{
+  "1" : {
+    "production" : {
+        "minForce" : 1,
+        "surplus" : {
+          "resources" : {
+            "servants" : 2,
+            "coins" : 1
+          }
+        }
+    },
+    "harvest" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "wood" : 1,
+          "stones" : 1
+        },
+        "points" : {
+          "military": 1
+        }
+      }
+    }
+  },
+
+  "2" : {
+    "production" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "servants" : 1,
+          "coins" : 2
+        }
+      }
+    },
+    "harvest" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "wood" : 1,
+          "stones" : 1
+        },
+        "points" : {
+          "military": 1
+        }
+      }
+    }
+  },
+
+  "3" : {
+    "production" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "coins" : 1
+        },
+        "points": {
+          "military": 2
+        }
+      }
+    },
+    "harvest" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "wood" : 1,
+          "stones" : 1,
+          "servants" : 1
+        }
+      }
+    }
+  },
+
+  "4" : {
+    "production" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "servants" : 1
+        },
+        "points": {
+          "military": 2
+        }
+      }
+    },
+    "harvest" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "wood" : 1,
+          "stones" : 1,
+          "coins" : 1
+        }
+      }
+    }
+  },
+
+  "5" : {
+    "production" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "coins" : 2
+        },
+        "points": {
+          "military": 1
+        }
+      }
+    },
+    "harvest" : {
+      "minForce" : 1,
+      "surplus" : {
+        "resources" : {
+          "wood" : 1,
+          "stones" : 1,
+          "servants" : 1
+        }
+      }
+    }
+  }
+}

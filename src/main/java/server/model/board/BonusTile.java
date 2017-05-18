@@ -6,21 +6,39 @@ import server.model.effect.EffectSurplus;
  * Created by Federico on 11/05/2017.
  */
 public class BonusTile {
-    private EffectSurplus harvestSurplus;
+    private Integer id;
+    private Integer productionMinForce;
     private EffectSurplus productionSurplus;
+    private Integer harvestMinForce;
+    private EffectSurplus harvestSurplus;
 
 
-    public BonusTile(EffectSurplus harvestSurplus, EffectSurplus productionSurplus){
+
+    public BonusTile(Integer id, Integer productionMinForce, EffectSurplus productionSurplus, Integer harvestMinForce, EffectSurplus harvestSurplus){
+        this.id=id;
+        this.harvestMinForce= harvestMinForce;
         this.harvestSurplus = harvestSurplus;
+        this.productionMinForce = productionMinForce;
         this.productionSurplus = productionSurplus;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getHarvestMinForce() {
+        return harvestMinForce;
     }
 
     public EffectSurplus getHarvestSurplus() {
         return harvestSurplus;
     }
 
-    public void setProductionSurplus(EffectSurplus productionSurplus) {
-        this.productionSurplus = productionSurplus;
+    public Integer getProductionMinForce() {
+        return productionMinForce;
     }
-    
+
+    public EffectSurplus getProductionSurplus() {
+        return productionSurplus;
+    }
 }
