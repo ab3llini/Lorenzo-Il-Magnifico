@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Federico on 11/05/2017.
- * Implemented by LBARCELLA on 18/05/2017.
+ * Method implemented by LBARCELLA on 18/05/2017.
  */
 public class PHCompositeActionPlace extends CompositeActionPlace {
     private Integer forceMalus;

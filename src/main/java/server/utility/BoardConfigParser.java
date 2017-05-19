@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import logger.Level;
 import logger.Logger;
 import server.model.board.*;
-import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.effect.EffectSurplus;
 import server.model.valuable.Point;
@@ -62,12 +61,14 @@ public class BoardConfigParser {
 
         Integer thirdtMinFaith = cathedralObject.get("thirdMinFaith").getAsInt();
 
+        //create cathedral object and return it
         return new Cathedral(firstMinFaith, secondMinFaith , thirdtMinFaith);
     }
 
 
     /**
-     * this method parse productionArea attributes; production area is composed by two parts : single production place, composite production place
+     * this method parse productionArea attributes; production area is composed by two parts : single production place, composite production place.
+     * this method uses getSingleActionPlace and getCompositeActionPlace to obtain his attributes.
      * @return Action Area (production) that will be used in board model
      */
     public static ActionArea getProductionActionArea(){
@@ -79,12 +80,14 @@ public class BoardConfigParser {
 
         PHCompositeActionPlace productionCompositePlace = getCompositeActionPlace(productionAreaObject);
 
+        //return actionArea object with the specification of his type
         return new ActionArea(ActionType.Production, productionSinglePlace, productionCompositePlace);
 
     }
 
     /**
-     * this method parse harvestArea attributes; harvest area is composed by two parts : single production place, composite production place
+     * this method parse harvestArea attributes; harvest area is composed by two parts : single production place, composite production place.
+     * this method uses getSingleActionPlace and getCompositeActionPlace to obtain his attributes.
      * @return Action Area (harvest) that will be used in board model
      */
     public static ActionArea getHarvestActionArea(){
@@ -96,6 +99,7 @@ public class BoardConfigParser {
 
         PHCompositeActionPlace productionCompositePlace = getCompositeActionPlace(productionAreaObject);
 
+        //return actionArea object with the specification of his type
         return new ActionArea(ActionType.Harvest, productionSinglePlace, productionCompositePlace);
 
     }
@@ -160,9 +164,10 @@ public class BoardConfigParser {
         //get keys from towerObject ( 1 || 2 || 3 || 4)
         ArrayList<String> towerKeys = Json.getObjectKeys(towerObject);
 
-        //foreach key extract his values
+        //foreach key extract his values ( for each towerSlot[1,2,3,4] extract his value)
         for (String towerKey: towerKeys) {
 
+            //every towerSlot has minForce(or entryForce) and surplus
             Integer minForce=0;
             EffectSurplus surplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0);
             JsonObject towerSlot = towerObject.getAsJsonObject(towerKey);

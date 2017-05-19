@@ -9,10 +9,12 @@ import java.util.HashMap;
  */
 public class Cathedral {
 
-    HashMap<Period,BanCard> banCards;
-    Integer firstMinFaith;
-    Integer secondMinFaith;
-    Integer thirdMinFaith;
+    private HashMap<Period,BanCard> banCards;
+
+    //represent the minimum number of faith points to avoid excommunication in each period
+    private Integer firstMinFaith;
+    private Integer secondMinFaith;
+    private Integer thirdMinFaith;
 
     public Cathedral(Integer firstMinFaith, Integer secondMinFaith, Integer thirdMinFaith){
         this.firstMinFaith = firstMinFaith;
@@ -40,6 +42,5 @@ public class Cathedral {
     public void getBanCard(Period period){
         banCards.get(period);
     }
-
 
 }

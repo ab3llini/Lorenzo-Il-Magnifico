@@ -6,7 +6,7 @@ import server.model.effect.ImmediateEffect;
 
 /**
  * Created by Federico on 11/05/2017.
- * Implemented by LBARCELLA on 18/05/2017
+ * Methods implemented by LBARCELLA on 18/05/2017
  */
 public class TowerSlot extends SingleActionPlace {
     private DvptCard dvptCard;
