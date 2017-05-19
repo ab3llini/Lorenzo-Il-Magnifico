@@ -10,13 +10,10 @@ import server.model.effect.OnceARoundEffect;
 import server.model.effect.PermanentLeaderEffectType;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static server.utility.DvptCardParser.getKeys;
 import static server.utility.DvptCardParser.getPoints;
 import static server.utility.DvptCardParser.getResourceCost;
 
@@ -30,7 +27,7 @@ public class LeaderCardParser {
     }
 
     /**
-     * this method parse leaderCards. receive a json file and returns an arrayList with all leaderCards
+     * this method parse leaderCards. take a json file and returns an arrayList with all leaderCards
      *
      * @return
      */
@@ -45,16 +42,16 @@ public class LeaderCardParser {
         ArrayList<LeaderCard> allLeaderCards = new ArrayList<LeaderCard>();    //this arrayList contains all the leaderCard already parsed
 
         //get a JsonObject from the file stored in resource that contains all the cards in json
-        JsonObject cardsSet = DvptCardParser.getJsonObjectFromFile("/json/leaderCards.json");
+        JsonObject cardsSet = Loader.getJsonObjectFromFile("/json/leaderCards.json");
 
         //extract one by one all the card from cardsSet and create a Card object from every single card in json file
-        for (String cardId : DvptCardParser.getKeys(cardsSet)) {
+        for (String cardId : Json.getObjectKeys(cardsSet)) {
 
             //extract one single leaderCard
             JsonObject card = cardsSet.getAsJsonObject(cardId);
 
             //get leaderCard keys in json representation
-            ArrayList<String> keys = DvptCardParser.getKeys(card);
+            ArrayList<String> keys = Json.getObjectKeys(card);
 
             //foreach key extract his value
             for (String key : keys) {
@@ -91,7 +88,7 @@ public class LeaderCardParser {
         JsonObject requirement= card.getAsJsonObject("requirement");
 
         //get keys from requirement(resources || points || cards || sixIdentical)
-        ArrayList<String> requirementKeys = DvptCardParser.getKeys(requirement);
+        ArrayList<String> requirementKeys = Json.getObjectKeys(requirement);
 
         for (String requirementKey:requirementKeys) {
             if (requirementKey.equals("resources")) {
@@ -121,7 +118,7 @@ public class LeaderCardParser {
         JsonObject effects= card.getAsJsonObject("effects");
 
         //get keys from effects(onceARound || permanent)
-        ArrayList<String> effectKeys = DvptCardParser.getKeys(effects);
+        ArrayList<String> effectKeys = Json.getObjectKeys(effects);
 
         for (String effectKey:effectKeys) {
             if (effectKey.equals("onceARound")) {
@@ -153,7 +150,7 @@ public class LeaderCardParser {
         JsonObject cardsRequired=requirement.getAsJsonObject("cards");
 
         //for each type of card get his value required
-        for(String cardRequiredKey:getKeys(cardsRequired)){
+        for(String cardRequiredKey : Json.getObjectKeys(cardsRequired)){
 
             if(cardRequiredKey.equals("territory")){
                 cardsReq.put(DvptCardType.territory,cardsRequired.get("territory").getAsInt());}
@@ -182,7 +179,7 @@ public class LeaderCardParser {
         JsonObject onceARoundEffect= effects.getAsJsonObject("onceARound");
 
         //get keys from onceARoundEffect(resources || points || actions || sixEffect)
-        ArrayList<String> effectKeys = DvptCardParser.getKeys(onceARoundEffect);
+        ArrayList<String> effectKeys = Json.getObjectKeys(onceARoundEffect);
 
         for (String effectKey:effectKeys) {
             if (effectKey.equals("resources")) {
@@ -217,7 +214,7 @@ public class LeaderCardParser {
         JsonObject actionObject = onceARoundEffect.getAsJsonObject("action");
 
         //get keys from onceARoundEffect(harvest|| production)
-        ArrayList<String> effectKeys = DvptCardParser.getKeys(actionObject);
+        ArrayList<String> effectKeys = Json.getObjectKeys(actionObject);
 
         for (String effectKey:effectKeys) {
 

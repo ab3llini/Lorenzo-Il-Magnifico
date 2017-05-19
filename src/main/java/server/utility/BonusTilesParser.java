@@ -20,7 +20,7 @@ public class BonusTilesParser {
     }
 
     /**
-     * this method parse bonus tiles. receive a json file and returns an arrayList with all bonus tiles
+     * this method parse bonus tiles. take a json file and returns an arrayList with all bonus tiles
      *
      * @return
      */
@@ -38,33 +38,40 @@ public class BonusTilesParser {
         ArrayList<BonusTile> allBonusTiles = new ArrayList<BonusTile>();
 
         //get a JsonObject from the file stored in resource that contains all the bonusTiles in json
-        JsonObject bonusTilesSet = DvptCardParser.getJsonObjectFromFile("/json/bonusTiles.json");
+        JsonObject bonusTilesSet = Loader.getJsonObjectFromFile("/json/bonusTiles.json");
 
         //extract one by one all the card from cardsSet and create a bonus tiles object from every single bunus tile in json file
-        for (String bonusTilesId : DvptCardParser.getKeys(bonusTilesSet)) {
+        for (String bonusTilesId : Json.getObjectKeys(bonusTilesSet)) {
 
             //extract one single bonus tile
             JsonObject tile = bonusTilesSet.getAsJsonObject(bonusTilesId);
 
             //get bonus tile keys in json representation
-            ArrayList<String> keys = DvptCardParser.getKeys(tile);
+            ArrayList<String> keys = Json.getObjectKeys(tile);
 
             //foreach key extract his value
             for (String key : keys) {
+
                 if (key.equals("production")) {
+
+                    //extract JsonObject productionObject from tile
                     JsonObject productionObject = tile.getAsJsonObject("production");
                     productionMinForce = getMinForce(productionObject);
                     productionSurplus = getEffectSurplus(productionObject);
+
                 }
 
                 if (key.equals("harvest")) {
+
+                    //extract JsonObject harvestObject from tile
                     JsonObject harvestObject = tile.getAsJsonObject("production");
                     harvestMinForce = getMinForce(harvestObject);
                     harvestSurplus = getEffectSurplus(harvestObject);
+
                 }
 
             }
-            //add the new card to the arrayList
+            //add the new bonus tile to the arrayList
             allBonusTiles.add(new BonusTile(Integer.parseInt(bonusTilesId), productionMinForce, productionSurplus, harvestMinForce, harvestSurplus));
         }
 

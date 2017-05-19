@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 /*
  * Created by alberto on 10/05/17.
+ * All method signature has been implemented by LBARCELLA on 15/05/17
  */
 public class Player {
 

@@ -9,18 +9,14 @@ import server.model.card.developement.VentureDvptCard;
 import java.util.ArrayList;
 
 /**
- * Created by Federico on 11/05/2017.
+ * Created by LBARCELLA on 19/05/2017.
  */
 public class Board {
-    private ArrayList<TerritoryDvptCard> territoryCards;
-    private ArrayList<CharacterDvptCard> characterCards;
-    private ArrayList<BuildingDvptCard> buildingCards;
-    private ArrayList<VentureDvptCard> ventureCards;
     private ArrayList<TowerSlot> territoryTower;
     private ArrayList<TowerSlot> characterTower;
     private ArrayList<TowerSlot> buildingTower;
     private ArrayList<TowerSlot> ventureTower;
-    private ArrayList<BanCard> cathedral;
+    private Cathedral cathedral;
     private CouncilPalace councilPalace;
     private ArrayList<Dice> dices;
     private ActionArea productionArea;
@@ -29,13 +25,10 @@ public class Board {
 
 
     public Board (ArrayList<TerritoryDvptCard> territoryCards, ArrayList<CharacterDvptCard> characterCards, ArrayList<BuildingDvptCard> buildingCards, ArrayList<VentureDvptCard> ventureCards, ArrayList<TowerSlot> territoryTower, ArrayList<TowerSlot> characterTower, ArrayList<TowerSlot> buildingTower, ArrayList<TowerSlot> ventureTower, ArrayList<BanCard> cathedral, CouncilPalace councilPalace, ArrayList<Dice> dices, ActionArea productionArea, ActionArea harvestArea, ArrayList<SingleActionPlace> market){
-        this.territoryCards = territoryCards;
-        this.ventureCards = ventureCards;
         this.buildingTower = buildingTower;
         this.territoryTower = territoryTower;
         this.characterTower = characterTower;
         this.ventureTower = ventureTower;
-        this.cathedral = cathedral;
         this.councilPalace = councilPalace;
         this.dices = dices;
         this.productionArea = productionArea;

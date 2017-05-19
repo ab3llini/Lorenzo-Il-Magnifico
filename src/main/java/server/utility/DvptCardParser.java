@@ -15,14 +15,15 @@ import java.util.*;
 
 public class DvptCardParser {
 
+    private DvptCardParser(){
+    }
+
+
     /**
-     * this method parse dvptCards. receive a json file and returns an arrayList with all dvptCards
+     * this method parse dvptCards. take a json file and returns an arrayList with all dvptCards
      *
      * @return
      */
-
-    private DvptCardParser(){
-    }
 
     public static ArrayList<DvptCard> parse() throws IOException, URISyntaxException {
 
@@ -35,16 +36,16 @@ public class DvptCardParser {
         PermanentEffect permanentEffect = null;
 
         //get a JsonObject from the file stored in resource that contains all the cards in json
-        JsonObject cardsSet = DvptCardParser.getJsonObjectFromFile("/json/cards.json");
+        JsonObject cardsSet = Loader.getJsonObjectFromFile("/json/cards.json");
 
         //extract one by one all the card from cardsSet and create a Card object from every single card in json file
-        for (String cardId : DvptCardParser.getKeys(cardsSet)) {
+        for (String cardId : Json.getObjectKeys(cardsSet)) {
 
             //extract one single card
             JsonObject card = cardsSet.getAsJsonObject(cardId);
 
             //get card keys in json representation
-            ArrayList<String> keys = DvptCardParser.getKeys(card);
+            ArrayList<String> keys = Json.getObjectKeys(card);
 
             //foreach key extract his value
             for (String key : keys) {
@@ -65,7 +66,7 @@ public class DvptCardParser {
                     JsonObject effect = card.getAsJsonObject("effects");
 
                     //effects can be immediate and permanent
-                    for (String effectKey : DvptCardParser.getKeys(effect)) {
+                    for (String effectKey : Json.getObjectKeys(effect)) {
                         if (effectKey.equals("immediate")){
                             immediateEffect = getImmediateEffect(effect);}
 
@@ -76,7 +77,7 @@ public class DvptCardParser {
                 }
 
             }
-            //add the new card to the arrayList
+            //add the new card to the arrayList, choose the correct constructor depending on the card type
             if (type==DvptCardType.territory) {
                 allCards.add(new TerritoryDvptCard(Integer.parseInt(cardId), name, period, immediateEffect, permanentEffect));
             }
@@ -122,7 +123,7 @@ public class DvptCardParser {
             JsonObject costo = arrayCost.get(j).getAsJsonObject();
 
             //get keys from cost (resource || military)
-            ArrayList<String> costoKeys = DvptCardParser.getKeys(costo);
+            ArrayList<String> costoKeys = Json.getObjectKeys(costo);
 
             //initialize two variables in order not to use null pointers
             ArrayList<Resource> resourceCost = new ArrayList<Resource>();
@@ -154,7 +155,7 @@ public class DvptCardParser {
         JsonObject immediate = effect.getAsJsonObject("immediate");
 
         //get keys from immediate (surplus || action)
-        ArrayList<String> effectKeys = DvptCardParser.getKeys(immediate);
+        ArrayList<String> effectKeys = Json.getObjectKeys(immediate);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
         for (String effectKey : effectKeys) {
@@ -184,7 +185,7 @@ public class DvptCardParser {
         JsonObject permanent = effect.getAsJsonObject("permanent");
 
         //get keys from permanent (minforce || type || surplus || conversion || action || discount || penality)
-        ArrayList<String> effectKeys = DvptCardParser.getKeys(permanent);
+        ArrayList<String> effectKeys = Json.getObjectKeys(permanent);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
         for (String effectKey : effectKeys) {
@@ -231,7 +232,7 @@ public class DvptCardParser {
         JsonObject resources = costo.getAsJsonObject("resources");
 
         //get keys from resources(coins || wood || stones || servants)
-        ArrayList<String> resourceKeys = DvptCardParser.getKeys(resources);
+        ArrayList<String> resourceKeys = Json.getObjectKeys(resources);
 
         for (String resourceKey:resourceKeys) {
             if(resourceKey.equals("coins")){
@@ -254,7 +255,7 @@ public class DvptCardParser {
         JsonObject military= costo.getAsJsonObject("military");
 
         //get keys from military(required || malus)
-        ArrayList<String> militaryKeys = DvptCardParser.getKeys(military);
+        ArrayList<String> militaryKeys = Json.getObjectKeys(military);
 
         for (String resourceKey:militaryKeys) {
             if(resourceKey.equals("required"))
@@ -277,11 +278,13 @@ public class DvptCardParser {
     }
 
     private static EffectSurplus getSurplus(JsonObject surplus){
+
         ArrayList<Resource> resources=new ArrayList<Resource>();      //ArrayList to save surplus in resources
         ArrayList<Point> points=new ArrayList<Point>();               //ArrayList to save surplus in points
         Integer council=0;
+
         //get keys from surplus(resources || points || council) that identify all the different kind of surplus
-        ArrayList<String> surplusKeys = DvptCardParser.getKeys(surplus);
+        ArrayList<String> surplusKeys = Json.getObjectKeys(surplus);
 
         for (String surplusKey:surplusKeys) {
             if(surplusKey.equals("resources")){
@@ -296,16 +299,17 @@ public class DvptCardParser {
     }
 
     private static EffectAction getEffectAction (JsonObject immediate){
+
         ActionType target=null;
         DvptCardType type=null;
         Integer force=null;
-        ArrayList<Resource> discount=new ArrayList<Resource>();
+        ArrayList<Resource> discount = new ArrayList<Resource>();
 
         //get JsonObject surplus from immediate
         JsonObject actions=immediate.getAsJsonObject("action");
 
         //get keys from actions(target || type || force || discount) that identify all the different keys of action
-        ArrayList<String> actionKeys = DvptCardParser.getKeys(actions);
+        ArrayList<String> actionKeys = Json.getObjectKeys(actions);
 
         for (String actionKey: actionKeys) {
             if(actionKey.equals("target")){
@@ -329,7 +333,7 @@ public class DvptCardParser {
         ArrayList<Resource> discount=new ArrayList<Resource>();
 
         //get keys from permanent (minForce || type || surplus || conversion || action || discount || penality)
-        ArrayList<String> permanentKeys = DvptCardParser.getKeys(permanent);
+        ArrayList<String> permanentKeys = Json.getObjectKeys(permanent);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
         for (String permanentKey : permanentKeys) {
@@ -363,9 +367,13 @@ public class DvptCardParser {
 
         //consider all the possible conversion
         for(int i=0;i<conversion.size();i++){
+
             JsonObject ObjectConversion = conversion.get(i).getAsJsonObject();
+
             EffectSurplus from=getSurplus(ObjectConversion.get("from").getAsJsonObject());
             EffectSurplus to=getSurplus(ObjectConversion.get("to").getAsJsonObject());
+
+            //add new conversion to the conversion array
             conversions.add(new EffectConversion(from,to));
         }
         return conversions;
@@ -386,7 +394,7 @@ public class DvptCardParser {
             JsonObject ObjectDiscount = arrayDiscount.get(j).getAsJsonObject();
 
             //foreach key of ObjectDiscount get his value
-            for (String discountKey:getKeys(ObjectDiscount)) {
+            for (String discountKey:Json.getObjectKeys(ObjectDiscount)) {
                 if(discountKey.equals("coins")){
                     discount.add(new Resource(ResourceType.Coins,ObjectDiscount.get("coins").getAsInt()));
                 }
@@ -413,7 +421,7 @@ public class DvptCardParser {
         JsonObject pointsObject = surplus.getAsJsonObject("points");
 
         //get keys from points(military || victory || faith || multiplier)
-        ArrayList<String> pointsKeys = DvptCardParser.getKeys(pointsObject);
+        ArrayList<String> pointsKeys = Json.getObjectKeys(pointsObject);
 
         for (String pointsKey:pointsKeys) {
 
@@ -442,7 +450,7 @@ public class DvptCardParser {
         JsonObject multiplier = pointsObject.getAsJsonObject("multiplier");
 
         //get keys from multiplier(what || result || coefficient)
-        ArrayList<String> multiplierKeys = DvptCardParser.getKeys(multiplier);
+        ArrayList<String> multiplierKeys = Json.getObjectKeys(multiplier);
 
         for (String multiplierKey:multiplierKeys) {
 
@@ -465,12 +473,6 @@ public class DvptCardParser {
     private static Integer getCouncil (JsonObject surplus){
         return surplus.get("council").getAsInt();
     }
-
-    /**
-     * all file pars with gson
-     * @return
-     * @throws IOException
-     */
 
     public static JsonObject getJsonObjectFromFile(String filename) throws IOException, URISyntaxException {
         BufferedReader br = null;
@@ -507,5 +509,6 @@ public class DvptCardParser {
         }
         return keys;
     }
+
 
 }

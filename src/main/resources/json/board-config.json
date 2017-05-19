@@ -1,0 +1,206 @@
+{
+  "territoryTower": {
+
+    "1" : {
+      "minForce" : 1
+    },
+
+    "2" : {
+      "minForce" : 3
+    },
+
+    "3" : {
+      "minForce" : 5,
+      "surplus" : {
+        "resources" : {
+          "wood" : 1
+        }
+      }
+    },
+
+    "4" : {
+      "minForce" : 7,
+      "surplus" : {
+        "resources" : {
+          "wood" : 2
+        }
+      }
+    }
+  },
+
+  "characterTower": {
+
+    "1" : {
+      "minForce" : 1
+    },
+
+    "2" : {
+      "minForce" : 3
+    },
+
+    "3" : {
+      "minForce" : 5,
+      "surplus" : {
+        "resources" : {
+          "wood" : 1
+        }
+      }
+    },
+
+    "4" : {
+      "minForce" : 7,
+      "surplus" : {
+        "resources" : {
+          "stones" : 2
+        }
+      }
+    }
+  },
+
+  "buildingTower": {
+
+    "1" : {
+      "minForce" : 1
+    },
+
+    "2" : {
+      "minForce" : 3
+    },
+
+    "3" : {
+      "minForce" : 5,
+      "surplus" : {
+        "points" : {
+          "military" : 1
+        }
+      }
+    },
+
+
+    "4" : {
+      "minForce" : 7,
+      "surplus" : {
+        "points" : {
+          "military" : 2
+        }
+      }
+    }
+  },
+
+  "ventureTower": {
+
+    "1" : {
+      "minForce" : 1
+    },
+
+    "2" : {
+      "minForce" : 3
+    },
+
+    "3" : {
+      "minForce" : 5,
+      "surplus" : {
+        "resources" : {
+          "coins" : 1
+        }
+      }
+    },
+
+    "4" : {
+      "minForce" : 7,
+      "surplus" : {
+        "resources" : {
+          "coins" : 2
+        }
+      }
+    }
+  },
+
+  "councilPalace" : {
+    "minForce" : 1,
+    "minPlayers" : 0,
+    "surplus" : {
+      "resources" : {
+        "coins" : 1
+      },
+      "council" : 1
+    }
+  },
+
+  "cathedral" : {
+    "firstMinFaith" : 3,
+    "secondMinFaith" : 4,
+    "thirdMinFaith" : 5
+  },
+
+  "productionArea" : {
+
+    "singleActionPlace" : {
+      "minForce" : 1,
+      "minPlayers" : 0
+    },
+
+    "phCompositeActionPlace" : {
+      "minPlayers" : 0,
+      "minForce" : 1,
+      "malus" : 3
+    }
+  },
+
+  "harvestArea" : {
+
+    "singleActionPlace" : {
+      "minForce" : 1,
+      "minPlayers" : 0
+    },
+
+    "phCompositeActionPlace" : {
+      "minPlayers" : 0,
+      "minForce" : 1,
+      "malus" : 3
+    }
+  },
+
+  "market" : {
+    "1" : {
+      "minForce" : 1,
+      "minPlayers" : 0,
+      "surplus" : {
+        "resources" : {
+          "coins" :5
+        }
+      }
+    },
+
+    "2" : {
+      "minForce" : 1,
+      "minPlayers" : 0,
+      "surplus" : {
+        "resources" : {
+          "servants" :5
+        }
+      }
+    },
+
+    "3" : {
+      "minForce" : 1,
+      "minPlayers" : 4,
+      "surplus" : {
+        "resources" : {
+          "coins" : 2
+        },
+        "points" : {
+          "military" : 3
+        }
+      }
+    },
+
+    "4" : {
+      "minForce" : 1,
+      "minPlayers" : 4,
+      "surplus" : {
+        "council" : 2
+        }
+      }
+    }
+}

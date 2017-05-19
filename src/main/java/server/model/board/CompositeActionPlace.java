@@ -1,5 +1,6 @@
 package server.model.board;
 
+import server.model.effect.EffectSurplus;
 import server.model.effect.ImmediateEffect;
 
 import java.util.ArrayList;
@@ -10,9 +11,8 @@ import java.util.ArrayList;
 public class CompositeActionPlace extends ActionPlace {
     protected ArrayList<FamilyMember> places;
 
-    public CompositeActionPlace(ImmediateEffect immediateEffect, Integer entryForce, Integer minPlayers, ArrayList<FamilyMember> places) {
-        super(immediateEffect, entryForce, minPlayers);
-        this.places = places;
+    public CompositeActionPlace(EffectSurplus effectSurplus, Integer entryForce, Integer minPlayers) {
+        super(effectSurplus, entryForce, minPlayers);
     }
 
     public ArrayList<FamilyMember> getPlaces() {

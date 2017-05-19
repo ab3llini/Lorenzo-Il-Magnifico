@@ -1,29 +1,28 @@
 package server.model.board;
 
+import server.model.effect.EffectSurplus;
 import server.model.effect.ImmediateEffect;
 
 import java.util.ArrayList;
 
 /**
- * Created by Federico on 11/05/2017.
+ * Created by LBARCELLA on 14/05/2017.
  */
 public class CouncilPalace extends CompositeActionPlace {
 
 
-    public CouncilPalace(ImmediateEffect immediateEffect, Integer entryForce, Integer minPlayers, ArrayList<FamilyMember> places) {
-        super(immediateEffect, entryForce, minPlayers, places);
+    public CouncilPalace(EffectSurplus effectSurplus, Integer entryForce, Integer minPlayers) {
+        super(effectSurplus, entryForce, minPlayers);
     }
 
-    public ImmediateEffect getImmediateEffect(){
-        return immediateEffect;
-    }
+    public EffectSurplus getEffectSurplus() { return this.effectSurplus;}
 
     public Integer getEntryForce(){
-        return entryForce;
+        return this.entryForce;
     }
 
     public Integer getMinPlayers(){
-        return minPlayers;
+        return this.minPlayers;
     }
 
     /**
@@ -33,7 +32,7 @@ public class CouncilPalace extends CompositeActionPlace {
     public ArrayList<Player> getCouncilPalaceOrder(){
         ArrayList<Player> playersOrder=new ArrayList<Player>();
 
-        for (FamilyMember place:places) {
+        for (FamilyMember place: this.places) {
             if(!playersOrder.contains(place.getPlayer())){
                 playersOrder.add(place.getPlayer());
             }
