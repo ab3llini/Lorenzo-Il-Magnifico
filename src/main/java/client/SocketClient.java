@@ -11,7 +11,7 @@ import java.net.Socket;
  * @since   15/05/17.
  */
 
-public class SocketClient {
+public class SocketClient implements Runnable {
 
     //Host properties
     private String host;
@@ -42,7 +42,8 @@ public class SocketClient {
 
         socketOut.flush();
 
-        socketOut.writeObject(new RegistrationRequest("Lorenzo"));
+        socketOut.writeObject(new RegistrationRequest("Filippo"));
+
 
 
     }
@@ -50,9 +51,21 @@ public class SocketClient {
 
     public static void main(String[] args) throws IOException {
 
-        SocketClient sc = new SocketClient("localhost", 4545);
-        sc.connect();
+        Thread sc = new Thread(new SocketClient("localhost", 4545));
+        sc.start();
+
 
     }
 
+    public void run() {
+
+        try {
+            this.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        while (true);
+
+    }
 }

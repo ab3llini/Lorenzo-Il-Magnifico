@@ -15,15 +15,24 @@ import static java.util.Collections.shuffle;
  */
 
 public class Match {
+
     private Board board;
     private ArrayList<Player> players;
     private ArrayList<Player> playersOrder;
-    private Integer era;
+    private Integer period;
     private Integer round;
     private MatchSettings matchSettings;
-    private final int dvptCardOffset = 8; //Offset to split the development cards in subarrays for different eras(3) and towers (4)
 
-    public void prepareBoard(){};
+    /**
+     * Constructor: the match object get initialized with an array of players.
+     * @param players the players who are actually in game
+     */
+    public Match(ArrayList<Player> players) {
+
+        //Assign the players to the model reference
+        this.players = players;
+
+    }
 
     public Board getBoard() {
         return board;

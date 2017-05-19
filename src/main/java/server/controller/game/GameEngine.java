@@ -107,7 +107,15 @@ public class GameEngine implements ServerObserver {
 
         try {
 
-            lobby.leave(handler);
+            if (lobby.leave(handler) == 0) {
+
+                //If after the leaving there are no more players in the lobby, it gets destroyed.
+                this.lobbies.remove(lobby);
+
+                Logger.log(Level.FINEST, "GameEngine", lobby.toString() + " closed");
+
+
+            }
 
         }
         catch (NoSuchHanlderException e) {
@@ -141,20 +149,13 @@ public class GameEngine implements ServerObserver {
 
         try {
 
-            Lobby lefted = this.leaveLobby(handler);
-
-            if (lefted.isEmpty()) {
-
-                this.lobbies.remove(lefted);
-
-            }
-
+            //Try to leave the lobby
+            this.leaveLobby(handler);
 
         }
         catch (NoSuchLobbyException e) {
 
             Logger.log(Level.FINE, "GameEngine", "Unable to find the lobby to leave!", e);
-
 
         }
 

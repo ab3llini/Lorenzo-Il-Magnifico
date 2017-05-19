@@ -20,6 +20,10 @@ public class Player {
     private HashMap<PointType,Integer> points;
     private ArrayList<FamilyMember> familyMembers;
 
+    //Very important attribute both for match controller & lobby, do not edit unless 100% certain of what you are doing.
+    private boolean disabled = false;
+
+
     public Player(String username){
 
         this.username=username;
@@ -288,5 +292,16 @@ public class Player {
             throw new NotEnoughFaithPointsException("Not enough faith points to do this");
         }
     }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public boolean isDisabled() {
+
+        return this.disabled;
+
+    }
+
 }
 

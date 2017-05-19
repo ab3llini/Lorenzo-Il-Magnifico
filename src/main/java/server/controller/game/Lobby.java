@@ -50,14 +50,10 @@ public class Lobby {
         //Create the players map
         this.players = new LinkedHashMap<ClientHandler, Player>();
 
-        //TODO: Init match controller, share players reference
+        //Add the first player
+        this.players.put(firstHandler, new Player(firstHandler.getUsername()));
 
-        //Join the first player
-        this.join(firstHandler);
-
-
-        Logger.log(Level.FINE, this.toString(), "Creation successful");
-
+        Logger.log(Level.FINE, this.toString(), firstHandler.getUsername() + " created the lobby.");
 
     }
 
@@ -160,25 +156,22 @@ public class Lobby {
      * If there were only two players the timeout gets cleared
      * Otherwise just a notification to other clients
      * @param handler the handler of the client that has left
+     * @return int the number of clients in the lobby after the leaving
      */
-    public boolean leave(ClientHandler handler) throws NoSuchHanlderException {
+    public int leave(ClientHandler handler) throws NoSuchHanlderException {
 
         if (this.players.get(handler) == null) {
 
             throw new NoSuchHanlderException("The player did not belong to this lobby");
 
-
         }
 
         if (this.hasStarted) {
 
-            Logger.log(Level.WARNING, this.toString(), "Client " + handler.getUsername() + " disconnected while playing, aborting..");
+            Logger.log(Level.WARNING, this.toString(), "Client " + handler.getUsername() + " disconnected while playing, disabling player..");
 
-            //Notify
-            this.notifyMatchAborted();
-
-            //Delete players and wait for destroy
-            this.players = null;
+            //Permanently disable the player
+            this.players.get(handler).setDisabled(true);
 
         }
         else {
@@ -201,9 +194,10 @@ public class Lobby {
 
         }
 
+        //Remove any reference to the handler (If the match has started the player is still accessible in the model).
         this.players.remove(handler);
 
-        return true;
+        return this.players.size();
 
     }
 
@@ -212,6 +206,8 @@ public class Lobby {
         while(this.players.keySet().iterator().hasNext()) {
 
             this.players.keySet().iterator().next().sendObject(new Notification(NotificationType.MatchAborted));
+
+
 
         }
 
@@ -226,6 +222,7 @@ public class Lobby {
 
     /**
      * Starts the match
+     * It loads the match controller with the players
      */
     public void startMatch() {
 
@@ -233,8 +230,24 @@ public class Lobby {
 
         Logger.log(Level.FINE, this.toString(), "Match started");
 
-        //TODO: Start the match !
+        this.matchController = new MatchController(this.getPlayers());
 
+    }
+
+    public ArrayList<Player> getPlayers() {
+
+        return new ArrayList<Player>(this.players.values());
+
+    }
+
+    public ArrayList<ClientHandler> getClients() {
+
+        return new ArrayList<ClientHandler>(this.players.keySet());
+
+    }
+
+    public LinkedHashMap<ClientHandler, Player> getMapping() {
+        return players;
     }
 
     @Override
@@ -244,7 +257,5 @@ public class Lobby {
         return  this.players.keySet().iterator().next().getUsername() + "'s Lobby";
     }
 
-    public LinkedHashMap<ClientHandler, Player> getPlayers() {
-        return players;
-    }
+
 }

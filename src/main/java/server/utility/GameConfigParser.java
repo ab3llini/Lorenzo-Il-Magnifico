@@ -30,7 +30,6 @@ public class GameConfigParser {
 
             Logger.log(Level.SEVERE, "GameConfigParser", "Unable to parse the config file! Any access to config will fail", e);
 
-
         }
 
         return config;

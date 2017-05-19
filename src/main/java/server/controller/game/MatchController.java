@@ -1,5 +1,6 @@
 package server.controller.game;
 import netobject.Action;
+import server.controller.network.Observable;
 import server.model.*;
 import server.model.board.Board;
 import server.model.board.Player;
@@ -13,42 +14,55 @@ import java.util.ArrayList;
 import static java.util.Collections.shuffle;
 
 /**
- * Created by Federico on 15/05/2017.
+ * Created by Alberto on 19/05/2017.
  */
 
-
+/**
+ * The controller of the match.
+ * Will handle the model instance reacting to game events.
+ */
 public class MatchController {
 
+    /**
+     * The model instance of the match
+     */
     private Match match;
-    private final Integer dvptCardOffset = 8; //every deck is a subarray composed by 8 card, according to different combination of type and era
-    private final Integer numberOfEra = 3;
-    private final Integer numberOfTower = 4;
-    private final Integer numberOfSlot = 4;
+
+    /**
+     * The instance of the board controller
+     */
+    private BoardController boardController;
+
+    /**
+     * This is the match controller constructor.
+     * It is called only by the lobby itself when the match starts
+     * @param players the players in the match.
+     */
+    public MatchController(ArrayList<Player> players) {
+
+        /*
+         * First up, create the model for the current match.
+         * Note that this call will trigger every constructor in the model
+         * The players are always provided
+         */
+        this.match = new Match(players);
+
+
+        /*
+         * Assign the board controller
+         * Keep in mind that match.board must be initialized at this time
+         */
+        this.boardController = new BoardController(this.match.getBoard());
+
+        //Init anything else in the future here..
+
+    }
 
     public void onPlayerAction(Player player, Action action) {
+
+
+
     }
 
-    private ArrayList<Player> players;
-    private ArrayList<Player> playersOrder;
-    private Integer era;
-    private Integer round;
-    private MatchSettings matchSettings;
 
-    public ArrayList<ArrayList<DvptCard>> createDecks(GameSingleton singleton) {
-        ArrayList<ArrayList<DvptCard>> deckArray = new ArrayList<ArrayList<DvptCard>>();
-        for (int deckIndex = 0; deckIndex < numberOfEra * numberOfTower; deckIndex++) {
-            ArrayList<DvptCard> deck = new ArrayList<DvptCard>();
-            for (int cardIndex = deckIndex * dvptCardOffset; cardIndex < deckIndex * dvptCardOffset + dvptCardOffset; cardIndex++) {
-                deck.add(singleton.getDvptCard(cardIndex));
-            }
-            deckArray.add(deck);
-        }
-        return deckArray;
-    }
-
-    public void shuffleDecks(ArrayList<ArrayList<DvptCard>> deckArray) {
-        for (ArrayList<DvptCard> deck : deckArray) {
-            shuffle(deck);
-        }
-    }
 }
