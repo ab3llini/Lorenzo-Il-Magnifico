@@ -5,6 +5,7 @@ package server.controller.network.RMI;
  */
 
 import client.RMIClientInterface;
+import netobject.NetObject;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
@@ -64,10 +65,17 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
+    public boolean sendObject(NetObject object) {
+
+        return false;
+
+    }
+
     /**
      * Getters and setters
      */
     public RMIClientInterface getClientRef() {
         return clientRef;
     }
+
 }

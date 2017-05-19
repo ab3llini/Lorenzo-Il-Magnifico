@@ -8,7 +8,7 @@ package logger;
 public class Logger {
 
     private static boolean silenced = false;
-    private static int minLevel = Level.FINE;
+    private static int minLevel = Level.FINEST;
 
     /**
      * Logs the message with the provided level and exception message
@@ -46,6 +46,10 @@ public class Logger {
         if (lv >= minLevel) {
 
             switch (lv) {
+
+                case Level.FINEST:
+                    print(AnsiColors.ANSI_CYAN + "[FINEST] " + ctx + " : " + message, e);
+                    break;
 
                 case Level.FINE:
                     print(AnsiColors.ANSI_GREEN + "[FINE] " + ctx + " : " + message, e);

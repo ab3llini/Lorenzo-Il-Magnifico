@@ -4,6 +4,7 @@ package server.controller.game;
  * Created by alberto on 09/05/17.
  */
 
+import exception.NoSuchHanlderException;
 import exception.NoSuchLobbyException;
 import logger.Level;
 import logger.Logger;
@@ -11,6 +12,7 @@ import server.controller.network.*;
 import server.controller.network.RMI.RMIClientHandler;
 import server.controller.network.RMI.RMIServer;
 import server.controller.network.Socket.SocketServer;
+import singleton.GameConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +62,7 @@ public class GameEngine implements ServerObserver {
      * @return An active lobby is returned when is found.
      * @throws NoSuchLobbyException
      */
-    private Lobby getLobbyForClientHanlder(ClientHandler handler) throws NoSuchLobbyException {
+    private synchronized Lobby getLobbyForClientHanlder(ClientHandler handler) throws NoSuchLobbyException {
 
         //Lookup the lobby to which the client belongs
         for (Lobby lobby : this.lobbies) {
@@ -77,6 +79,48 @@ public class GameEngine implements ServerObserver {
 
     }
 
+    private synchronized Lobby joinLobby(ClientHandler handler) {
+
+        for (Lobby lobby : this.lobbies) {
+
+            if (lobby.isJoinable()) {
+
+                lobby.join(handler);
+
+                return lobby;
+
+            }
+
+        }
+
+        Lobby newLobby = new Lobby(handler);
+
+        this.lobbies.add(newLobby);
+
+        return newLobby;
+
+    }
+
+    private synchronized Lobby leaveLobby(ClientHandler handler) throws NoSuchLobbyException {
+
+        Lobby lobby = this.getLobbyForClientHanlder(handler);
+
+        try {
+
+            lobby.leave(handler);
+
+        }
+        catch (NoSuchHanlderException e) {
+
+            Logger.log(Level.SEVERE, "GameEngine", "Client does not belong to the lobby specified", e);
+
+        }
+
+        return lobby;
+
+    }
+
+
     public void onError(Server server) {
 
         Logger.log(Level.SEVERE, "GameEngine", "Error encountered on server " + server.toString());
@@ -87,16 +131,45 @@ public class GameEngine implements ServerObserver {
 
         Logger.log(Level.FINE, "GameEngine", "New client connected, username = " + handler.getUsername());
 
+        this.joinLobby(handler);
+
     }
 
     public void onDisconnection(Server server, ClientHandler handler) {
 
-        Logger.log(Level.WARNING, "GameEngine", "New client disconnected, username = " + handler.getUsername());
+        Logger.log(Level.FINE, "GameEngine", "Client disconnected, username = " + handler.getUsername());
+
+        try {
+
+            Lobby lefted = this.leaveLobby(handler);
+
+            if (lefted.isEmpty()) {
+
+                this.lobbies.remove(lefted);
+
+            }
+
+
+        }
+        catch (NoSuchLobbyException e) {
+
+            Logger.log(Level.FINE, "GameEngine", "Unable to find the lobby to leave!", e);
+
+
+        }
 
 
     }
 
-    public boolean onRegistrationRequest(Server server, String username) {
+    /**
+     * Loops through all the clients (either RMI or Socket) and looks for a client with the provided username
+     * Must be synchronized because access cannot be simultaneous
+     * What if two client attempt to register with the same name at the same time ?
+     * @param server The server
+     * @param username The username to check the new client with
+     * @return true if exists a client with the same username, false otherwise
+     */
+    public synchronized boolean onRegistrationRequest(Server server, String username) {
 
         if (username == null) {
 

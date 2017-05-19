@@ -103,7 +103,6 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
 
             Logger.log(Level.WARNING, "Client handler (Socket)", "Broken pipe: the client disconnected while writing", e);
 
-
         }
 
         return false;
@@ -129,7 +128,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
 
         }
 
-        while (!this.socket.isClosed()) {
+        while (!this.socket.isClosed() && this.socket.isConnected()) {
 
             try {
 
@@ -150,7 +149,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
             }
             catch (IOException e) {
 
-                Logger.log(Level.WARNING, "Client handler (Socket)", "Broken pipe", e);
+                Logger.log(Level.WARNING, "Client handler (Socket)", "Broken pipe while listening", e);
 
                 this.notifyDisconnection();
 

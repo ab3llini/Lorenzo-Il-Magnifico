@@ -14,7 +14,11 @@ public class GameConfigParser {
 
     public static JsonObject config;
 
-    public static void parse() {
+    public static JsonObject getConfig() {
+
+        //Do not parse again if already.
+        if (config != null) { return config; }
+
 
         try {
 
@@ -24,9 +28,12 @@ public class GameConfigParser {
         }
         catch (Exception e) {
 
-            Logger.log(Level.SEVERE, "GameConfigParser", "Unable to parse the config file!", e);
+            Logger.log(Level.SEVERE, "GameConfigParser", "Unable to parse the config file! Any access to config will fail", e);
+
 
         }
+
+        return config;
 
     }
 
@@ -36,7 +43,7 @@ public class GameConfigParser {
      */
     public static int getRmiPort() {
 
-         return config.getAsJsonObject("server").get("rmi-port").getAsInt();
+        return GameConfigParser.getConfig().getAsJsonObject("server").get("rmi-port").getAsInt();
 
     }
 
@@ -46,7 +53,7 @@ public class GameConfigParser {
      */
     public static int getSocketPort() {
 
-        return config.getAsJsonObject("server").get("socket-port").getAsInt();
+        return GameConfigParser.getConfig().getAsJsonObject("server").get("socket-port").getAsInt();
 
     }
 
@@ -56,7 +63,7 @@ public class GameConfigParser {
      */
     public static int getPlayerTimeout() {
 
-        return config.getAsJsonObject("player").get("timeout").getAsInt();
+        return GameConfigParser.getConfig().getAsJsonObject("player").get("timeout").getAsInt();
 
     }
 
@@ -66,7 +73,7 @@ public class GameConfigParser {
      */
     public static int getMatchTimeout() {
 
-        return config.getAsJsonObject("match").get("timeout").getAsInt();
+        return GameConfigParser.getConfig().getAsJsonObject("match").get("timeout").getAsInt();
 
     }
 

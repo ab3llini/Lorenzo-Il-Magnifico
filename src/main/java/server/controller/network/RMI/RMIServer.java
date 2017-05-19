@@ -74,7 +74,7 @@ public class RMIServer extends Server implements RMIServerStub {
 
             this.registry = LocateRegistry.createRegistry(this.port);
 
-            Logger.log(Level.INFO, "Server (RMI)", "Registry created");
+            Logger.log(Level.FINEST, "Server (RMI)", "Registry created");
 
         }
         catch (RemoteException e) {
@@ -90,12 +90,12 @@ public class RMIServer extends Server implements RMIServerStub {
         try {
 
             this.registry.bind(bindName, this);
-            Logger.log(Level.INFO, "Server (RMI)", "Bounded remote object as " + bindName);
+            Logger.log(Level.FINEST, "Server (RMI)", "Bounded remote object as " + bindName);
 
         }
         catch (AlreadyBoundException e) {
 
-            Logger.log(Level.INFO, "Server (RMI)", "The registry was already bound to object", e);
+            Logger.log(Level.FINEST, "Server (RMI)", "The registry was already bound to object", e);
 
             try {
 
@@ -147,7 +147,7 @@ public class RMIServer extends Server implements RMIServerStub {
 
         }
 
-        Logger.log(Level.INFO, "Server (RMI)", "New registration request with username " + request.username);
+        Logger.log(Level.FINEST, "Server (RMI)", "New registration request with username " + request.username);
 
         if (!this.checkUsernameAvailable(request.username)) {
 

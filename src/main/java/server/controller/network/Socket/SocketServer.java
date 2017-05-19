@@ -75,7 +75,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
         }
 
         //Run forever
-        while (true) {
+        while (!this.acceptor.isClosed()) {
 
             try {
 
@@ -97,7 +97,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                 //Start the handler
                 thread.start();
 
-                Logger.log(Level.INFO, "Server (Socket)", "New client added.. waiting for registration");
+                Logger.log(Level.FINEST, "Server (Socket)", "New client added.. waiting for registration");
 
 
             }
@@ -114,7 +114,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
     public void onDisconnect(ClientHandler handler) {
 
-        Logger.log(Level.INFO, "Server (Socket)", "Client disconnected " + handler);
+        Logger.log(Level.FINEST, "Server (Socket)", "Client disconnected " + handler);
 
         //If the username was not null the client had authenticated and reached the game engine in the past
         if (handler.getUsername() != null) {
@@ -148,7 +148,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
         if (object instanceof RegistrationRequest) {
 
-            Logger.log(Level.INFO, "Server (Socket)", "Temporary client sent an object: '"+ object +"'");
+            Logger.log(Level.FINEST, "Server (Socket)", "Temporary client sent an object: '"+ object +"'");
 
             this.parseRequest(handler, (RegistrationRequest)object);
 
@@ -160,7 +160,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
         if (request.username != null) {
 
-            Logger.log(Level.INFO, "Server (Socekt)", "New registration request with username " + request.username);
+            Logger.log(Level.FINEST, "Server (Socekt)", "New registration request with username " + request.username);
 
             if (!this.checkUsernameAvailable(request.username)) {
 

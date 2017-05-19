@@ -1,4 +1,4 @@
-package server.controller.game;
+package singleton;
 
 /*
  * @author  ab3llini
@@ -45,17 +45,13 @@ public class GameConfig {
      */
     private GameConfig() {
 
-        //Parse the object first into the parser
-        GameConfigParser.parse();
-
         //Inject the values
         this.socketPort     = GameConfigParser.getSocketPort();
         this.rmiPort        = GameConfigParser.getRmiPort();
         this.matchTimeout   = GameConfigParser.getMatchTimeout();
         this.playerTimeout  = GameConfigParser.getPlayerTimeout();
 
-        Logger.log(Level.INFO, "GameConfig", "Game configuration loaded");
-
+        Logger.log(Level.FINEST, "GameConfig", "Game configuration loaded");
 
     }
 

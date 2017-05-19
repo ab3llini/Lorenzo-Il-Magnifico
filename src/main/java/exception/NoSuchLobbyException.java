@@ -13,3 +13,4 @@ public class NoSuchLobbyException extends Exception {
     }
 
 }
+

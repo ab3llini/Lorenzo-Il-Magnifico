@@ -1,4 +1,6 @@
 package server.controller.network;
+import netobject.NetObject;
+
 import java.util.ArrayList;
 
 /*
@@ -9,6 +11,8 @@ public abstract class ClientHandler  {
 
     //A representative username
     protected String username;
+
+    public abstract boolean sendObject(NetObject object);
 
     public String getUsername() {
         return username;
