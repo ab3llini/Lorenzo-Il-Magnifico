@@ -1,5 +1,6 @@
 package client;
 
+import netobject.LoginAuthentication;
 import netobject.RegistrationRequest;
 
 import java.io.IOException;
@@ -17,15 +18,20 @@ public class SocketClient implements Runnable {
     private String host;
     private int port;
 
+    private int life;
+
     private Socket socket;
 
-    public SocketClient(String host, int port) {
+    public SocketClient(String host, int port, int life) {
 
         //Assign host & port
         this.host = host;
         this.port = port;
+        this.life = life;
 
     }
+
+
 
 
     public void connect() throws IOException {
@@ -42,8 +48,7 @@ public class SocketClient implements Runnable {
 
         socketOut.flush();
 
-        socketOut.writeObject(new RegistrationRequest("Filippo"));
-
+        socketOut.writeObject(new LoginAuthentication("#" + Math.round(Math.random() * 10000), null));
 
 
     }
@@ -51,7 +56,7 @@ public class SocketClient implements Runnable {
 
     public static void main(String[] args) throws IOException {
 
-        Thread sc = new Thread(new SocketClient("localhost", 4545));
+        Thread sc = new Thread(new SocketClient("localhost", 4545, 3600));
         sc.start();
 
 
@@ -65,7 +70,25 @@ public class SocketClient implements Runnable {
             e.printStackTrace();
         }
 
-        while (true);
+        while (life > 0) {
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            life--;
+
+        }
+
+        System.out.println("Disconnecting..");
+
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

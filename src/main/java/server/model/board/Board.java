@@ -67,4 +67,5 @@ public class Board {
     public void setVentureTower(ArrayList<TowerSlot> ventureTower){
         this.ventureTower = ventureTower;
     }
+
 }

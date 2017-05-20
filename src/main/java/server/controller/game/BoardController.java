@@ -47,6 +47,7 @@ public class BoardController {
 
     /**
      * A method that creates the card decks
+     * Was originally implemented by Federico but has been revisited to fit changes.
      * @return the array list
      */
     public ArrayList<Deck<DvptCard>> createDecks() {

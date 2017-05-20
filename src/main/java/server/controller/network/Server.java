@@ -1,6 +1,11 @@
 package server.controller.network;
 
+import netobject.LoginAuthentication;
+import netobject.NetObject;
+import netobject.RegisterAuthentication;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * @author  ab3llini
@@ -13,7 +18,10 @@ import java.util.ArrayList;
 public abstract class Server implements Observable<ServerObserver> {
 
     //The observer list
-    protected ArrayList<ServerObserver> observers = new ArrayList<ServerObserver>() ;
+    protected ArrayList<ServerObserver> observers = new ArrayList<ServerObserver>();
+
+    //The client handlers
+    protected HashMap<ClientHandler, Thread> clientHandlers = new HashMap<ClientHandler, Thread>();;
 
 
     //Interface impl.
@@ -39,7 +47,7 @@ public abstract class Server implements Observable<ServerObserver> {
     /**
      * Notify error
      */
-    public final void notifyError() {
+    protected final void notifyError() {
 
         for (ServerObserver o : this.observers) {
 
@@ -50,24 +58,30 @@ public abstract class Server implements Observable<ServerObserver> {
     }
 
     /**
-     * Notify the connection
+     * Notify the authentication of a client
      * @param handler The handler
      */
-    public final void notifyConnection(ClientHandler handler) {
+    private final synchronized void notifyAuthentication(ClientHandler handler) {
 
         for (ServerObserver o : this.observers) {
 
-            o.onConnection(this, handler);
+            o.onAuthentication(this, handler);
 
         }
 
     }
 
     /**
-     * Notify the disconnection
+     * Notify the disconnection of an authenticated client only
      * @param handler The handler
      */
-    public final void notifyDisconnection(ClientHandler handler) {
+    protected final synchronized void notifyDisconnection(ClientHandler handler) {
+
+        if (!handler.isAuthenticated()) {
+
+            return;
+
+        }
 
         for (ServerObserver o : this.observers) {
 
@@ -78,32 +92,68 @@ public abstract class Server implements Observable<ServerObserver> {
     }
 
     /**
-     * Makes the request
-     * @param username The username
-     * @return True/False
+     * Removes a client and terminates his thread
+     * @param handler the handler to be removed
      */
-    public final boolean checkUsernameAvailable(String username) {
+    protected synchronized void removeClientHandler(ClientHandler handler) {
 
-        for (ServerObserver o : this.observers) {
+        //Terminate the thread
+        this.clientHandlers.get(handler).interrupt();
 
-            if (!o.onRegistrationRequest(this, username)) {
+        //Remove the reference
+        this.clientHandlers.remove(handler);
 
-                return false;
+    }
 
-            }
+    /**
+     * Adds a client handler to the map.
+     * Takes care of giving a thread and running it
+     * @param handler the handler to add
+     */
+    protected synchronized void addClientHandler(ClientHandler handler) {
+
+        //Prepare a dedicated thread for the client.
+        Thread thread = new Thread(handler);
+
+        //Map the client
+        clientHandlers.put(handler, thread);
+
+        //Start the handler
+        thread.start();
+
+    }
+
+
+    protected final synchronized boolean authenticate(ClientHandler handler, NetObject authentication) {
+
+        //Login or register
+        if (authentication instanceof LoginAuthentication) {
+
+            LoginAuthentication login = (LoginAuthentication)authentication;
+
+            //Perform login with postgre sql server
+            //Check if username & password are correct
+
+            //Assign username & session to handler
+            handler.setUsername(login.getUsername());
+            handler.setAuthenticated(true);
+
+            //Notify the authentication
+            this.notifyAuthentication(handler);
+
+            return true;
+
+
+        }
+        else if (authentication instanceof RegisterAuthentication) {
+
+            //Perform registration
 
         }
 
-        return true;
+        return false;
 
     }
-
-    public final void register (ClientHandler handler, String username) {
-
-        handler.setUsername(username);
-
-    }
-
 
 
 }

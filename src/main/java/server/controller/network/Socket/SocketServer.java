@@ -7,16 +7,14 @@ package server.controller.network.Socket;
 
 import logger.Level;
 import logger.Logger;
+import netobject.LoginAuthentication;
 import netobject.NetObject;
-import netobject.RegistrationRequest;
-import netobject.RegistrationResponse;
 import server.controller.network.Server;
 import server.controller.network.ClientHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 
 /**
  * The server which handles the clients connected via socket.
@@ -30,17 +28,11 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
     //The listening port
     private int port;
 
-    //The TCP Socket client handlers
-    private HashMap<SocketClientHandler, Thread> clientHandlers;
-
     /**
      * Constructor
      * @param port The port on which the listening will be performed
      */
     public SocketServer(int port) {
-
-        //Initialize the handlers
-        this.clientHandlers = new HashMap<SocketClientHandler, Thread>();
 
         //Assign the port
         this.port = port;
@@ -48,14 +40,23 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
     }
 
     /**
-     * Constructor with default 4545 port
+     * Parses an object received by the socket client handler
+     * @param handler the socket client handler
+     * @param object the object to be parsed
      */
-    public SocketServer() {
+    private void parseObject(SocketClientHandler handler, NetObject object) {
 
-        this(4545);
+        if (object instanceof LoginAuthentication) {
+
+            this.authenticate(handler, object);
+
+        }
 
     }
 
+    /**
+     * The run loop where the socket server listens for new connections
+     */
     public void run() {
 
 
@@ -83,21 +84,15 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                 Socket newClientSocket = this.acceptor.accept();
 
                 //Create a new client handler
-                SocketClientHandler client = new SocketClientHandler(newClientSocket, this);
+                SocketClientHandler handler = new SocketClientHandler(newClientSocket);
 
                 //Register us as observers
-                client.addObserver(this);
+                handler.addObserver(this);
 
-                //Prepare a dedicated thread for the client.
-                Thread thread = new Thread(client);
+                //Add the client
+                this.addClientHandler(handler);
 
-                //Map the client
-                clientHandlers.put(client, thread);
-
-                //Start the handler
-                thread.start();
-
-                Logger.log(Level.FINEST, "Server (Socket)", "New client added.. waiting for registration");
+                Logger.log(Level.FINEST, "Server (Socket)", "New client connected, waiting for authentication..");
 
 
             }
@@ -111,10 +106,9 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
     }
 
+    public synchronized void onDisconnect(ClientHandler handler) {
 
-    public void onDisconnect(ClientHandler handler) {
-
-        Logger.log(Level.FINEST, "Server (Socket)", "Client disconnected " + handler);
+        Logger.log(Level.FINEST, "Server (Socket)", "Client " + handler.getUsername() + " disconnected");
 
         //If the username was not null the client had authenticated and reached the game engine in the past
         if (handler.getUsername() != null) {
@@ -124,17 +118,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
         }
 
-        this.removeClient(handler);
-
-    }
-
-    public void removeClient(ClientHandler handler) {
-
-        //Terminate the thread
-        this.clientHandlers.get(handler).interrupt();
-
-        //Remove the reference
-        this.clientHandlers.remove(handler);
+        this.removeClientHandler(handler);
 
     }
 
@@ -144,60 +128,8 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
     }
 
-    private void parseObject(SocketClientHandler handler, NetObject object) {
-
-        if (object instanceof RegistrationRequest) {
-
-            Logger.log(Level.FINEST, "Server (Socket)", "Temporary client sent an object: '"+ object +"'");
-
-            this.parseRequest(handler, (RegistrationRequest)object);
-
-        }
-
-    }
-
-    private void parseRequest(SocketClientHandler handler, RegistrationRequest request) {
-
-        if (request.username != null) {
-
-            Logger.log(Level.FINEST, "Server (Socekt)", "New registration request with username " + request.username);
-
-            if (!this.checkUsernameAvailable(request.username)) {
-
-                //Register the client
-                this.register(handler, request.username);
-
-                //Notify observer
-                this.notifyConnection(handler);
-
-                //Send a response to the client
-                handler.sendObject(new RegistrationResponse(true));
-
-
-            }
-            else {
-
-                handler.sendObject(new RegistrationResponse(false));
-
-                //Remove the client
-                this.removeClient(handler);
-
-            }
-
-        }
-
-
-
-    }
-
-
-    public HashMap<SocketClientHandler, Thread> getClientHandlers() {
-        return clientHandlers;
-    }
-
-
     public static void main(String[] args) {
-        (new Thread(new SocketServer())).start();
+        (new Thread(new SocketServer(4545))).start();
     }
 
 }

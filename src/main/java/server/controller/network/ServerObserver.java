@@ -21,7 +21,7 @@ public interface ServerObserver {
      * @param server The server
      * @param handler The handler
      */
-    void onConnection(Server server, ClientHandler handler);
+    void onAuthentication(Server server, ClientHandler handler);
 
     /**
      * Event raised whenever a client disconnects
@@ -29,14 +29,6 @@ public interface ServerObserver {
      * @param handler The handler
      */
     void onDisconnection(Server server, ClientHandler handler);
-
-    /**
-     * Event raised whenever the server tries to performRegistrationRequest a new client
-     * @param server The server
-     * @param username The username to performRegistrationRequest the new client with
-     * @return
-     */
-    boolean onRegistrationRequest(Server server, String username);
 
 
 }

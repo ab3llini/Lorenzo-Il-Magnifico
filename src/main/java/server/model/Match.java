@@ -41,4 +41,25 @@ public class Match {
     public void setBoard(Board board) {
         this.board = board;
     }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public Player getPlayerFromUsername(String username) {
+
+        for (Player p : this.players) {
+
+            if (p.getUsername() == username) {
+
+                return p;
+
+            }
+
+        }
+
+        return null;
+
+    }
+
 }

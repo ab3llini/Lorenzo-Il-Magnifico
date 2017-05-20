@@ -7,7 +7,6 @@ package server.controller.game;
 import exception.NoSuchHanlderException;
 import logger.Level;
 import logger.Logger;
-import netobject.Action;
 import netobject.Notification;
 import netobject.NotificationType;
 import server.controller.network.ClientHandler;
@@ -30,10 +29,16 @@ public class Lobby {
     private MatchController matchController;
 
     //Timer to start the match
-    private Timer timeout = new Timer();
+    private Timer timeout;
 
-    //Status variable
-    private boolean hasStarted = false;
+    //The name of the lobby, given by the first player
+    private String name;
+
+    //Status variable that tells if the match has started
+    private boolean matchDidStart = false;
+
+    //Status variable that tells if the timeout has started
+    private boolean timeoutDidStart = false;
 
     //Constants
     private static final int MAXIMUM_PLAYERS = 4;
@@ -53,12 +58,15 @@ public class Lobby {
         //Add the first player
         this.players.put(firstHandler, new Player(firstHandler.getUsername()));
 
+        //Assign the lobby name
+        this.name = firstHandler.getUsername();
+
         Logger.log(Level.FINE, this.toString(), firstHandler.getUsername() + " created the lobby.");
 
     }
 
     /**
-     * Tells if the lobby has the specified client playing
+     * Tells if the lobby has the specified client
      * @param handler the client handler
      * @return
      */
@@ -68,21 +76,27 @@ public class Lobby {
 
     }
 
-    public boolean onClientAction(ClientHandler handler, Action action) {
+    /**
+     * Tells if the lobby has the specified player
+     * @param username the player username
+     * @return
+     */
+    public boolean hasPlayer(String username) {
 
-        //TODO: Map the handler to the player and forward the action to the match controller
+        for (Player p : this.matchController.getMatch().getPlayers()) {
 
-        return true;
+            if (p.getUsername().equals(username)) {
+
+                return true;
+
+            }
+
+        }
+
+        return false;
 
     }
 
-    public boolean onClientDisconnection(ClientHandler handler) {
-
-        //TODO: Inform the controller, take right measures.
-
-        return true;
-
-    }
 
     /**
      * If the timeout has not expired yet the lobby is in a joinable state.
@@ -90,7 +104,7 @@ public class Lobby {
      */
     public boolean isJoinable() {
 
-        return (!this.hasStarted && this.players.size() < MAXIMUM_PLAYERS);
+        return (!this.matchDidStart && this.players.size() < MAXIMUM_PLAYERS);
 
     }
 
@@ -101,10 +115,10 @@ public class Lobby {
      * @param handler the client handler who wants to join the lobby
      * @return true if the join was successful
      */
-    public boolean join(ClientHandler handler) {
+    public synchronized boolean join(ClientHandler handler) {
 
         //If the lobby is full
-        if (this.players.size() >= MAXIMUM_PLAYERS || this.hasStarted) {
+        if (this.players.size() >= MAXIMUM_PLAYERS || this.matchDidStart) {
 
             return false;
 
@@ -116,9 +130,14 @@ public class Lobby {
         Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has joined!");
 
 
-
         //Check whether or not to start the timeout
         if (this.players.size() == MINIMUM_PLAYERS) {
+
+            /* Create always a new timer.
+             * This operation must always be performed.
+             * This because once a timer scheduled task get cancelled, nothing else can be scheduled.
+             */
+            this.timeout = new Timer();
 
             //Prepare the expiry date
             Calendar expiry = Calendar.getInstance();
@@ -126,6 +145,8 @@ public class Lobby {
             //Sum the timeout value
             expiry.add(Calendar.SECOND, GameConfig.getInstance().getMatchTimeout());
 
+            //Set the timeout status variable
+            this.timeoutDidStart = true;
 
             //Schedule the task with the callback
             this.timeout.schedule(new TimerTask() {
@@ -135,6 +156,7 @@ public class Lobby {
                     //This is called when the timeout expires
                     Lobby.this.startMatch();
 
+
                 }
 
             }, expiry.getTime());
@@ -143,10 +165,40 @@ public class Lobby {
 
         }
 
+        else if (this.players.size() == MAXIMUM_PLAYERS) {
+
+            //When the fourth player joins, start the match and clear the timeout
+            this.stopTimeout();
+            this.startMatch();
+
+        }
+
         return true;
 
     }
 
+    /**
+     * Remaps a client handler to a player that is already playing.
+     * Note that event though getPlayerForUsername may return null
+     * when this method is triggered a check has already been made
+     * to be sure that this lobby's match instance has that player.
+     * @param handler
+     * @return
+     */
+    public synchronized void joinAfterDisconnection(ClientHandler handler) {
+
+        //Get the player in the model
+        Player belongingPlayer = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
+
+        //Update his state! It was set to disabled
+        belongingPlayer.setDisabled(false);
+
+        //Remap the player with the new handler
+        this.players.put(handler, belongingPlayer);
+
+        Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
+
+    }
 
     /**
      * Method to handle a player disconnection
@@ -158,7 +210,7 @@ public class Lobby {
      * @param handler the handler of the client that has left
      * @return int the number of clients in the lobby after the leaving
      */
-    public int leave(ClientHandler handler) throws NoSuchHanlderException {
+    public synchronized int leave(ClientHandler handler) throws NoSuchHanlderException {
 
         if (this.players.get(handler) == null) {
 
@@ -166,7 +218,7 @@ public class Lobby {
 
         }
 
-        if (this.hasStarted) {
+        if (this.matchDidStart) {
 
             Logger.log(Level.WARNING, this.toString(), "Client " + handler.getUsername() + " disconnected while playing, disabling player..");
 
@@ -185,9 +237,11 @@ public class Lobby {
             }
             else {
 
-                this.timeout.cancel();
+                if (this.timeoutDidStart) {
 
-                Logger.log(Level.FINEST, this.toString(), "Timeout stopped");
+                    this.stopTimeout();
+
+                }
 
 
             }
@@ -201,13 +255,26 @@ public class Lobby {
 
     }
 
+    private void stopTimeout() {
+
+        //Cancel the timeout if less than 2 players are in the room
+        this.timeout.cancel();
+
+        //Let the old timer object get garbage collected
+        this.timeout = null;
+
+        //Change the status variable
+        this.timeoutDidStart = false;
+
+        Logger.log(Level.FINEST, this.toString(), "Timeout stopped");
+
+    }
+
     private void notifyMatchAborted() {
 
         while(this.players.keySet().iterator().hasNext()) {
 
             this.players.keySet().iterator().next().sendObject(new Notification(NotificationType.MatchAborted));
-
-
 
         }
 
@@ -219,14 +286,13 @@ public class Lobby {
 
     }
 
-
     /**
      * Starts the match
      * It loads the match controller with the players
      */
     public void startMatch() {
 
-        this.hasStarted = true;
+        this.matchDidStart = true;
 
         Logger.log(Level.FINE, this.toString(), "Match started");
 
@@ -254,8 +320,11 @@ public class Lobby {
     public String toString() {
 
         //Returns the name of the client handler that created the lobby
-        return  this.players.keySet().iterator().next().getUsername() + "'s Lobby";
+        return  this.name + "'s Lobby";
+
     }
 
-
+    public boolean hasStarted() {
+        return this.matchDidStart;
+    }
 }

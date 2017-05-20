@@ -1,12 +1,14 @@
 package client;
 
-import exception.UsernameAlreadyInUseException;
-import netobject.RegistrationRequest;
-import server.controller.network.RMI.RMIServerStub;
+import exception.LoginFailedException;
+import netobject.LoginAuthentication;
+import server.controller.network.RMIConnectionToken;
+import server.controller.network.RMI.RMIServerInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
@@ -21,9 +23,9 @@ interface RMIClientObserver {
 
 }
 
-public class RMIClient extends Thread implements RMIClientInterface {
+public class RMIClient extends Thread implements client.RMIClientInterface {
 
-    RMIServerStub serverRef;
+    RMIServerInterface serverRef;
     Registry registry;
 
     ArrayList<RMIClientObserver> observers = new ArrayList<RMIClientObserver>();
@@ -51,7 +53,7 @@ public class RMIClient extends Thread implements RMIClientInterface {
         try {
 
             this.registry = LocateRegistry.getRegistry(host, port);
-            this.serverRef = (RMIServerStub) registry.lookup(remoteName);
+            this.serverRef = (RMIServerInterface) registry.lookup(remoteName);
 
             System.out.println("Remote stub obtained.");
 
@@ -87,24 +89,20 @@ public class RMIClient extends Thread implements RMIClientInterface {
             RMIClient rmic = new RMIClient("127.0.0.1" , 1099, "server");
 
             rmic.prepareRmiConnection();
-            if(rmic.getServerRef().performRegistrationRequest(rmic, new RegistrationRequest("Alberto")).success) {
 
-                System.out.println("Connected");
+            RMIConnectionToken token = rmic.getServerRef().connect(rmic);
 
-            }
+            System.out.println("Got " + token.toString());
 
-        }
+            rmic.getServerRef().login(token.getToken(), new LoginAuthentication("#" + Math.round(Math.random() * 10000), null));
 
-        catch (UsernameAlreadyInUseException e) {
 
-            System.out.println("Username already in use");
-
-        }
-
-        catch (RemoteException e) {
-
-            System.out.println("RemoteException:  " + e.getMessage());
-
+        } catch (ServerNotActiveException e1) {
+            e1.printStackTrace();
+        } catch (RemoteException e1) {
+            e1.printStackTrace();
+        } catch (LoginFailedException e) {
+            e.printStackTrace();
         }
 
     }
@@ -121,11 +119,11 @@ public class RMIClient extends Thread implements RMIClientInterface {
     }
 
 
-    public RMIServerStub getServerRef() {
+    public RMIServerInterface getServerRef() {
         return serverRef;
     }
 
-    public void callback() throws RemoteException {
-        System.out.println("Callback successful");
+    public boolean heartbeat() throws RemoteException {
+        return true;
     }
 }

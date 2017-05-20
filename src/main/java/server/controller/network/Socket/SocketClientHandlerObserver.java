@@ -16,4 +16,5 @@ public interface SocketClientHandlerObserver extends ClientHandlerObserver {
      */
     void onObjectReceived(SocketClientHandler handler, NetObject object);
 
+
 }

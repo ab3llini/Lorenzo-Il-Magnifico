@@ -6,6 +6,7 @@ package server.controller.game;
 
 import exception.NoSuchHanlderException;
 import exception.NoSuchLobbyException;
+import exception.PlayerNeverDisconnectedException;
 import logger.Level;
 import logger.Logger;
 import server.controller.network.*;
@@ -24,26 +25,28 @@ import java.util.HashMap;
 
 public class GameEngine implements ServerObserver {
 
-    //The game configuration
-    private GameConfig config = GameConfig.getInstance();
-
-    //Il server in ascolto per nuove connessioni TCP su socket
+    //Socket server listening for clients to connect
     private SocketServer socketServer;
 
-    //Il server in ascolto per nuove connessioni RMI
+    //RMI Server listening for RMI invocations
     private RMIServer rmiServer;
 
-    //Le lobby esistenti
+    //Reference to the lobbies
     private ArrayList<Lobby> lobbies;
 
+    /**
+     * Game engine constructor
+     * Initializes the lobbies
+     * Launches the servers
+     */
     public GameEngine() {
 
         //Initialize the lobbies
         this.lobbies = new ArrayList<Lobby>();
 
         //Initialize the servers
-        this.socketServer = new SocketServer(config.getSocketPort());
-        this.rmiServer = new RMIServer(config.getRmiPort(), "server");
+        this.socketServer = new SocketServer(GameConfig.getInstance().getSocketPort());
+        this.rmiServer = new RMIServer(GameConfig.getInstance().getRmiPort(), "server");
 
         //Register us as observer
         this.socketServer.addObserver(this);
@@ -55,14 +58,7 @@ public class GameEngine implements ServerObserver {
 
     }
 
-
-    /**
-     * Get a reference to the lobby which holds a reference to the provided handler
-     * @param handler The handler to perform the lookup with
-     * @return An active lobby is returned when is found.
-     * @throws NoSuchLobbyException
-     */
-    private synchronized Lobby getLobbyForClientHanlder(ClientHandler handler) throws NoSuchLobbyException {
+    private Lobby getLobby(ClientHandler handler) throws NoSuchLobbyException {
 
         //Lookup the lobby to which the client belongs
         for (Lobby lobby : this.lobbies) {
@@ -79,7 +75,29 @@ public class GameEngine implements ServerObserver {
 
     }
 
-    private synchronized Lobby joinLobby(ClientHandler handler) {
+    private Lobby getLobbyAfterDisconnection(ClientHandler handler) throws PlayerNeverDisconnectedException {
+
+        for (Lobby l : this.lobbies) {
+
+            //Loop through each lobby
+            if (l.hasStarted()) {
+
+                //If the match did already start, maybe the player is here and wants to reconnect after a disconnection
+                if (l.hasPlayer(handler.getUsername())) {
+
+                    return l;
+
+                }
+
+            }
+
+        }
+
+        throw new PlayerNeverDisconnectedException("The player " + handler.getUsername() + " never left a match while playing");
+
+    }
+
+    private synchronized Lobby joinNewLobby(ClientHandler handler) {
 
         for (Lobby lobby : this.lobbies) {
 
@@ -103,7 +121,7 @@ public class GameEngine implements ServerObserver {
 
     private synchronized Lobby leaveLobby(ClientHandler handler) throws NoSuchLobbyException {
 
-        Lobby lobby = this.getLobbyForClientHanlder(handler);
+        Lobby lobby = this.getLobby(handler);
 
         try {
 
@@ -114,13 +132,12 @@ public class GameEngine implements ServerObserver {
 
                 Logger.log(Level.FINEST, "GameEngine", lobby.toString() + " closed");
 
-
             }
 
         }
         catch (NoSuchHanlderException e) {
 
-            Logger.log(Level.SEVERE, "GameEngine", "Client does not belong to the lobby specified", e);
+            Logger.log(Level.SEVERE, "GameEngine", "Client does not belong to the lobby found", e);
 
         }
 
@@ -128,18 +145,34 @@ public class GameEngine implements ServerObserver {
 
     }
 
-
     public void onError(Server server) {
 
         Logger.log(Level.SEVERE, "GameEngine", "Error encountered on server " + server.toString());
 
     }
 
-    public void onConnection(Server server, ClientHandler handler) {
+    public void onAuthentication(Server server, ClientHandler handler) {
 
-        Logger.log(Level.FINE, "GameEngine", "New client connected, username = " + handler.getUsername());
+        Logger.log(Level.FINE, "GameEngine", "New client authenticated with username = " + handler.getUsername());
 
-        this.joinLobby(handler);
+        //Assume first that the new client may have been already playing into a lobby but disconnected and reconnected
+        //Find the lobby and let the player continue the match
+        try {
+
+            //Search the lobby whose model contains the player with the just-logged-in client's username
+            Lobby previousLobby = this.getLobbyAfterDisconnection(handler);
+
+            //Upon success, rejoin the lobby!
+            previousLobby.joinAfterDisconnection(handler);
+
+        }
+        catch (PlayerNeverDisconnectedException e) {
+
+            //If we get here it means that no player with the username of the just-logged-in client was playing
+            //Follow the standard procedure: join the first available lobby
+            this.joinNewLobby(handler);
+
+        }
 
     }
 
@@ -155,54 +188,11 @@ public class GameEngine implements ServerObserver {
         }
         catch (NoSuchLobbyException e) {
 
-            Logger.log(Level.FINE, "GameEngine", "Unable to find the lobby to leave!", e);
+            Logger.log(Level.SEVERE, "GameEngine", "Unable to find the lobby to leave!", e);
 
         }
 
 
-    }
-
-    /**
-     * Loops through all the clients (either RMI or Socket) and looks for a client with the provided username
-     * Must be synchronized because access cannot be simultaneous
-     * What if two client attempt to register with the same name at the same time ?
-     * @param server The server
-     * @param username The username to check the new client with
-     * @return true if exists a client with the same username, false otherwise
-     */
-    public synchronized boolean onRegistrationRequest(Server server, String username) {
-
-        if (username == null) {
-
-            return false;
-
-        }
-
-        for (RMIClientHandler client : this.rmiServer.getClientHandlers()) {
-
-            if (client.getUsername().equals(username)) {
-
-                return true;
-            }
-
-        }
-
-
-        for (Object o : this.socketServer.getClientHandlers().entrySet()) {
-
-            HashMap.Entry pair = (HashMap.Entry) o;
-
-            String uname = ((server.controller.network.Socket.SocketClientHandler) pair.getKey()).getUsername();
-
-            if (uname != null && uname.equals(username)) {
-
-                return true;
-
-            }
-
-        }
-
-        return false;
     }
 
     public static void main(String[] args) {

@@ -5,15 +5,17 @@ package client;
  * @since   14/05/17.
  */
 
-import exception.UsernameAlreadyInUseException;
+import exception.LoginFailedException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import netobject.LoginAuthentication;
 import netobject.RegistrationRequest;
 
 import java.rmi.RemoteException;
+import java.rmi.server.ServerNotActiveException;
 
 public class ConnectionController implements RMIClientObserver {
 
@@ -72,27 +74,12 @@ public class ConnectionController implements RMIClientObserver {
     public void RMIConnectionReady() {
 
         try {
-
-            if (rmiClient.getServerRef().performRegistrationRequest(
-                    rmiClient,
-                    new RegistrationRequest(usernameTextField.getText())
-            ).success) {
-
-                System.out.println("Connected..");
-
-            }
-            else {
-
-                System.out.println("Username already taken");
-
-            }
-
+            System.out.println(rmiClient.getServerRef().connect(rmiClient));
         }
-        catch (RemoteException ex) {
-
-            System.out.println(ex.getMessage());
-
-        } catch (UsernameAlreadyInUseException e) {
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        catch (ServerNotActiveException e) {
             e.printStackTrace();
         }
 

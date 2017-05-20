@@ -64,5 +64,9 @@ public class MatchController {
 
     }
 
+    public Match getMatch() {
+        return match;
+    }
+
 
 }

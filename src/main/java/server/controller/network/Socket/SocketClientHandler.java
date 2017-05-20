@@ -18,64 +18,25 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class SocketClientHandler extends ClientHandler implements Runnable, Observable<SocketClientHandlerObserver> {
+public class SocketClientHandler extends ClientHandler implements Observable<SocketClientHandlerObserver> {
 
     //The socket of the handler
     private Socket socket;
 
-    //Pointer to the server to check if the username is already in use
-    private SocketServer server;
+    //A state variable to assure performance
+    private boolean running = true;
 
     //The observer list
-    protected ArrayList<SocketClientHandlerObserver> observers = new ArrayList<SocketClientHandlerObserver>();
+    private ArrayList<SocketClientHandlerObserver> observers = new ArrayList<SocketClientHandlerObserver>();
 
-
-    public SocketClientHandler(Socket socket, SocketServer server) {
+    /**
+     * The constructor
+     * @param socket the socket of the client
+     */
+    public SocketClientHandler(Socket socket) {
 
         //Assign the socket
         this.socket = socket;
-        this.server = server;
-
-    }
-
-    //Interface impl.
-    public boolean addObserver(SocketClientHandlerObserver o) {
-
-        //Check whether the observer is not null
-        if (o != null) {
-            this.observers.add(o);
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    //Interface impl.
-    public boolean removeObserver(SocketClientHandlerObserver o) {
-
-        return this.observers.remove(o);
-
-    }
-
-
-    public final void notifyDisconnection() {
-
-        for (SocketClientHandlerObserver o : this.observers) {
-
-            o.onDisconnect(this);
-
-        }
-
-    }
-
-    public final void notifyObjectReceived(NetObject object) {
-
-        for (SocketClientHandlerObserver o : this.observers) {
-
-            o.onObjectReceived(this, object);
-
-        }
 
     }
 
@@ -87,7 +48,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
 
         }
 
-        ObjectOutputStream socketOut = null;
+        ObjectOutputStream socketOut;
 
         try {
 
@@ -103,10 +64,13 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
 
             Logger.log(Level.WARNING, "Client handler (Socket)", "Broken pipe: the client disconnected while writing", e);
 
+            this.notifyDisconnection();
+
+            this.running = false;
+
         }
 
         return false;
-
 
     }
 
@@ -128,7 +92,7 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
 
         }
 
-        while (!this.socket.isClosed() && this.socket.isConnected()) {
+        while (this.running && !this.socket.isClosed() && this.socket.isConnected()) {
 
             try {
 
@@ -153,6 +117,8 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
 
                 this.notifyDisconnection();
 
+                this.running = false;
+
                 break;
 
             }
@@ -162,6 +128,45 @@ public class SocketClientHandler extends ClientHandler implements Runnable, Obse
 
                 break;
             }
+
+        }
+
+    }
+
+    /* Observable<SocketClientHandlerObserver> implementation */
+    public boolean addObserver(SocketClientHandlerObserver o) {
+
+        //Check whether the observer is not null
+        if (o != null) {
+            this.observers.add(o);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean removeObserver(SocketClientHandlerObserver o) {
+
+        return this.observers.remove(o);
+
+    }
+
+    private void notifyDisconnection() {
+
+        for (SocketClientHandlerObserver o : this.observers) {
+
+            o.onDisconnect(this);
+
+        }
+
+    }
+
+    private void notifyObjectReceived(NetObject object) {
+
+        for (SocketClientHandlerObserver o : this.observers) {
+
+            o.onObjectReceived(this, object);
 
         }
 
