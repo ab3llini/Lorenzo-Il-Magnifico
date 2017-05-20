@@ -1,0 +1,263 @@
+{
+  "1" : {
+  	"period": 1,
+    "type" : "valuableMalus",
+    "effect": {
+      "malus" : {
+        "points": {
+          "military" : 1
+        }
+      }
+    }
+  },
+
+  "2" : {
+  	"period": 1,
+    "type" : "valuableMalus",
+    "effect": {
+      "malus": {
+        "resources" : {
+          "coins" : 1
+        }
+      }
+    }
+  },
+
+  "3" : {
+  	"period": 1,
+    "type" : "valuableMalus",
+    "effect": {
+      "malus": {
+        "resources" : {
+          "servants" : 1
+        }
+      }
+    }
+  },
+
+   "4" : {
+  	"period": 1,
+     "type" : "valuableMalus",
+    "effect": {
+      "malus": {
+        "resources" : {
+          "stones" : 1,
+          "wood" : 1
+        }
+      }
+    }
+  },
+
+  "5" : {
+  	"period": 1,
+    "type" : "dice",
+    "effect": {
+      "diceMalus":
+        {
+        "target" : "harvest",
+        "force" : 3
+        }
+    }
+  },
+
+  "6" : {
+  	"period": 1,
+    "type" : "dice",
+    "effect": {
+      "diceMalus":
+        {
+        "target" : "production",
+        "force" : 3
+        }
+    }
+  },
+  "7" : {
+  	"period": 1,
+    "type" : "dice",
+    "effect": {
+      "diceMalus":
+        {
+        "roundDiceMalus": 1
+        }
+    }
+  },
+
+  "8" : {
+  	"period": 2,
+    "type" : "dice",
+    "effect": {
+      "diceMalus":
+        {
+        "target" : "card",
+        "type" : "territory",
+        "force" : 4
+        }
+    }
+  },
+
+  "9" : {
+  	"period": 2,
+    "type" : "dice",
+    "effect": {
+      "diceMalus":
+        {
+        "target" : "card",
+        "type" : "building",
+        "force" : 4
+        }
+    }
+  },
+
+  "10" : {
+  	"period": 2,
+    "type" : "dice",
+    "effect": {
+      "diceMalus":
+        {
+        "target" : "card",
+        "type" : "character",
+        "force" : 4
+        }
+    }
+  },
+
+  "11" : {
+  	"period": 2,
+    "type" : "dice",
+    "effect": {
+      "diceMalus":
+        {
+        "target" : "card",
+        "type" : "venture",
+        "force" : 4
+        }
+    }
+  },
+
+  "12" : {
+  	"period": 2,
+    "type" : "special",
+    "effect": {
+      "specialEffect" : "noMarketMalus"
+    }
+  },
+
+  "13" : {
+  	"period": 2,
+    "type" : "special",
+    "effect": {
+      "specialEffect" : "servantsPowerMalus"
+    }
+  },
+
+  "14" : {
+    "period": 2,
+    "type" : "special",
+    "effect": {
+      "specialEffect" : "noFirstAction"
+    }
+  },
+
+  "15" : {
+  	"period": 3,
+    "type" : "noVictoryPoints",
+    "effect": {
+      "noVictoryPointsMalus": {
+        "target": "character"
+      }
+    }
+  },
+
+  "16" : {
+  	"period": 3,
+    "type" : "noVictoryPoints",
+    "effect": {
+      "noVictoryPointsMalus": {
+        "target": "venture"
+      }
+    }
+  },
+
+  "17" : {
+  	"period": 3,
+    "type" : "noVictoryPoints",
+    "effect": {
+      "noVictoryPointsMalus": {
+        "target": "territory"
+      }
+    }
+  },
+
+  "18" : {
+  	"period": 3,
+    "type" : "victoryMalus",
+    "effect": {
+      "victoryMalus": {
+        "causedByPoints":
+          {
+            "type": "victory",
+            "amount": 5
+          },
+        "malus": 1
+      }
+    }
+  },
+
+  "19" : {
+  	"period": 3,
+    "type" : "victoryMalus",
+    "effect": {
+      "victoryMalus": {
+        "causedByPoints":
+          {
+            "type": "military",
+            "amount": 1
+          },
+        "malus": 1
+      }
+    }
+  },
+
+  "20" : {
+  	"period": 3,
+    "type" : "victoryMalus",
+    "effect": {
+      "victoryMalus": {
+        "causedByResources": [
+             {
+            "type": "coins"
+             },
+            {
+            "type": "wood"
+             },
+            {
+            "type": "stones"
+            },
+            {
+            "type": "servants"
+            }
+            ],
+        "malus": 1
+      }
+    }
+  },
+
+  "21" : {
+  	"period": 3,
+    "type" : "victoryMalus",
+    "effect": {
+      "victoryMalus": {
+        "causedByResources": [
+            {
+            "type": "wood"
+             },
+            {
+            "type": "stones"
+            }
+            ],
+        "isRelatedToBuilding" : "true"
+      }
+    }
+  }
+}
+

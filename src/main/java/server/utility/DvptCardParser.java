@@ -103,7 +103,7 @@ public class DvptCardParser {
         return card.get("name").getAsString();
     }
 
-    private static Integer getPeriod(JsonObject card) {
+    public static Integer getPeriod(JsonObject card) {
         return card.get("period").getAsInt();
     }
 
@@ -302,7 +302,7 @@ public class DvptCardParser {
 
         ActionType target=null;
         DvptCardType type=null;
-        Integer force=null;
+        Integer force=0;
         ArrayList<Resource> discount = new ArrayList<Resource>();
 
         //get JsonObject surplus from immediate

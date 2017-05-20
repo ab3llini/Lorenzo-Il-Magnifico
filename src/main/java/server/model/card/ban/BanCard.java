@@ -2,15 +2,15 @@ package server.model.card.ban;/*
  * Created by alberto on 09/05/17.
  */
 
-public class BanCard {
+public abstract class BanCard {
     private Integer id;
     private Integer period;
-    private BanEffect banEffect;
+    private BanType type;
 
-    public BanCard(Integer id, Integer period, BanEffect banEffect) {
+    public BanCard(Integer id, Integer period,BanType type) {
         this.id = id;
         this.period = period;
-        this.banEffect = banEffect;
+        this.type = type;
     }
 
     public Integer getId() {
@@ -21,7 +21,5 @@ public class BanCard {
         return period;
     }
 
-    public BanEffect getBanEffect() {
-        return banEffect;
-    }
+    public BanType getType() {return type;}
 }

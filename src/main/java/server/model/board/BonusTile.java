@@ -3,7 +3,7 @@ package server.model.board;
 import server.model.effect.EffectSurplus;
 
 /**
- * Created by Federico on 11/05/2017.
+ * Created by LBARCELLA on 18/05/2017.
  */
 public class BonusTile {
     private Integer id;

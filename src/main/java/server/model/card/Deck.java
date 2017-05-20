@@ -73,7 +73,8 @@ public class Deck<T> {
         return this;
 
     }
-    
 
-
+    public ArrayList<T> getCards() {
+        return cards;
+    }
 }
