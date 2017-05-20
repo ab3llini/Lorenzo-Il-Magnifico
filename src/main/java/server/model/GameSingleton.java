@@ -1,7 +1,8 @@
 package server.model;
 
+import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
-import server.model.card.developement.TerritoryDvptCard;
+import server.utility.BanCardParser;
 import server.utility.DvptCardParser;
 
 import java.io.IOException;
@@ -15,8 +16,7 @@ import java.util.ArrayList;
 public class GameSingleton {
     private static GameSingleton instance = null;
     private ArrayList<DvptCard> dvptCards = new ArrayList<DvptCard>();
-
-
+    private ArrayList<BanCard> banCards = new ArrayList<BanCard>();
     private GameSingleton() {} //costructor
 
     public static GameSingleton getInstance() {
@@ -26,6 +26,7 @@ public class GameSingleton {
 
             try {
                 instance.dvptCards = DvptCardParser.parse();
+                instance.banCards = BanCardParser.parse();
             } catch (IOException e1) {
                 e1.printStackTrace();
             } catch (URISyntaxException e1) {
@@ -42,8 +43,18 @@ public class GameSingleton {
         return this.dvptCards.get(CardId);
     }
 
+    public BanCard getSpecificBanCard(Integer CardId) {
+
+        return this.banCards.get(CardId);
+    }
+
     public ArrayList<DvptCard> getDvptCards() {
 
         return this.dvptCards;
+    }
+
+    public ArrayList<BanCard> getBanCards() {
+
+        return this.banCards;
     }
 }
