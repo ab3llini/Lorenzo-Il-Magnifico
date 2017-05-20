@@ -37,8 +37,13 @@ public class GameSingleton {
     }
 
 
-   public DvptCard getDvptCard(Integer CardId) {
+   public DvptCard getSpecificDvptCard(Integer CardId) {
 
         return this.dvptCards.get(CardId);
+    }
+
+    public ArrayList<DvptCard> getDvptCards() {
+
+        return this.dvptCards;
     }
 }

@@ -20,6 +20,7 @@ public class CompositeActionPlace extends ActionPlace {
     }
 
     public void setPlaces(ArrayList<FamilyMember> places) {
+
         this.places = places;
     }
 }
