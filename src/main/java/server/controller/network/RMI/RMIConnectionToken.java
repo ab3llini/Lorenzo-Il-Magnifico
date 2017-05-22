@@ -1,4 +1,4 @@
-package server.controller.network;
+package server.controller.network.RMI;
 
 import java.io.Serializable;
 

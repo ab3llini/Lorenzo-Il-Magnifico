@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import netobject.LoginAuthentication;
 import netobject.RegistrationRequest;
+import server.controller.network.RMI.RMIConnectionToken;
 
 import java.rmi.RemoteException;
 import java.rmi.server.ServerNotActiveException;
@@ -74,12 +75,20 @@ public class ConnectionController implements RMIClientObserver {
     public void RMIConnectionReady() {
 
         try {
-            System.out.println(rmiClient.getServerRef().connect(rmiClient));
+
+            RMIConnectionToken token = rmiClient.getServerRef().connect(rmiClient);
+
+            System.out.println("Got " + token.toString());
+
+            rmiClient.getServerRef().login(token.getToken(), new LoginAuthentication(this.usernameTextField.getText(), null));
+
         }
         catch (RemoteException e) {
             e.printStackTrace();
         }
         catch (ServerNotActiveException e) {
+            e.printStackTrace();
+        } catch (LoginFailedException e) {
             e.printStackTrace();
         }
 

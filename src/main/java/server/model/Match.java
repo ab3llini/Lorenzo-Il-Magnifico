@@ -1,5 +1,6 @@
 package server.model;
 
+import exception.NoSuchPlayerException;
 import server.model.board.Board;
 import server.model.board.Player;
 import server.model.board.TowerSlot;
@@ -46,11 +47,11 @@ public class Match {
         return players;
     }
 
-    public Player getPlayerFromUsername(String username) {
+    public Player getPlayerFromUsername(String username) throws NoSuchPlayerException {
 
         for (Player p : this.players) {
 
-            if (p.getUsername() == username) {
+            if (p.getUsername().equals(username)) {
 
                 return p;
 
@@ -58,7 +59,7 @@ public class Match {
 
         }
 
-        return null;
+        throw new NoSuchPlayerException("There is no player with username = " + username);
 
     }
 

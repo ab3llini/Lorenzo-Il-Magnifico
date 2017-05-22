@@ -7,7 +7,6 @@ import exception.UsernameAlreadyInUseException;
 import netobject.Action;
 import netobject.LoginAuthentication;
 import netobject.RegisterAuthentication;
-import server.controller.network.RMIConnectionToken;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

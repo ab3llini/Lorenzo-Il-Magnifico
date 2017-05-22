@@ -5,6 +5,7 @@ package server.controller.game;
  */
 
 import exception.NoSuchHanlderException;
+import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
 import netobject.Notification;
@@ -188,15 +189,25 @@ public class Lobby {
     public synchronized void joinAfterDisconnection(ClientHandler handler) {
 
         //Get the player in the model
-        Player belongingPlayer = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
+        Player belongingPlayer = null;
 
-        //Update his state! It was set to disabled
-        belongingPlayer.setDisabled(false);
+        try {
 
-        //Remap the player with the new handler
-        this.players.put(handler, belongingPlayer);
+            belongingPlayer = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
 
-        Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
+            //Update his state! It was set to disabled
+            belongingPlayer.setDisabled(false);
+
+            //Remap the player with the new handler
+            this.players.put(handler, belongingPlayer);
+
+            Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
+
+        } catch (NoSuchPlayerException e) {
+
+            Logger.log(Level.SEVERE, this.toString(), "Cant find the player corresponding player after rejoin!", e);
+
+        }
 
     }
 
@@ -297,6 +308,8 @@ public class Lobby {
         Logger.log(Level.FINE, this.toString(), "Match started");
 
         this.matchController = new MatchController(this.getPlayers());
+
+
 
     }
 

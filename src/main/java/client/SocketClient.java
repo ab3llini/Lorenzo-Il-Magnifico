@@ -48,7 +48,7 @@ public class SocketClient implements Runnable {
 
         socketOut.flush();
 
-        socketOut.writeObject(new LoginAuthentication("#" + Math.round(Math.random() * 10000), null));
+        socketOut.writeObject(new LoginAuthentication("Alberto", null));
 
 
     }

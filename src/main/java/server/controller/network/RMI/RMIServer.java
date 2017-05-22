@@ -15,7 +15,6 @@ import netobject.Action;
 import logger.*;
 import netobject.LoginAuthentication;
 import netobject.RegisterAuthentication;
-import server.controller.network.RMIConnectionToken;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Server;
 import server.controller.network.ClientHandler;

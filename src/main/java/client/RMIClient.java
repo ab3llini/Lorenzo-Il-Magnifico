@@ -2,7 +2,7 @@ package client;
 
 import exception.LoginFailedException;
 import netobject.LoginAuthentication;
-import server.controller.network.RMIConnectionToken;
+import server.controller.network.RMI.RMIConnectionToken;
 import server.controller.network.RMI.RMIServerInterface;
 
 import java.rmi.RemoteException;

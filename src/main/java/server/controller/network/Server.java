@@ -3,6 +3,7 @@ package server.controller.network;
 import netobject.LoginAuthentication;
 import netobject.NetObject;
 import netobject.RegisterAuthentication;
+import server.model.board.Period;
 
 import java.util.ArrayList;
 import java.util.HashMap;
