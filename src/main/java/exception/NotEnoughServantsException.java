@@ -7,7 +7,7 @@ package exception;
 /**
  * This exception is raised whenever a player has not enough servants to do an action
  */
-public class NotEnoughServantsException extends Exception {
+public class NotEnoughServantsException extends NotEnoughResourcesException {
 
     public  NotEnoughServantsException(String message){
 

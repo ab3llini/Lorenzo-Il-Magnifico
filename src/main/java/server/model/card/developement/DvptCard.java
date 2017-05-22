@@ -5,6 +5,8 @@ package server.model.card.developement;/*
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
+import java.util.ArrayList;
+
 public abstract class DvptCard {
 
     private final Integer id;
@@ -27,6 +29,7 @@ public abstract class DvptCard {
     public Integer getId() {
         return id;
     }
+
     public Integer getPeriod() {
         return period;
     }
@@ -37,6 +40,10 @@ public abstract class DvptCard {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<Cost> getCost(){
+        return null;
     }
 
 }

@@ -7,7 +7,7 @@ package exception;
 /**
  * This exception is raised whenever a player has not enough coins to do an action
  */
-public class NotEnoughCoinsException extends Exception {
+public class NotEnoughCoinsException extends NotEnoughResourcesException {
 
     public NotEnoughCoinsException(String message) {
 

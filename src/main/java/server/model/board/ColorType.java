@@ -6,5 +6,6 @@ package server.model.board;
 public enum ColorType {
     White,
     Orange,
-    Black
+    Black,
+    Uncoloured
 }

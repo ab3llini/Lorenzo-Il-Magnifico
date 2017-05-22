@@ -1,5 +1,6 @@
 package server.model.board;
 
+import com.sun.org.apache.regexp.internal.RE;
 import exception.*;
 import server.model.board.ColorType;
 import server.model.board.FamilyMember;
@@ -45,7 +46,13 @@ public class Player {
         points.put(PointType.Military,0);
         points.put(PointType.Victory,0);
         points.put(PointType.Faith,0);
-    }
+
+        //create the arrayList with all the player's familyMembers
+        familyMembers = new ArrayList<FamilyMember>();
+        familyMembers.add(new FamilyMember(this,ColorType.Black));
+        familyMembers.add(new FamilyMember(this,ColorType.Orange));
+        familyMembers.add(new FamilyMember(this,ColorType.White));
+        familyMembers.add(new FamilyMember(this, ColorType.Uncoloured));    }
 
     public void setPersonalBoard(PersonalBoard personalBoard) {
         this.personalBoard = personalBoard;
@@ -87,6 +94,20 @@ public class Player {
 
     public void setWood(Integer wood) {
         this.resources.put(ResourceType.Wood,wood);
+    }
+
+    public Integer getResource(ResourceType resourceType){
+        if(resourceType == ResourceType.Coins)
+            return getCoins();
+
+        if(resourceType == ResourceType.Wood)
+            return getWood();
+
+        if(resourceType == ResourceType.Servants)
+            return getServants();
+
+        else
+            return getStones();
     }
 
     public Integer getMilitaryPoints() {
@@ -206,6 +227,18 @@ public class Player {
     }
 
     /**
+     * this method check if the player has enough coins to do something
+     * @param coinsMalus
+     * @throws NotEnoughCoinsException
+     */
+
+    public void hasEnoughCoins(Integer coinsMalus) throws NotEnoughCoinsException {
+        if(this.resources.get(ResourceType.Coins)<coinsMalus){
+            throw new NotEnoughCoinsException("Not enough money to do this");
+        }
+    }
+
+    /**
      * this method subtract a woodMalus if the player has enough wood
      * @param woodMalus
      * @throws NotEnoughWoodException
@@ -216,6 +249,18 @@ public class Player {
             this.resources.put(ResourceType.Wood,getWood()-woodMalus);
         }
         else{
+            throw new NotEnoughWoodException("Not enough wood to do this");
+        }
+    }
+
+    /**
+     * this method check if the player has enough wood to do something
+     * @param woodMalus
+     * @throws NotEnoughWoodException
+     */
+
+    public void hasEnoughWood(Integer woodMalus) throws NotEnoughWoodException {
+        if(this.resources.get(ResourceType.Wood)<woodMalus){
             throw new NotEnoughWoodException("Not enough wood to do this");
         }
     }
@@ -236,6 +281,18 @@ public class Player {
     }
 
     /**
+     * this method check if the player has enough stones to do something
+     * @param stonesMalus
+     * @throws NotEnoughStonesException
+     */
+
+    public void hasEnoughStones(Integer stonesMalus) throws NotEnoughStonesException {
+        if(this.resources.get(ResourceType.Stones)<stonesMalus){
+            throw new NotEnoughStonesException("Not enough stones to do this");
+        }
+    }
+
+    /**
      * this method subtract a servantsMalus if the player has enough servants
      * @param servantsMalus
      * @throws NotEnoughServantsException
@@ -246,6 +303,17 @@ public class Player {
             this.resources.put(ResourceType.Servants,getServants()-servantsMalus);
         }
         else {
+            throw new NotEnoughServantsException("Not enough servants to do this");
+        }
+    }
+
+    /**
+     * this method check if the player has enough servants to do something
+     * @param servantsMalus
+     * @throws NotEnoughServantsException
+     */
+    public void hasEnoughServants(Integer servantsMalus) throws NotEnoughServantsException {
+        if(this.resources.get(ResourceType.Servants)<servantsMalus){
             throw new NotEnoughServantsException("Not enough servants to do this");
         }
     }
@@ -292,6 +360,41 @@ public class Player {
         else {
             throw new NotEnoughFaithPointsException("Not enough faith points to do this");
         }
+    }
+
+    /**
+     * this method check if the player has enough resources to do something
+     * @param resourceType
+     * @param amount
+     * @throws NotEnoughResourcesException
+     */
+    public void hasEnough(ResourceType resourceType, Integer amount) throws NotEnoughResourcesException {
+        if(resourceType == ResourceType.Coins)
+            hasEnoughCoins(amount);
+        if(resourceType == ResourceType.Stones)
+            hasEnoughStones(amount);
+        if(resourceType == ResourceType.Servants)
+            hasEnoughServants(amount);
+        if(resourceType == ResourceType.Wood)
+            hasEnoughWood(amount);
+    }
+
+    /**
+     * this method subtract a specific amount of a resources from player resources
+     * @param resourceType
+     * @param amount
+     * @throws NotEnoughResourcesException
+     */
+
+    public void subtract(ResourceType resourceType, Integer amount) throws NotEnoughResourcesException {
+        if(resourceType == ResourceType.Coins)
+            subtractCoins(amount);
+        if(resourceType == ResourceType.Stones)
+            subtractStones(amount);
+        if(resourceType == ResourceType.Servants)
+            subtractServants(amount);
+        if(resourceType == ResourceType.Wood)
+            subtractWood(amount);
     }
 
     public void setDisabled(boolean disabled) {

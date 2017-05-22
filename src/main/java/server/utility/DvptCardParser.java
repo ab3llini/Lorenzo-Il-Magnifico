@@ -139,9 +139,9 @@ public class DvptCardParser {
                 if (costoKey.equals("military")) {
                     militaryCost = getMilitaryCost(costo);
                 }
-                //create the cost and added to the arrayList
-                cost.add(new Cost(resourceCost, militaryCost));
             }
+            //create the cost and added to the arrayList
+            cost.add(new Cost(resourceCost, militaryCost));
         }
 
         return cost;

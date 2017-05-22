@@ -123,6 +123,8 @@ public class Board {
         }
     }
 
+
+
     public Cathedral getCathedral() {
         return this.cathedral;
     }

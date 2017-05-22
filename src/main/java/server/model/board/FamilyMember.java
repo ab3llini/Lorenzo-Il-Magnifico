@@ -13,6 +13,7 @@ public class FamilyMember {
     public FamilyMember (Player player, ColorType color){
         this.player = player;
         this.color = color;
+        this.force = 0;
         this.busy=false;
     }
 
@@ -30,6 +31,10 @@ public class FamilyMember {
 
     public void setForce(Integer force) {
         this.force = force;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public Integer getForce() {

@@ -13,6 +13,7 @@ public class CompositeActionPlace extends ActionPlace {
 
     public CompositeActionPlace(EffectSurplus effectSurplus, Integer entryForce, Integer minPlayers) {
         super(effectSurplus, entryForce, minPlayers);
+        places = new ArrayList<FamilyMember>();
     }
 
     public ArrayList<FamilyMember> getPlaces() {
@@ -22,5 +23,9 @@ public class CompositeActionPlace extends ActionPlace {
     public void setPlaces(ArrayList<FamilyMember> places) {
 
         this.places = places;
+    }
+
+    public void placeFamilyMember(FamilyMember familyMember){
+        this.places.add(familyMember);
     }
 }

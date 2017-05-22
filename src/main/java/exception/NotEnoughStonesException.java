@@ -8,7 +8,7 @@ package exception;
  * This exception is raised whenever a player has not enough stones to do an action
  */
 
-public class NotEnoughStonesException extends Exception {
+public class NotEnoughStonesException extends NotEnoughResourcesException {
 
     public  NotEnoughStonesException(String message){
 

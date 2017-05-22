@@ -1,7 +1,9 @@
 package server.controller.game;
 
+import exception.NotStrongEnoughException;
 import server.model.GameSingleton;
 import server.model.board.Board;
+import server.model.board.FamilyMember;
 import server.model.board.Period;
 import server.model.card.Deck;
 import server.model.card.ban.BanCard;
@@ -59,9 +61,13 @@ public class BoardController {
     /**
      * Constructor. The board controller takes care of every update relative to the board
      */
+
+    private Board board;
+
     public BoardController(Board board) {
 
         //TODO: Load into the board model the proper values! Even throughout a constructor chain!
+        this.board = board;
 
     }
 
@@ -218,6 +224,22 @@ public class BoardController {
         }
 
         board.setBanCardOnCathedral(temporaryBanCardArray);
+
+    }
+
+    /**
+     * this method place a familyMember in the CouncilPalace (if it's possible )
+     * @param familyMember
+     * @throws NotStrongEnoughException
+     */
+
+    public void placeOnCouncilPalace(FamilyMember familyMember) throws NotStrongEnoughException {
+
+        if(familyMember.getForce() >= this.board.getCouncilPalace().getEntryForce()){
+            this.board.getCouncilPalace().placeFamilyMember(familyMember);}
+
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this action");
 
     }
 

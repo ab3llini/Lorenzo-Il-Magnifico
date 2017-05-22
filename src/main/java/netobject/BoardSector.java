@@ -5,6 +5,15 @@ package netobject;
  */
 public enum BoardSector {
 
-    TerritoryTower, BuildingTower, CharacterTower, VentureTower
+    TerritoryTower,
+    BuildingTower,
+    CharacterTower,
+    VentureTower,
+    Market,
+    CouncilPalace,
+    SingleProductionPlace,
+    CompositeProductionPlace,
+    SingleHarvestPlace,
+    CompositeHarvestPlace
 
 }
