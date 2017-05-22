@@ -18,7 +18,7 @@ import server.controller.network.RMI.RMIConnectionToken;
 import java.rmi.RemoteException;
 import java.rmi.server.ServerNotActiveException;
 
-public class ConnectionController implements RMIClientObserver {
+public class ConnectionController extends NavigationController implements RMIClientObserver {
 
     @FXML // fx:id="portTextField"
     private TextField portTextField; // Value injected by FXMLLoader
@@ -28,6 +28,9 @@ public class ConnectionController implements RMIClientObserver {
 
     @FXML // fx:id="usernameTextField"
     private TextField usernameTextField; // Value injected by FXMLLoader
+
+    @FXML // fx:id="passwordTextField"
+    private TextField passwordTextField; // Value injected by FXMLLoader
 
     @FXML // fx:id="rmiRadioButton"
     private RadioButton rmiRadioButton; // Value injected by FXMLLoader
@@ -80,7 +83,7 @@ public class ConnectionController implements RMIClientObserver {
 
             System.out.println("Got " + token.toString());
 
-            rmiClient.getServerRef().login(token.getToken(), new LoginAuthentication(this.usernameTextField.getText(), null));
+            rmiClient.getServerRef().login(token.getToken(), new LoginAuthentication(this.usernameTextField.getText(), this.passwordTextField.getText()));
 
         }
         catch (RemoteException e) {

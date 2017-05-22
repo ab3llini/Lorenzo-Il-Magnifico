@@ -17,12 +17,6 @@ import java.util.ArrayList;
  * @since   14/05/17.
  */
 
-interface RMIClientObserver {
-
-    void RMIConnectionReady();
-
-}
-
 public class RMIClient extends Thread implements client.RMIClientInterface {
 
     RMIServerInterface serverRef;
@@ -64,6 +58,7 @@ public class RMIClient extends Thread implements client.RMIClientInterface {
         } catch (Exception e) {
             e.getMessage();
         }
+
 
     }
 
@@ -125,5 +120,9 @@ public class RMIClient extends Thread implements client.RMIClientInterface {
 
     public boolean heartbeat() throws RemoteException {
         return true;
+    }
+
+    public void disconnect() throws RemoteException {
+        System.exit(0);
     }
 }

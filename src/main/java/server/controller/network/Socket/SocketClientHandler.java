@@ -82,6 +82,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
         ObjectInputStream socketIn = null;
 
         try {
+
             socketIn = new ObjectInputStream(this.socket.getInputStream());
 
         } catch (IOException e) {

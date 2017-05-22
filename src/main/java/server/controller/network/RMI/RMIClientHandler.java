@@ -127,7 +127,6 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
-
     public int getToken() {
         return token;
     }

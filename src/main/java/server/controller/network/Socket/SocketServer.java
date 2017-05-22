@@ -15,6 +15,7 @@ import server.controller.network.ClientHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 /**
  * The server which handles the clients connected via socket.
@@ -127,6 +128,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
         this.parseObject(handler, object);
 
     }
+
 
     public static void main(String[] args) {
         (new Thread(new SocketServer(4545))).start();

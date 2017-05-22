@@ -205,7 +205,16 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
         try {
 
-            this.authenticate(this.getClientHandler(connectionToken), loginAuthentication);
+            if (!this.authenticate(this.getClientHandler(connectionToken), loginAuthentication)) {
+
+                ClientHandler h = this.getClientHandler(connectionToken);
+
+                //Login failed, stop handler & remove object
+                this.clientHandlers.get(h).interrupt();
+                this.clientHandlers.remove(h);
+
+
+            }
 
         } catch (NoSuchHanlderException e) {
 

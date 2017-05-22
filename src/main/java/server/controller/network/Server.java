@@ -4,6 +4,7 @@ import netobject.LoginAuthentication;
 import netobject.NetObject;
 import netobject.RegisterAuthentication;
 import server.model.board.Period;
+import singleton.Database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,18 +133,24 @@ public abstract class Server implements Observable<ServerObserver> {
 
             LoginAuthentication login = (LoginAuthentication)authentication;
 
-            //Perform login with postgre sql server
-            //Check if username & password are correct
+            //Attempt to login
+            if (Database.getInstance().login(login.getUsername(), login.getPassword())) {
 
-            //Assign username & session to handler
-            handler.setUsername(login.getUsername());
-            handler.setAuthenticated(true);
+                //Assign username & session to hand
+                // ler
+                handler.setUsername(login.getUsername());
+                handler.setAuthenticated(true);
 
-            //Notify the authentication
-            this.notifyAuthentication(handler);
+                //Notify the authentication
+                this.notifyAuthentication(handler);
 
-            return true;
+                return true;
 
+            } else {
+
+                return false;
+
+            }
 
         }
         else if (authentication instanceof RegisterAuthentication) {

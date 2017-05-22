@@ -2,6 +2,7 @@ package client;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.RemoteServer;
 
 /*
  * @author  ab3llini
@@ -10,5 +11,7 @@ import java.rmi.RemoteException;
 public interface RMIClientInterface extends Remote {
 
     public boolean heartbeat() throws RemoteException;
+
+    public void disconnect() throws RemoteException;
 
 }
