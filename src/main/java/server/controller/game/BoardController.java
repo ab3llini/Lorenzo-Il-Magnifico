@@ -156,7 +156,9 @@ public class BoardController {
             for (int i = 0; i < 4; i++) {
                 temporaryVenture.add(deckArray.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
             }
+
         }
+
         //On the contrary, if it is the second round of that period, every tower will contain the second half of his specific deck, according to his type and period
 
         else {
@@ -218,6 +220,6 @@ public class BoardController {
         board.setBanCardOnCathedral(temporaryBanCardArray);
 
     }
-}
 
+}
 
