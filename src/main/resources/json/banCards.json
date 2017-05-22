@@ -193,10 +193,11 @@
     "type" : "victoryMalus",
     "effect": {
       "victoryMalus": {
-        "causedByPoints":
+        "causedBy":
           {
-            "type": "victory",
-            "amount": 5
+            "points" : {
+              "victory" : 5
+            }
           },
         "malus": 1
       }
@@ -208,11 +209,12 @@
     "type" : "victoryMalus",
     "effect": {
       "victoryMalus": {
-        "causedByPoints":
-          {
-            "type": "military",
-            "amount": 1
-          },
+        "causedBy":
+        {
+          "points" : {
+            "military" : 5
+          }
+        },
         "malus": 1
       }
     }
@@ -223,20 +225,14 @@
     "type" : "victoryMalus",
     "effect": {
       "victoryMalus": {
-        "causedByResources": [
-             {
-            "type": "coins"
-             },
-            {
-            "type": "wood"
-             },
-            {
-            "type": "stones"
-            },
-            {
-            "type": "servants"
-            }
-            ],
+        "causedBy": {
+          "resources" : {
+            "coins" : 1,
+            "stones" : 1,
+            "wood" : 1,
+            "servants" : 1
+          }
+        },
         "malus": 1
       }
     }
@@ -247,14 +243,13 @@
     "type" : "victoryMalus",
     "effect": {
       "victoryMalus": {
-        "causedByResources": [
-            {
-            "type": "wood"
-             },
-            {
-            "type": "stones"
-            }
-            ],
+        "causedByResources": {
+          "resources" : {
+            "wood" : 1,
+            "stones" :1
+          }
+        },
+        "malus" : 1,
         "isRelatedToBuilding" : "true"
       }
     }

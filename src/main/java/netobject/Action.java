@@ -6,7 +6,6 @@ package netobject;
 
 
 public class Action extends NetObject {
-
     //Some cool implementation
 
 }

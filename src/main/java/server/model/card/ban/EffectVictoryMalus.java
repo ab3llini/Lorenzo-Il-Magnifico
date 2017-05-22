@@ -1,6 +1,7 @@
 package server.model.card.ban;
 
 import server.model.valuable.Point;
+import server.model.valuable.Resource;
 import server.model.valuable.ResourceType;
 
 import java.util.ArrayList;
@@ -9,14 +10,14 @@ import java.util.ArrayList;
  * Created by Federico on 10/05/2017.
  */
 public class EffectVictoryMalus {
-    private Point causedByPoints;
-    private ArrayList<ResourceType> causedbyResources;
+    private ArrayList<Point> causedByPoints;
+    private ArrayList<Resource> causedByResources;
     private Integer malus;
     private boolean isRelatedToBuilding;
 
-    public EffectVictoryMalus(Point causedbyPoints, ArrayList<ResourceType> causedbyResources, Integer malus, boolean isRelatedToBuilding) {
+    public EffectVictoryMalus(ArrayList<Point> causedbyPoints, ArrayList<Resource> causedByResources, Integer malus, boolean isRelatedToBuilding) {
         this.causedByPoints = causedbyPoints;
-        this.causedbyResources = causedbyResources;
+        this.causedByResources = causedByResources;
         this.malus = malus;
         this.isRelatedToBuilding = isRelatedToBuilding;
     }
@@ -25,15 +26,15 @@ public class EffectVictoryMalus {
         return malus;
     }
 
-    public ArrayList<ResourceType> getCausedbyResources() {
-        return causedbyResources;
+    public ArrayList<Resource> getCausedbyResources() {
+        return causedByResources;
     }
 
     public boolean isRelatedToBuilding() {
         return isRelatedToBuilding;
     }
 
-    public Point getCausedByPoints() {
+    public ArrayList<Point> getCausedByPoints() {
         return causedByPoints;
     }
 

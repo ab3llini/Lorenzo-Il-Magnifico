@@ -9,10 +9,10 @@ import server.model.effect.ActionType;
 public class EffectDiceMalus {
     private ActionType target;
     private DvptCardType type;
-    private boolean RoundDiceMalus;
+    private Integer RoundDiceMalus;
     private Integer malus;
 
-    public EffectDiceMalus(ActionType target, DvptCardType type, boolean RoundDiceMalus, Integer malus ){
+    public EffectDiceMalus(ActionType target, DvptCardType type, Integer malus, Integer RoundDiceMalus ){
         this.target = target;
         this.type = type;
         this.RoundDiceMalus = RoundDiceMalus;
@@ -27,7 +27,7 @@ public class EffectDiceMalus {
         return type;
     }
 
-    public boolean isRoundDiceMalus() {
+    public Integer getRoundDiceMalus() {
         return RoundDiceMalus;
     }
 

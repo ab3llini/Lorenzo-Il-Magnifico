@@ -119,7 +119,6 @@ public class Board {
         Period period = Period.first;
         for (BanCard banCard: banCards) {
             this.cathedral.setBanCard(period,banCard);
-            System.out.println(period);
             period = next(period);
         }
     }

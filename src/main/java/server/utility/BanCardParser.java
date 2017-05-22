@@ -3,6 +3,7 @@ package server.utility;
 import com.google.gson.JsonObject;
 import server.model.card.ban.*;
 import server.model.card.developement.DvptCardType;
+import server.model.effect.ActionType;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
 
@@ -132,13 +133,63 @@ public class BanCardParser {
     }
 
     private static EffectDiceMalus getEffectDiceMalus (JsonObject effect){
-        //TODO
-        return null;
+
+        //effectDiceMalus is related with dice force and so with family members force
+        ActionType target = null;
+        DvptCardType type = null;
+        Integer roundDiceMalus = 0;  //all coloured family members receive the a reduction of their value each time you place them
+        Integer malus = 0;
+
+        JsonObject diceMalusObject = effect.getAsJsonObject("diceMalus");
+
+        for (String malusKey: Json.getObjectKeys(diceMalusObject)) {
+            if(malusKey.equals("target")){
+                target = ActionType.valueOf(diceMalusObject.get("target").getAsString());}
+
+            if(malusKey.equals("type")){
+                type = DvptCardType.valueOf(diceMalusObject.get("type").getAsString());
+            }
+
+            if(malusKey.equals("force")){
+                malus = diceMalusObject.get("force").getAsInt();
+            }
+
+            if(malusKey.equals("roundDiceMalus")){
+                roundDiceMalus = diceMalusObject.get("roundDiceMalus").getAsInt();
+            }
+        }
+        return new EffectDiceMalus(target, type, malus, roundDiceMalus);
     }
 
     private static EffectVictoryMalus getEffectVictoryMalus (JsonObject effect){
-        //TODO
-        return null;
+
+        //effect victory malus is applied at the end of the third period and represent a malus for victory points depending on some requisites
+        ArrayList<Resource> causedByResource = new ArrayList<Resource>();
+        ArrayList<Point> causedByPoints = new ArrayList<Point>();
+        Integer malus = 0;
+        Boolean isRelatedToBuilding = false;
+
+        JsonObject victoryMalusObject = effect.getAsJsonObject("victoryMalus");
+
+        for (String victoryMalusKey: Json.getObjectKeys(victoryMalusObject)) {
+            if(victoryMalusKey.equals("causedBy")){
+                JsonObject causedBy = victoryMalusObject.getAsJsonObject("causedBy");
+
+                for (String causeKey:Json.getObjectKeys(causedBy)) {
+                    if(causeKey.equals("points"))
+                        causedByPoints = getPoints(causedBy);
+                    if(causeKey.equals("resources"))
+                        causedByResource = getResourceCost(causedBy);
+                }
+            }
+            if(victoryMalusKey.equals("malus"))
+                malus = victoryMalusObject.get("malus").getAsInt();
+
+            if(victoryMalusKey.equals("isRelatedToBuilding"))
+                isRelatedToBuilding = true;
+        }
+
+        return new EffectVictoryMalus(causedByPoints,causedByResource, malus,isRelatedToBuilding) ;
     }
 
 }
