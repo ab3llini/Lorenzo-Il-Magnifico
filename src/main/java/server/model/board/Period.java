@@ -5,9 +5,18 @@ package server.model.board;
  * Created by LBARCELLA on 18/05/2017.
  */
 public enum Period {
-    first,
-    second,
-    third;
+    first(1),
+    second(2),
+    third(3);
+    int value;
+
+    Period(int value){
+        this.value = value;
+    }
+
+    public int toInt(){
+        return this.value;
+    }
 
     /**
      * this method return the next element of this enum
@@ -22,5 +31,6 @@ public enum Period {
         else
             return first;
         }
+
 }
 

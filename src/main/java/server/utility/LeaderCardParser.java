@@ -125,7 +125,7 @@ public class LeaderCardParser {
                 onceARound = getOnceARoundEffect(effects);
             }
             if (effectKey.equals("permanents")) {
-                //permanent effect are very and characterized, so it is much better to develop them in the code
+                //permanent effect are very particular and characterized, so it is much better to develop them in the code
                 permanentLeaderEffect=PermanentLeaderEffectType.valueOf(effects.get("permanents").getAsString());
             }
 

@@ -25,12 +25,17 @@ public class BanCardParser {
 
     public static ArrayList<BanCard> parse() throws IOException, URISyntaxException {
 
+        //this arrayList contains all the banCards already parsed
         ArrayList<BanCard> allBanCards = new ArrayList<BanCard>();
+
+        //initialise period and banType but they always be overwritten so there are is no possibility of null pointers
         Integer period = 0;
         BanType banType = null;
+
+        //ban cards effects are very different from each other, so we have to use different classes for represent them
         DvptCardType cardType = null;
-        ArrayList<Resource> resources = null;
-        ArrayList<Point> points = null;
+        ArrayList<Resource> resources = new ArrayList<Resource>();
+        ArrayList<Point> points = new ArrayList<Point>();
         String specialEffect = "";
         EffectVictoryMalus effectVictoryMalus = null;
         EffectDiceMalus effectDiceMalus = null;
@@ -59,10 +64,15 @@ public class BanCardParser {
                 }
 
                 if (key.equals("effect")) {
+
+                    // ban cards has very different kind of effect
                     JsonObject effect = banCard.getAsJsonObject("effect");
 
+                    //there are 5 possible keys ( malus || specialEffect || noVictoryPointsMalus || victoryMalus || diceMalus )
+                    //each ban card has ONLY one of this different effects
                     for (String effectKey: Json.getObjectKeys(effect)) {
 
+                        //malus effect consist in a subtraction of resources and points
                         if(effectKey.equals("malus")){
                             JsonObject malus = effect.getAsJsonObject("malus");
 
@@ -74,9 +84,11 @@ public class BanCardParser {
                             }
                         }
 
+                        //special effect are very particular and characterized, so it is much better to develop them in the code
                         if(effectKey.equals("specialEffect"))
                             specialEffect = effect.get("specialEffect").getAsString();
 
+                        //noVictoryPointsMalus consist in a failure to assign vicotry points for a particular type of card at the end of the game
                         if(effectKey.equals("noVictoryPointsMalus")){
                             JsonObject malusType = effect.getAsJsonObject("noVictoryPointsMalus");
                             cardType = DvptCardType.valueOf(malusType.get("target").getAsString());
