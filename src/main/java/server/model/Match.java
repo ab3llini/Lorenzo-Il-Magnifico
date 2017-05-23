@@ -32,6 +32,7 @@ public class Match {
 
         //Assign the players to the model reference
         this.players = players;
+        this.board = new Board();
 
     }
 

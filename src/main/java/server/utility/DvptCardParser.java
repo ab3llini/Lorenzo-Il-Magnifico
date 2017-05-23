@@ -55,7 +55,7 @@ public class DvptCardParser {
                 if (key.equals("period")){
                     period = getPeriod(card);}
 
-                if (key.equals("authenticationType")){
+                if (key.equals("type")){
                     type = getType(card);}
 
                 if (key.equals("cost")){
@@ -77,7 +77,7 @@ public class DvptCardParser {
                 }
 
             }
-            //add the new card to the arrayList, choose the correct constructor depending on the card authenticationType
+            //add the new card to the arrayList, choose the correct constructor depending on the card type
             if (type==DvptCardType.territory) {
                 allCards.add(new TerritoryDvptCard(Integer.parseInt(cardId), name, period, immediateEffect, permanentEffect));
             }
@@ -108,7 +108,7 @@ public class DvptCardParser {
     }
 
     private static DvptCardType getType(JsonObject card) {
-        return DvptCardType.valueOf(card.get("authenticationType").getAsString());
+        return DvptCardType.valueOf(card.get("type").getAsString());
     }
 
     private static ArrayList<Cost> getCost(JsonObject card) {
@@ -184,7 +184,7 @@ public class DvptCardParser {
         //extract permanent from JsonObject effect
         JsonObject permanent = effect.getAsJsonObject("permanent");
 
-        //get keys from permanent (minforce || authenticationType || surplus || conversion || action || discount || penality)
+        //get keys from permanent (minforce || type || surplus || conversion || action || discount || penality)
         ArrayList<String> effectKeys = Json.getObjectKeys(permanent);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
@@ -308,14 +308,14 @@ public class DvptCardParser {
         //get JsonObject surplus from immediate
         JsonObject actions=immediate.getAsJsonObject("action");
 
-        //get keys from actions(target || authenticationType || force || discount) that identify all the different keys of action
+        //get keys from actions(target || type || force || discount) that identify all the different keys of action
         ArrayList<String> actionKeys = Json.getObjectKeys(actions);
 
         for (String actionKey: actionKeys) {
             if(actionKey.equals("target")){
                 target= ActionType.valueOf(actions.get("target").getAsString());}
-            if(actionKey.equals("authenticationType")){
-                type=DvptCardType.valueOf(actions.get("authenticationType").getAsString());}
+            if(actionKey.equals("type")){
+                type=DvptCardType.valueOf(actions.get("type").getAsString());}
             if(actionKey.equals("force")){
                 force=actions.get("force").getAsInt();}
             if(actionKey.equals("discount")){
@@ -332,7 +332,7 @@ public class DvptCardParser {
         Integer forceBonus=0;
         ArrayList<Resource> discount=new ArrayList<Resource>();
 
-        //get keys from permanent (minForce || authenticationType || surplus || conversion || action || discount || penality)
+        //get keys from permanent (minForce || type || surplus || conversion || action || discount || penality)
         ArrayList<String> permanentKeys = Json.getObjectKeys(permanent);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
@@ -342,8 +342,8 @@ public class DvptCardParser {
                 target = ActionType.valueOf(permanent.get("target").getAsString());
             }
 
-            if (permanentKey.equals("authenticationType")) {
-                type = DvptCardType.valueOf(permanent.get("authenticationType").getAsString());
+            if (permanentKey.equals("type")) {
+                type = DvptCardType.valueOf(permanent.get("type").getAsString());
             }
 
             if (permanentKey.equals("forceBonus")) {

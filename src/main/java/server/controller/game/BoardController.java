@@ -1,5 +1,6 @@
 package server.controller.game;
 
+import exception.NotEnoughPlayersException;
 import exception.NotStrongEnoughException;
 import javafx.scene.effect.Effect;
 import server.model.GameSingleton;
@@ -232,12 +233,21 @@ public class BoardController {
     /**
      * this method place a familyMember in the CouncilPalace (if it's possible )
      * @param familyMember
+     * @param additionalServants that a player can use to increment his family member force
+     * @return an effect surplus for the player that has performed the action
      * @throws NotStrongEnoughException
+     * @throws NotEnoughPlayersException
      */
+    public EffectSurplus placeOnCouncilPalace(FamilyMember familyMember, Integer additionalServants, Integer numberOfPlayers) throws NotStrongEnoughException, NotEnoughPlayersException {
 
-    public EffectSurplus placeOnCouncilPalace(FamilyMember familyMember, Integer additionalServants) throws NotStrongEnoughException {
+        //check if the match has enough player to use council palace
+        if(!(numberOfPlayers>=this.board.getCouncilPalace().getMinPlayers()))
+            throw new NotEnoughPlayersException("Not enough players to use this place");
 
+        //check if the family member has enough force to set on council palace
         if(familyMember.getForce() + additionalServants >= this.board.getCouncilPalace().getEntryForce()){
+
+            //set the family member on the council palace
             this.board.getCouncilPalace().placeFamilyMember(familyMember);
             return this.board.getCouncilPalace().getEffectSurplus();
         }
@@ -247,11 +257,26 @@ public class BoardController {
 
     }
 
-    public void placeOnMarket(FamilyMember familyMember, Integer additionalServants, Integer placementIndex) throws NotStrongEnoughException {
+    /**
+     *this method place a familyMember in the one specific place of the market place (if it's possible )
+     * @param familyMember
+     * @param additionalServants that a player can use to increment his family member force
+     * @param placementIndex
+     * @return an effect surplus for the player that has performed the action
+     * @throws NotStrongEnoughException
+     */
+    public EffectSurplus placeOnMarket(FamilyMember familyMember, Integer additionalServants, Integer placementIndex, Integer numberOfPlayers) throws NotStrongEnoughException, NotEnoughPlayersException {
 
+        //check if the match has enough player to use council palace
+        if(!(numberOfPlayers >= this.board.getMarket().getMarketPlaces().get(placementIndex).getMinPlayers()))
+            throw new NotEnoughPlayersException("Not enough players to use this place");
+
+        //check if the family member has enough force to set on council palace
         if(familyMember.getForce() + additionalServants >= this.board.getMarket().getMarketPlaces().get(placementIndex).getEntryForce()) {
+
+            //set the family member on the market place
             this.board.getMarket().getMarketPlaces().get(placementIndex).setFamilyMember(familyMember);
-            //TODO applyEffectSurplus
+            return this.board.getMarket().getMarketPlaces().get(placementIndex).getEffectSurplus();
         }
         else
             throw new NotStrongEnoughException("Not strong enough to do this action");

@@ -409,18 +409,20 @@ public class Player {
 
     public void subtractResources(Cost cost) throws NotEnoughResourcesException {
         for (int j = 0; j < cost.getResources().size(); j++) {
-            this.subtract(cost.getResources().get(j).getType(), cost.getResources().get(j).getAmount());
+            this.subtractGenericResource(cost.getResources().get(j).getType(), cost.getResources().get(j).getAmount());
         }
     }
 
     public void addResources(ArrayList<Resource> resources)  {
         for (int j = 0; j < resources.size(); j++) {
-            this.add(resources.get(j).getType(), resources.get(j).getAmount());
+            this.addGenericResource(resources.get(j).getType(), resources.get(j).getAmount());
         }
     }
 
     public void addPoints(ArrayList<Point> points){
-        //TODO
+        for (int j = 0; j < points.size(); j++) {
+            this.addGenericPoint(points.get(j).getType(), points.get(j).getAmount());
+        }
     }
 
     public boolean hasEnoughPoints(PointType pointType, Integer amount) {
@@ -470,7 +472,7 @@ public class Player {
      * @throws NotEnoughResourcesException
      */
 
-    public void subtract(ResourceType resourceType, Integer amount) throws NotEnoughResourcesException {
+    public void subtractGenericResource(ResourceType resourceType, Integer amount) throws NotEnoughResourcesException {
         if (resourceType == ResourceType.Coins)
             subtractCoins(amount);
         if (resourceType == ResourceType.Stones)
@@ -482,11 +484,11 @@ public class Player {
     }
 
     /**
-     * this method add a specific amount of a resource from player resources
-     * @param resourceType
+     * this method increase player resorces by a specific amount of a resources
+     * @param resourceType that specify which resource type has to be increased
      * @param amount
      */
-    public void add(ResourceType resourceType, Integer amount) {
+    public void addGenericResource(ResourceType resourceType, Integer amount) {
         if (resourceType == ResourceType.Coins)
             addCoins(amount);
         if (resourceType == ResourceType.Stones)
@@ -495,6 +497,21 @@ public class Player {
             addServants(amount);
         if (resourceType == ResourceType.Wood)
             addWood(amount);
+    }
+
+    /**
+     * this method increase player's points by a specific amount of a points
+     * @param pointType that specify which point type has to be increased
+     * @param amount
+     */
+    public void addGenericPoint(PointType pointType, Integer amount) {
+        if (pointType == PointType.Faith)
+            addFaithPoints(amount);
+        if (pointType == PointType.Military)
+            addMilitaryPoints(amount);
+        if (pointType == PointType.Victory)
+            addVictoryPoints(amount);
+
     }
 
     public void setDisabled(boolean disabled) {

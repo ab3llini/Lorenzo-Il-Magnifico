@@ -60,10 +60,11 @@ public class MatchController {
 
     }
 
-    public void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException{
+    public void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException {
 
         if(action instanceof FamilyMemberPlacementActionRequest){
 
+            placeFamilyMember((FamilyMemberPlacementActionRequest) action,player);
 
         }
 
@@ -100,7 +101,7 @@ public class MatchController {
             return;
 
         int i=0;
-
+        System.out.println(card.getCost().size());
         //some cards could have a double cost
         if(card.getCost().size()>1)
           i = choosenCost;
@@ -131,25 +132,27 @@ public class MatchController {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException {
+    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
 
-        //TODO only implemented one BoardSectorType...
+        //TODO
         if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
-            EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants());
+            EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants(),this.match.getPlayers().size());
+            applyEffectSurplus(player,surplus);
             }
 
         if (action.getActionTarget() == BoardSectorType.Market) {
-            boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants());
+            EffectSurplus surplus =boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants(),this.match.getPlayers().size());
+            applyEffectSurplus(player,surplus);
         }
 
         familyMember.setBusy(true);
     }
 
     /**
-     * this method apply the effectSurplus of a player
+     * this method apply the effectSurplus to a player
      * @param player
      * @param surplus
      */
