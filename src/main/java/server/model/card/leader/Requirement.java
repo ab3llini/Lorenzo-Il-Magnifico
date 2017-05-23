@@ -22,4 +22,20 @@ public class Requirement {
         this.resourceRequired=resourceRequired;
         this.sixIdentical=sixIdentical;
     }
+
+    public ArrayList<Resource> getResourceRequired() {
+        return resourceRequired;
+    }
+
+    public HashMap<DvptCardType, Integer> getCardsRequired() {
+        return cardsRequired;
+    }
+
+    public ArrayList<Point> getPointsRequired() {
+        return pointsRequired;
+    }
+
+    public Boolean getSixIdentical() {
+        return sixIdentical;
+    }
 }

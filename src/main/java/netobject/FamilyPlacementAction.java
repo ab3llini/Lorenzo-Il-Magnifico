@@ -6,7 +6,7 @@ import server.model.board.FamilyMember;
 /**
  * Created by Federico on 22/05/2017.
  */
-public class FamilyPlacementAction extends NetObject {
+public class FamilyPlacementAction extends Action {
 
         private final BoardSector actionTarget; //sector of the board which is target of the action
 

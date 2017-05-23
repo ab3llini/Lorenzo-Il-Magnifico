@@ -3,9 +3,11 @@ package server.model;
 import server.model.board.CouncilPalace;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
+import server.model.card.leader.LeaderCard;
 import server.utility.BanCardParser;
 import server.utility.BoardConfigParser;
 import server.utility.DvptCardParser;
+import server.utility.LeaderCardParser;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,6 +25,8 @@ public class GameSingleton {
 
     private ArrayList<BanCard> banCards = new ArrayList<BanCard>();
 
+    private ArrayList<LeaderCard> leaderCards = new ArrayList<LeaderCard>();
+
     private GameSingleton() {} //costructor
 
     public static GameSingleton getInstance() {
@@ -36,6 +40,8 @@ public class GameSingleton {
                 instance.dvptCards = DvptCardParser.parse();
 
                 instance.banCards = BanCardParser.parse();
+
+                instance.leaderCards = LeaderCardParser.parse();
 
             } catch (IOException e1) {
 
@@ -61,6 +67,11 @@ public class GameSingleton {
     public BanCard getSpecificBanCard(Integer CardId) {
 
         return this.banCards.get(CardId);
+    }
+
+    public LeaderCard getSpecificLeaderCard(Integer CardId) {
+
+        return this.leaderCards.get(CardId);
     }
 
     public ArrayList<DvptCard> getDvptCards() {

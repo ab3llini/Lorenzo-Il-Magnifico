@@ -1,8 +1,6 @@
 package server.controller.game;
 import exception.*;
-import netobject.BoardSector;
-import netobject.FamilyPlacementAction;
-import netobject.NetObject;
+import netobject.*;
 import server.model.*;
 import server.model.board.*;
 import server.model.card.developement.Cost;
@@ -59,11 +57,27 @@ public class MatchController {
 
     }
 
-    public void onPlayerAction(Player player,NetObject  action) {
+    public void onPlayerAction(Player player, Action action) throws NotStrongEnoughException{
+
+        if(action instanceof FamilyPlacementAction){
 
 
+        }
+
+        if(action instanceof LeaderActivationAction){
+
+            activateLeaderCard((LeaderActivationAction) action, player);
+
+        }
+
+        if(action instanceof RollDiceAction){
+
+            rollDice ((player));
+
+        }
 
     }
+
 
     public Match getMatch() {
         return match;
@@ -127,7 +141,6 @@ public class MatchController {
         //TODO only implemented one BoardSector...
         if (action.getActionTarget() == BoardSector.CouncilPalace) {
             EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants());
-            applyEffectSurplus(player,surplus);
             }
 
         if (action.getActionTarget() == BoardSector.Market) {
@@ -141,4 +154,11 @@ public class MatchController {
 
     }
 
+    public void activateLeaderCard (LeaderActivationAction action, Player player) {
+
+    }
+
+    public void rollDice (Player player){
+
+    }
 }
