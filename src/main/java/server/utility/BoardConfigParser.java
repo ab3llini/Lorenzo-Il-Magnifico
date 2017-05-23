@@ -110,7 +110,7 @@ public class BoardConfigParser {
      */
     public static Market getMarket(){
 
-        ArrayList<ActionPlace> marketPlaces = new ArrayList<ActionPlace>();
+        ArrayList<SingleActionPlace> marketPlaces = new ArrayList<SingleActionPlace>();
 
         //get JsonObject market from boardConfig
         JsonObject marketObject = BoardConfigParser.getBoardConfig().getAsJsonObject("market");
@@ -128,7 +128,7 @@ public class BoardConfigParser {
             Integer minPlayers = marketPlace.get("minPlayers").getAsInt();
             EffectSurplus surplus = getEffectSurplus(marketPlace);
 
-            marketPlaces.add(new ActionPlace(surplus, minForce, minPlayers));
+            marketPlaces.add(new SingleActionPlace(surplus, minForce, minPlayers));
         }
         return new Market(marketPlaces);
     }

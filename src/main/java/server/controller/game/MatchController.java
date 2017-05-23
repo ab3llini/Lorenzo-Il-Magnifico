@@ -102,20 +102,17 @@ public class MatchController {
         //try to apply military cost, if it does not succeed it returns an exception
         if(costo.getMilitary().getRequired() <= player.getMilitaryPoints())
             player.subtractMilitaryPoints(costo.getMilitary().getMalus());
+
         else{
             throw new NotEnoughMilitaryPointsException("Not enough military point to do this");}
 
         //check if there are enough resources to apply the cost in order to have an atomic transaction, if it does not succeed it returns an exception
-        for(int j=0;j<costo.getResources().size();j++){
-            player.hasEnough(costo.getResources().get(j).getType(),costo.getResources().get(j).getAmount());
-        }
-
         //deducts the cost of the card from the player's resources
-        for(int j=0;j<card.getCost().get(i).getResources().size();j++){
-            player.subtract(costo.getResources().get(j).getType(),costo.getResources().get(j).getAmount());
+        if(player.hasEnoughResources(costo)) {
+            player.subtractResources(costo);
         }
-
-
+        else
+            throw new NotEnoughResourcesException("Not enough resources to do this");
 
     }
 
@@ -132,10 +129,17 @@ public class MatchController {
      */
     public void placeFamilyMember(FamilyPlacementAction action, Player player) throws NotStrongEnoughException {
 
+
         //TODO only implemented one BoardSector...
-        if(action.getActionTarget() == BoardSector.CouncilPalace){
-            action.getFamilyMember().setPlayer(player);
-            boardController.placeOnCouncilPalace(action.getFamilyMember());}
+        if (action.getActionTarget() == BoardSector.CouncilPalace) {
+            boardController.placeOnCouncilPalace(action.getFamilyMember(), action.getAdditionalServants());
+
+            }
+
+        if (action.getActionTarget() == BoardSector.Market) {
+            boardController.placeOnMarket(action.getFamilyMember(),action.getPlacementIndex(),action.getAdditionalServants());
+        }
+
     }
 
 

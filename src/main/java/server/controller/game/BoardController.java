@@ -233,10 +233,12 @@ public class BoardController {
      * @throws NotStrongEnoughException
      */
 
-    public void placeOnCouncilPalace(FamilyMember familyMember) throws NotStrongEnoughException {
+    public void placeOnCouncilPalace(FamilyMember familyMember,Integer additionalServants) throws NotStrongEnoughException {
 
-        if(familyMember.getForce() >= this.board.getCouncilPalace().getEntryForce()){
+        if(familyMember.getForce() + additionalServants >= this.board.getCouncilPalace().getEntryForce()){
             this.board.getCouncilPalace().placeFamilyMember(familyMember);
+            //TODO applyEffectSurplus
+
         }
 
         else
@@ -244,5 +246,14 @@ public class BoardController {
 
     }
 
+    public void placeOnMarket(FamilyMember familyMember, Integer additionalServants, Integer placementIndex) throws NotStrongEnoughException {
+
+        if(familyMember.getForce() + additionalServants >= this.board.getMarket().getMarketPlaces().get(placementIndex).getEntryForce()) {
+            this.board.getMarket().getMarketPlaces().get(placementIndex).setFamilyMember(familyMember);
+            //TODO applyEffectSurplus
+        }
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this action");
+    }
 }
 

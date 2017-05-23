@@ -7,7 +7,7 @@ package exception;
 /**
  * This exception is raised whenever a player has not enough faith points to do an action
  */
-public class NotEnoughFaithPointsException extends Exception {
+public class NotEnoughFaithPointsException extends NotEnoughPointsException {
 
     public NotEnoughFaithPointsException(String message){
         super(message);

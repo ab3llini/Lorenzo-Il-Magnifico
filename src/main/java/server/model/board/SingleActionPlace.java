@@ -8,7 +8,7 @@ import server.model.effect.ImmediateEffect;
  * Methods implemented by LBARCELLA on 18/05/2017.
  */
 public class SingleActionPlace extends ActionPlace {
-    private FamilyMember place;
+    private FamilyMember familyMember;
     private boolean occupied;
 
     public SingleActionPlace(EffectSurplus effectSurplus, Integer entryForce, Integer minPlayers) {
@@ -20,16 +20,16 @@ public class SingleActionPlace extends ActionPlace {
         return occupied;
     }
 
-    public FamilyMember getPlace() {
-        return place;
+    public FamilyMember getFamilyMember() {
+        return familyMember;
     }
 
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
     }
 
-    public void setPlace(FamilyMember place) {
-        this.place = place;
+    public void setFamilyMember(FamilyMember familyMember) {
+        this.familyMember = familyMember;
     }
     
 }

@@ -7,13 +7,19 @@ import java.util.ArrayList;
  */
 public class Market {
 
-    private ArrayList<ActionPlace> marketPlaces;
+    private ArrayList<SingleActionPlace> marketPlaces;
 
-    public Market(ArrayList<ActionPlace> marketPlaces){
+    public Market(ArrayList<SingleActionPlace> marketPlaces){
         this.marketPlaces=marketPlaces;
     }
 
-    public ArrayList<ActionPlace> getMarketPlaces() {
+    public ArrayList<SingleActionPlace> getMarketPlaces() {
         return marketPlaces;
+    }
+
+    public void placeFamilyMember(FamilyMember familyMember,Integer placementIndex){
+
+        this.getMarketPlaces().get(placementIndex).setOccupied(true);
+        this.getMarketPlaces().get(placementIndex).setFamilyMember(familyMember);
     }
 }

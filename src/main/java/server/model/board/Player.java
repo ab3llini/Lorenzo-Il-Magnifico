@@ -5,7 +5,9 @@ import exception.*;
 import server.model.board.ColorType;
 import server.model.board.FamilyMember;
 import server.model.board.PersonalBoard;
+import server.model.card.developement.Cost;
 import server.model.valuable.PointType;
+import server.model.valuable.Resource;
 import server.model.valuable.ResourceType;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,10 +234,8 @@ public class Player {
      * @throws NotEnoughCoinsException
      */
 
-    public void hasEnoughCoins(Integer coinsMalus) throws NotEnoughCoinsException {
-        if(this.resources.get(ResourceType.Coins)<coinsMalus){
-            throw new NotEnoughCoinsException("Not enough money to do this");
-        }
+    public boolean hasEnoughCoins(Integer coinsMalus) {
+        return (this.resources.get(ResourceType.Coins) >= coinsMalus);
     }
 
     /**
@@ -256,13 +256,10 @@ public class Player {
     /**
      * this method check if the player has enough wood to do something
      * @param woodMalus
-     * @throws NotEnoughWoodException
      */
 
-    public void hasEnoughWood(Integer woodMalus) throws NotEnoughWoodException {
-        if(this.resources.get(ResourceType.Wood)<woodMalus){
-            throw new NotEnoughWoodException("Not enough wood to do this");
-        }
+    public boolean hasEnoughWood(Integer woodMalus){
+        return  (this.resources.get(ResourceType.Wood) >= woodMalus);
     }
 
     /**
@@ -283,13 +280,10 @@ public class Player {
     /**
      * this method check if the player has enough stones to do something
      * @param stonesMalus
-     * @throws NotEnoughStonesException
      */
 
-    public void hasEnoughStones(Integer stonesMalus) throws NotEnoughStonesException {
-        if(this.resources.get(ResourceType.Stones)<stonesMalus){
-            throw new NotEnoughStonesException("Not enough stones to do this");
-        }
+    public boolean hasEnoughStones(Integer stonesMalus) {
+        return (this.resources.get(ResourceType.Stones) >= stonesMalus);
     }
 
     /**
@@ -310,12 +304,11 @@ public class Player {
     /**
      * this method check if the player has enough servants to do something
      * @param servantsMalus
-     * @throws NotEnoughServantsException
      */
-    public void hasEnoughServants(Integer servantsMalus) throws NotEnoughServantsException {
-        if(this.resources.get(ResourceType.Servants)<servantsMalus){
-            throw new NotEnoughServantsException("Not enough servants to do this");
-        }
+    public boolean hasEnoughServants(Integer servantsMalus) {
+
+        return (this.resources.get(ResourceType.Servants) >= servantsMalus);
+
     }
 
     /**
@@ -368,16 +361,34 @@ public class Player {
      * @param amount
      * @throws NotEnoughResourcesException
      */
-    public void hasEnough(ResourceType resourceType, Integer amount) throws NotEnoughResourcesException {
+    public boolean hasEnough(ResourceType resourceType, Integer amount)  {
         if(resourceType == ResourceType.Coins)
-            hasEnoughCoins(amount);
+            return hasEnoughCoins(amount);
         if(resourceType == ResourceType.Stones)
-            hasEnoughStones(amount);
+            return hasEnoughStones(amount);
         if(resourceType == ResourceType.Servants)
-            hasEnoughServants(amount);
-        if(resourceType == ResourceType.Wood)
-            hasEnoughWood(amount);
+            return hasEnoughServants(amount);
+        else
+            return hasEnoughWood(amount);
     }
+
+    public boolean hasEnoughResources(Cost cost) {
+
+        for(int j=0;j<cost.getResources().size();j++){
+
+            if (!this.hasEnough(cost.getResources().get(j).getType(),cost.getResources().get(j).getAmount()))
+                return false;}
+
+            return true;
+
+        }
+
+    public void subtractResources(Cost cost) throws NotEnoughResourcesException {
+        for (int j = 0; j < cost.getResources().size(); j++) {
+            this.subtract(cost.getResources().get(j).getType(), cost.getResources().get(j).getAmount());
+        }
+    }
+
 
     /**
      * this method subtract a specific amount of a resources from player resources
