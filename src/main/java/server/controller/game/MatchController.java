@@ -7,6 +7,8 @@ import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.effect.EffectSurplus;
+import server.model.valuable.Point;
+import server.model.valuable.Resource;
 
 import java.util.ArrayList;
 
@@ -90,7 +92,7 @@ public class MatchController {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void ApplyDvptCardCost(Player player, DvptCard card) throws NotEnoughResourcesException, NotEnoughMilitaryPointsException {
+    public void ApplyDvptCardCost(Player player, DvptCard card,Integer choosenCost) throws NotEnoughResourcesException, NotEnoughMilitaryPointsException {
 
         //territory cards doesn't have cost
         if(card.getType() == DvptCardType.territory)
@@ -100,7 +102,7 @@ public class MatchController {
 
         //some cards could have a double cost
         if(card.getCost().size()>1)
-          i = selectCost(card.getCost());
+          i = choosenCost;
 
         //get the choosen one cost
         Cost costo = card.getCost().get(i);
@@ -120,11 +122,6 @@ public class MatchController {
         else
             throw new NotEnoughResourcesException("Not enough resources to do this");
 
-    }
-
-    public Integer selectCost(ArrayList<Cost> costs){
-        //TODO
-        return 0;
     }
 
     /**
@@ -150,8 +147,24 @@ public class MatchController {
         familyMember.setBusy(true);
     }
 
+    /**
+     * this method apply the effectSurplus of a player
+     * @param player
+     * @param surplus
+     */
+
     public void applyEffectSurplus(Player player,EffectSurplus surplus){
 
+        ArrayList<Resource> resourcesSurplus = surplus.getResources();
+        ArrayList<Point> pointsSurplus = surplus.getPoints();
+        Integer council = surplus.getCouncil();
+
+        player.addResources(resourcesSurplus);
+        player.addPoints(pointsSurplus);
+
+        if(council >= 1)
+            //TODO
+            ;
     }
 
     public void activateLeaderCard (LeaderActivationAction action, Player player) {

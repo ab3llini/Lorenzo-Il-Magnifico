@@ -410,6 +410,16 @@ public class Player {
         }
     }
 
+    public void addResources(ArrayList<Resource> resources)  {
+        for (int j = 0; j < resources.size(); j++) {
+            this.add(resources.get(j).getType(), resources.get(j).getAmount());
+        }
+    }
+
+    public void addPoints(ArrayList<Point> points){
+        //TODO
+    }
+
     public boolean hasEnoughPoints(PointType pointType, Integer amount) {
 
         if (pointType == PointType.Military)
@@ -450,7 +460,7 @@ public class Player {
     }
 
     /**
-     * this method subtract a specific amount of a resources from player resources
+     * this method subtract a specific amount of a resource from player resources
      *
      * @param resourceType
      * @param amount
@@ -466,6 +476,22 @@ public class Player {
             subtractServants(amount);
         if (resourceType == ResourceType.Wood)
             subtractWood(amount);
+    }
+
+    /**
+     * this method add a specific amount of a resource from player resources
+     * @param resourceType
+     * @param amount
+     */
+    public void add(ResourceType resourceType, Integer amount) {
+        if (resourceType == ResourceType.Coins)
+            addCoins(amount);
+        if (resourceType == ResourceType.Stones)
+            addStones(amount);
+        if (resourceType == ResourceType.Servants)
+            addServants(amount);
+        if (resourceType == ResourceType.Wood)
+            addWood(amount);
     }
 
     public void setDisabled(boolean disabled) {
