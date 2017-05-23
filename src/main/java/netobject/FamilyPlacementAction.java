@@ -1,5 +1,6 @@
 package netobject;
 
+import server.model.board.ColorType;
 import server.model.board.FamilyMember;
 
 /**
@@ -11,17 +12,17 @@ public class FamilyPlacementAction extends NetObject {
 
         private final Integer placementIndex; //slot index of the board sector
 
-        private final FamilyMember familyMember;
+        private final ColorType colorType;
 
         private final int additionalServants;
 
         private final CostOption costOption;
 
-        public FamilyPlacementAction(BoardSector actionTarget, Integer placementIndex, FamilyMember familyMember, int additionalServants, CostOption costOption) {
+        public FamilyPlacementAction(BoardSector actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, CostOption costOption) {
 
                 this.actionTarget = actionTarget;
                 this.placementIndex = placementIndex;
-                this.familyMember = familyMember;
+                this.colorType = colorType;
                 this.additionalServants = additionalServants;
                 this.costOption = costOption;
 
@@ -35,8 +36,8 @@ public class FamilyPlacementAction extends NetObject {
                 return placementIndex;
         }
 
-        public FamilyMember getFamilyMember() {
-                return familyMember;
+        public ColorType getColorType() {
+                return colorType;
         }
 
         public CostOption getCostOption() {

@@ -1,13 +1,8 @@
 package server.model.board;
 
-import com.sun.org.apache.regexp.internal.RE;
 import exception.*;
-import server.model.board.ColorType;
-import server.model.board.FamilyMember;
-import server.model.board.PersonalBoard;
 import server.model.card.developement.Cost;
 import server.model.valuable.PointType;
-import server.model.valuable.Resource;
 import server.model.valuable.ResourceType;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,7 +173,7 @@ public class Player {
      * @return
      * @throws FamilyMemberAlreadyInUseException
      */
-    public FamilyMember getFamilymember(ColorType colorType) throws FamilyMemberAlreadyInUseException {
+    public FamilyMember getFamilyMember(ColorType colorType) throws FamilyMemberAlreadyInUseException {
 
         FamilyMember memberWanted=null;
 
@@ -361,7 +356,7 @@ public class Player {
      * @param amount
      * @throws NotEnoughResourcesException
      */
-    public boolean hasEnough(ResourceType resourceType, Integer amount)  {
+    public boolean hasEnoughResources(ResourceType resourceType, Integer amount)  {
         if(resourceType == ResourceType.Coins)
             return hasEnoughCoins(amount);
         if(resourceType == ResourceType.Stones)
@@ -372,11 +367,11 @@ public class Player {
             return hasEnoughWood(amount);
     }
 
-    public boolean hasEnoughResources(Cost cost) {
+    public boolean hasEnoughCostResources(Cost cost) {
 
         for(int j=0;j<cost.getResources().size();j++){
 
-            if (!this.hasEnough(cost.getResources().get(j).getType(),cost.getResources().get(j).getAmount()))
+            if (!this.hasEnoughResources(cost.getResources().get(j).getType(),cost.getResources().get(j).getAmount()))
                 return false;}
 
             return true;

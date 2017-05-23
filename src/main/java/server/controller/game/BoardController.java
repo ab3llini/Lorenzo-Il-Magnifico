@@ -1,6 +1,7 @@
 package server.controller.game;
 
 import exception.NotStrongEnoughException;
+import javafx.scene.effect.Effect;
 import server.model.GameSingleton;
 import server.model.board.Board;
 import server.model.board.FamilyMember;
@@ -8,6 +9,7 @@ import server.model.board.Period;
 import server.model.card.Deck;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
+import server.model.effect.EffectSurplus;
 import server.utility.DvptCardParser;
 
 import java.io.IOException;
@@ -233,12 +235,11 @@ public class BoardController {
      * @throws NotStrongEnoughException
      */
 
-    public void placeOnCouncilPalace(FamilyMember familyMember,Integer additionalServants) throws NotStrongEnoughException {
+    public EffectSurplus placeOnCouncilPalace(FamilyMember familyMember, Integer additionalServants) throws NotStrongEnoughException {
 
         if(familyMember.getForce() + additionalServants >= this.board.getCouncilPalace().getEntryForce()){
             this.board.getCouncilPalace().placeFamilyMember(familyMember);
-            //TODO applyEffectSurplus
-
+            return this.board.getCouncilPalace().getEffectSurplus();
         }
 
         else

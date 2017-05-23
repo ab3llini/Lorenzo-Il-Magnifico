@@ -1,24 +1,16 @@
 package server.controller.game;
 import exception.*;
-import netobject.Action;
 import netobject.BoardSector;
 import netobject.FamilyPlacementAction;
 import netobject.NetObject;
-import server.controller.network.Observable;
 import server.model.*;
-import server.model.board.Board;
-import server.model.board.CouncilPalace;
-import server.model.board.Player;
-import server.model.board.TowerSlot;
+import server.model.board.*;
 import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
-import server.utility.DvptCardParser;
+import server.model.effect.EffectSurplus;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import static java.util.Collections.shuffle;
 
@@ -108,7 +100,7 @@ public class MatchController {
 
         //check if there are enough resources to apply the cost in order to have an atomic transaction, if it does not succeed it returns an exception
         //deducts the cost of the card from the player's resources
-        if(player.hasEnoughResources(costo)) {
+        if(player.hasEnoughCostResources(costo)) {
             player.subtractResources(costo);
         }
         else
@@ -127,20 +119,26 @@ public class MatchController {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyPlacementAction action, Player player) throws NotStrongEnoughException {
+    public void placeFamilyMember(FamilyPlacementAction action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException {
+
+        FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
 
         //TODO only implemented one BoardSector...
         if (action.getActionTarget() == BoardSector.CouncilPalace) {
-            boardController.placeOnCouncilPalace(action.getFamilyMember(), action.getAdditionalServants());
-
+            EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants());
+            applyEffectSurplus(player,surplus);
             }
 
         if (action.getActionTarget() == BoardSector.Market) {
-            boardController.placeOnMarket(action.getFamilyMember(),action.getPlacementIndex(),action.getAdditionalServants());
+            boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants());
         }
 
+        familyMember.setBusy(true);
     }
 
+    public void applyEffectSurplus(Player player,EffectSurplus surplus){
+
+    }
 
 }

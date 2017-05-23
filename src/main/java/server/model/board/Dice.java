@@ -7,7 +7,7 @@ public class Dice {
     private ColorType color;
     private Integer value;
 
-    public Dice (ColorType color, Integer value){
+    public Dice (ColorType color){
         this.color = color;
         this.value = value;
     }

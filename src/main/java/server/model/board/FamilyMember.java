@@ -29,6 +29,10 @@ public class FamilyMember {
         return busy;
     }
 
+    public void setBusy(Boolean busy) {
+        this.busy = busy;
+    }
+
     public void setForce(Integer force) {
         this.force = force;
     }

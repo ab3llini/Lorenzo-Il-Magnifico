@@ -24,6 +24,8 @@ public class Board {
     private Market market;
 
     public Board() {
+
+        //create the board configured from file
         this.territoryTower = BoardConfigParser.getTower(DvptCardType.venture);
         this.characterTower = BoardConfigParser.getTower(DvptCardType.character);
         this.buildingTower = BoardConfigParser.getTower(DvptCardType.building);
@@ -33,7 +35,12 @@ public class Board {
         this.productionArea = BoardConfigParser.getProductionActionArea();
         this.harvestArea = BoardConfigParser.getHarvestActionArea();
         this.market = BoardConfigParser.getMarket();
+
+        //create the three dices
         this.dices = new ArrayList<Dice>();
+        dices.add(new Dice(ColorType.Black));
+        dices.add(new Dice(ColorType.White));
+        dices.add(new Dice(ColorType.Orange));
     }
 
 
@@ -151,6 +158,20 @@ public class Board {
 
     public Market getMarket() {
         return this.market;
+    }
+
+    /**
+     * return dice force from its color
+     * @param colorType
+     * @return
+     */
+    public Integer getDiceForce(ColorType colorType){
+
+        for (Dice dice:this.dices) {
+            if(dice.getColor() == colorType)
+                return  dice.getValue();
+        }
+        return 0;
     }
 
 }
