@@ -5,7 +5,7 @@ package netobject;
  */
 
 
-public class Action extends NetObject {
+public abstract class Action extends NetObject {
     //Some cool implementation
 
 }

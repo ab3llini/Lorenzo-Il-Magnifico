@@ -8,8 +8,6 @@ import exception.NoSuchHanlderException;
 import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
-import netobject.Notification;
-import netobject.NotificationType;
 import server.controller.network.ClientHandler;
 import server.model.board.Player;
 import singleton.GameConfig;
@@ -285,7 +283,7 @@ public class Lobby {
 
         while(this.players.keySet().iterator().hasNext()) {
 
-            this.players.keySet().iterator().next().sendObject(new Notification(NotificationType.MatchAborted));
+            //this.players.keySet().iterator().next().sendObject(new Notification(NotificationType.MatchAborted));
 
         }
 

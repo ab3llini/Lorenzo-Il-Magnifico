@@ -12,7 +12,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import netobject.LoginAuthentication;
-import netobject.RegistrationRequest;
 import server.controller.network.RMI.RMIConnectionToken;
 
 import java.rmi.RemoteException;

@@ -3,6 +3,7 @@ import exception.*;
 import netobject.Action;
 import netobject.BoardSector;
 import netobject.FamilyPlacementAction;
+import netobject.NetObject;
 import server.controller.network.Observable;
 import server.model.*;
 import server.model.board.Board;
@@ -66,7 +67,7 @@ public class MatchController {
 
     }
 
-    public void onPlayerAction(Player player, Action action) {
+    public void onPlayerAction(Player player,NetObject  action) {
 
 
 

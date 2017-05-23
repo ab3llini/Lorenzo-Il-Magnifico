@@ -1,7 +1,6 @@
 package client;
 
 import netobject.LoginAuthentication;
-import netobject.RegistrationRequest;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

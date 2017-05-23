@@ -236,7 +236,8 @@ public class BoardController {
     public void placeOnCouncilPalace(FamilyMember familyMember) throws NotStrongEnoughException {
 
         if(familyMember.getForce() >= this.board.getCouncilPalace().getEntryForce()){
-            this.board.getCouncilPalace().placeFamilyMember(familyMember);}
+            this.board.getCouncilPalace().placeFamilyMember(familyMember);
+        }
 
         else
             throw new NotStrongEnoughException("Not strong enough to do this action");
