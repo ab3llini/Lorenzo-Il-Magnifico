@@ -3,12 +3,15 @@ package server.model.board;
 import exception.*;
 import server.model.GameSingleton;
 import server.model.card.developement.Cost;
+import server.model.card.developement.DvptCardType;
 import server.model.valuable.Point;
 import server.model.valuable.PointType;
 import server.model.valuable.Resource;
 import server.model.valuable.ResourceType;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static server.model.card.developement.DvptCardType.*;
 
 /*
  * Created by alberto on 10/05/17.
@@ -504,15 +507,73 @@ public class Player {
 
     }
 
+    public boolean hasEnoughTerritoryCard (Integer territoryMalus) {
+
+        return this.personalBoard.getTerritoryCards().size() >= territoryMalus;
+
+    }
+
+    public boolean hasEnoughBuildingCard (Integer buildingMalus) {
+
+        return this.personalBoard.getBuildingCards().size() >= buildingMalus;
+
+    }
+
+    public boolean hasEnoughCharacterCard (Integer characterMalus) {
+
+        return this.personalBoard.getCharacterCards().size() >= characterMalus;
+
+    }
+
+    public boolean hasEnoughVentureCard (Integer ventureMalus) {
+
+        return this.personalBoard.getVentureCards().size() >= ventureMalus;
+
+    }
+
+    public boolean hasEnoughCards(DvptCardType cardType, Integer amount) {
+
+        if (cardType == territory)
+            return hasEnoughTerritoryCard(amount);
+        if (cardType == building)
+            return hasEnoughBuildingCard(amount);
+        if (cardType == character)
+            return hasEnoughCharacterCard(amount);
+        else
+            return hasEnoughVentureCard(amount);
+
+    }
+
+    public boolean hasEnoughRequiredCards(HashMap<DvptCardType,Integer> cards) {
+        if (cards.containsKey(territory)){
+            if ((!this.hasEnoughCards(territory, cards.get(territory))))
+                return false;}
+        if (cards.containsKey(building)){
+            if ((!this.hasEnoughCards(building, cards.get(building))))
+                return false;}
+        if (cards.containsKey(character)){
+            if ((!this.hasEnoughCards(character, cards.get(character))))
+                return false;}
+        if (cards.containsKey(venture)) {
+            if ((!this.hasEnoughCards(venture, cards.get(venture))))
+                return false;
+        }
+
+        return true;
+    }
+
     public boolean hasEnoughLeaderRequirements(Integer leaderIndex) {
         boolean hasEnoughResources;
         boolean hasEnoughPoints;
         boolean hasEnoughCards;
 
+
+        hasEnoughCards = hasEnoughRequiredCards(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getCardsRequired());
         hasEnoughResources = hasEnoughRequiredResources(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getResourceRequired());
         hasEnoughPoints = hasEnoughRequiredPoints(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getPointsRequired());
 
-        return hasEnoughResources && hasEnoughPoints;
+
+        return hasEnoughCards && hasEnoughResources && hasEnoughPoints;
 
     }
 
