@@ -4,20 +4,22 @@ package server.controller.network.RMI;
  * Created by alberto on 10/05/17.
  */
 
-import client.RMIClientInterface;
-import exception.LoginFailedException;
-import exception.NoSuchHanlderException;
-import exception.NotRegisteredException;
-import exception.UsernameAlreadyInUseException;
+import client.controller.network.RMI.RMIClientInterface;
+import exception.*;
 
-import netobject.Action;
+import exception.authentication.AlreadyLoggedInException;
+import exception.authentication.LoginFailedException;
+import exception.authentication.UsernameAlreadyInUseException;
+import netobject.request.action.ActionRequest;
 
 import logger.*;
-import netobject.LoginAuthentication;
-import netobject.RegisterAuthentication;
+import netobject.request.auth.LoginRequest;
+import netobject.request.auth.RegisterRequest;
+import server.controller.game.GameEngine;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Server;
 import server.controller.network.ClientHandler;
+import server.utility.Security;
 
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
@@ -28,6 +30,7 @@ import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -54,7 +57,10 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
      * @param port the port to run the server on
      * @param bindName the name to bind the interface with
      */
-    public RMIServer(int port,  String bindName) {
+    public RMIServer(int port, String bindName, GameEngine gameEngine) {
+
+        //Initialize super class
+        super(gameEngine);
 
         //Init port
         this.port = port;
@@ -144,7 +150,7 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
      * @param connectionToken The token to refer to the client handler
      * @return The corresponding client handler
      */
-    private RMIClientHandler getClientHandler(int connectionToken) throws NoSuchHanlderException {
+    private RMIClientHandler getClientHandler(String connectionToken) throws NoSuchHanlderException {
 
         Iterator it = this.clientHandlers.entrySet().iterator();
 
@@ -154,7 +160,7 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
             RMIClientHandler handler = (RMIClientHandler)pair.getKey();
 
-            if (connectionToken == handler.getToken()) {
+            if (connectionToken.equals(handler.getToken())) {
 
                 return handler;
 
@@ -179,15 +185,29 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
     }
 
+    public String getBoundableIP() throws RemoteException, ServerNotActiveException {
+
+        return RemoteServer.getClientHost();
+
+    }
+
     /* RMIServerInterface implementation */
-    public synchronized RMIConnectionToken connect(RMIClientInterface clientRef) throws RemoteException, ServerNotActiveException {
+    public synchronized String connect(RMIClientInterface clientRef) throws RemoteException, ConnectionFailedException {
 
-        int stupidToken = new Date().toString().hashCode();
+        String MD5Token;
 
-        RMIConnectionToken token = new RMIConnectionToken(RemoteServer.getClientHost(), stupidToken);
+        try {
+
+            MD5Token = Security.MD5Hash(clientRef + new Date().toString());
+
+        } catch (NoSuchAlgorithmException e) {
+
+            throw new ConnectionFailedException("Unable to connect.");
+
+        }
 
         //Create the RMI handler
-        RMIClientHandler handler = new RMIClientHandler(clientRef, stupidToken);
+        RMIClientHandler handler = new RMIClientHandler(clientRef, MD5Token);
 
         //Register as observers
         handler.addObserver(this);
@@ -195,58 +215,63 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
         //Add the handler
         this.addClientHandler(handler);
 
-        Logger.log(Level.FINEST, "Server (RMI)", "New client connected, waiting for authentication..");
+        Logger.log(Level.FINEST, "Server (RMI)", "New client connected, waiting for request..");
 
+        return MD5Token;
 
-        return token;
     }
 
-    public synchronized void login(int connectionToken, LoginAuthentication loginAuthentication) throws RemoteException, LoginFailedException {
+    public synchronized void login(String connectionToken, LoginRequest loginRequest) throws RemoteException, LoginFailedException, AlreadyLoggedInException {
+
+        ClientHandler handler = null;
 
         try {
 
-            if (!this.authenticate(this.getClientHandler(connectionToken), loginAuthentication)) {
+            handler = this.getClientHandler(connectionToken);
 
-                ClientHandler h = this.getClientHandler(connectionToken);
-
-                //Login failed, stop handler & remove object
-                this.clientHandlers.get(h).interrupt();
-                this.clientHandlers.remove(h);
-
-
-            }
+            this.authenticate(handler, loginRequest);
 
         } catch (NoSuchHanlderException e) {
 
             Logger.log(Level.SEVERE, "Server (RMI)", "No handler found while logging in", e);
 
+            return;
+
+        }
+        //If we want to terminate the handler we must, before forwarding the exception to the client, catch it and do something.
+        catch (Exception e) {
+
+            this.removeClientHandler(handler);
+
+            Logger.log(Level.FINEST, "Server (RMI)", "Removing handler", e);
+
+
+            if (e instanceof LoginFailedException) {
+
+                Logger.log(Level.FINEST, "Server (RMI)", "Bad login for client " + loginRequest.getUsername());
+
+                throw (LoginFailedException)e;
+            }
+            else if (e instanceof AlreadyLoggedInException) {
+
+                Logger.log(Level.FINEST, "Server (RMI)", "Client " + loginRequest.getUsername() + " was already logged in!");
+
+                throw (AlreadyLoggedInException)e;
+            }
+
         }
 
     }
 
-    public synchronized void register(int connectionToken, RegisterAuthentication registerAuthentication) throws RemoteException, UsernameAlreadyInUseException {
+    public synchronized void register(String connectionToken, RegisterRequest registerAuthentication) throws RemoteException, UsernameAlreadyInUseException, AlreadyLoggedInException, LoginFailedException {
 
-        try {
 
-            this.authenticate(this.getClientHandler(connectionToken), registerAuthentication);
-
-        } catch (NoSuchHanlderException e) {
-
-            Logger.log(Level.SEVERE, "Server (RMI)", "No handler found while registering", e);
-
-        }
 
 
     }
 
-    public synchronized boolean performAction(int connectionToken, Action action) throws RemoteException, NotRegisteredException {
+    public synchronized boolean performAction(String connectionToken, ActionRequest actionRequest) throws RemoteException, NotRegisteredException {
         return false;
-    }
-
-    public static void main(String[] args) {
-
-        RMIServer server = new RMIServer(1099, "server");
-        server.start();
     }
 
 }

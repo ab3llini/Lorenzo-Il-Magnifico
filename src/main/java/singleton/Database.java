@@ -2,6 +2,7 @@ package singleton;
 
 import logger.Level;
 import logger.Logger;
+import server.utility.Security;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -84,7 +85,7 @@ public class Database
             stmt.setQueryTimeout(QUERY_TIMEOUT);
 
             //Create the query;
-            String query = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + this.getMD5Hex(password) + "'";
+            String query = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + Security.MD5Hash(password) + "'";
 
             //Execute the query
             ResultSet result = stmt.executeQuery(query);
@@ -111,42 +112,6 @@ public class Database
 
     }
 
-
-    /**
-     * Converts a string to an MD5 hash
-     * @param inputString the string to be converted
-     * @return the hashed string to md5
-     * @throws NoSuchAlgorithmException will never occur.
-     */
-    public String getMD5Hex(final String inputString) throws NoSuchAlgorithmException {
-
-        //Creates a message digest
-        MessageDigest md = MessageDigest.getInstance("MD5");
-
-        //Update the message digest
-        md.update(inputString.getBytes());
-
-        //Get the final md5 digest
-        byte[] digest = md.digest();
-
-        return this.convertByteToHex(digest);
-    }
-
-    /**
-     * Converts an array of bytes to a hexadecimal string
-     * @param byteData the array to be converted
-     * @return the converted string
-     */
-    private String convertByteToHex(byte[] byteData) {
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < byteData.length; i++) {
-            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-        }
-
-        return sb.toString();
-    }
 
 }
 

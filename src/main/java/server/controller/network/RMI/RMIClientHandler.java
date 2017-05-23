@@ -4,7 +4,7 @@ package server.controller.network.RMI;
  * Created by alberto on 10/05/17.
  */
 
-import client.RMIClientInterface;
+import client.controller.network.RMI.RMIClientInterface;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
@@ -15,7 +15,6 @@ import server.controller.network.Observable;
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,7 +28,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
     /**
      * The connection token
      */
-    private int token;
+    private String token;
 
     /**
      * Heartbeat system delay constant
@@ -49,7 +48,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
      * @param clientRef The proxy reference to the client
      */
 
-    public RMIClientHandler(RMIClientInterface clientRef, int token) {
+    public RMIClientHandler(RMIClientInterface clientRef, String token) {
 
         //Assign the reference to the RMI Client in order to make callbacks
         this.clientRef = clientRef;
@@ -94,7 +93,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
             } catch (InterruptedException e) {
 
-                e.printStackTrace();
+                Logger.log(Level.FINEST, "RMIClientHandler", "Thread terminated");
 
                 break;
 
@@ -116,18 +115,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
-    /**
-     * Sends an object to the client
-     * @param object the object to send
-     * @return true if the object has been sent
-     */
-    public boolean sendObject(NetObject object) {
-
-        return false;
-
-    }
-
-    public int getToken() {
+    public String getToken() {
         return token;
     }
 
@@ -161,4 +149,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
     }
 
 
+    protected boolean send(Object o) {
+        return false;
+    }
 }

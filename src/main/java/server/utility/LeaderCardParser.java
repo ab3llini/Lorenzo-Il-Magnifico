@@ -78,7 +78,7 @@ public class LeaderCardParser {
     }
 
     private static Requirement getRequirement(JsonObject card){
-        //requirement can be composed by resources or points or also by the number of card of one specific type
+        //requirement can be composed by resources or points or also by the number of card of one specific authenticationType
         ArrayList<Resource> resourceRequired=new ArrayList<Resource>();
         ArrayList<Point> pointsRequired=new ArrayList<Point>();
         HashMap<DvptCardType,Integer> cardsRequired=new HashMap<DvptCardType, Integer>();
@@ -149,7 +149,7 @@ public class LeaderCardParser {
         //extract JsonObject cardsRequired from requirement
         JsonObject cardsRequired=requirement.getAsJsonObject("cards");
 
-        //for each type of card get his value required
+        //for each authenticationType of card get his value required
         for(String cardRequiredKey : Json.getObjectKeys(cardsRequired)){
 
             if(cardRequiredKey.equals("territory")){

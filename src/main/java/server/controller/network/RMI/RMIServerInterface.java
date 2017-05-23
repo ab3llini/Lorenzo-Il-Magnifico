@@ -1,12 +1,13 @@
 package server.controller.network.RMI;
 
-import client.RMIClientInterface;
-import exception.LoginFailedException;
-import exception.NotRegisteredException;
-import exception.UsernameAlreadyInUseException;
-import netobject.Action;
-import netobject.LoginAuthentication;
-import netobject.RegisterAuthentication;
+import client.controller.network.RMI.RMIClientInterface;
+import exception.*;
+import exception.authentication.AlreadyLoggedInException;
+import exception.authentication.LoginFailedException;
+import exception.authentication.UsernameAlreadyInUseException;
+import netobject.request.action.ActionRequest;
+import netobject.request.auth.LoginRequest;
+import netobject.request.auth.RegisterRequest;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -19,13 +20,19 @@ import java.rmi.server.ServerNotActiveException;
 public interface RMIServerInterface extends Remote {
 
     /**
+     * Returns the external IP of the client so that he can export himself properly
+     * @return the client external ip
+     */
+    String getBoundableIP() throws RemoteException, ServerNotActiveException;
+
+    /**
      * Method used to get  server.
-     * It will return to the client his external IP address so that he can export himself properly
+     * It will return to the client a session token that will be later used to make any call
      * @param clientRef the connecting client
-     * @return the connection token
+     * @return the connection token as an MD5 Hexadecimal string.
      * @throws RemoteException Needed for RMI Pattern
      */
-    RMIConnectionToken connect(RMIClientInterface clientRef) throws RemoteException, ServerNotActiveException;
+    String connect(RMIClientInterface clientRef) throws RemoteException, ConnectionFailedException;
 
     /**
      * Attempts to login a new RMI client on the server.
@@ -33,7 +40,7 @@ public interface RMIServerInterface extends Remote {
      * @param loginAuthentication The auth request
      * @throws RemoteException Needed for RMI Pattern
      */
-    void login(int connectionToken, LoginAuthentication loginAuthentication) throws RemoteException, LoginFailedException;
+    void login(String connectionToken, LoginRequest loginAuthentication) throws RemoteException, LoginFailedException, AlreadyLoggedInException;
 
     /**
      * Attempts to login a new RMI client on the server.
@@ -41,15 +48,15 @@ public interface RMIServerInterface extends Remote {
      * @param authentication The registration request
      * @throws RemoteException Needed for RMI Pattern
      */
-    void register(int connectionToken, RegisterAuthentication authentication) throws RemoteException, UsernameAlreadyInUseException;
+    void register(String connectionToken, RegisterRequest authentication) throws RemoteException, UsernameAlreadyInUseException, AlreadyLoggedInException, LoginFailedException;
 
     /**
-     * Attempts to perform an action
+     * Attempts to perform an actionRequest
      * @param connectionToken The stub of the client
-     * @param action The action to be performed
+     * @param actionRequest The actionRequest to be performed
      * @return Upon success returns true, otherwise false.
      * @throws RemoteException Needed for RMI Pattern
      */
-    boolean performAction(int connectionToken, Action action) throws RemoteException, NotRegisteredException;
+    boolean performAction(String connectionToken, ActionRequest actionRequest) throws RemoteException, NotRegisteredException;
 
 }

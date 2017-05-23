@@ -142,7 +142,7 @@ public class BoardController {
 
         period = round / 2;
 
-        // If it is the first turn of a period, every tower will contain the first half of his specific deck, according to his type and period
+        // If it is the first turn of a period, every tower will contain the first half of his specific deck, according to his authenticationType and period
 
         if (round % 2 == 1) {
 
@@ -167,7 +167,7 @@ public class BoardController {
 
         }
 
-        //On the contrary, if it is the second round of that period, every tower will contain the second half of his specific deck, according to his type and period
+        //On the contrary, if it is the second round of that period, every tower will contain the second half of his specific deck, according to his authenticationType and period
 
         else {
 

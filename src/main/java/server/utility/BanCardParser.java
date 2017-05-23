@@ -60,8 +60,8 @@ public class BanCardParser {
                     period = getPeriod(banCard);
                 }
 
-                if (key.equals("type")) {
-                    banType = BanType.valueOf(banCard.get("type").getAsString());
+                if (key.equals("authenticationType")) {
+                    banType = BanType.valueOf(banCard.get("authenticationType").getAsString());
                 }
 
                 if (key.equals("effect")) {
@@ -89,7 +89,7 @@ public class BanCardParser {
                         if(effectKey.equals("specialEffect"))
                             specialEffect = effect.get("specialEffect").getAsString();
 
-                        //noVictoryPointsMalus consist in a failure to assign vicotry points for a particular type of card at the end of the game
+                        //noVictoryPointsMalus consist in a failure to assign vicotry points for a particular authenticationType of card at the end of the game
                         if(effectKey.equals("noVictoryPointsMalus")){
                             JsonObject malusType = effect.getAsJsonObject("noVictoryPointsMalus");
                             cardType = DvptCardType.valueOf(malusType.get("target").getAsString());
@@ -106,7 +106,7 @@ public class BanCardParser {
                 }
 
             }
-            //add the new card to the arrayList, choose the correct constructor depending on the banCard type
+            //add the new card to the arrayList, choose the correct constructor depending on the banCard authenticationType
             if (banType == BanType.dice) {
                 allBanCards.add(new DiceBanCard(Integer.parseInt(banCardId), period, effectDiceMalus));
             }
@@ -146,8 +146,8 @@ public class BanCardParser {
             if(malusKey.equals("target")){
                 target = ActionType.valueOf(diceMalusObject.get("target").getAsString());}
 
-            if(malusKey.equals("type")){
-                type = DvptCardType.valueOf(diceMalusObject.get("type").getAsString());
+            if(malusKey.equals("authenticationType")){
+                type = DvptCardType.valueOf(diceMalusObject.get("authenticationType").getAsString());
             }
 
             if(malusKey.equals("force")){

@@ -1,9 +1,9 @@
-package netobject;
+package netobject.request.action;
 
 /**
  * Created by Federico on 22/05/2017.
  */
-public enum BoardSector {
+public enum BoardSectorType {
 
     TerritoryTower,
     BuildingTower,

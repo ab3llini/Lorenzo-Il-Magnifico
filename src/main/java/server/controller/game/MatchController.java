@@ -1,6 +1,7 @@
 package server.controller.game;
 import exception.*;
 import netobject.*;
+import netobject.request.action.*;
 import server.model.*;
 import server.model.board.*;
 import server.model.card.developement.Cost;
@@ -59,20 +60,20 @@ public class MatchController {
 
     }
 
-    public void onPlayerAction(Player player, Action action) throws NotStrongEnoughException{
+    public void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException{
 
-        if(action instanceof FamilyPlacementAction){
+        if(action instanceof FamilyMemberPlacementActionRequest){
 
-
-        }
-
-        if(action instanceof LeaderActivationAction){
-
-            activateLeaderCard((LeaderActivationAction) action, player);
 
         }
 
-        if(action instanceof RollDiceAction){
+        if(action instanceof LeaderCardActivationActionRequest){
+
+            activateLeaderCard((LeaderCardActivationActionRequest) action, player);
+
+        }
+
+        if(action instanceof RollDiceActionRequest){
 
             rollDice ((player));
 
@@ -130,17 +131,17 @@ public class MatchController {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyPlacementAction action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException {
+    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
 
-        //TODO only implemented one BoardSector...
-        if (action.getActionTarget() == BoardSector.CouncilPalace) {
+        //TODO only implemented one BoardSectorType...
+        if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
             EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants());
             }
 
-        if (action.getActionTarget() == BoardSector.Market) {
+        if (action.getActionTarget() == BoardSectorType.Market) {
             boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants());
         }
 
@@ -167,7 +168,7 @@ public class MatchController {
             ;
     }
 
-    public void activateLeaderCard (LeaderActivationAction action, Player player) {
+    public void activateLeaderCard (LeaderCardActivationActionRequest action, Player player) {
 
     }
 

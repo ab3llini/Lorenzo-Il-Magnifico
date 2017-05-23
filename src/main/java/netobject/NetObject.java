@@ -12,6 +12,13 @@ import java.io.Serializable;
  */
 public abstract class NetObject implements Serializable {
 
-    int id;
+    protected final NetObjectType type;
 
+    protected NetObject(NetObjectType type) {
+        this.type = type;
+    }
+
+    public NetObjectType getType() {
+        return type;
+    }
 }

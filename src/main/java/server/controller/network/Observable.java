@@ -7,12 +7,12 @@ package server.controller.network;
 
 /**
  * This template describes a collection of methods that an observed element should implement
- * @param <T> The observer type
+ * @param <T> The observer authenticationType
  */
 public interface Observable<T> {
 
     /**
-     * Adds an observer of type T
+     * Adds an observer of authenticationType T
      * @param o The observer
      * @return True upon success, False otherwise
      */

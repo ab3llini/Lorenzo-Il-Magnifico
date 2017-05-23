@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ConnectionController">
+<AnchorPane prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.ConnectionController">
    <children>
       <Label layoutX="20.0" layoutY="418.0" text="Host" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="20.0" />
       <TextField fx:id="hostTextField" layoutX="73.0" layoutY="418.0" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" promptText="x.y.z.w" text="127.0.0.1" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="20.0" />

@@ -45,8 +45,8 @@ public class GameEngine implements ServerObserver {
         this.lobbies = new ArrayList<Lobby>();
 
         //Initialize the servers
-        this.socketServer = new SocketServer(GameConfig.getInstance().getSocketPort());
-        this.rmiServer = new RMIServer(GameConfig.getInstance().getRmiPort(), "server");
+        this.socketServer = new SocketServer(GameConfig.getInstance().getSocketPort(), this);
+        this.rmiServer = new RMIServer(GameConfig.getInstance().getRmiPort(), "server", this);
 
         //Register us as observer
         this.socketServer.addObserver(this);
@@ -192,6 +192,12 @@ public class GameEngine implements ServerObserver {
 
         }
 
+
+    }
+
+    public boolean hasAlreadyAuthenticated(String username) {
+
+        return this.rmiServer.hasHandlerWithUsername(username) || this.socketServer.hasHandlerWithUsername(username);
 
     }
 

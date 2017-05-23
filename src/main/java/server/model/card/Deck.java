@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- *  * Represents a card desk of custom type
- * @param <T> the type of the deck cards
+ *  * Represents a card desk of custom authenticationType
+ * @param <T> the authenticationType of the deck cards
  */
 public class Deck<T> {
 

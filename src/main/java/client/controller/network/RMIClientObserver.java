@@ -1,4 +1,4 @@
-package client;
+package client.controller.network;
 
 interface RMIClientObserver {
 

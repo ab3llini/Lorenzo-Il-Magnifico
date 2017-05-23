@@ -5,17 +5,24 @@ package server.controller.network.Socket;
  */
 
 
+import exception.authentication.AlreadyLoggedInException;
+import exception.authentication.AuthenticationException;
+import exception.authentication.LoginFailedException;
 import logger.Level;
 import logger.Logger;
-import netobject.LoginAuthentication;
+import netobject.NetObjectType;
+import netobject.request.Request;
+import netobject.request.RequestType;
+import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
+import netobject.response.auth.LoginResponse;
+import server.controller.game.GameEngine;
 import server.controller.network.Server;
 import server.controller.network.ClientHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 
 /**
  * The server which handles the clients connected via socket.
@@ -33,7 +40,10 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
      * Constructor
      * @param port The port on which the listening will be performed
      */
-    public SocketServer(int port) {
+    public SocketServer(int port, GameEngine gameEngine) {
+
+        //Initialize super class
+        super(gameEngine);
 
         //Assign the port
         this.port = port;
@@ -47,9 +57,27 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
      */
     private void parseObject(SocketClientHandler handler, NetObject object) {
 
-        if (object instanceof LoginAuthentication) {
+        if (object.getType() == NetObjectType.Request) {
 
-            this.authenticate(handler, object);
+            Request req = (Request)object;
+
+            if (req.getRequestType() == RequestType.Login) {
+
+                LoginRequest loginRequest = (LoginRequest)req;
+
+                try {
+                    this.authenticate(handler, loginRequest);
+                }
+                catch (LoginFailedException e) {
+
+                    //Request failed: remove the client but tell him why
+                    handler.sendObject(new LoginResponse(false, e.getMessage()));
+
+                } catch (AlreadyLoggedInException e) {
+                    handler.sendObject(new LoginResponse(false, e.getMessage()));
+                }
+
+            }
 
         }
 
@@ -93,7 +121,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                 //Add the client
                 this.addClientHandler(handler);
 
-                Logger.log(Level.FINEST, "Server (Socket)", "New client connected, waiting for authentication..");
+                Logger.log(Level.FINEST, "Server (Socket)", "New client connected, waiting for request..");
 
 
             }
@@ -127,11 +155,6 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
         this.parseObject(handler, object);
 
-    }
-
-
-    public static void main(String[] args) {
-        (new Thread(new SocketServer(4545))).start();
     }
 
 }

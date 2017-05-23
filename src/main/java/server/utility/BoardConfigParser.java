@@ -69,7 +69,7 @@ public class BoardConfigParser {
     /**
      * this method parse productionArea attributes; production area is composed by two parts : single production place, composite production place.
      * this method uses getSingleActionPlace and getCompositeActionPlace to obtain his attributes.
-     * @return Action Area (production) that will be used in board model
+     * @return ActionRequest Area (production) that will be used in board model
      */
     public static ActionArea getProductionActionArea(){
 
@@ -80,7 +80,7 @@ public class BoardConfigParser {
 
         PHCompositeActionPlace productionCompositePlace = getCompositeActionPlace(productionAreaObject);
 
-        //return actionArea object with the specification of his type
+        //return actionArea object with the specification of his authenticationType
         return new ActionArea(ActionType.Production, productionSinglePlace, productionCompositePlace);
 
     }
@@ -88,7 +88,7 @@ public class BoardConfigParser {
     /**
      * this method parse harvestArea attributes; harvest area is composed by two parts : single production place, composite production place.
      * this method uses getSingleActionPlace and getCompositeActionPlace to obtain his attributes.
-     * @return Action Area (harvest) that will be used in board model
+     * @return ActionRequest Area (harvest) that will be used in board model
      */
     public static ActionArea getHarvestActionArea(){
 
@@ -99,7 +99,7 @@ public class BoardConfigParser {
 
         PHCompositeActionPlace productionCompositePlace = getCompositeActionPlace(productionAreaObject);
 
-        //return actionArea object with the specification of his type
+        //return actionArea object with the specification of his authenticationType
         return new ActionArea(ActionType.Harvest, productionSinglePlace, productionCompositePlace);
 
     }
@@ -151,14 +151,14 @@ public class BoardConfigParser {
     }
 
     /**
-     * this method parse a tower depending on her type
+     * this method parse a tower depending on her authenticationType
      * @return a tower that will be used in board model
      */
     public static ArrayList<TowerSlot> getTower(DvptCardType type){
 
         ArrayList<TowerSlot> tower = new ArrayList<TowerSlot>();
 
-        //get correct JsonObject ventureTower from boardConfig (type+Tower because in json territoryTower is the key for JsonObject territoryTower)
+        //get correct JsonObject ventureTower from boardConfig (authenticationType+Tower because in json territoryTower is the key for JsonObject territoryTower)
         JsonObject towerObject = BoardConfigParser.getBoardConfig().getAsJsonObject(type+"Tower");
 
         //get keys from towerObject ( 1 || 2 || 3 || 4)

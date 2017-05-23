@@ -40,7 +40,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     }
 
-    public boolean sendObject(NetObject object) {
+    public boolean send(Object object) {
 
         if (this.socket.isClosed()) {
 
@@ -78,6 +78,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
      * Runnable interface implementation of run()
      */
     public void run() {
+
 
         ObjectInputStream socketIn = null;
 
