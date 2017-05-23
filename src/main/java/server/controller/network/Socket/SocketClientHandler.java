@@ -10,6 +10,7 @@ import logger.Logger;
 import netobject.NetObject;
 import server.controller.network.ClientHandler;
 import server.controller.network.Observable;
+import server.model.Match;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -40,7 +41,12 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     }
 
-    public boolean send(Object object) {
+    /**
+     * Sends an object to the client
+     * @param object the object
+     * @return true upon success
+     */
+    public boolean sendObject(NetObject object) {
 
         if (this.socket.isClosed()) {
 
@@ -174,4 +180,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     }
 
+    public void updateModel(Match model) {
+
+    }
 }

@@ -3,7 +3,9 @@ package client.controller.network.RMI;
 import client.controller.network.Client;
 import exception.authentication.AlreadyLoggedInException;
 import exception.ConnectionFailedException;
+import exception.authentication.AuthenticationException;
 import exception.authentication.LoginFailedException;
+import exception.authentication.NotConnectedException;
 import logger.Level;
 import logger.Logger;
 import netobject.request.auth.LoginRequest;
@@ -116,13 +118,26 @@ public class RMIClient extends Client implements RMIClientInterface {
     public void login(LoginRequest authentication) {
 
         try {
-            this.serverRef.login(this.token, authentication);
+
+            if (this.serverRef.login(this.token, authentication)) {
+
+                this.notifyLoginSucceeded();
+
+            }
+
         } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (LoginFailedException e) {
-            e.printStackTrace();
-        } catch (AlreadyLoggedInException e) {
-            e.printStackTrace();
+
+            Logger.log(Level.SEVERE, "RMIClient::login", "Remote exception", e);
+
+        } catch (AuthenticationException e) {
+
+            this.notifyLoginFailed(e.getMessage());
+
+        } catch (NotConnectedException e) {
+
+            Logger.log(Level.SEVERE, "RMIClient::login", "The client is disconnected", e);
+
+
         }
 
     }

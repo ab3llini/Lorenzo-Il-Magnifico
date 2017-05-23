@@ -39,19 +39,6 @@ public abstract class Client implements Observable<ClientObserver> {
      */
     public abstract void login(LoginRequest authentication);
 
-    /**
-     * Notify that an object has been received
-     * @param object
-     */
-    protected void notifyObjectReceived(NetObject object) {
-
-        for (ClientObserver o : this.observers) {
-
-            o.onObjectReceived(this,object);
-
-        }
-
-    }
 
     /**
      * Notify that the server closed the connection
@@ -61,6 +48,26 @@ public abstract class Client implements Observable<ClientObserver> {
         for (ClientObserver o : this.observers) {
 
             o.onDisconnection(this);
+
+        }
+
+    }
+
+    protected void notifyLoginFailed(String reason) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onLoginFailed(this, reason);
+
+        }
+
+    }
+
+    protected void notifyLoginSucceeded() {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onLoginSuccess(this);
 
         }
 

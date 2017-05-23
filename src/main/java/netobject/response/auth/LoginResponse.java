@@ -9,21 +9,21 @@ import netobject.response.ResponseType;
  */
 public class LoginResponse extends Response {
 
-    private final boolean status;
+    private final boolean loginSucceeded;
 
     private final String message;
 
-    public LoginResponse(boolean status, String message) {
+    public LoginResponse(boolean loginSucceeded, String message) {
 
         super(ResponseType.Login);
 
-        this.status = status;
+        this.loginSucceeded = loginSucceeded;
         this.message = message;
 
     }
 
-    public boolean getStatus() {
-        return this.status;
+    public boolean loginHasSucceeded() {
+        return this.loginSucceeded;
     }
 
     public String getMessage() {

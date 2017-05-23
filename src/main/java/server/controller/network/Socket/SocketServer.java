@@ -6,7 +6,6 @@ package server.controller.network.Socket;
 
 
 import exception.authentication.AlreadyLoggedInException;
-import exception.authentication.AuthenticationException;
 import exception.authentication.LoginFailedException;
 import logger.Level;
 import logger.Logger;

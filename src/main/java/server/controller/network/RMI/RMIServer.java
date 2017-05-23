@@ -7,9 +7,7 @@ package server.controller.network.RMI;
 import client.controller.network.RMI.RMIClientInterface;
 import exception.*;
 
-import exception.authentication.AlreadyLoggedInException;
-import exception.authentication.LoginFailedException;
-import exception.authentication.UsernameAlreadyInUseException;
+import exception.authentication.*;
 import netobject.request.action.ActionRequest;
 
 import logger.*;
@@ -150,7 +148,7 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
      * @param connectionToken The token to refer to the client handler
      * @return The corresponding client handler
      */
-    private RMIClientHandler getClientHandler(String connectionToken) throws NoSuchHanlderException {
+    private RMIClientHandler getClientHandler(String connectionToken) throws NotConnectedException {
 
         Iterator it = this.clientHandlers.entrySet().iterator();
 
@@ -168,7 +166,7 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
         }
 
-        throw new NoSuchHanlderException("No handler found on RMI Server for token " + connectionToken);
+        throw new NotConnectedException("No user did connect with token = " + connectionToken);
 
     }
 
@@ -221,7 +219,7 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
     }
 
-    public synchronized void login(String connectionToken, LoginRequest loginRequest) throws RemoteException, LoginFailedException, AlreadyLoggedInException {
+    public synchronized boolean login(String connectionToken, LoginRequest loginRequest) throws RemoteException, LoginFailedException, AlreadyLoggedInException, NotConnectedException {
 
         ClientHandler handler = null;
 
@@ -229,17 +227,11 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
             handler = this.getClientHandler(connectionToken);
 
-            this.authenticate(handler, loginRequest);
-
-        } catch (NoSuchHanlderException e) {
-
-            Logger.log(Level.SEVERE, "Server (RMI)", "No handler found while logging in", e);
-
-            return;
+            return this.authenticate(handler, loginRequest);
 
         }
         //If we want to terminate the handler we must, before forwarding the exception to the client, catch it and do something.
-        catch (Exception e) {
+        catch (AuthenticationException e) {
 
             this.removeClientHandler(handler);
 
@@ -260,6 +252,8 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
             }
 
         }
+
+        return false;
 
     }
 

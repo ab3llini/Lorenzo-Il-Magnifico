@@ -1,5 +1,6 @@
 package server.controller.network;
 import netobject.NetObject;
+import server.model.Match;
 
 /*
  * @author  ab3llini
@@ -13,40 +14,13 @@ public abstract class ClientHandler implements Runnable  {
     //A flag indicating whether or not the client did authenticate
     protected boolean authenticated;
 
-    /**
-     * Sends an object to the client
-     * @param object the object
-     * @return true upon success
-     */
-    public final boolean sendObject(NetObject object) {
-        return this.send(object);
-    }
-
-    /**
-     * Sends an exception to the client
-     * @param e the exception
-     * @return true upon success
-     */
-    public final boolean sendException(Exception e) {
-        return this.send(e);
-    }
-
-    protected abstract boolean send(Object o);
-
     public String getUsername() {
 
-        if (this.username == null) {
-
-            return "Username not set";
-
-        }
-        else {
-
-            return this.username;
-
-        }
+        return (this.username != null) ? this.username : "Undefined";
 
     }
+
+    public abstract void updateModel(Match model);
 
     public void setUsername(String username) {
         this.username = username;

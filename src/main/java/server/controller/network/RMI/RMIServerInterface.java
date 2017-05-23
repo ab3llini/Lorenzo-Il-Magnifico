@@ -4,6 +4,7 @@ import client.controller.network.RMI.RMIClientInterface;
 import exception.*;
 import exception.authentication.AlreadyLoggedInException;
 import exception.authentication.LoginFailedException;
+import exception.authentication.NotConnectedException;
 import exception.authentication.UsernameAlreadyInUseException;
 import netobject.request.action.ActionRequest;
 import netobject.request.auth.LoginRequest;
@@ -40,7 +41,7 @@ public interface RMIServerInterface extends Remote {
      * @param loginAuthentication The auth request
      * @throws RemoteException Needed for RMI Pattern
      */
-    void login(String connectionToken, LoginRequest loginAuthentication) throws RemoteException, LoginFailedException, AlreadyLoggedInException;
+    boolean login(String connectionToken, LoginRequest loginAuthentication) throws RemoteException, LoginFailedException, AlreadyLoggedInException, NotConnectedException;
 
     /**
      * Attempts to login a new RMI client on the server.

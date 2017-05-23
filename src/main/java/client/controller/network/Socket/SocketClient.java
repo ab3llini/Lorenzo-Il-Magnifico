@@ -3,8 +3,12 @@ package client.controller.network.Socket;
 import client.controller.network.Client;
 import logger.Level;
 import logger.Logger;
+import netobject.NetObjectType;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
+import netobject.response.Response;
+import netobject.response.ResponseType;
+import netobject.response.auth.LoginResponse;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -47,6 +51,8 @@ public class SocketClient extends Client implements Runnable {
 
             this.socket = new Socket(this.host, this.port);
 
+            new Thread(this).start();
+
             Logger.log(Level.FINE, "SocketClient::connect", "Connected.");
 
             return true;
@@ -67,7 +73,6 @@ public class SocketClient extends Client implements Runnable {
 
     }
 
-
     public void run() {
 
         while (!this.socket.isClosed() && this.socket.isConnected()) {
@@ -80,7 +85,7 @@ public class SocketClient extends Client implements Runnable {
                 Object obj = socketIn.readObject();
 
                 //Notify that an object was received
-                this.notifyObjectReceived((NetObject) obj);
+                this.parse((NetObject) obj);
 
             }
             catch (EOFException e) {
@@ -113,6 +118,35 @@ public class SocketClient extends Client implements Runnable {
 
     }
 
+    private void parse(NetObject object) {
+
+        if (object.getType() == NetObjectType.Response) {
+
+            Response resp = (Response)object;
+
+            if (resp.getResponseType() == ResponseType.Login) {
+
+                LoginResponse loginResponse = (LoginResponse)resp;
+
+                if (loginResponse.loginHasSucceeded()) {
+
+                    this.notifyLoginSucceeded();
+
+                }
+
+                else {
+
+                    this.notifyLoginFailed(loginResponse.getMessage());
+
+                }
+
+            }
+
+        }
+
+
+    }
+
     public boolean sendObject(NetObject object) {
 
         ObjectOutputStream socketOut;
@@ -142,9 +176,6 @@ public class SocketClient extends Client implements Runnable {
         SocketClient s = new SocketClient("127.0.0.1", 4545);
 
         s.connect();
-
-        new Thread(s).start();
-
 
         s.login(new LoginRequest("alberto", "unix"));
 

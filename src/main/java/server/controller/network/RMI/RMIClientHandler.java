@@ -11,6 +11,7 @@ import netobject.NetObject;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
+import server.model.Match;
 
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
@@ -151,5 +152,9 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     protected boolean send(Object o) {
         return false;
+    }
+
+    public void updateModel(Match model) {
+
     }
 }

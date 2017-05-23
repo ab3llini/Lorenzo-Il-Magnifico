@@ -12,4 +12,8 @@ public interface ClientObserver {
 
     void onDisconnection(Client client);
 
+    void onLoginFailed(Client client, String reason);
+
+    void onLoginSuccess(Client client);
+
 }
