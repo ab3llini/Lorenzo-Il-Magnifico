@@ -173,6 +173,8 @@ public class MatchController {
 
     public void activateLeaderCard (LeaderCardActivationActionRequest action, Player player) {
 
+        player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()); //verify the requirements to activate Leader Card
+
     }
 
     public void rollDice (Player player){

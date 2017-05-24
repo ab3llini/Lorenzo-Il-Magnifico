@@ -34,27 +34,41 @@ public class Player {
         this.username = username;
 
         //initialize hashMap that contains all resources
+
         resources = new HashMap<ResourceType, Integer>();
 
         //put all kind of resource in the hashMap
+
         resources.put(ResourceType.Coins, 0);
+
         resources.put(ResourceType.Servants, 0);
+
         resources.put(ResourceType.Stones, 0);
+
         resources.put(ResourceType.Servants, 0);
 
         //initialize hashMap that contains all points
+
         points = new HashMap<PointType, Integer>();
 
         //put all kind of points in the hashMap
+
         points.put(PointType.Military, 0);
+
         points.put(PointType.Victory, 0);
+
         points.put(PointType.Faith, 0);
 
         //create the arrayList with all the player's familyMembers
+
         familyMembers = new ArrayList<FamilyMember>();
+
         familyMembers.add(new FamilyMember(this, ColorType.Black));
+
         familyMembers.add(new FamilyMember(this, ColorType.Orange));
+
         familyMembers.add(new FamilyMember(this, ColorType.White));
+
         familyMembers.add(new FamilyMember(this, ColorType.Uncoloured));
     }
 
@@ -103,17 +117,23 @@ public class Player {
     }
 
     public Integer getResource(ResourceType resourceType) {
+
         if (resourceType == ResourceType.Coins)
+
             return getCoins();
 
         if (resourceType == ResourceType.Wood)
+
             return getWood();
 
         if (resourceType == ResourceType.Servants)
+
             return getServants();
 
         else
+
             return getStones();
+
     }
 
     public Integer getMilitaryPoints() {
@@ -161,15 +181,21 @@ public class Player {
     }
 
     public void addServants(Integer servantsPlus) {
+
         this.resources.put(ResourceType.Servants, getServants() + servantsPlus);
+
     }
 
     public void addMilitaryPoints(Integer militaryPlus) {
+
         this.points.put(PointType.Military, getMilitaryPoints() + militaryPlus);
+
     }
 
     public void addVictoryPoints(Integer victoryPlus) {
+
         this.points.put(PointType.Victory, getVictoryPoints() + victoryPlus);
+
     }
 
     public void addFaithPoints(Integer faithPlus) {
@@ -189,18 +215,29 @@ public class Player {
 
         //search through the array of family members until finds the member we want
         for (FamilyMember member : familyMembers) {
+
             if (member.getColor() == colorType) {
+
                 memberWanted = member;
+
                 break;
+
             }
+
         }
 
         //the member wanted can be already in use
+
         if (memberWanted.isBusy()) {
+
             throw new FamilyMemberAlreadyInUseException("this family member is already in use");
+
         } else {
+
             return memberWanted;
+
         }
+
     }
 
 
@@ -209,14 +246,21 @@ public class Player {
      *
      * @return
      */
+
     public ArrayList<FamilyMember> getFamilyMembersSuitable(Integer forceRequired) {
+
         ArrayList<FamilyMember> familyMembersSuitable = new ArrayList<FamilyMember>();
 
         for (FamilyMember member : familyMembers) {
+
             if (member.getForce() >= (forceRequired - this.resources.get(ResourceType.Servants)))
+
                 familyMembersSuitable.add(member);
+
         }
+
         return familyMembersSuitable;
+
     }
 
     /**
@@ -225,13 +269,19 @@ public class Player {
      * @param coinsMalus
      * @throws NotEnoughCoinsException
      */
+
     public void subtractCoins(Integer coinsMalus) throws NotEnoughCoinsException {
 
         if (this.resources.get(ResourceType.Coins) >= coinsMalus) {
+
             resources.put(ResourceType.Coins, getCoins() - coinsMalus);
+
         } else {
+
             throw new NotEnoughCoinsException("Not enough money to do this");
+
         }
+
     }
 
     /**
@@ -251,6 +301,7 @@ public class Player {
      * @param woodMalus
      * @throws NotEnoughWoodException
      */
+
     public void subtractWood(Integer woodMalus) throws NotEnoughWoodException {
 
         if (this.resources.get(ResourceType.Wood) >= woodMalus) {
@@ -276,13 +327,19 @@ public class Player {
      * @param stonesMalus
      * @throws NotEnoughStonesException
      */
+
     public void subtractStones(Integer stonesMalus) throws NotEnoughStonesException {
 
         if (this.resources.get(ResourceType.Stones) >= stonesMalus) {
+
             this.resources.put(ResourceType.Stones, getStones() - stonesMalus);
+
         } else {
+
             throw new NotEnoughStonesException("Not enough stones to do this");
+
         }
+
     }
 
     /**
@@ -292,7 +349,9 @@ public class Player {
      */
 
     public boolean hasEnoughStones(Integer stonesMalus) {
+
         return (this.resources.get(ResourceType.Stones) >= stonesMalus);
+
     }
 
     /**
@@ -301,13 +360,19 @@ public class Player {
      * @param servantsMalus
      * @throws NotEnoughServantsException
      */
+
     public void subtractServants(Integer servantsMalus) throws NotEnoughServantsException {
 
         if (this.resources.get(ResourceType.Servants) >= servantsMalus) {
+
             this.resources.put(ResourceType.Servants, getServants() - servantsMalus);
+
         } else {
+
             throw new NotEnoughServantsException("Not enough servants to do this");
+
         }
+
     }
 
     /**
@@ -329,10 +394,15 @@ public class Player {
     public void subtractMilitaryPoints(Integer militaryMalus) throws NotEnoughMilitaryPointsException {
 
         if (this.points.get(PointType.Military) >= militaryMalus) {
+
             this.points.put(PointType.Military, getMilitaryPoints() - militaryMalus);
+
         } else {
+
             throw new NotEnoughMilitaryPointsException("Not enough military points to do this");
+
         }
+
     }
 
     /**
@@ -344,10 +414,15 @@ public class Player {
     public void subtractVictoryPoints(Integer victoryMalus) throws NotEnoughVictoryPointsException {
 
         if (this.points.get(PointType.Victory) >= victoryMalus) {
+
             this.points.put(PointType.Victory, getVictoryPoints() - victoryMalus);
+
         } else {
+
             throw new NotEnoughVictoryPointsException("Not enough military points to do this");
+
         }
+
     }
 
     /**
@@ -356,13 +431,19 @@ public class Player {
      * @param faithMalus
      * @throws NotEnoughFaithPointsException
      */
+
     public void subtractFaithPoints(Integer faithMalus) throws NotEnoughFaithPointsException {
 
         if (this.points.get(PointType.Faith) >= faithMalus) {
+
             this.points.put(PointType.Faith, getFaithPoints() - faithMalus);
+
         } else {
+
             throw new NotEnoughFaithPointsException("Not enough faith points to do this");
+
         }
+
     }
 
     /**
@@ -372,14 +453,23 @@ public class Player {
      * @param amount
      * @throws NotEnoughResourcesException
      */
+
     public boolean hasEnoughResources(ResourceType resourceType, Integer amount) {
+
         if (resourceType == ResourceType.Coins)
+
             return hasEnoughCoins(amount);
+
         if (resourceType == ResourceType.Stones)
+
             return hasEnoughStones(amount);
+
         if (resourceType == ResourceType.Servants)
+
             return hasEnoughServants(amount);
+
         else
+
             return hasEnoughWood(amount);
     }
 
@@ -388,7 +478,9 @@ public class Player {
         for (int j = 0; j < cost.getResources().size(); j++) {
 
             if (!this.hasEnoughResources(cost.getResources().get(j).getType(), cost.getResources().get(j).getAmount()))
+
                 return false;
+
         }
 
         return true;
@@ -400,7 +492,9 @@ public class Player {
         for (int j = 0; j < resources.size(); j++) {
 
             if (!this.hasEnoughResources(resources.get(j).getType(), resources.get(j).getAmount()))
+
                 return false;
+
         }
 
         return true;
@@ -408,43 +502,82 @@ public class Player {
     }
 
     public void subtractResources(Cost cost) throws NotEnoughResourcesException {
+
         for (int j = 0; j < cost.getResources().size(); j++) {
+
             this.subtractGenericResource(cost.getResources().get(j).getType(), cost.getResources().get(j).getAmount());
+
         }
+
     }
 
     public void addResources(ArrayList<Resource> resources)  {
+
         for (int j = 0; j < resources.size(); j++) {
+
             this.addGenericResource(resources.get(j).getType(), resources.get(j).getAmount());
+
         }
+
     }
 
     public void addPoints(ArrayList<Point> points){
+
         for (int j = 0; j < points.size(); j++) {
+
             this.addGenericPoint(points.get(j).getType(), points.get(j).getAmount());
+
         }
+
     }
+
+
+    /**
+     * this method check if the player has enough points to do something
+     *
+     */
 
     public boolean hasEnoughPoints(PointType pointType, Integer amount) {
 
-        if (pointType == PointType.Military)
+        if (pointType == PointType.Military) {
+
             return hasEnoughMilitaryPoints(amount);
-        if (pointType == PointType.Victory)
+
+        }
+
+        if (pointType == PointType.Victory) {
+
             return hasEnoughVictoryPoints(amount);
-        else
+
+        }
+
+        else {
+
             return hasEnoughFaithPoints(amount);
+
+        }
     }
+
+
+    /**
+     * this method check if the player has enough points to activate a leader card
+     */
 
     public boolean hasEnoughRequiredPoints(ArrayList<Point> points) {
 
         for (int j = 0; j < points.size(); j++) {
 
             if (!this.hasEnoughPoints(points.get(j).getType(), points.get(j).getAmount()))
+
                 return false;
         }
 
         return true;
     }
+
+    /**
+     * this method verifies if there are enough points of a specific type (faith, victory, military) to activate a leader card
+     */
 
     public boolean hasEnoughFaithPoints(Integer faithMalus) {
 
@@ -473,13 +606,21 @@ public class Player {
      */
 
     public void subtractGenericResource(ResourceType resourceType, Integer amount) throws NotEnoughResourcesException {
+
         if (resourceType == ResourceType.Coins)
+
             subtractCoins(amount);
+
         if (resourceType == ResourceType.Stones)
+
             subtractStones(amount);
+
         if (resourceType == ResourceType.Servants)
+
             subtractServants(amount);
+
         if (resourceType == ResourceType.Wood)
+
             subtractWood(amount);
     }
 
@@ -489,33 +630,52 @@ public class Player {
      * @param amount
      */
     public void addGenericResource(ResourceType resourceType, Integer amount) {
+
         if (resourceType == ResourceType.Coins)
+
             addCoins(amount);
+
         if (resourceType == ResourceType.Stones)
+
             addStones(amount);
+
         if (resourceType == ResourceType.Servants)
+
             addServants(amount);
+
         if (resourceType == ResourceType.Wood)
+
             addWood(amount);
+
     }
+
 
     /**
      * this method increase player's points by a specific amount of a points
      * @param pointType that specify which point type has to be increased
      * @param amount
      */
+
     public void addGenericPoint(PointType pointType, Integer amount) {
+
         if (pointType == PointType.Faith)
+
             addFaithPoints(amount);
+
         if (pointType == PointType.Military)
+
             addMilitaryPoints(amount);
+
         if (pointType == PointType.Victory)
+
             addVictoryPoints(amount);
 
     }
 
     public void setDisabled(boolean disabled) {
+
         this.disabled = disabled;
+
     }
 
     public boolean isDisabled() {
@@ -548,51 +708,93 @@ public class Player {
 
     }
 
+
+    /**
+     * this method verify if player's cards of a specific
+     * @param cardType are enough to do something
+     */
+
     public boolean hasEnoughCards(DvptCardType cardType, Integer amount) {
 
         if (cardType == territory)
+
             return hasEnoughTerritoryCard(amount);
+
         if (cardType == building)
+
             return hasEnoughBuildingCard(amount);
+
         if (cardType == character)
+
             return hasEnoughCharacterCard(amount);
+
         else
+
             return hasEnoughVentureCard(amount);
 
     }
 
+    /**
+     * this method check if player's cards of a specific type are enough to do activate a leader card
+     */
+
     public boolean hasEnoughRequiredCards(HashMap<DvptCardType,Integer> cards) {
+
         if (cards.containsKey(territory)){
-            if ((!this.hasEnoughCards(territory, cards.get(territory))))
-                return false;}
-        if (cards.containsKey(building)){
-            if ((!this.hasEnoughCards(building, cards.get(building))))
-                return false;}
-        if (cards.containsKey(character)){
-            if ((!this.hasEnoughCards(character, cards.get(character))))
-                return false;}
-        if (cards.containsKey(venture)) {
-            if ((!this.hasEnoughCards(venture, cards.get(venture))))
+
+            if (!this.hasEnoughCards(territory, cards.get(territory)))
+
                 return false;
-        }
+
+            }
+
+        if (cards.containsKey(building)){
+
+            if (!this.hasEnoughCards(building, cards.get(building)))
+
+                return false;
+
+            }
+
+        if (cards.containsKey(character)){
+
+            if (!this.hasEnoughCards(character, cards.get(character)))
+
+                return false;
+            }
+
+        if (cards.containsKey(venture)) {
+
+            if (!this.hasEnoughCards(venture, cards.get(venture)))
+
+                return false;
+            }
 
         return true;
+
     }
 
-    public boolean hasEnoughLeaderRequirements(Integer leaderIndex) {
-        boolean hasEnoughResources;
-        boolean hasEnoughPoints;
-        boolean hasEnoughCards;
+    /**
+     * this method check if all requirement of a LeaderCard with a specific
+     * @param leaderIndex are respected to activate it
+     */
 
+    public boolean hasEnoughLeaderRequirements(Integer leaderIndex) {
+
+        boolean hasEnoughResources; //verify if the player has enough resources to activate the Leader Card
+
+        boolean hasEnoughPoints; //verify if the player has enough points to activate the Leader Card
+
+        boolean hasEnoughCards; //verify if the player has enough cards of a specific type to activate the Leader Card
 
         hasEnoughCards = hasEnoughRequiredCards(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getCardsRequired());
-        hasEnoughResources = hasEnoughRequiredResources(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getResourceRequired());
-        hasEnoughPoints = hasEnoughRequiredPoints(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getPointsRequired());
 
+        hasEnoughResources = hasEnoughRequiredResources(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getResourceRequired());
+
+        hasEnoughPoints = hasEnoughRequiredPoints(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getPointsRequired());
 
         return hasEnoughCards && hasEnoughResources && hasEnoughPoints;
 
     }
-
 
 }

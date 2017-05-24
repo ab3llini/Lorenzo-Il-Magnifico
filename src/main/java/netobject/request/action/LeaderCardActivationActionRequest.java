@@ -14,4 +14,9 @@ public class LeaderCardActivationActionRequest extends ActionRequest {
         this.leaderCardIndex = leaderCardIndex;
 
     }
+
+    public int getLeaderCardIndex() {
+        return leaderCardIndex;
+    }
+
 }
