@@ -3,6 +3,7 @@ package server.model.board;
 import exception.*;
 import server.model.GameSingleton;
 import server.model.card.developement.Cost;
+import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.valuable.Point;
 import server.model.valuable.PointType;
@@ -622,6 +623,29 @@ public class Player {
     }
 
     /**
+     * this method subtracts player's points by a specific amount of a points
+     * @param pointType that specify which point type has to be increased
+     * @param amount
+     */
+
+    public void subtractGenericPoint(PointType pointType, Integer amount) throws NotEnoughPointsException{
+
+        if (pointType == PointType.Faith)
+
+            subtractFaithPoints(amount);
+
+        if (pointType == PointType.Military)
+
+            subtractMilitaryPoints(amount);
+
+        if (pointType == PointType.Victory)
+
+            subtractVictoryPoints(amount);
+
+    }
+
+
+    /**
      * this method increase player resorces by a specific amount of a resources
      * @param resourceType that specify which resource type has to be increased
      * @param amount
@@ -668,6 +692,8 @@ public class Player {
             addVictoryPoints(amount);
 
     }
+
+
 
     public void setDisabled(boolean disabled) {
 
@@ -771,18 +797,49 @@ public class Player {
 
     }
 
+    public boolean hasSixIdentical (boolean SixIdentical){
+
+        if (SixIdentical){
+
+            if(this.hasEnoughCards(territory, 6))
+
+                return true;
+
+            if(this.hasEnoughCards(building, 6))
+
+                return true;
+
+            if(this.hasEnoughCards(character, 6))
+
+                return true;
+
+            if(this.hasEnoughCards(venture, 6))
+
+                return true;
+
+            return false;
+        }
+
+        return true;
+
+    }
+
+
+
     /**
-     * this method check if all requirement of a LeaderCard with a specific
+     * this method checks if all requirement of a LeaderCard with a specific
      * @param leaderIndex are respected to activate it
      */
 
     public boolean hasEnoughLeaderRequirements(Integer leaderIndex) {
 
-        boolean hasEnoughResources; //verify if the player has enough resources to activate the Leader Card
+        boolean hasEnoughResources; //verifies if the player has enough resources to activate the Leader Card
 
-        boolean hasEnoughPoints; //verify if the player has enough points to activate the Leader Card
+        boolean hasEnoughPoints; //verifies if the player has enough points to activate the Leader Card
 
-        boolean hasEnoughCards; //verify if the player has enough cards of a specific type to activate the Leader Card
+        boolean hasEnoughCards; //verifies if the player has enough cards of a specific type to activate the Leader Card
+
+        boolean hasSixIdentical; //verifies if the player has six development card of the same type
 
         hasEnoughCards = hasEnoughRequiredCards(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getCardsRequired());
 
@@ -790,7 +847,9 @@ public class Player {
 
         hasEnoughPoints = hasEnoughRequiredPoints(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getPointsRequired());
 
-        return hasEnoughCards && hasEnoughResources && hasEnoughPoints;
+        hasSixIdentical = hasSixIdentical(GameSingleton.getInstance().getSpecificLeaderCard(leaderIndex).getRequirement().getSixIdentical());
+
+        return hasEnoughCards && hasEnoughResources && hasEnoughPoints && hasSixIdentical;
 
     }
 

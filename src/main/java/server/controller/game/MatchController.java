@@ -8,13 +8,18 @@ import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.card.developement.TerritoryDvptCard;
+import server.model.effect.EffectConversion;
 import server.model.effect.EffectSurplus;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.util.Collections.shuffle;
+import static server.model.board.ColorType.Black;
+import static server.model.board.ColorType.Orange;
+import static server.model.board.ColorType.White;
 
 /**
  * Created by Alberto on 19/05/2017.
@@ -77,7 +82,7 @@ public class MatchController {
 
         if(action instanceof RollDiceActionRequest){
 
-            rollDice ((player));
+            rollDice ();
 
         }
 
@@ -213,13 +218,104 @@ public class MatchController {
         }
     }
 
+
     public void activateLeaderCard (LeaderCardActivationActionRequest action, Player player) {
 
-        player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()); //verify the requirements to activate Leader Card
+        if(player.hasEnoughLeaderRequirements(action.getLeaderCardIndex())){ //verify the requirements to activate Leader Card
+        }
 
     }
 
-    public void rollDice (Player player){
+    public void applyProductionChain (Player player, FamilyMember familyMember) throws NotEnoughPointsException,NotEnoughResourcesException {
+
+        for (DvptCard card : player.getPersonalBoard().getBuildingCards()
+                ) {
+
+            if (familyMember.getForce() >= card.getPermanentEffect().getMinForce()) {
+
+                applyBuildingPermanentEffect(card, player, 0);
+
+            }
+
+        }
+    }
+
+    public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws NotEnoughResourcesException, NotEnoughPointsException{
+
+        if(card.getPermanentEffect().getSurplus() != null)
+
+            applyEffectSurplus(player, card.getPermanentEffect().getSurplus());
+
+        if(!card.getPermanentEffect().getConversion().isEmpty())
+
+            applyConversion(player, card.getPermanentEffect().getConversion() , choice);
 
     }
+
+    public void applyConversion (Player player, ArrayList<EffectConversion> conversionList, Integer choice) throws NotEnoughResourcesException, NotEnoughPointsException {
+
+        if(!conversionList.get(choice).getFrom().getResources().isEmpty()) {
+
+            for(Resource from: conversionList.get(choice).getFrom().getResources())
+
+                player.subtractGenericResource(from.getType(), from.getAmount());
+
+        }
+
+        if(!conversionList.get(choice).getFrom().getPoints().isEmpty()) {
+
+            for(Point from: conversionList.get(choice).getFrom().getPoints())
+
+                player.subtractGenericPoint(from.getType(), from.getAmount());
+
+        }
+
+        if(!conversionList.get(choice).getTo().getResources().isEmpty()) {
+
+            for(Resource to: conversionList.get(choice).getTo().getResources())
+
+                player.addGenericResource(to.getType(), to.getAmount());
+
+        }
+
+        if(!conversionList.get(choice).getTo().getPoints().isEmpty()) {
+
+            for(Point to: conversionList.get(choice).getTo().getPoints())
+
+                player.addGenericPoint(to.getType(), to.getAmount());
+
+        }
+
+    }
+
+    /** this method rolls dices and set them on the board */
+
+    public void rollDice (){
+
+        Random random = new Random();
+
+        ArrayList<Dice> dices = new ArrayList<Dice>();
+
+        Dice blackDice = new Dice(Black);
+
+        Dice whiteDice = new Dice(White);
+
+        Dice orangeDice = new Dice(Orange);
+
+        dices.add(blackDice);
+
+        dices.add(whiteDice);
+
+        dices.add(orangeDice);
+
+        for (Dice dice: dices){
+
+            dice.setValue(random.nextInt(5) + 1); //it generates a number between 1 and 6
+
+        }
+
+        match.getBoard().setDices(dices);
+
+    }
+
 }

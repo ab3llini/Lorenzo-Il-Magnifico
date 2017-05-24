@@ -6,6 +6,7 @@ import exception.PlaceOccupiedException;
 import javafx.scene.effect.Effect;
 import server.model.GameSingleton;
 import server.model.board.Board;
+import server.model.board.Dice;
 import server.model.board.FamilyMember;
 import server.model.board.Period;
 import server.model.card.Deck;
@@ -230,6 +231,7 @@ public class BoardController {
         board.setBanCardOnCathedral(temporaryBanCardArray);
 
     }
+
 
     /**
      * this method place a familyMember in the CouncilPalace (if it's possible )

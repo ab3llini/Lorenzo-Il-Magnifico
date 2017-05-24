@@ -19,4 +19,12 @@ public class Dice {
     public Integer getValue() {
         return value;
     }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+    public void setColor(ColorType color) {
+        this.color = color;
+    }
 }
