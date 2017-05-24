@@ -1,9 +1,6 @@
 package server.model.board;
 
-import server.model.card.developement.BuildingDvptCard;
-import server.model.card.developement.CharacterDvptCard;
-import server.model.card.developement.TerritoryDvptCard;
-import server.model.card.developement.VentureDvptCard;
+import server.model.card.developement.*;
 
 import java.util.ArrayList;
 
@@ -17,12 +14,14 @@ public class PersonalBoard {
     private ArrayList<CharacterDvptCard>  characterCards;
     private ArrayList<VentureDvptCard>  ventureCards;
 
-    public PersonalBoard (BonusTile bonusTile, ArrayList<TerritoryDvptCard> territoryCards, ArrayList<BuildingDvptCard> buildingCards, ArrayList<CharacterDvptCard>  characterCards, ArrayList<VentureDvptCard>  ventureCards){
-        this.bonusTile = bonusTile;
-        this.territoryCards = territoryCards;
-        this.buildingCards = buildingCards;
-        this.characterCards = characterCards;
-        this.ventureCards = ventureCards;
+    public PersonalBoard (){
+
+        //initialize player card container
+        this.territoryCards = new ArrayList<TerritoryDvptCard>();
+        this.buildingCards = new ArrayList<BuildingDvptCard>();
+        this.characterCards = new ArrayList<CharacterDvptCard>();
+        this.ventureCards = new ArrayList<VentureDvptCard>();
+
     }
 
     public ArrayList<BuildingDvptCard> getBuildingCards() {
@@ -55,5 +54,38 @@ public class PersonalBoard {
 
     public void setVentureCards(ArrayList<VentureDvptCard> ventureCards) {
         this.ventureCards = ventureCards;
+    }
+
+    public void addVentureCard(VentureDvptCard card){
+        ventureCards.add(card);
+    }
+
+    public void addBuildingCard(BuildingDvptCard card){
+        buildingCards.add(card);
+    }
+
+    public void addCharacterCard(CharacterDvptCard card){
+        characterCards.add(card);
+    }
+
+    public void addTerritoryCard(TerritoryDvptCard card){
+        territoryCards.add(card);
+    }
+
+    public void addCard(DvptCard card){
+
+        if(card.getType() == DvptCardType.territory)
+            addTerritoryCard((TerritoryDvptCard) card);
+
+        if(card.getType() == DvptCardType.building)
+            addBuildingCard((BuildingDvptCard) card);
+
+        if(card.getType() == DvptCardType.character)
+            addCharacterCard((CharacterDvptCard) card);
+
+        if(card.getType() == DvptCardType.venture)
+            addVentureCard(((VentureDvptCard) card));
+
+
     }
 }

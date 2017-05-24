@@ -2,6 +2,7 @@ package server.controller.game;
 
 import exception.NotEnoughPlayersException;
 import exception.NotStrongEnoughException;
+import exception.PlaceOccupiedException;
 import javafx.scene.effect.Effect;
 import server.model.GameSingleton;
 import server.model.board.Board;
@@ -234,6 +235,7 @@ public class BoardController {
      * this method place a familyMember in the CouncilPalace (if it's possible )
      * @param familyMember
      * @param additionalServants that a player can use to increment his family member force
+     * @param numberOfPlayers
      * @return an effect surplus for the player that has performed the action
      * @throws NotStrongEnoughException
      * @throws NotEnoughPlayersException
@@ -258,28 +260,107 @@ public class BoardController {
     }
 
     /**
-     *this method place a familyMember in the one specific place of the market place (if it's possible )
+     *
+     * this method place a familyMember in the one specific place of the market place (if it's possible )
      * @param familyMember
      * @param additionalServants that a player can use to increment his family member force
      * @param placementIndex
+     * @param numberOfPlayers
      * @return an effect surplus for the player that has performed the action
      * @throws NotStrongEnoughException
+     * @throws NotEnoughPlayersException
+     * @throws PlaceOccupiedException
      */
-    public EffectSurplus placeOnMarket(FamilyMember familyMember, Integer additionalServants, Integer placementIndex, Integer numberOfPlayers) throws NotStrongEnoughException, NotEnoughPlayersException {
+    public EffectSurplus placeOnMarket(FamilyMember familyMember,Integer placementIndex, Integer additionalServants, Integer numberOfPlayers) throws NotStrongEnoughException, NotEnoughPlayersException, PlaceOccupiedException {
 
-        //check if the match has enough player to use council palace
-        if(!(numberOfPlayers >= this.board.getMarket().getMarketPlaces().get(placementIndex).getMinPlayers()))
-            throw new NotEnoughPlayersException("Not enough players to use this place");
+        //check if the match has enough player to use this market place
+        if(!(numberOfPlayers >= this.board.getMarket().getMarketPlaces().get(placementIndex).getMinPlayers())){
 
-        //check if the family member has enough force to set on council palace
+            throw new NotEnoughPlayersException("Not enough players to use this place");}
+
+        //check if the market place is already in use
+        if(this.board.getMarket().getMarketPlaces().get(placementIndex).isOccupied()){
+
+            throw new PlaceOccupiedException("This place is already occupied");}
+
+        //check if the family member has enough force to set on market place
         if(familyMember.getForce() + additionalServants >= this.board.getMarket().getMarketPlaces().get(placementIndex).getEntryForce()) {
 
             //set the family member on the market place
             this.board.getMarket().getMarketPlaces().get(placementIndex).setFamilyMember(familyMember);
+
             return this.board.getMarket().getMarketPlaces().get(placementIndex).getEffectSurplus();
         }
         else
             throw new NotStrongEnoughException("Not strong enough to do this action");
     }
+
+    /**
+     * this method place a familyMember in the the single harvest place
+     * @param familyMember
+     * @param additionalServants
+     * @param numberOfPlayers
+     * @return
+     * @throws NotEnoughPlayersException
+     * @throws PlaceOccupiedException
+     * @throws NotStrongEnoughException
+     */
+    public EffectSurplus placeOnSingleHarvestPlace(FamilyMember familyMember, Integer additionalServants, Integer numberOfPlayers) throws NotEnoughPlayersException, PlaceOccupiedException, NotStrongEnoughException {
+
+        //check if the match has enough player to use this single harvest place
+        if(!(numberOfPlayers >= this.board.getHarvestArea().getMainPlace().getMinPlayers())){
+
+            throw new NotEnoughPlayersException("Not enough players to use this place");}
+
+        //check if the single harvest place is already in use
+        if(this.board.getHarvestArea().getMainPlace().isOccupied()){
+
+            throw new PlaceOccupiedException("This place is already occupied");}
+
+
+        //check if the family member has enough force to set on single harvest place
+        if(familyMember.getForce() + additionalServants >= this.board.getHarvestArea().getMainPlace().getEntryForce()) {
+
+            //set the family member on the market place
+            this.board.getHarvestArea().getMainPlace().setFamilyMember(familyMember);
+
+            return this.board.getHarvestArea().getMainPlace().getEffectSurplus();
+        }
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this action");
+
+
+    }
+
+    /**
+     * this method place a familyMember in the the composite harvest place
+     * @param familyMember
+     * @param additionalServants
+     * @param numberOfPlayers
+     * @return
+     * @throws NotEnoughPlayersException
+     * @throws NotStrongEnoughException
+     */
+    public EffectSurplus placeOnCompositeHarvestPlace(FamilyMember familyMember, Integer additionalServants, Integer numberOfPlayers) throws NotEnoughPlayersException, NotStrongEnoughException {
+
+        //check if the match has enough player to use this composite harvest place
+        if(!(numberOfPlayers >= this.board.getHarvestArea().getSecondaryPlace().getMinPlayers())){
+
+            throw new NotEnoughPlayersException("Not enough players to use this place");}
+
+        //check if the family member has enough force to set on composite harvest place
+        if(familyMember.getForce() + additionalServants >= this.board.getHarvestArea().getSecondaryPlace().getEntryForce()) {
+
+            //set the family member on the market place
+            this.board.getHarvestArea().getSecondaryPlace().placeFamilyMember(familyMember);
+
+            return this.board.getHarvestArea().getSecondaryPlace().getEffectSurplus();
+        }
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this action");
+
+
+    }
+
 }
 

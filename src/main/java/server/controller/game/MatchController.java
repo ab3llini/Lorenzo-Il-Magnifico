@@ -7,6 +7,7 @@ import server.model.board.*;
 import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
+import server.model.card.developement.TerritoryDvptCard;
 import server.model.effect.EffectSurplus;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
@@ -60,7 +61,7 @@ public class MatchController {
 
     }
 
-    public void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException {
+    public void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException {
 
         if(action instanceof FamilyMemberPlacementActionRequest){
 
@@ -132,21 +133,41 @@ public class MatchController {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException {
+    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
-
         //TODO
+        //if boardSectorType is CouncilPalace we place the family member in the council palace
         if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
             EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
             }
 
+        //if boardSectorType is Market we place the family member in the correct market place (from index 0 to index 3)
         if (action.getActionTarget() == BoardSectorType.Market) {
-            EffectSurplus surplus =boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants(),this.match.getPlayers().size());
+
+            EffectSurplus surplus = boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
+
         }
+
+        if(action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
+
+            EffectSurplus surplus = boardController.placeOnSingleHarvestPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
+            applyEffectSurplus(player,surplus);
+            applyHarvestChain(player,familyMember.getForce() + action.getAdditionalServants());
+        }
+
+        if(action.getActionTarget() == BoardSectorType.CompositeHarvestPlace) {
+
+            EffectSurplus surplus = boardController.placeOnCompositeHarvestPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
+            applyEffectSurplus(player,surplus);
+
+            //we have to subtract force malus from activation force
+            applyHarvestChain(player,familyMember.getForce() + action.getAdditionalServants() - this.match.getBoard().getHarvestArea().getSecondaryPlace().getForceMalus());
+        }
+
 
         familyMember.setBusy(true);
     }
@@ -159,6 +180,7 @@ public class MatchController {
 
     public void applyEffectSurplus(Player player,EffectSurplus surplus){
 
+        //effect surplus is composed by resources,points and council privilege
         ArrayList<Resource> resourcesSurplus = surplus.getResources();
         ArrayList<Point> pointsSurplus = surplus.getPoints();
         Integer council = surplus.getCouncil();
@@ -166,9 +188,29 @@ public class MatchController {
         player.addResources(resourcesSurplus);
         player.addPoints(pointsSurplus);
 
+        //the client can choose which council privilege want to have
         if(council >= 1)
             //TODO
             ;
+    }
+
+    /**
+     * this method start the harvest chain.
+     * this harvest chain consist in the activation of all the territory cards permament effect
+     * @param player
+     * @param force
+     */
+    public void applyHarvestChain(Player player, Integer force){
+
+        for (TerritoryDvptCard card:player.getPersonalBoard().getTerritoryCards()) {
+
+            //apply territory card permanent effect only if the player has enough force
+            if(card.getPermanentEffect().getMinForce() <= force){
+
+                applyEffectSurplus(player,card.getPermanentEffect().getSurplus());
+
+            }
+        }
     }
 
     public void activateLeaderCard (LeaderCardActivationActionRequest action, Player player) {

@@ -40,11 +40,8 @@ public class Player {
         //put all kind of resource in the hashMap
 
         resources.put(ResourceType.Coins, 0);
-
         resources.put(ResourceType.Servants, 0);
-
         resources.put(ResourceType.Stones, 0);
-
         resources.put(ResourceType.Servants, 0);
 
         //initialize hashMap that contains all points
@@ -54,22 +51,19 @@ public class Player {
         //put all kind of points in the hashMap
 
         points.put(PointType.Military, 0);
-
         points.put(PointType.Victory, 0);
-
         points.put(PointType.Faith, 0);
 
         //create the arrayList with all the player's familyMembers
 
         familyMembers = new ArrayList<FamilyMember>();
-
         familyMembers.add(new FamilyMember(this, ColorType.Black));
-
         familyMembers.add(new FamilyMember(this, ColorType.Orange));
-
         familyMembers.add(new FamilyMember(this, ColorType.White));
-
         familyMembers.add(new FamilyMember(this, ColorType.Uncoloured));
+
+        //initialize player's board
+        this.personalBoard = new PersonalBoard();
     }
 
     public void setPersonalBoard(PersonalBoard personalBoard) {
@@ -305,8 +299,11 @@ public class Player {
     public void subtractWood(Integer woodMalus) throws NotEnoughWoodException {
 
         if (this.resources.get(ResourceType.Wood) >= woodMalus) {
+
             this.resources.put(ResourceType.Wood, getWood() - woodMalus);
+
         } else {
+
             throw new NotEnoughWoodException("Not enough wood to do this");
         }
     }

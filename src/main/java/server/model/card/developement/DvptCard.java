@@ -46,5 +46,12 @@ public abstract class DvptCard {
         return null;
     }
 
+    public PermanentEffect getPermanentEffect() {
+        return permanentEffect;
+    }
+
+    public ImmediateEffect getImmediateEffect() {
+        return immediateEffect;
+    }
 }
 
