@@ -42,6 +42,11 @@ public class MatchController {
     private BoardController boardController;
 
     /**
+     * Describes who has the turn
+     */
+    private Player currentPlayer;
+
+    /**
      * This is the match controller constructor.
      * It is called only by the lobby itself when the match starts
      * @param players the players in the match.
@@ -61,6 +66,8 @@ public class MatchController {
          * Keep in mind that match.board must be initialized at this time
          */
         this.boardController = new BoardController(this.match.getBoard());
+
+
 
         //Init anything else in the future here..
 
@@ -82,7 +89,7 @@ public class MatchController {
 
         if(action instanceof RollDiceActionRequest){
 
-            rollDice ();
+            rollDices ();
 
         }
 
@@ -133,7 +140,7 @@ public class MatchController {
     }
 
     /**
-     * this method receive an action and its author and place the familiar in the correct place (if it is strong enough)
+     * this method receives an action and its author and places the familiar in the correct place (if it is strong enough)
      * @param action
      * @param player
      * @throws NotStrongEnoughException
@@ -200,8 +207,8 @@ public class MatchController {
     }
 
     /**
-     * this method start the harvest chain.
-     * this harvest chain consist in the activation of all the territory cards permament effect
+     * this method starts the harvest chain.
+     * this harvest chain consists in the activation of all the territory cards permament effect
      * @param player
      * @param force
      */
@@ -226,6 +233,9 @@ public class MatchController {
 
     }
 
+    /** this method applies the Production Chain
+     * this character chain consists in the activation of all the building card permanent effect**/
+
     public void applyProductionChain (Player player, FamilyMember familyMember) throws NotEnoughPointsException,NotEnoughResourcesException {
 
         for (DvptCard card : player.getPersonalBoard().getBuildingCards()
@@ -240,6 +250,10 @@ public class MatchController {
         }
     }
 
+    /** this method applies the PermanentEffect of a Building card, that could be a surplus or a conversion
+     *
+     * */
+
     public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws NotEnoughResourcesException, NotEnoughPointsException{
 
         if(card.getPermanentEffect().getSurplus() != null)
@@ -251,6 +265,16 @@ public class MatchController {
             applyConversion(player, card.getPermanentEffect().getConversion() , choice);
 
     }
+
+    /** this method applies a conversion permanent effect of a development card to a particular player
+     *
+     * @param player
+     * @param conversionList the list of conversion contained in the card effect
+     * @param choice the choice of different conversion which can be made by the player
+     * @throws NotEnoughResourcesException
+     * @throws NotEnoughPointsException
+     */
+
 
     public void applyConversion (Player player, ArrayList<EffectConversion> conversionList, Integer choice) throws NotEnoughResourcesException, NotEnoughPointsException {
 
@@ -290,31 +314,15 @@ public class MatchController {
 
     /** this method rolls dices and set them on the board */
 
-    public void rollDice (){
+    public void rollDices (){
 
         Random random = new Random();
 
-        ArrayList<Dice> dices = new ArrayList<Dice>();
+        for (Dice d : this.match.getBoard().getDices()) {
 
-        Dice blackDice = new Dice(Black);
-
-        Dice whiteDice = new Dice(White);
-
-        Dice orangeDice = new Dice(Orange);
-
-        dices.add(blackDice);
-
-        dices.add(whiteDice);
-
-        dices.add(orangeDice);
-
-        for (Dice dice: dices){
-
-            dice.setValue(random.nextInt(5) + 1); //it generates a number between 1 and 6
+            d.setValue(random.nextInt(5) + 1);
 
         }
-
-        match.getBoard().setDices(dices);
 
     }
 
