@@ -1,5 +1,7 @@
 package server.controller.game;
 import exception.*;
+import logger.Level;
+import logger.Logger;
 import netobject.*;
 import netobject.request.action.*;
 import server.model.*;
@@ -15,21 +17,23 @@ import server.model.valuable.Resource;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.BlockingQueue;
 
 import static java.util.Collections.shuffle;
 import static server.model.board.ColorType.Black;
 import static server.model.board.ColorType.Orange;
 import static server.model.board.ColorType.White;
 
-/**
- * Created by Alberto on 19/05/2017.
+/*
+ * @author  ab3llini
+ * @since   15/05/17.
  */
 
 /**
  * The controller of the match.
  * Will handle the model instance reacting to game events.
  */
-public class MatchController {
+public class MatchController implements Runnable {
 
     /**
      * The model instance of the match
@@ -40,6 +44,17 @@ public class MatchController {
      * The instance of the board controller
      */
     private BoardController boardController;
+
+
+    /**
+     * This queue holds all the action that need processing from the active player
+     */
+    private BlockingQueue<ActionRequest> actionRequests;
+
+    /**
+     * Holds a reference to the player of the model who is performing the move
+     */
+    private Player activePlayer;
 
     /**
      * Describes who has the turn
@@ -70,6 +85,32 @@ public class MatchController {
 
 
         //Init anything else in the future here..
+
+    }
+
+    /**
+     * The run method is the Runnable implementation of the match controller
+     * Every match controller requires its own thread
+     * This because it should be able to wait (literally) for the players to perform an action/choice
+     */
+    public void run() {
+
+        while (true) {
+
+            try {
+
+                //This call will pause the thread until a new request will be put in the queue
+                ActionRequest actionRequest = this.actionRequests.take();
+
+                Logger.log(Level.SEVERE, "MatchController", "Parsing request");
+
+            } catch (InterruptedException e) {
+
+                Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
+
+            }
+
+        }
 
     }
 

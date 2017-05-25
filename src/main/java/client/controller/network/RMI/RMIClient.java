@@ -93,6 +93,8 @@ public class RMIClient extends Client implements RMIClientInterface {
             //Connect
             this.token = this.serverRef.connect(this);
 
+            this.connected = true;
+
             Logger.log(Level.FINE, "RMIClient::connect", "Connected with token " + token);
 
             return true;
@@ -120,6 +122,10 @@ public class RMIClient extends Client implements RMIClientInterface {
         try {
 
             if (this.serverRef.login(this.token, authentication)) {
+
+                this.authenticated = true;
+
+                this.username = authentication.getUsername();
 
                 this.notifyLoginSucceeded();
 

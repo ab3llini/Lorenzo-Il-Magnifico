@@ -10,20 +10,25 @@ import netobject.response.ResponseType;
 public class LoginResponse extends Response {
 
     private final boolean loginSucceeded;
-
+    private final String username;
     private final String message;
 
-    public LoginResponse(boolean loginSucceeded, String message) {
+    public LoginResponse(boolean loginSucceeded, String username, String message) {
 
         super(ResponseType.Login);
 
         this.loginSucceeded = loginSucceeded;
+        this.username = username;
         this.message = message;
 
     }
 
     public boolean loginHasSucceeded() {
         return this.loginSucceeded;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getMessage() {

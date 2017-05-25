@@ -68,7 +68,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         } catch (IOException e) {
 
-            Logger.log(Level.WARNING, "Client handler (Socket)", "Broken pipe: the client disconnected while writing", e);
+            Logger.log(Level.WARNING, this.toString(), "Broken pipe: the client disconnected while writing", e);
 
             this.notifyDisconnection();
 
@@ -94,7 +94,10 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         } catch (IOException e) {
 
-            Logger.log(Level.SEVERE, this.toString(), "Unable to get input stream", e);
+            Logger.log(Level.SEVERE, this.toString(), "Unable to get input stream, client probably disconnected.");
+
+            //Notify observers so that they can remove the handler
+            this.notifyDisconnection();
 
             return;
 
@@ -121,7 +124,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
             }
             catch (IOException e) {
 
-                Logger.log(Level.WARNING, "Client handler (Socket)", "Broken pipe while listening", e);
+                Logger.log(Level.WARNING, this.toString(), "Broken pipe while listening", e);
 
                 this.notifyDisconnection();
 
@@ -132,7 +135,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
             }
             catch (ClassNotFoundException e) {
 
-                Logger.log(Level.SEVERE, "Client handler (Socket)", "Class not found", e);
+                Logger.log(Level.WARNING, this.toString(), "Class not found", e);
 
                 break;
             }
@@ -152,6 +155,11 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
         else {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ClientHandler (Socket)";
     }
 
     public boolean removeObserver(SocketClientHandlerObserver o) {

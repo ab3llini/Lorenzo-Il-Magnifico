@@ -19,6 +19,12 @@ public abstract class Client implements Observable<ClientObserver> {
     //The list of observers
     protected ArrayList<ClientObserver> observers = new ArrayList<ClientObserver>();
 
+    protected String username;
+
+    protected boolean connected;
+
+    protected boolean authenticated;
+
     /**
      * Method that should be implemented to send an object to the server
      * @param object the object to be sent
@@ -39,6 +45,18 @@ public abstract class Client implements Observable<ClientObserver> {
      */
     public abstract void login(LoginRequest authentication);
 
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean hasConnected() {
+        return this.connected;
+    }
+
+    public boolean hasAuthenticated() {
+        return this.authenticated;
+    }
 
     /**
      * Notify that the server closed the connection

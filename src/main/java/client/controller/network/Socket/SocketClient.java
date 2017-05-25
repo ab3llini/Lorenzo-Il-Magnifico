@@ -35,6 +35,8 @@ public class SocketClient extends Client implements Runnable {
     //The port of the host
     private int port;
 
+    ObjectOutputStream socketOut;
+
     public SocketClient(String host, int port) {
 
         //Assign host & port
@@ -75,9 +77,16 @@ public class SocketClient extends Client implements Runnable {
 
     public void run() {
 
+        try {
+            this.socketOut = new ObjectOutputStream(this.socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         while (!this.socket.isClosed() && this.socket.isConnected()) {
 
             try {
+
 
                 ObjectInputStream socketIn = new ObjectInputStream(this.socket.getInputStream());
 
@@ -130,6 +139,10 @@ public class SocketClient extends Client implements Runnable {
 
                 if (loginResponse.loginHasSucceeded()) {
 
+                    this.username = loginResponse.getUsername();
+
+                    this.authenticated = true;
+
                     this.notifyLoginSucceeded();
 
                 }
@@ -149,11 +162,7 @@ public class SocketClient extends Client implements Runnable {
 
     public boolean sendObject(NetObject object) {
 
-        ObjectOutputStream socketOut;
-
         try {
-
-            socketOut = new ObjectOutputStream(this.socket.getOutputStream());
 
             socketOut.flush();
 

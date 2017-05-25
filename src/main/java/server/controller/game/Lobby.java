@@ -138,12 +138,6 @@ public class Lobby {
              */
             this.timeout = new Timer();
 
-            //Prepare the expiry date
-            Calendar expiry = Calendar.getInstance();
-
-            //Sum the timeout value
-            expiry.add(Calendar.SECOND, GameConfig.getInstance().getMatchTimeout());
-
             //Set the timeout status variable
             this.timeoutDidStart = true;
 
@@ -158,7 +152,7 @@ public class Lobby {
 
                 }
 
-            }, expiry.getTime());
+            }, GameConfig.getInstance().getMatchTimeout() * 1000);
 
             Logger.log(Level.FINEST, this.toString(), "Timeout started: " + GameConfig.getInstance().getMatchTimeout() + "s");
 

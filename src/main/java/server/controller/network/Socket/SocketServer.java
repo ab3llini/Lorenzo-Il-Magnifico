@@ -65,15 +65,28 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                 LoginRequest loginRequest = (LoginRequest)req;
 
                 try {
+
                     this.authenticate(handler, loginRequest);
+
+                    System.out.println("Login ok");
+
+
+                    handler.sendObject(new LoginResponse(true, loginRequest.getUsername(), "Login succeeded"));
+
                 }
                 catch (LoginFailedException e) {
 
+                    System.out.println("Login failed");
+
                     //Request failed: remove the client but tell him why
-                    handler.sendObject(new LoginResponse(false, e.getMessage()));
+                    handler.sendObject(new LoginResponse(false, loginRequest.getUsername(), e.getMessage()));
 
                 } catch (AlreadyLoggedInException e) {
-                    handler.sendObject(new LoginResponse(false, e.getMessage()));
+
+
+                    System.out.println("Login failed");
+
+                    handler.sendObject(new LoginResponse(false, loginRequest.getUsername(), e.getMessage()));
                 }
 
             }

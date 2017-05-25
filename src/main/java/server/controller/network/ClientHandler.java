@@ -16,7 +16,7 @@ public abstract class ClientHandler implements Runnable  {
 
     public String getUsername() {
 
-        return (this.username != null) ? this.username : "Undefined";
+        return (this.username != null) ? this.username : "(Never authenticated)";
 
     }
 
