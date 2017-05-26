@@ -12,6 +12,7 @@ import server.model.board.Period;
 import server.model.card.Deck;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
+import server.model.card.developement.DvptCardType;
 import server.model.effect.EffectSurplus;
 import server.utility.DvptCardParser;
 
@@ -323,7 +324,7 @@ public class BoardController {
         //check if the family member has enough force to set on single harvest place
         if(familyMember.getForce() + additionalServants >= this.board.getHarvestArea().getMainPlace().getEntryForce()) {
 
-            //set the family member on the market place
+            //set the family member on the single harvest place
             this.board.getHarvestArea().getMainPlace().setFamilyMember(familyMember);
 
             return this.board.getHarvestArea().getMainPlace().getEffectSurplus();
@@ -353,7 +354,7 @@ public class BoardController {
         //check if the family member has enough force to set on composite harvest place
         if(familyMember.getForce() + additionalServants >= this.board.getHarvestArea().getSecondaryPlace().getEntryForce()) {
 
-            //set the family member on the market place
+            //set the family member on the composite harvest place
             this.board.getHarvestArea().getSecondaryPlace().placeFamilyMember(familyMember);
 
             return this.board.getHarvestArea().getSecondaryPlace().getEffectSurplus();
@@ -364,5 +365,97 @@ public class BoardController {
 
     }
 
+    /**
+     * this method place a familyMember in the the single production place
+     * @param familyMember
+     * @param additionalServants
+     * @param numberOfPlayers
+     * @return
+     * @throws NotEnoughPlayersException
+     * @throws PlaceOccupiedException
+     * @throws NotStrongEnoughException
+     */
+    public EffectSurplus placeOnSingleProductionPlace(FamilyMember familyMember, Integer additionalServants, Integer numberOfPlayers) throws NotEnoughPlayersException, PlaceOccupiedException, NotStrongEnoughException {
+
+        //check if the match has enough player to use this single production place
+        if(!(numberOfPlayers >= this.board.getProductionArea().getMainPlace().getMinPlayers())){
+
+            throw new NotEnoughPlayersException("Not enough players to use this place");}
+
+        //check if the single production place is already in use
+        if(this.board.getProductionArea().getMainPlace().isOccupied()){
+
+            throw new PlaceOccupiedException("This place is already occupied");}
+
+
+        //check if the family member has enough force to set on single production place
+        if(familyMember.getForce() + additionalServants >= this.board.getProductionArea().getMainPlace().getEntryForce()) {
+
+            //set the family member on the single production place
+            this.board.getProductionArea().getMainPlace().setFamilyMember(familyMember);
+
+            return this.board.getProductionArea().getMainPlace().getEffectSurplus();
+        }
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this action");
+
+
+    }
+
+    /**
+     * this method place a familyMember in the the composite production place
+     * @param familyMember
+     * @param additionalServants
+     * @param numberOfPlayers
+     * @return
+     * @throws NotEnoughPlayersException
+     * @throws NotStrongEnoughException
+     */
+    public EffectSurplus placeOnCompositeProductionPlace(FamilyMember familyMember, Integer additionalServants, Integer numberOfPlayers) throws NotEnoughPlayersException, NotStrongEnoughException {
+
+        //check if the match has enough player to use this composite production place
+        if(!(numberOfPlayers >= this.board.getProductionArea().getSecondaryPlace().getMinPlayers())){
+
+            throw new NotEnoughPlayersException("Not enough players to use this place");}
+
+        //check if the family member has enough force to set on composite production place
+        if(familyMember.getForce() + additionalServants >= this.board.getProductionArea().getSecondaryPlace().getEntryForce()) {
+
+            //set the family member on the composite production place
+            this.board.getProductionArea().getSecondaryPlace().placeFamilyMember(familyMember);
+
+            return this.board.getProductionArea().getSecondaryPlace().getEffectSurplus();
+        }
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this action");
+
+
+    }
+
+    public EffectSurplus placeOnTower(FamilyMember familyMember, Integer additionalServants, Integer numberOfPlayers, DvptCardType towerType, Integer index) throws NotEnoughPlayersException, PlaceOccupiedException, NotStrongEnoughException {
+
+        //check if the match has enough player to use this tower slot
+        if(!(numberOfPlayers >= this.board.getTower(towerType).get(index).getMinPlayers())){
+
+            throw new NotEnoughPlayersException("Not enough players to use this place");}
+
+        //check if the tower slot is already in use
+        if(this.board.getTower(towerType).get(index).isOccupied()){
+
+            throw new PlaceOccupiedException("This place is already occupied");}
+
+
+        //check if the family member has enough force to set on the tower slot
+        if(familyMember.getForce() + additionalServants >= this.board.getTower(towerType).get(index).getEntryForce()) {
+
+            //set the family member on the tower slot
+            this.board.getTower(towerType).get(index).setFamilyMember(familyMember);
+
+            return this.board.getTower(towerType).get(index).getEffectSurplus();
+        }
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this action");
+
+    }
 }
 

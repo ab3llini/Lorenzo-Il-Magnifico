@@ -6,7 +6,17 @@ package netobject.request.action;
  */
 public enum CostOptionType {
 
-    Fist,
-    Second
+    First(0),
+    Second(1);
+    int value;
+
+    CostOptionType(int value){
+        this.value = value;
+    }
+
+    public int toInt(){
+        return this.value;
+    }
+
 
 }

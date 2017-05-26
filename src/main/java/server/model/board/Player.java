@@ -43,7 +43,7 @@ public class Player {
         resources.put(ResourceType.Coins, 0);
         resources.put(ResourceType.Servants, 0);
         resources.put(ResourceType.Stones, 0);
-        resources.put(ResourceType.Servants, 0);
+        resources.put(ResourceType.Wood, 0);
 
         //initialize hashMap that contains all points
 

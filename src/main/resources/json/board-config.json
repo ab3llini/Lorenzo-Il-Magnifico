@@ -42,7 +42,7 @@
       "minForce" : 5,
       "surplus" : {
         "resources" : {
-          "wood" : 1
+          "stones" : 1
         }
       }
     },

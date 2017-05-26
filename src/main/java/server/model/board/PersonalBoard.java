@@ -88,4 +88,11 @@ public class PersonalBoard {
 
 
     }
+
+    public BonusTile getBonusTile() {
+        return bonusTile;}
+
+    public void setBonusTile(BonusTile bonusTile) {
+        this.bonusTile = bonusTile;
+    }
 }

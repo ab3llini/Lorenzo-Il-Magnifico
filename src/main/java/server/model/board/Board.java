@@ -26,7 +26,7 @@ public class Board {
     public Board() {
 
         //create the board configured from file
-        this.territoryTower = BoardConfigParser.getTower(DvptCardType.venture);
+        this.territoryTower = BoardConfigParser.getTower(DvptCardType.territory);
         this.characterTower = BoardConfigParser.getTower(DvptCardType.character);
         this.buildingTower = BoardConfigParser.getTower(DvptCardType.building);
         this.ventureTower = BoardConfigParser.getTower(DvptCardType.venture);
@@ -58,6 +58,22 @@ public class Board {
 
     public ArrayList<TowerSlot> getVentureTower() {
         return ventureTower;
+    }
+
+    public ArrayList<TowerSlot> getTower(DvptCardType towerType){
+
+        if(towerType == DvptCardType.building){
+            return this.buildingTower;}
+
+        if(towerType == DvptCardType.character){
+            return this.characterTower;}
+
+        if(towerType == DvptCardType.territory){
+            return this.territoryTower;}
+
+        else{
+            return this.ventureTower;}
+
     }
 
     /**
