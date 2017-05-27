@@ -3,6 +3,7 @@ import exception.*;
 import logger.Level;
 import logger.Logger;
 import netobject.request.action.*;
+import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
 import server.model.card.developement.*;
@@ -12,6 +13,7 @@ import server.model.valuable.Point;
 import server.model.valuable.Resource;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
@@ -38,6 +40,7 @@ public class MatchController implements Runnable {
      */
     private BoardController boardController;
 
+    private LinkedHashMap<ClientHandler, Player> playerHandlerMap;
 
     /**
      * This queue holds all the action that need processing from the active player
@@ -57,9 +60,30 @@ public class MatchController implements Runnable {
     /**
      * This is the match controller constructor.
      * It is called only by the lobby itself when the match starts
-     * @param players the players in the match.
+     * @param handlers the handlers of the model players
      */
-    public MatchController(ArrayList<Player> players) {
+    public MatchController(ArrayList<ClientHandler> handlers) {
+
+        /*
+         * Initialize the map
+         */
+        this.playerHandlerMap = new LinkedHashMap<ClientHandler, Player>();
+
+        /*
+         * Create a temporary list of players that will be passed to the Match
+         * For each handler create a map entry and add it to the temporary list
+         */
+        ArrayList<Player> players = new ArrayList<Player>();
+
+        for (ClientHandler handler : handlers) {
+
+            Player player = new Player(handler.getUsername());
+
+            this.playerHandlerMap.put(handler, player);
+
+            players.add(player);
+
+        }
 
         /*
          * First up, create the model for the current match.
@@ -129,6 +153,15 @@ public class MatchController implements Runnable {
 
     }
 
+    public void setDisablePlayerRelativeTo(ClientHandler handler, boolean value) {
+
+        this.playerHandlerMap.get(handler).setDisabled(value);
+
+    }
+
+    public LinkedHashMap<ClientHandler, Player> getPlayerHandlerMap() {
+        return playerHandlerMap;
+    }
 
     public Match getMatch() {
         return match;

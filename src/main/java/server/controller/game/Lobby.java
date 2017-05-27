@@ -8,6 +8,9 @@ import exception.NoSuchHanlderException;
 import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
+import netobject.notification.LobbyNotification;
+import netobject.notification.LobbyNotificationType;
+import netobject.notification.Notification;
 import server.controller.network.ClientHandler;
 import server.model.board.Player;
 import singleton.GameConfig;
@@ -15,14 +18,14 @@ import singleton.GameConfig;
 import java.util.*;
 
 /**
- * The Lobby represents a virtual room where players wait for other players to join and for the match to begin.
+ * The Lobby represents a virtual room where handlers wait for other handlers to join and for the match to begin.
  */
 
 
 public class Lobby {
 
-    //This table maps each clientHandler to it relative player object in the model
-    private LinkedHashMap<ClientHandler, Player> players;
+    //This array list holds the clients in the lobby
+    private ArrayList<ClientHandler> handlers;
 
     //Match controller
     private MatchController matchController;
@@ -51,16 +54,18 @@ public class Lobby {
     public Lobby(ClientHandler firstHandler) {
 
 
-        //Create the players map
-        this.players = new LinkedHashMap<ClientHandler, Player>();
+        //Create the handlers map
+        this.handlers = new ArrayList<ClientHandler>();
 
         //Add the first player
-        this.players.put(firstHandler, new Player(firstHandler.getUsername()));
+        this.handlers.add(firstHandler);
 
         //Assign the lobby name
         this.name = firstHandler.getUsername();
 
         Logger.log(Level.FINE, this.toString(), firstHandler.getUsername() + " created the lobby.");
+
+        this.welcomeClient(firstHandler);
 
     }
 
@@ -71,7 +76,7 @@ public class Lobby {
      */
     public boolean hasClientHandler(ClientHandler handler) {
 
-        return this.players.containsKey(handler);
+        return this.handlers.contains(handler);
 
     }
 
@@ -81,6 +86,12 @@ public class Lobby {
      * @return
      */
     public boolean hasPlayer(String username) {
+
+        if (this.matchController == null) {
+
+            return false;
+
+        }
 
         for (Player p : this.matchController.getMatch().getPlayers()) {
 
@@ -103,13 +114,13 @@ public class Lobby {
      */
     public boolean isJoinable() {
 
-        return (!this.matchDidStart && this.players.size() < MAXIMUM_PLAYERS);
+        return (!this.matchDidStart && this.handlers.size() < MAXIMUM_PLAYERS);
 
     }
 
     /**
      * Method called to joint tha lobby.
-     * It constantly checks whether or not there are enough players to start the timeout
+     * It constantly checks whether or not there are enough handlers to start the timeout
      * When the minimum number requirement is fulfilled a task is scheduled with the specified amount of time
      * @param handler the client handler who wants to join the lobby
      * @return true if the join was successful
@@ -117,20 +128,24 @@ public class Lobby {
     public synchronized boolean join(ClientHandler handler) {
 
         //If the lobby is full
-        if (this.players.size() >= MAXIMUM_PLAYERS || this.matchDidStart) {
+        if (this.handlers.size() >= MAXIMUM_PLAYERS || this.matchDidStart) {
 
             return false;
 
         }
 
-        //Add the new player
-        this.players.put(handler, new Player(handler.getUsername()));
+        //Add the new handler
+        this.handlers.add(handler);
 
         Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has joined!");
 
+        this.welcomeClient(handler);
+
+        this.notifyAllExcept(handler, new LobbyNotification(LobbyNotificationType.ClientJoin, "Client " + handler.getUsername() + " has joined!"));
+
 
         //Check whether or not to start the timeout
-        if (this.players.size() == MINIMUM_PLAYERS) {
+        if (this.handlers.size() == MINIMUM_PLAYERS) {
 
             /* Create always a new timer.
              * This operation must always be performed.
@@ -156,9 +171,13 @@ public class Lobby {
 
             Logger.log(Level.FINEST, this.toString(), "Timeout started: " + GameConfig.getInstance().getMatchTimeout() + "s");
 
+
+            this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will start in " + GameConfig.getInstance().getMatchTimeout() + "s" ));
+
+
         }
 
-        else if (this.players.size() == MAXIMUM_PLAYERS) {
+        else if (this.handlers.size() == MAXIMUM_PLAYERS) {
 
             //When the fourth player joins, start the match and clear the timeout
             this.stopTimeout();
@@ -181,7 +200,7 @@ public class Lobby {
     public synchronized void joinAfterDisconnection(ClientHandler handler) {
 
         //Get the player in the model
-        Player belongingPlayer = null;
+        Player belongingPlayer;
 
         try {
 
@@ -191,9 +210,14 @@ public class Lobby {
             belongingPlayer.setDisabled(false);
 
             //Remap the player with the new handler
-            this.players.put(handler, belongingPlayer);
+            this.matchController.getPlayerHandlerMap().put(handler, belongingPlayer);
+
+            //Re add the client to the handlers list
+            this.handlers.add(handler);
 
             Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
+
+            handler.sendNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
 
         } catch (NoSuchPlayerException e) {
 
@@ -208,16 +232,22 @@ public class Lobby {
      * When a client disconnects two things may happen:
      * If the match had already started, it must be stopped.
      * If the match hadn't started yet:
-     * If there were only two players the timeout gets cleared
+     * If there were only two handlers the timeout gets cleared
      * Otherwise just a notification to other clients
      * @param handler the handler of the client that has left
      * @return int the number of clients in the lobby after the leaving
      */
     public synchronized int leave(ClientHandler handler) throws NoSuchHanlderException {
 
-        if (this.players.get(handler) == null) {
+        if (!this.handlers.contains(handler)) {
 
             throw new NoSuchHanlderException("The player did not belong to this lobby");
+
+        }
+        else {
+
+            //Remove any reference to the handler (If the match has started the player is still accessible in the model).
+            this.handlers.remove(handler);
 
         }
 
@@ -226,23 +256,26 @@ public class Lobby {
             Logger.log(Level.WARNING, this.toString(), "Client " + handler.getUsername() + " disconnected while playing, disabling player..");
 
             //Permanently disable the player
-            this.players.get(handler).setDisabled(true);
+            this.matchController.setDisablePlayerRelativeTo(handler, true);
+
+
+            //Remove the reference even into the match controller
+            this.matchController.getPlayerHandlerMap().remove(handler);
 
         }
         else {
 
             Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " left");
 
-            if (this.players.size() > MINIMUM_PLAYERS) {
+            this.notifyAllExcept(handler, new LobbyNotification(LobbyNotificationType.ClientLeave, "Client " + handler.getUsername() + " has left the lobby."));
 
-                //TODO: Notify players of client disconnection, but let the timeout keep on going
-
-            }
-            else {
+            if (this.handlers.size() < MINIMUM_PLAYERS) {
 
                 if (this.timeoutDidStart) {
 
                     this.stopTimeout();
+
+                    this.notifyAllExcept(handler, new LobbyNotification(LobbyNotificationType.TimeoutStopped, "Timeout stopped, not enough players!"));
 
                 }
 
@@ -251,16 +284,13 @@ public class Lobby {
 
         }
 
-        //Remove any reference to the handler (If the match has started the player is still accessible in the model).
-        this.players.remove(handler);
-
-        return this.players.size();
+        return this.handlers.size();
 
     }
 
-    private void stopTimeout() {
+    private synchronized void stopTimeout() {
 
-        //Cancel the timeout if less than 2 players are in the room
+        //Cancel the timeout if less than 2 handlers are in the room
         this.timeout.cancel();
 
         //Let the old timer object get garbage collected
@@ -273,53 +303,73 @@ public class Lobby {
 
     }
 
-    private void notifyMatchAborted() {
-
-        while(this.players.keySet().iterator().hasNext()) {
-
-            //this.players.keySet().iterator().next().sendObject(new Notification(NotificationType.MatchAborted));
-
-        }
-
-    }
 
     public boolean isEmpty() {
 
-        return (this.players.size() == 0);
+        return (this.handlers.size() == 0);
 
     }
 
     /**
      * Starts the match
-     * It loads the match controller with the players
+     * It loads the match controller with the handlers
      */
-    public void startMatch() {
+    private void startMatch() {
+
+        if (this.handlers.size() < MINIMUM_PLAYERS) {
+
+            Logger.log(Level.WARNING, this.toString(), "The timeout might have expired while a client was disconnecting, not enough players to start");
+
+            return;
+
+        }
 
         this.matchDidStart = true;
 
         Logger.log(Level.FINE, this.toString(), "Match started");
 
-        this.matchController = new MatchController(this.getPlayers());
+        this.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match has started"));
 
-
-
-    }
-
-    public ArrayList<Player> getPlayers() {
-
-        return new ArrayList<Player>(this.players.values());
+        this.matchController = new MatchController(this.handlers);
 
     }
 
-    public ArrayList<ClientHandler> getClients() {
+    private void welcomeClient(ClientHandler handler) {
 
-        return new ArrayList<ClientHandler>(this.players.keySet());
+        handler.sendNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername() + ", welcome to " + this.toString()));
 
     }
 
-    public LinkedHashMap<ClientHandler, Player> getMapping() {
-        return players;
+    private synchronized void notifyAllExcept(ClientHandler handler, Notification not) {
+
+        for (ClientHandler c : this.handlers) {
+
+            if (c != handler) {
+
+                c.sendNotification(not);
+
+            }
+
+        }
+
     }
+
+    private synchronized void notifyAll(Notification not) {
+
+        for (ClientHandler c : this.handlers) {
+
+            c.sendNotification(not);
+            
+        }
+
+    }
+
+    public ArrayList<ClientHandler> getHandlers() {
+
+        return this.handlers;
+
+    }
+
 
     @Override
     public String toString() {

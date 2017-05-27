@@ -7,6 +7,7 @@ package netobject;
 public enum NetObjectType {
 
     Request,
-    Response
+    Response,
+    Notification
 
 }

@@ -120,6 +120,14 @@ public abstract class Server implements Observable<ServerObserver> {
      */
     protected synchronized void removeClientHandler(ClientHandler handler) {
 
+        if (handler == null || this.clientHandlers.get(handler) == null) {
+
+            Logger.log(Level.SEVERE, "Server", "Trying to remove a client handler that is either null or already removed");
+
+            return;
+
+        }
+
         //Terminate the thread
         this.clientHandlers.get(handler).interrupt();
 

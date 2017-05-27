@@ -1,6 +1,6 @@
 package client.controller.network;
 
-import netobject.NetObject;
+import netobject.notification.Notification;
 
 /*
  * @author  ab3llini
@@ -8,12 +8,12 @@ import netobject.NetObject;
  */
 public interface ClientObserver {
 
-    void onObjectReceived(Client client, NetObject object);
-
     void onDisconnection(Client client);
 
     void onLoginFailed(Client client, String reason);
 
     void onLoginSuccess(Client client);
+
+    void onNotification(Client client, Notification not);
 
 }

@@ -8,6 +8,7 @@ import exception.authentication.LoginFailedException;
 import exception.authentication.NotConnectedException;
 import logger.Level;
 import logger.Logger;
+import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
 import server.controller.network.RMI.RMIServerInterface;
@@ -63,6 +64,10 @@ public class RMIClient extends Client implements RMIClientInterface {
 
     public void disconnect() throws RemoteException {
         System.exit(0);
+    }
+
+    public void notify(Notification not) throws RemoteException {
+        this.notifyNotificationReceived(not);
     }
 
 

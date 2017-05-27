@@ -8,6 +8,7 @@ package server.controller.network.Socket;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
+import netobject.notification.Notification;
 import server.controller.network.ClientHandler;
 import server.controller.network.Observable;
 import server.model.Match;
@@ -186,6 +187,10 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         }
 
+    }
+
+    public void sendNotification(Notification not) {
+        this.sendObject(not);
     }
 
     public void updateModel(Match model) {

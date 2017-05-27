@@ -14,40 +14,79 @@ import client.view.cmd.ClientTypeCmd;
 import client.view.utility.AsyncInputStream;
 import client.view.utility.AsyncInputStreamObserver;
 import client.view.cmd.Cmd;
-import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
+import netobject.NetObjectType;
+import netobject.notification.LobbyNotification;
+import netobject.notification.LobbyNotificationType;
+import netobject.notification.Notification;
+import netobject.notification.NotificationType;
 import netobject.request.auth.LoginRequest;
+import netobject.response.Response;
 import singleton.GameConfig;
+import sun.nio.ch.Net;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * The command line interface for the game :/
  */
 public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
-    //The client that will be used
+    /**
+     * The client handler that will be dynamically bounded and used
+     */
     private Client client;
 
-    //The keyboard stream
-    private AsyncInputStream keyboard;
+    /**
+     * An asynchronous stream that listens for user input. It is event based with observers.
+     */
+    private final AsyncInputStream keyboard;
 
-    private final Object keyboardMutex = new Object();
+    /**
+     * This is the blocking queue that will be filled with new user input
+     */
+    private final BlockingQueue<String> inputQueue;
 
-    private String keyboardInput = "";
+    /**
+     * This is the blocking queue that will be filled with notifications
+     */
+    private final BlockingQueue<Notification> notificationQueue;
 
+    /**
+     * This mutex is used to wait until a connection-driven event occurs
+     */
+    private final Object connectionMutex;
+
+
+    /**
+     * Event though the CLI thread might be suspended, the Asynchronous stream will never be
+     * Therefore it is a priority to prevent the user from entering any input
+     */
     private boolean keyboardEnabled = true;
 
-    private final Object connectionMutex = new Object();
-
+    /**
+     * Defines the context on which the CLI is operating
+     * Please see the relative enum for more details
+     */
     private CliContext ctx;
 
     /**
      * The command line interface constructor
+     * Initializes the required objects and proceeds with a bootstrap phase
      */
     private CLI() {
 
-        this.ctx = CliContext.Bootstrap;
+        //Init blocking queue for user input
+        this.inputQueue = new ArrayBlockingQueue<String>(10);
+
+        //Init blocking queue for server data
+        this.notificationQueue = new ArrayBlockingQueue<Notification>(10);
+
+        //Init the mutex
+        this.connectionMutex = new Object();
 
         //Initialization procedure
         this.keyboard = new AsyncInputStream(System.in);
@@ -67,7 +106,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      * Pauses the main thread until a notify is performed on the provided mutex object
      * @param mutex the object on which the lock is acquired
      */
-    private void waitForInputOnMutex(Object mutex) {
+    private void waitOnMutex(Object mutex) {
 
         synchronized (mutex) {
 
@@ -93,15 +132,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         if (stream == this.keyboard && this.keyboardEnabled) {
 
-            synchronized (keyboardMutex) {
-
-                //Assign the last input
-                this.keyboardInput = value;
-
-                //Resume the CLI thread
-                keyboardMutex.notify();
-
-            }
+            this.inputQueue.add(value);
 
         }
 
@@ -111,31 +142,26 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      * Starts the command line interface
      * Requests the server ip address and the connection type
      */
-    private void bootstrap() {
+    private void bootstrap() throws InterruptedException {
+
+        //Set the context
+        this.ctx = CliContext.Bootstrap;
 
         String hostIP;
         String connection;
 
-        if (this.ctx != CliContext.Bootstrap) return;
-        
         //Request the IP
         Cmd.askFor("Please enter the IP address of the host");
 
-        //Suspend
-        this.waitForInputOnMutex(this.keyboardMutex);
-
         //Read the IP
-        hostIP = this.keyboardInput;
+        hostIP = this.inputQueue.take();
 
         //Check it
         while (hostIP.equals("")) {
 
             Cmd.askFor("Invalid IP address");
 
-            this.waitForInputOnMutex(this.keyboardMutex);
-
-            hostIP = this.keyboardInput;
-
+            hostIP = this.inputQueue.take();
 
         }
 
@@ -145,18 +171,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Print the available choices
         Cmd.printChoices(ClientTypeCmd.values());
 
-        //Suspend
-        this.waitForInputOnMutex(this.keyboardMutex);
-
         //Read the selection
-        connection = this.keyboardInput;
+        connection = this.inputQueue.take();
 
         //Check it
         while (!Cmd.isValid(ClientTypeCmd.values(), connection)) {
 
-            this.waitForInputOnMutex(this.keyboardMutex);
-
-            connection = this.keyboardInput;
+            connection = this.inputQueue.take();
 
         }
 
@@ -189,7 +210,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    private void authenticate() {
+    /**
+     * Authenticates the user
+     * @throws InterruptedException blockingQueue take
+     */
+    private void authenticate() throws InterruptedException {
 
         //Switch context
         this.ctx = CliContext.Authentication;
@@ -200,22 +225,21 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Print the available choices
         Cmd.printChoices(AuthTypeCmd.values());
 
-        //Suspend
-        this.waitForInputOnMutex(this.keyboardMutex);
+        String choice = this.inputQueue.take();
 
         //Check it
-        while (!Cmd.isValid(AuthTypeCmd.values(), this.keyboardInput)) {
+        while (!Cmd.isValid(AuthTypeCmd.values(), choice)) {
 
-            this.waitForInputOnMutex(this.keyboardMutex);
+            choice = this.inputQueue.take();
 
         }
 
-        if (this.keyboardInput.equals(AuthTypeCmd.Login.getValue())) {
+        if (choice.equals(AuthTypeCmd.Login.getValue())) {
 
             this.login();
 
         }
-        else if (this.keyboardInput.equals(AuthTypeCmd.Registration.getValue())) {
+        else if (choice.equals(AuthTypeCmd.Registration.getValue())) {
 
             this.register();
 
@@ -228,7 +252,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    private void login() {
+    /**
+     * Logs in the user
+     * @throws InterruptedException blockingQueue take
+     */
+    private void login() throws InterruptedException {
 
         //Switch context
         this.ctx = CliContext.Login;
@@ -238,18 +266,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Request the IP
         Cmd.askFor("Please enter your username");
 
-        //Suspend
-        this.waitForInputOnMutex(this.keyboardMutex);
-
-        username = this.keyboardInput;
+        username = this.inputQueue.take();
 
         //Request the IP
         Cmd.askFor("Please enter your password");
 
-        //Suspend
-        this.waitForInputOnMutex(this.keyboardMutex);
-
-        password = this.keyboardInput;
+        password = this.inputQueue.take();
 
         //Perform login request
         this.client.login(new LoginRequest(username, password));
@@ -262,7 +284,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             this.keyboardEnabled = false;
 
             //Wait for the server response
-            this.waitForInputOnMutex(this.connectionMutex);
+            this.waitOnMutex(this.connectionMutex);
 
             this.keyboardEnabled = true;
 
@@ -293,19 +315,44 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    private void interactWithLobby() {
+    /**
+     * Notify the user about the events that happen while waiting for the match to start
+     * @throws InterruptedException blockingQueue take
+     */
+    private void interactWithLobby() throws InterruptedException {
 
         this.ctx = CliContext.Lobby;
 
+        this.keyboardEnabled = false;
+
+        //Assuming that before the match start the client will receive just Lobby notifications
+        //Read the first notification
+        LobbyNotification o = (LobbyNotification)this.notificationQueue.take();
+
+        //Keep posting notifications until the match starts
+        do {
+
+            Cmd.notify(o.getMessage());
+
+            o = (LobbyNotification)this.notificationQueue.take();
+
+
+        }
+        while (o.getLobbyNotificationType() != LobbyNotificationType.MatchStart);
+
+        Cmd.notify(o.getMessage());
+
+        this.keyboardEnabled = true;
+
     }
 
-    public void onObjectReceived(Client client, NetObject object) {
-
-    }
 
     public void onDisconnection(Client client) {
 
+        Cmd.notify("Connection lost.");
+
     }
+
 
     public void onLoginFailed(Client client, String reason) {
 
@@ -329,7 +376,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    public static void main(String[] args) {
+    public void onNotification(Client client, Notification not) {
+
+        this.notificationQueue.add(not);
+
+    }
+
+    public static void main(String[] args) throws InterruptedException {
 
         (new CLI()).bootstrap();
 

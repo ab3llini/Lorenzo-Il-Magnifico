@@ -1,5 +1,8 @@
 package client.view.cmd;
 
+/**
+ * Authentication commands
+ */
 public enum AuthTypeCmd implements Command {
 
     Login("Login", "1"),

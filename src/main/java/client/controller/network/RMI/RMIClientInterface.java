@@ -1,5 +1,7 @@
 package client.controller.network.RMI;
 
+import netobject.notification.Notification;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
@@ -16,12 +18,14 @@ public interface RMIClientInterface extends Remote {
      * @return true
      * @throws RemoteException required
      */
-    public boolean heartbeat() throws RemoteException;
+    boolean heartbeat() throws RemoteException;
 
     /**
      * Method called by the server to disconnect the client
      * @throws RemoteException required
      */
-    public void disconnect() throws RemoteException;
+    void disconnect() throws RemoteException;
+
+    void notify(Notification not) throws RemoteException;
 
 }

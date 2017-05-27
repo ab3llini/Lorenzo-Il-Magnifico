@@ -231,29 +231,21 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
         }
         //If we want to terminate the handler we must, before forwarding the exception to the client, catch it and do something.
-        catch (AuthenticationException e) {
+        catch (LoginFailedException e) {
 
-            this.removeClientHandler(handler);
+            Logger.log(Level.FINEST, "Server (RMI)", "Bad login for client " + loginRequest.getUsername());
 
-            Logger.log(Level.FINEST, "Server (RMI)", "Removing handler", e);
-
-
-            if (e instanceof LoginFailedException) {
-
-                Logger.log(Level.FINEST, "Server (RMI)", "Bad login for client " + loginRequest.getUsername());
-
-                throw (LoginFailedException)e;
-            }
-            else if (e instanceof AlreadyLoggedInException) {
-
-                Logger.log(Level.FINEST, "Server (RMI)", "Client " + loginRequest.getUsername() + " was already logged in!");
-
-                throw (AlreadyLoggedInException)e;
-            }
+            throw e;
 
         }
 
-        return false;
+        catch (AlreadyLoggedInException e) {
+
+            Logger.log(Level.FINEST, "Server (RMI)", "Client " + loginRequest.getUsername() + " was already logged in!");
+
+            throw e;
+
+        }
 
     }
 

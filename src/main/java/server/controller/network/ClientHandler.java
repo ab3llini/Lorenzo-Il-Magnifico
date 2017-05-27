@@ -1,5 +1,6 @@
 package server.controller.network;
 import netobject.NetObject;
+import netobject.notification.Notification;
 import server.model.Match;
 
 /*
@@ -19,6 +20,8 @@ public abstract class ClientHandler implements Runnable  {
         return (this.username != null) ? this.username : "(Never authenticated)";
 
     }
+
+    public abstract void sendNotification(Notification not);
 
     public abstract void updateModel(Match model);
 

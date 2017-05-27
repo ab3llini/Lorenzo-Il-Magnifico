@@ -1,5 +1,6 @@
 package client.controller.network;
 
+import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
 import server.controller.network.Observable;
@@ -86,6 +87,16 @@ public abstract class Client implements Observable<ClientObserver> {
         for (ClientObserver o : this.observers) {
 
             o.onLoginSuccess(this);
+
+        }
+
+    }
+
+    protected void notifyNotificationReceived(Notification not) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onNotification(this, not);
 
         }
 

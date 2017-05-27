@@ -4,6 +4,7 @@ import client.controller.network.Client;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObjectType;
+import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
 import netobject.response.Response;
@@ -154,6 +155,11 @@ public class SocketClient extends Client implements Runnable {
                 }
 
             }
+
+        }
+        else if (object.getType() == NetObjectType.Notification) {
+
+            this.notifyNotificationReceived((Notification)object);
 
         }
 

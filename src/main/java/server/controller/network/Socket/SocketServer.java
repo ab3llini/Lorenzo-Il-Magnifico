@@ -68,9 +68,6 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
 
                     this.authenticate(handler, loginRequest);
 
-                    System.out.println("Login ok");
-
-
                     handler.sendObject(new LoginResponse(true, loginRequest.getUsername(), "Login succeeded"));
 
                 }

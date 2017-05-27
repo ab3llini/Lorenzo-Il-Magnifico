@@ -8,6 +8,7 @@ import client.controller.network.RMI.RMIClientInterface;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
+import netobject.notification.Notification;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
@@ -150,8 +151,17 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
     }
 
 
-    protected boolean send(Object o) {
-        return false;
+    public void sendNotification(Notification not) {
+
+        try {
+
+            this.clientRef.notify(not);
+
+        } catch (RemoteException e) {
+
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to send notification", e);
+        }
+
     }
 
     public void updateModel(Match model) {

@@ -6,6 +6,10 @@ package client.view.cmd;
  * @since   23/05/17.
  */
 
+
+/**
+ * Client connectivity method command
+ */
 public enum ClientTypeCmd implements Command {
 
     Socket("Socket", "1"),
