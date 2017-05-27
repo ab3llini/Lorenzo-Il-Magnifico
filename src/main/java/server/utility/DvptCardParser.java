@@ -32,14 +32,16 @@ public class DvptCardParser {
         Integer period = 0;
         DvptCardType type = null;
         ArrayList<Cost> cost = new ArrayList<Cost>();
-        ImmediateEffect immediateEffect = null;
-        PermanentEffect permanentEffect = null;
+
 
         //get a JsonObject from the file stored in resource that contains all the cards in json
         JsonObject cardsSet = Loader.getJsonObjectFromFile("/json/cards.json");
 
         //extract one by one all the card from cardsSet and create a Card object from every single card in json file
         for (String cardId : Json.getObjectKeys(cardsSet)) {
+
+            ImmediateEffect immediateEffect = new ImmediateEffect(new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0),null);
+            PermanentEffect permanentEffect = null;
 
             //extract one single card
             JsonObject card = cardsSet.getAsJsonObject(cardId);
@@ -148,7 +150,7 @@ public class DvptCardParser {
     }
 
     private static ImmediateEffect getImmediateEffect(JsonObject effect) {
-        EffectSurplus effectSurplus = null;
+        EffectSurplus effectSurplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(), 0);
         EffectAction effectAction = null;
 
         //extract immediate from JsonObject
@@ -277,7 +279,7 @@ public class DvptCardParser {
         return getSurplus(surplus);
     }
 
-    private static EffectSurplus getSurplus(JsonObject surplus){
+    public static EffectSurplus getSurplus(JsonObject surplus){
 
         ArrayList<Resource> resources=new ArrayList<Resource>();      //ArrayList to save surplus in resources
         ArrayList<Point> points=new ArrayList<Point>();               //ArrayList to save surplus in points

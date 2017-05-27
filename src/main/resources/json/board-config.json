@@ -127,6 +127,41 @@
     }
   },
 
+  "councilPrivilegeOptions":
+    [
+      {
+        "resources" : {
+          "coins" : 2
+        }
+      },
+
+      {
+        "resources" : {
+          "servants" : 2
+        }
+      },
+
+      {
+        "resources" : {
+          "wood" : 1,
+          "stones" : 1
+        }
+      },
+
+      {
+        "points" : {
+          "faith" : 1
+        }
+      },
+
+      {
+        "points" : {
+          "military" : 2
+        }
+      }
+    ],
+
+
   "cathedral" : {
     "firstMinFaith" : 3,
     "secondMinFaith" : 4,

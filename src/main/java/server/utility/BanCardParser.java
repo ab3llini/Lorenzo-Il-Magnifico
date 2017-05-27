@@ -33,19 +33,21 @@ public class BanCardParser {
         Integer period = 0;
         BanType banType = null;
 
-        //ban cards effects are very different from each other, so we have to use different classes for represent them
-        DvptCardType cardType = null;
-        ArrayList<Resource> resources = new ArrayList<Resource>();
-        ArrayList<Point> points = new ArrayList<Point>();
-        String specialEffect = "";
-        EffectVictoryMalus effectVictoryMalus = null;
-        EffectDiceMalus effectDiceMalus = null;
+
 
         //get a JsonObject from the file stored in resource that contains all the banCards in json
         JsonObject cardsSet = Loader.getJsonObjectFromFile("/json/banCards.json");
 
         //extract one by one all the ban cards from cardsSet and create a banCard object from every single banCard in json file
         for (String banCardId : Json.getObjectKeys(cardsSet)) {
+
+            //ban cards effects are very different from each other, so we have to use different classes for represent them
+            DvptCardType cardType = null;
+            ArrayList<Resource> resources = new ArrayList<Resource>();
+            ArrayList<Point> points = new ArrayList<Point>();
+            String specialEffect = "";
+            EffectVictoryMalus effectVictoryMalus = null;
+            EffectDiceMalus effectDiceMalus = null;
 
             //extract one single banCard
             JsonObject banCard = cardsSet.getAsJsonObject(banCardId);
@@ -60,8 +62,8 @@ public class BanCardParser {
                     period = getPeriod(banCard);
                 }
 
-                if (key.equals("authenticationType")) {
-                    banType = BanType.valueOf(banCard.get("authenticationType").getAsString());
+                if (key.equals("type")) {
+                    banType = BanType.valueOf(banCard.get("type").getAsString());
                 }
 
                 if (key.equals("effect")) {
@@ -146,8 +148,8 @@ public class BanCardParser {
             if(malusKey.equals("target")){
                 target = ActionType.valueOf(diceMalusObject.get("target").getAsString());}
 
-            if(malusKey.equals("authenticationType")){
-                type = DvptCardType.valueOf(diceMalusObject.get("authenticationType").getAsString());
+            if(malusKey.equals("type")){
+                type = DvptCardType.valueOf(diceMalusObject.get("type").getAsString());
             }
 
             if(malusKey.equals("force")){

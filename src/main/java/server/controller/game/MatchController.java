@@ -7,8 +7,10 @@ import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
 import server.model.card.developement.*;
+import server.model.effect.ActionType;
 import server.model.effect.EffectConversion;
 import server.model.effect.EffectSurplus;
+import server.model.effect.ImmediateEffect;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
 
@@ -84,6 +86,32 @@ public class MatchController implements Runnable {
             players.add(player);
 
         }
+
+        /*
+         * First up, create the model for the current match.
+         * Note that this call will trigger every constructor in the model
+         * The players are always provided
+         */
+        this.match = new Match(players);
+
+
+        /*
+         * Assign the board controller
+         * Keep in mind that match.board must be initialized at this time
+         */
+        this.boardController = new BoardController(this.match.getBoard());
+
+
+
+        //Init anything else in the future here..
+
+    }
+
+    /**
+     * costruttore temporaneo usato solo per testare le classi
+     * @param players
+     */
+    public MatchController(ArrayList<Player> players,Integer xx) {
 
         /*
          * First up, create the model for the current match.
@@ -206,8 +234,44 @@ public class MatchController implements Runnable {
 
     }
 
-    public void ApplyImmediateEffect(Player player, DvptCard card){
+    public void applyImmediateEffect(Player player, DvptCard card) throws NotEnoughResourcesException, NotEnoughPointsException {
         //TODO
+        FamilyMemberPlacementActionRequest action;
+        ImmediateEffect immediateEffect = card.getImmediateEffect();
+
+
+        applyEffectSurplus(player,immediateEffect.getSurplus());
+
+
+        try{
+            if(immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
+                applyHarvestChain(player,immediateEffect.getEffectAction().getForce());
+
+            if(immediateEffect.getEffectAction().getTarget() == ActionType.production)
+                applyProductionChain(player,immediateEffect.getEffectAction().getForce());
+
+            if(immediateEffect.getEffectAction().getTarget() == ActionType.card){
+                if(immediateEffect.getEffectAction().getType() == DvptCardType.territory)
+                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    ;
+
+                if(immediateEffect.getEffectAction().getType() == DvptCardType.character)
+                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    ;
+
+                if(immediateEffect.getEffectAction().getType() == DvptCardType.building)
+                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    ;
+
+                if(immediateEffect.getEffectAction().getType() == DvptCardType.venture)
+                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    ;
+            }
+        }
+        catch (NullPointerException e){
+            System.out.println("non c'è nessun target");
+        }
+
         return;
     }
 
@@ -296,7 +360,7 @@ public class MatchController implements Runnable {
             //add to the personal board of the player the territory card set in the tower slot
             player.getPersonalBoard().addTerritoryCard((TerritoryDvptCard) this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).getDvptCard());
 
-            ApplyImmediateEffect(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
+            applyImmediateEffect(player,this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).getDvptCard());
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).setDvptCard(null);
@@ -316,7 +380,7 @@ public class MatchController implements Runnable {
             //add to the personal board of the player the building card set in the tower slot
             player.getPersonalBoard().addBuildingCard((BuildingDvptCard) this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).getDvptCard());
 
-            ApplyImmediateEffect(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
+            applyImmediateEffect(player,this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).getDvptCard());
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).setDvptCard(null);
@@ -336,7 +400,7 @@ public class MatchController implements Runnable {
             //add to the personal board of the player the building card set in the tower slot
             player.getPersonalBoard().addCharacterCard((CharacterDvptCard) this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
 
-            ApplyImmediateEffect(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
+            applyImmediateEffect(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).setDvptCard(null);
@@ -356,7 +420,7 @@ public class MatchController implements Runnable {
             //add to the personal board of the player the building card set in the tower slot
             player.getPersonalBoard().addVentureCard((VentureDvptCard) this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).getDvptCard());
 
-            ApplyImmediateEffect(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
+            applyImmediateEffect(player,this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).getDvptCard());
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).setDvptCard(null);

@@ -1,5 +1,7 @@
 package server.utility;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import logger.Level;
 import logger.Logger;
@@ -12,6 +14,7 @@ import server.model.valuable.Resource;
 import java.util.ArrayList;
 
 import static server.utility.DvptCardParser.getEffectSurplus;
+import static server.utility.DvptCardParser.getSurplus;
 
 /**
  * Created by LBARCELLA on 18/05/2017.
@@ -216,5 +219,18 @@ public class BoardConfigParser {
         EffectSurplus surplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0);
 
         return new PHCompositeActionPlace(surplus, minForce, forceMalus, minPlayers);
+    }
+
+    public static ArrayList<EffectSurplus> getCouncilPrivilegeOptions(){
+        ArrayList<EffectSurplus> councilPrivilegeOptions = new ArrayList<EffectSurplus>();
+
+        JsonArray optionArray = BoardConfigParser.getBoardConfig().getAsJsonArray("councilPrivilegeOptions");
+
+        for(JsonElement option : optionArray){
+            EffectSurplus surplus = getSurplus((JsonObject) option);
+            councilPrivilegeOptions.add(surplus);
+        }
+
+        return councilPrivilegeOptions;
     }
 }
