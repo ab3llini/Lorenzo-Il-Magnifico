@@ -113,7 +113,7 @@ public class BoardController {
 
         for (int deckIndex = 0; deckIndex < 3; deckIndex++) {
 
-            Deck<BanCard> deck = new Deck<BanCard>();
+            Deck<BanCard> deck = new Deck<BanCard>();;
 
             for (int cardIndex = deckIndex * BAN_CARD_OFFSET; cardIndex < deckIndex * BAN_CARD_OFFSET + BAN_CARD_OFFSET; cardIndex++) {
 
@@ -134,7 +134,7 @@ public class BoardController {
 
     public void prepareTowers(Board board, Integer round, ArrayList<Deck<DvptCard>> deckArray) {
 
-        Integer period;
+        Integer period = 0;
 
         ArrayList<DvptCard> temporaryTerritory = new ArrayList<DvptCard>();
 
@@ -144,7 +144,14 @@ public class BoardController {
 
         ArrayList<DvptCard> temporaryVenture = new ArrayList<DvptCard>();
 
-        period = round / 2;
+        if(round == 1 || round == 2)
+            period = 1;
+
+        if(round == 3 || round == 4)
+            period = 2;
+
+        if(round == 5 || round == 6)
+            period = 3;
 
         // If it is the first turn of a period, every tower will contain the first half of his specific deck, according to his authenticationType and period
 
@@ -152,7 +159,7 @@ public class BoardController {
 
             for (int i = 0; i < 4; i++) {
                 temporaryTerritory.add(deckArray.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
-                System.out.println("Sto caricando la carta" + deckArray.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS).getCards().get(i).getId());
+
             }
 
             for (int i = 0; i < 4; i++) {
@@ -217,9 +224,7 @@ public class BoardController {
      * A method that inserts the ban cards into cathedral
      */
 
-    public void prepareCathedral(ArrayList<Deck<BanCard>> bancards, Integer round, Board board) {
-
-        Integer period = round / 2;
+    public void prepareCathedral(ArrayList<Deck<BanCard>> bancards, Board board) {
 
         ArrayList<BanCard> temporaryBanCardArray = new ArrayList<BanCard>();
 

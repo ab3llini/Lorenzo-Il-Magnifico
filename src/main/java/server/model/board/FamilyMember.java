@@ -41,6 +41,10 @@ public class FamilyMember {
         this.player = player;
     }
 
+    public void setColor(ColorType color) {
+        this.color = color;
+    }
+
     public Integer getForce() {
         return force;
     }

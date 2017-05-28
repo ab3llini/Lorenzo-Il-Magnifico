@@ -39,8 +39,8 @@ public class Cathedral {
         banCards.put(period,banCard);
     }
 
-    public void getBanCard(Period period){
-        banCards.get(period);
+    public BanCard getBanCard(Period period){
+        return banCards.get(period);
     }
 
 }

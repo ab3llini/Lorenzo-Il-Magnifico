@@ -39,4 +39,5 @@ public class CouncilPalace extends CompositeActionPlace {
         }
         return playersOrder;
     }
+
 }

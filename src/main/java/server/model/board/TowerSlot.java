@@ -24,4 +24,5 @@ public class TowerSlot extends SingleActionPlace {
     public void setDvptCard(DvptCard dvptCard) {
         this.dvptCard = dvptCard;
     }
+
 }
