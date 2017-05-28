@@ -13,9 +13,11 @@ import server.model.effect.EffectSurplus;
 import server.model.effect.ImmediateEffect;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
+import server.utility.BoardConfigParser;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
@@ -159,7 +161,7 @@ public class MatchController implements Runnable {
 
     }
 
-    public void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException, NotEnoughResourcesException, NotEnoughPointsException {
+    public void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException, NotEnoughResourcesException, NotEnoughPointsException, SixCardsLimitReachedException, PlayerAlreadyOccupiedTowerException {
 
         if(action instanceof FamilyMemberPlacementActionRequest){
 
@@ -234,6 +236,13 @@ public class MatchController implements Runnable {
 
     }
 
+    /**
+     * this method applies immediate effect of a card on the player who took it
+     * @param player
+     * @param card
+     * @throws NotEnoughResourcesException
+     * @throws NotEnoughPointsException
+     */
     public void applyImmediateEffect(Player player, DvptCard card) throws NotEnoughResourcesException, NotEnoughPointsException {
         //TODO
         FamilyMemberPlacementActionRequest action;
@@ -243,34 +252,28 @@ public class MatchController implements Runnable {
         applyEffectSurplus(player,immediateEffect.getSurplus());
 
 
-        try{
-            if(immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
-                applyHarvestChain(player,immediateEffect.getEffectAction().getForce());
+        if(immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
+            applyHarvestChain(player,immediateEffect.getEffectAction().getForce());
 
-            if(immediateEffect.getEffectAction().getTarget() == ActionType.production)
-                applyProductionChain(player,immediateEffect.getEffectAction().getForce());
+        if(immediateEffect.getEffectAction().getTarget() == ActionType.production)
+            applyProductionChain(player,immediateEffect.getEffectAction().getForce());
 
-            if(immediateEffect.getEffectAction().getTarget() == ActionType.card){
-                if(immediateEffect.getEffectAction().getType() == DvptCardType.territory)
+        if(immediateEffect.getEffectAction().getTarget() == ActionType.card){
+            if(immediateEffect.getEffectAction().getType() == DvptCardType.territory)
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    ;
+                ;
 
-                if(immediateEffect.getEffectAction().getType() == DvptCardType.character)
-                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    ;
+            if(immediateEffect.getEffectAction().getType() == DvptCardType.character)
+                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                ;
 
-                if(immediateEffect.getEffectAction().getType() == DvptCardType.building)
-                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    ;
+            if(immediateEffect.getEffectAction().getType() == DvptCardType.building)
+                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                ;
 
-                if(immediateEffect.getEffectAction().getType() == DvptCardType.venture)
-                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    ;
-            }
-        }
-        catch (NullPointerException e){
-            System.out.println("non c'è nessun target");
-        }
+            if(immediateEffect.getEffectAction().getType() == DvptCardType.venture)
+                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                ;}
 
         return;
     }
@@ -281,7 +284,7 @@ public class MatchController implements Runnable {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException, NotEnoughResourcesException, NotEnoughPointsException {
+    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException, NotEnoughResourcesException, NotEnoughPointsException, SixCardsLimitReachedException, PlayerAlreadyOccupiedTowerException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
@@ -351,6 +354,14 @@ public class MatchController implements Runnable {
         //once positioned the towerSlot give to the player an effectSurplus
         if(action.getActionTarget() == BoardSectorType.TerritoryTower) {
 
+            //control if the player has another family member in the tower
+            if(this.match.getBoard().getTerritoryTowerPlayers().contains(player))
+                throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
+
+            //if the tower is already occupied tha player have to pay 3 coins
+            if(this.match.getBoard().getTerritoryTowerPlayers().size()>0){
+                player.subtractCoins(3);}
+
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
 
@@ -370,6 +381,14 @@ public class MatchController implements Runnable {
         //if boardSectorType is BuildingTower we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
         if(action.getActionTarget() == BoardSectorType.BuildingTower) {
+
+            //control if the player has another family member in the tower
+            if(this.match.getBoard().getBuildingTowerPlayers().contains(player))
+                throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
+
+            //if the tower is already occupied tha player have to pay 3 coins
+            if(this.match.getBoard().getBuildingTowerPlayers().size()>0)
+                player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
@@ -391,6 +410,14 @@ public class MatchController implements Runnable {
         //once positioned the towerSlot give to the player an effectSurplus
         if(action.getActionTarget() == BoardSectorType.CharacterTower) {
 
+            //control if the player has another family member in the tower
+            if(this.match.getBoard().getCharacterTowerPlayers().contains(player))
+                throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
+
+            //if the tower is already occupied tha player have to pay 3 coins
+            if(this.match.getBoard().getCharacterTowerPlayers().size()>0)
+                player.subtractCoins(3);
+
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
 
@@ -410,6 +437,14 @@ public class MatchController implements Runnable {
         //if boardSectorType is VentureTower we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
         if(action.getActionTarget() == BoardSectorType.VentureTower) {
+
+            //control if the player has another family member in the tower
+            if(this.match.getBoard().getVentureTowerPlayers().contains(player))
+                throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
+
+            //if the tower is already occupied tha player have to pay 3 coins
+            if(this.match.getBoard().getVentureTowerPlayers().size()>0)
+                player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
@@ -578,6 +613,36 @@ public class MatchController implements Runnable {
 
         }
 
+    }
+
+    /**
+     * this method calculate the final score of the players
+     */
+    public void calculatesFinalScore(){
+
+        for (Map.Entry<ClientHandler, Player> entry : this.playerHandlerMap.entrySet()) {
+
+            Player player = entry.getValue();
+
+            Integer totalScore = 0;
+
+            totalScore += player.getVictoryPoints();
+
+            //each venture card give a victory bonus
+            for (VentureDvptCard card: player.getPersonalBoard().getVentureCards()) {
+                    totalScore += card.getPermanentEffect().getvPoints();
+            }
+
+            //one victory point from every 5 resources of all type
+            totalScore += (player.getCoins() + player.getStones() + player.getWood() + player.getServants()) / 5;
+
+            //victory points that depends on building card on the player personal board
+            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.building,player.getPersonalBoard().getBuildingCards().size());
+
+            //victory points that depends on character card on the player personal board
+            totalScore+= BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());
+
+        }
     }
 
 }

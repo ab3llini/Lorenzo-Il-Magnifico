@@ -49,7 +49,6 @@ public class Board {
         return territoryTower;
     }
 
-
     public ArrayList<TowerSlot> getBuildingTower() {
         return buildingTower;
     }
@@ -201,6 +200,84 @@ public class Board {
         return 0;
     }
 
+    /**
+     * this method receive a towerType color and return an arrayList of all the players that have a family member in this tower
+     * @param towerType
+     * @return
+     */
+    public ArrayList<Player> getPlayersInTower(DvptCardType towerType){
+
+        ArrayList<Player> players = new ArrayList<Player>();
+
+        if(towerType == DvptCardType.character){
+            players = getCharacterTowerPlayers();
+        }
+
+        if(towerType == DvptCardType.venture){
+            players = getVentureTowerPlayers();
+        }
+
+        if(towerType == DvptCardType.building){
+            players = getBuildingTowerPlayers();
+        }
+
+        if(towerType == DvptCardType.territory)
+            players = getTerritoryTowerPlayers();
+
+        return players;
+    }
+
+    public ArrayList<Player> getCharacterTowerPlayers(){
+
+        ArrayList<Player> players = new ArrayList<Player>();
+
+        for (TowerSlot towerSlot : this.characterTower) {
+            if (towerSlot.isOccupied()) {
+                players.add(towerSlot.getFamilyMember().getPlayer());
+            }
+        }
+
+        return players;
+    }
+
+    public ArrayList<Player> getVentureTowerPlayers(){
+
+        ArrayList<Player> players = new ArrayList<Player>();
+
+        for (TowerSlot towerSlot : this.ventureTower) {
+
+            if (towerSlot.isOccupied()) {
+                players.add(towerSlot.getFamilyMember().getPlayer());
+            }
+        }
+        return players;
+    }
+
+    public ArrayList<Player> getTerritoryTowerPlayers(){
+
+        ArrayList<Player> players = new ArrayList<Player>();
+
+        for (TowerSlot towerSlot : this.territoryTower) {
+
+            if (towerSlot.isOccupied()) {
+                players.add(towerSlot.getFamilyMember().getPlayer());
+            }
+        }
+        return players;
+    }
+
+    public ArrayList<Player> getBuildingTowerPlayers(){
+
+        ArrayList<Player> players = new ArrayList<Player>();
+
+        for (TowerSlot towerSlot : this.buildingTower) {
+
+            if (towerSlot.isOccupied()) {
+                players.add(towerSlot.getFamilyMember().getPlayer());
+            }
+        }
+        return players;
+    }
 
     /** This method prints the entire board in all its component in that moment**/
 

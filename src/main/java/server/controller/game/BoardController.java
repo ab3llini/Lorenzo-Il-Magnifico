@@ -456,6 +456,9 @@ public class BoardController {
             //set the family member on the tower slot
             this.board.getTower(towerType).get(index).setFamilyMember(familyMember);
 
+            //set the towerSlot occupied
+            this.board.getTower(towerType).get(index).setOccupied(true);
+
             return this.board.getTower(towerType).get(index).getEffectSurplus();
         }
         else

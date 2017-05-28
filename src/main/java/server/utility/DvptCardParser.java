@@ -40,7 +40,8 @@ public class DvptCardParser {
         //extract one by one all the card from cardsSet and create a Card object from every single card in json file
         for (String cardId : Json.getObjectKeys(cardsSet)) {
 
-            ImmediateEffect immediateEffect = new ImmediateEffect(new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0),null);
+            //initialize immediateEffect to default value in order to avoid null pointers
+            ImmediateEffect immediateEffect = new ImmediateEffect(new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0),new EffectAction(ActionType.unknown,null,0,new ArrayList<Resource>()));
             PermanentEffect permanentEffect = null;
 
             //extract one single card
@@ -150,8 +151,10 @@ public class DvptCardParser {
     }
 
     private static ImmediateEffect getImmediateEffect(JsonObject effect) {
+
+        //initialize effect surplus and effect action in order to avoid null pointers
         EffectSurplus effectSurplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(), 0);
-        EffectAction effectAction = null;
+        EffectAction effectAction = new EffectAction(ActionType.unknown,null,0,new ArrayList<Resource>());
 
         //extract immediate from JsonObject
         JsonObject immediate = effect.getAsJsonObject("immediate");
@@ -302,7 +305,7 @@ public class DvptCardParser {
 
     private static EffectAction getEffectAction (JsonObject immediate){
 
-        ActionType target=null;
+        ActionType target= ActionType.unknown;
         DvptCardType type=null;
         Integer force=0;
         ArrayList<Resource> discount = new ArrayList<Resource>();

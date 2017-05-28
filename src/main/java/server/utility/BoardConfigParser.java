@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import logger.Level;
 import logger.Logger;
 import server.model.board.*;
+import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.effect.EffectSurplus;
 import server.model.valuable.Point;
@@ -232,5 +233,25 @@ public class BoardConfigParser {
         }
 
         return councilPrivilegeOptions;
+    }
+
+    public static Integer getVictoryBonus(DvptCardType dvptCardType, Integer numberOfCards){
+
+        Integer victoryBonus= 0;
+
+        //get JsonObject productionArea from boardConfig
+        JsonObject cardsBonusObject = BoardConfigParser.getBoardConfig().getAsJsonObject("cardsToVictoryPoints");
+
+        if(dvptCardType == DvptCardType.territory){
+            JsonObject territoryBonusObject = cardsBonusObject.getAsJsonObject("territoryCardToVictory");
+            victoryBonus = territoryBonusObject.get(""+numberOfCards).getAsInt();
+        }
+
+        if(dvptCardType == DvptCardType.character){
+            JsonObject characterBonusObject = cardsBonusObject.getAsJsonObject("characterCardToVictory");
+            victoryBonus = characterBonusObject.get(""+numberOfCards).getAsInt();
+        }
+
+        return  victoryBonus;
     }
 }

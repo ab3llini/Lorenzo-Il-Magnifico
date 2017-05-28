@@ -1,5 +1,6 @@
 package server.model.board;
 
+import exception.SixCardsLimitReachedException;
 import server.model.card.developement.*;
 
 import java.util.ArrayList;
@@ -56,23 +57,46 @@ public class PersonalBoard {
         this.ventureCards = ventureCards;
     }
 
-    public void addVentureCard(VentureDvptCard card){
-        ventureCards.add(card);
+    public void addVentureCard(VentureDvptCard card) throws SixCardsLimitReachedException {
+
+        if(ventureCards.size()< 6){
+            ventureCards.add(card);}
+
+        else
+            throw new SixCardsLimitReachedException("The player has already reached the maximum limit of six cards");
     }
 
-    public void addBuildingCard(BuildingDvptCard card){
-        buildingCards.add(card);
+    public void addBuildingCard(BuildingDvptCard card) throws SixCardsLimitReachedException {
+
+        if(buildingCards.size()< 6){
+            buildingCards.add(card);}
+
+        else
+            throw new SixCardsLimitReachedException("The player has already reached the maximum limit of six cards");
+
     }
 
-    public void addCharacterCard(CharacterDvptCard card){
-        characterCards.add(card);
+    public void addCharacterCard(CharacterDvptCard card) throws SixCardsLimitReachedException {
+
+        if(characterCards.size()< 6){
+            characterCards.add(card);}
+
+        else
+            throw new SixCardsLimitReachedException("The player has already reached the maximum limit of six cards");
+
+
     }
 
-    public void addTerritoryCard(TerritoryDvptCard card){
-        territoryCards.add(card);
+    public void addTerritoryCard(TerritoryDvptCard card) throws SixCardsLimitReachedException {
+
+        if(territoryCards.size()< 6){
+            territoryCards.add(card);}
+
+        else
+            throw new SixCardsLimitReachedException("The player has already reached the maximum limit of six cards");
     }
 
-    public void addCard(DvptCard card){
+    public void addCard(DvptCard card) throws SixCardsLimitReachedException {
 
         if(card.getType() == DvptCardType.territory)
             addTerritoryCard((TerritoryDvptCard) card);

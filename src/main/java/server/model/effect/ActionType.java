@@ -6,6 +6,7 @@ package server.model.effect;
 public enum ActionType {
     harvest,
     production,
-    card
+    card,
+    unknown;
 }
 
