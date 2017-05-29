@@ -1,6 +1,7 @@
 package server.model.board;
 
 import exception.FamilyMemberAlreadyInUseException;
+import logger.AnsiColors;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.*;
 import server.utility.BoardConfigParser;
@@ -282,60 +283,145 @@ public class Board {
     /** This method prints the entire board in all its component in that moment**/
 
     public void printBoard() {
+
         System.out.println("__________________________________________________________________________________________");
+
         System.out.println("|                                                                                        |");
-        System.out.println("| TERRITORY              BUILDING            CHARACTER               VENTURE             |");
-        System.out.println("|   TOWER                  TOWER               TOWER                  TOWER              |");
+
+        System.out.print("| ");
+        System.out.print(AnsiColors.ANSI_GREEN + "  TERRITORY            ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_YELLOW + " BUILDING           ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_BLUE + "   CHARACTER            ");
+
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_PURPLE + " VENTURE            |\n");
+
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print("| ");
+        System.out.print(AnsiColors.ANSI_GREEN + "  TOWER               ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_YELLOW + "  TOWER              ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_BLUE + "   TOWER                ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_PURPLE + " TOWER              |\n");
+
+        System.out.print(AnsiColors.ANSI_RESET);
+
         System.out.println("|   ______                ______                ______                ______             |");
+
         System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+
         System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+
         printTowerLine(0);
+
         System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+
         System.out.println("|   |____|                |____|                |____|                |____|             |");
+
         System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+
         System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+
         printTowerLine(1);
+
         System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+
         System.out.println("|   |____|                |____|                |____|                |____|             |");
+
         System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+
         System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+
         printTowerLine(2);
+
         System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+
         System.out.println("|   |____|                |____|                |____|                |____|             |");
+
         System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+
         System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+
         printTowerLine(3);
+
         System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+
         System.out.println("|   |____|                |____|                |____|                |____|             |");
+
         System.out.println("|                                                                                        |");
+
         System.out.println("|                                                                                        |");
+
         System.out.println("|        CATHEDRAL                                            COUNCIL PALACE             |");
+
         System.out.println("|     ________________                                       _______________________     |");
+
         printCouncilPalace();
+
         printCathedralLine();
+
         System.out.println("|     |____|____|____|                                                                   |");
+
         System.out.println("|                                                                                        |");
+
         System.out.println("|                                                                                        |");
+
         System.out.println("|                                                                 MARKET                 |");
+
         System.out.println("|                                   5 COINS       5 SERVANTS   3 MILITARY   2 DIFF       |");
+
         System.out.println("|                                                             + 2 COINS      COUNCILS    |");
+
         System.out.println("|                                    _______      _______      _______      _______      |");
+
         printMarketLine();
+
         System.out.println("|                                    |_____|      |_____|      |_____|      |_____|      |");
+
         System.out.println("|      SINGLE  PLACES                                                                    |");
+
         System.out.println("|    PRODUCTION HARVEST                                                                  |");
+
         System.out.println("|    _______     _______                                             DICES               |");
+
         printMainPHPlacesLine();
-        System.out.println("|    |_____|     |_____|                                 BLACK       WHITE       ORANGE  |");
-        System.out.println("|                                                       _______    _______    _______    |");
-        printDicesLine();
-        System.out.println("|                                                       |_____|    |_____|    |_____|    |");
-        System.out.println("|     MULTIPLE  PLACES                                                                   |");
-        System.out.println("|    PRODUCTION HARVEST                                                                  |");
-        System.out.println("|    _______     _______                                                                 |");
-        printMultiplePHPlacesLine();
+
         System.out.println("|    |_____|     |_____|                                                                 |");
+
+        System.out.print("|                                                  ");
+        System.out.print(AnsiColors.ANSI_BLACK);
+        System.out.print("     BLACK  ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_WHITE);
+        System.out.print("    WHITE  ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print(AnsiColors.ANSI_RED);
+        System.out.print("    ORANGE   ");
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print("  |\n");
+
+        System.out.println("|                                                       _______    _______    _______    |");
+
+        printDicesLine();
+
+        System.out.println("|                                                       |_____|    |_____|    |_____|    |");
+
+        System.out.println("|     MULTIPLE  PLACES                                                                   |");
+
+        System.out.println("|    PRODUCTION HARVEST                                                                  |");
+
+        System.out.println("|    _______     _______                                                                 |");
+
+        printMultiplePHPlacesLine();
+
+        System.out.println("|    |_____|     |_____|                                                                 |");
+
         System.out.println("|________________________________________________________________________________________|");
+
     }
 
     /** This method prints a line on the towers according to the different floor of them **/
@@ -378,9 +464,12 @@ public class Board {
             System.out.print("|    |   |            ");
 
         else {
+
             if (this.getBuildingTower().get(line).getFamilyMember() == null) {
                 System.out.print("| " + this.getBuildingTower().get(line).getDvptCard().getId() + " |   |            ");
-            } else {
+            }
+
+            else {
                 System.out.print("|    | ");
                 printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
                 System.out.print("|            ");
@@ -404,9 +493,12 @@ public class Board {
         if (this.getVentureTower().get(line).getDvptCard() == null && this.getVentureTower().get(line).getFamilyMember() == null)
             System.out.print("|   |     |   |         |");
         else {
+
             if (this.getVentureTower().get(line).getFamilyMember() == null) {
                 System.out.print("| " + this.getVentureTower().get(line).getDvptCard().getId() + " |   |         |" + "\n");
-            } else {
+            }
+
+            else {
                 System.out.print("|    | ");
                 printFamilyMember(this.getVentureTower().get(line).getFamilyMember());
                 System.out.print("|         |" + "\n");
@@ -426,15 +518,18 @@ public class Board {
         else {
 
             if (familyMember.getColor() == ColorType.Orange) {
-                System.out.print("OF");
+                System.out.print(AnsiColors.ANSI_RED + "OF");
+                System.out.print(AnsiColors.ANSI_RESET);
             }
 
             if (familyMember.getColor() == ColorType.Black) {
-                System.out.print("BF");
+                System.out.print(AnsiColors.ANSI_BLACK + "BF");
+                System.out.print(AnsiColors.ANSI_RESET);
             }
 
             if (familyMember.getColor() == ColorType.White) {
-                System.out.print("WF");
+                System.out.print(AnsiColors.ANSI_WHITE + "WF");
+                System.out.print(AnsiColors.ANSI_RESET);
             }
 
             if (familyMember.getColor() == ColorType.Uncoloured) {
@@ -513,7 +608,7 @@ public class Board {
 
         printFamilyMember(harvestArea.getMainPlace().getFamilyMember());
 
-        System.out.print("  |                                                                |");
+        System.out.print("  |                                                                 |");
         System.out.print("\n");
 
     }
@@ -522,6 +617,7 @@ public class Board {
     /** This method prints some lines that contain the Family Members occupying the multiple places of Production and Harvest Area **/
 
     public void printMultiplePHPlacesLine() {
+
         Integer max;
 
         if(productionArea.getSecondaryPlace().getPlaces().size() > harvestArea.getSecondaryPlace().getPlaces().size())
@@ -552,13 +648,20 @@ public class Board {
     /** This method prints a line with the value of dices on board **/
 
     public void printDicesLine(){
+
         System.out.print("|                                                       | ");
-
-        for(Dice dice : dices) {
-            System.out.print(dice.getValue());
-            System.out.print("   |    | ");
-        }
-
+        System.out.print(AnsiColors.ANSI_BLACK);
+        System.out.print(dices.get(0).getValue());
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print("   |    | ");
+        System.out.print(AnsiColors.ANSI_WHITE);
+        System.out.print(dices.get(1).getValue());
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print("   |    | ");
+        System.out.print(AnsiColors.ANSI_RED);
+        System.out.print(dices.get(2).getValue());
+        System.out.print(AnsiColors.ANSI_RESET);
+        System.out.print("   |    | ");
         System.out.print("\n");
 
     }
