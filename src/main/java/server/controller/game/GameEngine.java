@@ -128,6 +128,7 @@ public class GameEngine implements ServerObserver {
             if (lobby.leave(handler) == 0) {
 
                 //If after the leaving there are no more players in the lobby, it gets destroyed.
+                lobby.destroy();
                 this.lobbies.remove(lobby);
 
                 Logger.log(Level.FINEST, "GameEngine", lobby.toString() + " closed");

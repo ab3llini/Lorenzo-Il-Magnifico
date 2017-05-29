@@ -8,6 +8,8 @@ public enum ActionType {
 
     FamilyMemberPlacement,
     LeaderCardActivation,
-    RollDice
+    RollDice,
+    ExpiredAction,
+    RoundFinished
 
 }

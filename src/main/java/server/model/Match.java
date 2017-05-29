@@ -6,23 +6,26 @@ import server.model.board.Player;
 import server.model.board.TowerSlot;
 import server.model.card.developement.DvptCard;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+
 import static java.util.Collections.shuffle;
 
 
 /**
  * Created by Federico on 15/05/2017.
+ * Additions made by ab3llini
  */
 
 public class Match {
 
     private Board board;
     private ArrayList<Player> players;
-    private ArrayList<Player> playersOrder;
-    private Integer period;
-    private Integer round;
-    private MatchSettings matchSettings;
+    private ArrayList<Player> roundOrder;
+
+    private int currentPeriod;
+    private int currentTurn;
+    private int currentRound;
+
 
     /**
      * Constructor: the match object get initialized with an array of players.
@@ -32,7 +35,16 @@ public class Match {
 
         //Assign the players to the model reference
         this.players = players;
+
+        //Assume the beginning order is the same as when the players joined the lobby
+        this.roundOrder = players;
+
+        //Initialize the board
         this.board = new Board();
+
+        this.currentPeriod = 1;
+        this.currentTurn = 1;
+        this.currentRound = 1;
 
     }
 
@@ -46,6 +58,10 @@ public class Match {
 
     public ArrayList<Player> getPlayers() {
         return players;
+    }
+
+    public ArrayList<Player> getRoundOrder() {
+        return roundOrder;
     }
 
     public Player getPlayerFromUsername(String username) throws NoSuchPlayerException {
@@ -64,4 +80,32 @@ public class Match {
 
     }
 
+
+    public int getCurrentPeriod() {
+        return currentPeriod;
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public void setCurrentPeriod(int currentPeriod) {
+        this.currentPeriod = currentPeriod;
+    }
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
+    }
+
+    public void setRoundOrder(ArrayList<Player> roundOrder) {
+        this.roundOrder = roundOrder;
+    }
 }

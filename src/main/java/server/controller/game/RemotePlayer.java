@@ -1,5 +1,6 @@
 package server.controller.game;
 
+import exception.ActionException;
 import server.model.Match;
 
 /*
@@ -15,5 +16,12 @@ public interface RemotePlayer {
 
     void updateModel(Match model);
 
+    void notifyMoveEnabled();
+
+    void notifyMoveDisabled();
+
+    void notifyMoveTimeoutExpired();
+
+    void notifyActionRefused(ActionException exception);
 
 }

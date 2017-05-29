@@ -5,6 +5,7 @@ package server.controller.network.RMI;
  */
 
 import client.controller.network.RMI.RMIClientInterface;
+import exception.ActionException;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
@@ -165,6 +166,22 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
     }
 
     public void updateModel(Match model) {
+
+    }
+
+    public void notifyMoveEnabled() {
+
+    }
+
+    public void notifyMoveDisabled() {
+
+    }
+
+    public void notifyMoveTimeoutExpired() {
+
+    }
+
+    public void notifyActionRefused(ActionException exception) {
 
     }
 }

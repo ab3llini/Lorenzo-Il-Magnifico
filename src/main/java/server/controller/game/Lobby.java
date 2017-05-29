@@ -30,6 +30,9 @@ public class Lobby {
     //Match controller
     private MatchController matchController;
 
+    //Match controller runner thread
+    private Thread matchControllerRunner;
+
     //Timer to start the match
     private Timer timeout;
 
@@ -45,6 +48,7 @@ public class Lobby {
     //Constants
     private static final int MAXIMUM_PLAYERS = 4;
     private static final int MINIMUM_PLAYERS = 2;
+    private static final int START_DELAY = GameConfig.getInstance().getMatchTimeout() * 1000;
 
     /**
      * Creates a new Lobby.
@@ -167,7 +171,7 @@ public class Lobby {
 
                 }
 
-            }, GameConfig.getInstance().getMatchTimeout() * 1000);
+            }, START_DELAY);
 
             Logger.log(Level.FINEST, this.toString(), "Timeout started: " + GameConfig.getInstance().getMatchTimeout() + "s");
 
@@ -204,8 +208,13 @@ public class Lobby {
 
         try {
 
-            //Add again the reference entry into the match controller and re enable the player
-            this.matchController.disablePlayerRelativeTo(handler, false);
+            Player target = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
+
+            //Disable the player
+            target.setDisabled(false);
+
+            //Re add the client to the map in the match controller
+            this.matchController.getRemotePlayerMap().put(target, handler);
 
             //Re add the client to the handlers list
             this.handlers.add(handler);
@@ -252,9 +261,13 @@ public class Lobby {
 
             try {
 
+                Player target = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
+
                 //Permanently disable the player
+                target.setDisabled(false);
+
                 //Remove the reference even into the match controller
-                this.matchController.disablePlayerRelativeTo(handler, true);
+                this.matchController.getRemotePlayerMap().remove(target);
 
             } catch (NoSuchPlayerException e) {
 
@@ -331,6 +344,24 @@ public class Lobby {
         this.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match has started"));
 
         this.matchController = new MatchController(this.handlers);
+
+        this.matchControllerRunner = new Thread(matchController);
+
+        this.matchControllerRunner.start();
+
+    }
+
+    /**
+     * Stops the match controller thread if need to
+     */
+    public void destroy() {
+
+        if (this.matchControllerRunner != null && this.matchControllerRunner.isAlive()) {
+
+            this.matchControllerRunner.interrupt();
+
+
+        }
 
     }
 

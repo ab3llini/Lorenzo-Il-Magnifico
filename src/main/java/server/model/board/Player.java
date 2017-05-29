@@ -2,9 +2,11 @@ package server.model.board;
 
 import exception.*;
 import server.model.GameSingleton;
+import server.model.card.ban.BanCard;
 import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
+import server.model.card.leader.LeaderCard;
 import server.model.valuable.Point;
 import server.model.valuable.PointType;
 import server.model.valuable.Resource;
@@ -25,6 +27,8 @@ public class Player {
     private HashMap<ResourceType, Integer> resources;
     private HashMap<PointType, Integer> points;
     private ArrayList<FamilyMember> familyMembers;
+    private ArrayList<BanCard> banCards;
+    private ArrayList<LeaderCard> leaderCards;
 
     //Very important attribute both for match controller & lobby, do not edit unless 100% certain of what you are doing.
     private boolean disabled = false;
@@ -65,6 +69,10 @@ public class Player {
 
         //initialize player's board
         this.personalBoard = new PersonalBoard();
+
+        this.banCards = new ArrayList<BanCard>();
+
+        this.leaderCards = new ArrayList<LeaderCard>();
     }
 
     public void setPersonalBoard(PersonalBoard personalBoard) {
@@ -157,6 +165,22 @@ public class Player {
 
     public ArrayList<FamilyMember> getFamilyMembers() {
         return familyMembers;
+    }
+
+    public ArrayList<BanCard> getBanCards() {
+        return banCards;
+    }
+
+    public ArrayList<LeaderCard> getLeaderCards() {
+        return leaderCards;
+    }
+
+    public boolean addBanCard(BanCard card) {
+        return this.banCards.add(card);
+    }
+
+    public boolean addLeaderCard(LeaderCard card) {
+        return this.leaderCards.add(card);
     }
 
     public void setFamilyMembers(ArrayList<FamilyMember> familyMembers) {

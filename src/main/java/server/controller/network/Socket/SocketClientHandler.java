@@ -5,6 +5,7 @@ package server.controller.network.Socket;
  */
 
 
+import exception.ActionException;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
@@ -194,6 +195,22 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
     }
 
     public void updateModel(Match model) {
+
+    }
+
+    public void notifyMoveEnabled() {
+
+    }
+
+    public void notifyMoveDisabled() {
+
+    }
+
+    public void notifyMoveTimeoutExpired() {
+
+    }
+
+    public void notifyActionRefused(ActionException exception) {
 
     }
 }
