@@ -45,7 +45,7 @@ public class BanCardParser {
             DvptCardType cardType = null;
             ArrayList<Resource> resources = new ArrayList<Resource>();
             ArrayList<Point> points = new ArrayList<Point>();
-            String specialEffect = "";
+            SpecialEffectType specialEffect = null;
             EffectVictoryMalus effectVictoryMalus = null;
             EffectDiceMalus effectDiceMalus = null;
 
@@ -89,7 +89,7 @@ public class BanCardParser {
 
                         //special effect are very particular and characterized, so it is much better to develop them in the code
                         if(effectKey.equals("specialEffect"))
-                            specialEffect = effect.get("specialEffect").getAsString();
+                            specialEffect = SpecialEffectType.valueOf(effect.get("specialEffect").getAsString());
 
                         //noVictoryPointsMalus consist in a failure to assign vicotry points for a particular authenticationType of card at the end of the game
                         if(effectKey.equals("noVictoryPointsMalus")){

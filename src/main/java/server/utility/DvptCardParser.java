@@ -42,7 +42,7 @@ public class DvptCardParser {
 
             //initialize immediateEffect to default value in order to avoid null pointers
             ImmediateEffect immediateEffect = new ImmediateEffect(new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0),new EffectAction(ActionType.unknown,null,0,new ArrayList<Resource>()));
-            PermanentEffect permanentEffect = null;
+            PermanentEffect permanentEffect = new PermanentEffect(0,0,new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0),null,null,new EffectPermanentAction(ActionType.unknown,null,0,null),false);
 
             //extract one single card
             JsonObject card = cardsSet.getAsJsonObject(cardId);
@@ -178,12 +178,13 @@ public class DvptCardParser {
     }
 
     private static PermanentEffect getPermanentEffect(JsonObject effect){
-        Integer minForce=null;
-        Integer vpoints=null;
-        EffectSurplus surplus=null;
+
+        Integer minForce=0;
+        Integer vpoints= 0;
+        EffectSurplus surplus=new EffectSurplus(new ArrayList<Resource>(), new ArrayList<Point>(), 0 );
         Multiplier multiplier=null;
         ArrayList<EffectConversion> conversion=null;
-        EffectPermanentAction action=null;
+        EffectPermanentAction action=new EffectPermanentAction(ActionType.unknown,null,0,null);
         Boolean penality=false;
 
         //extract permanent from JsonObject effect

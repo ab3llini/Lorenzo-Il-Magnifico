@@ -16,9 +16,11 @@ public class FamilyMemberPlacementActionRequest extends ActionRequest {
 
     private final ColorType colorType;
 
-    private final int additionalServants;
+    private  int additionalServants;
 
     private final CostOptionType costOptionType;
+
+    private int characterBonus;
 
     public FamilyMemberPlacementActionRequest(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, CostOptionType costOptionType) {
 
@@ -29,7 +31,7 @@ public class FamilyMemberPlacementActionRequest extends ActionRequest {
         this.colorType = colorType;
         this.additionalServants = additionalServants;
         this.costOptionType = costOptionType;
-
+        this.characterBonus = 0;
     }
 
     public BoardSectorType getActionTarget() {
@@ -51,4 +53,9 @@ public class FamilyMemberPlacementActionRequest extends ActionRequest {
     public int getAdditionalServants() {
             return additionalServants;
     }
+
+    public void increaseBonus(int bonus ) {
+        this.additionalServants += bonus;
+    }
+
 }

@@ -5,14 +5,14 @@ package server.model.card.ban;
  */
 public class SpecialBanCard extends BanCard {
 
-    String specialEffect;
+    SpecialEffectType specialEffect;
 
-    public SpecialBanCard(Integer id, Integer period, String specialEffect) {
+    public SpecialBanCard(Integer id, Integer period, SpecialEffectType specialEffect) {
         super(id, period, BanType.special);
         this.specialEffect = specialEffect;
     }
 
-    public String getSpecialEffect() {
+    public SpecialEffectType getSpecialEffect() {
         return specialEffect;
     }
 }

@@ -7,10 +7,8 @@ import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
 import server.model.card.developement.*;
+import server.model.effect.*;
 import server.model.effect.ActionType;
-import server.model.effect.EffectConversion;
-import server.model.effect.EffectSurplus;
-import server.model.effect.ImmediateEffect;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
 import server.utility.BoardConfigParser;
@@ -295,7 +293,6 @@ public class MatchController implements Runnable {
                 ;}
 
                 //TODO multiplier
-        return;
     }
 
     /**
@@ -307,6 +304,9 @@ public class MatchController implements Runnable {
     public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException, NotEnoughResourcesException, NotEnoughPointsException, SixCardsLimitReachedException, PlayerAlreadyOccupiedTowerException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
+
+        //apply character cards permanent effect
+        action = actionCharacterFilter(action,player);
 
         //if boardSectorType is CouncilPalace we place the family member in the council palace
         //once positioned the council palace give to the player an effectSurplus
@@ -688,6 +688,54 @@ public class MatchController implements Runnable {
         }
 
         return getVictoryBonusFromRanking(position);
+    }
+
+    /**
+     * this method apply permanent effect of character cards when a player try to place his family member
+     * @param action
+     * @param player
+     * @return
+     */
+    public FamilyMemberPlacementActionRequest actionCharacterFilter(FamilyMemberPlacementActionRequest action, Player player){
+
+        for (CharacterDvptCard card: player.getPersonalBoard().getCharacterCards()) {
+
+            EffectPermanentAction permanentEffectAction = card.getPermanentEffect().getAction();
+
+            if(permanentEffectAction.getTarget() == ActionType.harvest) {
+
+                if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace || action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
+                    action.increaseBonus(permanentEffectAction.getForceBonus());
+                }
+            }
+
+            if(permanentEffectAction.getTarget() == ActionType.production) {
+
+                if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace || action.getActionTarget() == BoardSectorType.SingleProductionPlace) {
+                    action.increaseBonus(permanentEffectAction.getForceBonus());
+                }
+            }
+
+            if(permanentEffectAction.getTarget() == ActionType.card){
+                System.out.println(permanentEffectAction.getType());
+                if(permanentEffectAction.getType() == DvptCardType.territory)
+                    action.increaseBonus(permanentEffectAction.getForceBonus());
+
+                if(permanentEffectAction.getType() == DvptCardType.building)
+                    action.increaseBonus(permanentEffectAction.getForceBonus());
+
+                if(permanentEffectAction.getType() == DvptCardType.character)
+                    action.increaseBonus(permanentEffectAction.getForceBonus());
+
+                if(permanentEffectAction.getType() == DvptCardType.venture)
+                    action.increaseBonus(permanentEffectAction.getForceBonus());
+
+            }
+            //TODO effect discount
+        }
+
+        return  action;
+
     }
 
 }

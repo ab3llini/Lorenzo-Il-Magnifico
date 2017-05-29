@@ -2,7 +2,7 @@
   "1": {
     "type": "territory",
     "period": 1,
-    "name": "Avamposto Commerciale",
+    "name": "Commercial Hub",
     "effects": {
       "permanent": {
         "minForce": 1,
@@ -14,10 +14,11 @@
       }
     }
   },
+
   "2": {
     "type": "territory",
     "period": 1,
-    "name": "Bosco",
+    "name": "Woods",
     "effects": {
       "immediate": {
         "surplus": {
@@ -36,10 +37,11 @@
       }
     }
   },
+
   "3": {
     "type": "territory",
     "period": 1,
-    "name": "Borgo",
+    "name": "Village",
     "effects": {
       "permanent": {
         "minForce": 3,
@@ -52,10 +54,11 @@
       }
     }
   },
+
   "4": {
     "type": "territory",
     "period": 1,
-    "name": "Cava di Ghiaia",
+    "name": "Gravel Pit",
     "effects": {
       "immediate": {
         "surplus": {
@@ -74,10 +77,11 @@
       }
     }
   },
+
   "5": {
     "type": "territory",
     "period": 1,
-    "name": "Foresta",
+    "name": "Forest",
     "effects": {
       "immediate": {
         "surplus": {
@@ -96,10 +100,11 @@
       }
     }
   },
+
   "6": {
     "type": "territory",
     "period": 1,
-    "name": "Monastero",
+    "name": "Monastery",
     "effects": {
       "immediate": {
         "surplus": {
@@ -124,10 +129,11 @@
       }
     }
   },
+
   "7": {
     "type": "territory",
     "period": 1,
-    "name": "Rocca",
+    "name": "Citadel",
     "effects": {
       "permanent": {
         "minForce": 5,
@@ -142,10 +148,11 @@
       }
     }
   },
+
   "8": {
     "type": "territory",
     "period": 1,
-    "name": "Città",
+    "name": "City",
     "effects": {
       "immediate": {
         "surplus": {
@@ -162,10 +169,11 @@
       }
     }
   },
+
   "9" : {
     "type" : "territory",
     "period":2,
-    "name" : "Miniera d'Oro",
+    "name" : "Gold Mine",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -184,10 +192,11 @@
       }
     }
   },
+
   "10" : {
     "type" : "territory",
     "period":2,
-    "name" : "Villaggio Montano",
+    "name" : "Mountain Town",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -209,10 +218,11 @@
       }
     }
   },
+
   "11" : {
     "type" : "territory",
     "period":2,
-    "name" : "Villaggio Minerario",
+    "name" : "Mining Town",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -233,10 +243,11 @@
       }
     }
   },
+
   "12" : {
     "type" : "territory",
     "period":2,
-    "name" : "Cava di Pietra",
+    "name" : "Rock Pit",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -255,10 +266,11 @@
       }
     }
   },
+
   "13" : {
     "type" : "territory",
     "period":2,
-    "name" : "Possedimento",
+    "name" : "Estate",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -279,10 +291,11 @@
       }
     }
   },
+
   "14" : {
     "type" : "territory",
     "period":2,
-    "name" : "Eremo",
+    "name" : "Hermitage",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -301,10 +314,11 @@
       }
     }
   },
+
   "15" : {
     "type" : "territory",
     "period":2,
-    "name" : "Maniero",
+    "name" : "Manor House",
     "effects" : {
       "permanent" : {
         "minForce" : 5,
@@ -319,10 +333,11 @@
       }
     }
   },
+
   "16" : {
     "type" : "territory",
     "period":2,
-    "name" : "Ducato",
+    "name" : "Dukedom",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -343,10 +358,11 @@
       }
     }
   },
+
   "17" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Città Mercantile",
+    "name" : "Trading Town",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -370,7 +386,7 @@
   "18" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Tenuta",
+    "name" : "Farm",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -399,7 +415,7 @@
   "19" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Colonia",
+    "name" : "Colony",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -425,7 +441,7 @@
   "20" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Cava di Marmo",
+    "name" : "Marble Pit",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -451,7 +467,7 @@
   "21" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Provincia",
+    "name" : "Province",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -478,7 +494,7 @@
   "22" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Santurario",
+    "name" : "Sanctuary",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -504,7 +520,7 @@
   "23" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Castello",
+    "name" : "Castle",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -533,7 +549,7 @@
   "24" : {
     "type" : "territory",
     "period": 3,
-    "name" : "Città Fortificata",
+    "name" : "Fortified Town",
     "effects" : {
       "immediate" : {
         "surplus" : {
@@ -558,10 +574,11 @@
       }
     }
   },
+
   "25": {
     "type": "building",
     "period": 1,
-    "name": "Zecca",
+    "name": "Mint",
     "cost": [
       {
         "resources": {
@@ -589,10 +606,11 @@
       }
     }
   },
+
   "26": {
     "type": "building",
     "period": 1,
-    "name": "Esattoria",
+    "name": "Tax Office",
     "cost": [
       {
         "resources": {
@@ -620,10 +638,11 @@
       }
     }
   },
+
   "27": {
     "type": "building",
     "period": 1,
-    "name": "Arco di Trionfo",
+    "name": "Triumphal Arch",
     "cost": [
       {
         "resources": {
@@ -651,10 +670,11 @@
       }
     }
   },
+
   "28": {
     "type": "building",
     "period": 1,
-    "name": "Teatro",
+    "name": "Theater",
     "cost": [
       {
         "resources": {
@@ -682,10 +702,11 @@
       }
     }
   },
+
   "29": {
     "type": "building",
     "period": 1,
-    "name": "Falegnameria",
+    "name": "Carpenter's Shop",
     "cost": [
       {
         "resources": {
@@ -736,10 +757,11 @@
       }
     }
   },
+
   "30": {
     "type": "building",
     "period": 1,
-    "name": "Tagliapietre",
+    "name": "Stonemason's shop",
     "cost": [
       {
         "resources": {
@@ -790,10 +812,11 @@
       }
     }
   },
+
   "31": {
     "type": "building",
     "period": 1,
-    "name": "Cappella",
+    "name": "Chapel",
     "cost": [
       {
         "resources": {
@@ -830,10 +853,11 @@
       }
     }
   },
+
   "32": {
     "type": "building",
     "period": 1,
-    "name": "Residenza",
+    "name": "Residence",
     "cost": [
       {
         "resources": {
@@ -868,10 +892,11 @@
       }
     }
   },
+
   "33": {
     "type": "building",
     "period": 2,
-    "name": "Mercato",
+    "name": "Marketplace",
     "cost": [
       {
         "resources": {
@@ -910,10 +935,11 @@
       }
     }
   },
+
   "34": {
     "type": "building",
     "period": 2,
-    "name": "Tesoriera",
+    "name": "Treasury",
     "cost": [
       {
         "resources": {
@@ -963,10 +989,11 @@
       }
     }
   },
+
   "35": {
     "type": "building",
     "period": 2,
-    "name": "Gilda di Pittori",
+    "name": "Painter's Guild",
     "cost": [
       {
         "resources": {
@@ -1016,10 +1043,11 @@
       }
     }
   },
+
   "36": {
     "type": "building",
     "period": 2,
-    "name": "Gilda di Scultori",
+    "name": "Sculptor's Guild",
     "cost": [
       {
         "resources": {
@@ -1069,10 +1097,11 @@
       }
     }
   },
+
   "37": {
     "type": "building",
     "period": 2,
-    "name": "Gilda dei Costruttori",
+    "name": "Stonemason's Guild",
     "cost": [
       {
         "resources": {
@@ -1112,10 +1141,11 @@
       }
     }
   },
+
   "38": {
     "type": "building",
     "period": 2,
-    "name": "Battistero",
+    "name": "Baptistery",
     "cost": [
       {
         "resources": {
@@ -1156,10 +1186,11 @@
       }
     }
   },
+
   "39": {
     "type": "building",
     "period": 2,
-    "name": "Caserma",
+    "name": "Barracks",
     "cost": [
       {
         "resources": {
@@ -1197,10 +1228,11 @@
       }
     }
   },
+
   "40": {
     "type": "building",
     "period": 2,
-    "name": "Fortezza",
+    "name": "Stronghold",
     "cost": [
       {
         "resources": {
@@ -1228,12 +1260,12 @@
           }}
       }
     }
-  }
-,
+  },
+
   "41": {
     "type": "building",
     "period": 3,
-    "name": "Banca",
+    "name": "Bank",
     "cost": [
       {
         "resources": {
@@ -1262,10 +1294,11 @@
       }
     }
   },
+
   "42": {
     "type": "building",
     "period": 3,
-    "name": "Fiera",
+    "name": "Fair",
     "cost": [
       {
         "resources": {
@@ -1304,10 +1337,11 @@
       }
     }
   },
+
   "43": {
     "type": "building",
     "period": 3,
-    "name": "Giardino",
+    "name": "Garden",
     "cost": [
       {
         "resources": {
@@ -1336,10 +1370,11 @@
       }
     }
   },
+
   "44": {
     "type": "building",
     "period": 3,
-    "name": "Castelletto",
+    "name": "Fortress",
     "cost": [
       {
         "resources": {
@@ -1369,10 +1404,11 @@
       }
     }
   },
+
   "45": {
     "type": "building",
     "period": 3,
-    "name": "Palazzo",
+    "name": "Palace",
     "cost": [
       {
         "resources": {
@@ -1414,10 +1450,11 @@
       }
     }
   },
+
   "46": {
     "type": "building",
     "period": 3,
-    "name": "Basilica",
+    "name": "Church",
     "cost": [
       {
         "resources": {
@@ -1469,10 +1506,11 @@
        }
       }
   },
+
   "47": {
     "type": "building",
     "period": 3,
-    "name": "Accademia Militare",
+    "name": "Military Academy",
     "cost": [
       {
         "resources": {
@@ -1512,10 +1550,11 @@
       }
     }
   },
+
   "48": {
     "type": "building",
     "period": 3,
-    "name": "Cattedrale",
+    "name": "Cathedral",
     "cost": [
       {
         "resources": {
@@ -1544,10 +1583,11 @@
       }
     }
   },
+
   "49" : {
     "type" : "character",
     "period":1,
-    "name" : "Condottiero",
+    "name" : "Warlord",
     "cost" : [
       {
         "resources" : {
@@ -1570,10 +1610,11 @@
       }
     }
   },
+
   "50" : {
     "type" : "character",
     "period":1,
-    "name" : "Costruttore",
+    "name" : "Stonemason",
     "cost" : [
       {
         "resources" : {
@@ -1597,10 +1638,11 @@
       }
     }
   },
+
   "51" : {
     "type" : "character",
     "period":1,
-    "name" : "Dama",
+    "name" : "Dame",
     "cost" : [
       {
         "resources" : {
@@ -1621,10 +1663,11 @@
       }
     }
   },
+
   "52" : {
     "type" : "character",
     "period":1,
-    "name" : "Cavaliere",
+    "name" : "Knight",
     "cost" : [
       {
         "resources" : {
@@ -1645,10 +1688,11 @@
       }
     }
   },
+
   "53" : {
     "type" : "character",
     "period":1,
-    "name" : "Contadino",
+    "name" : "Farmer",
     "cost" : [
       {
         "resources" : {
@@ -1663,10 +1707,11 @@
       }
     }
   },
+
   "54" : {
     "type" : "character",
     "period":1,
-    "name" : "Artigiano",
+    "name" : "Artisan",
     "cost" : [
       {
         "resources" : {
@@ -1681,10 +1726,11 @@
       }
     }
   },
+
   "55" : {
     "type" : "character",
     "period":1,
-    "name" : "Predicatore",
+    "name" : "Preacher",
     "cost" : [
       {
         "resources" : {
@@ -1705,10 +1751,11 @@
       }
     }
   },
+
   "56" : {
     "type" : "character",
     "period":1,
-    "name" : "Badessa",
+    "name" : "Abbess",
     "cost" : [
       {
         "resources" : {
@@ -1730,10 +1777,11 @@
       }
     }
   },
+
   "57" : {
     "type" : "character",
     "period":2,
-    "name" : "Capitano",
+    "name" : "Captain",
     "cost" : [
       {
         "resources" : {
@@ -1756,10 +1804,11 @@
       }
     }
   },
+
   "58" : {
     "type" : "character",
     "period":2,
-    "name" : "Architetto",
+    "name" : "Architect",
     "cost" : [
       {
         "resources" : {
@@ -1783,10 +1832,11 @@
       }
     }
   },
+
   "59" : {
     "type" : "character",
     "period":2,
-    "name" : "Mecenate",
+    "name" : "Patron",
     "cost" : [
       {
         "resources" : {
@@ -1809,10 +1859,11 @@
       }
     }
   },
+
   "60" : {
     "type" : "character",
     "period":2,
-    "name" : "Eroe",
+    "name" : "Hero",
     "cost" : [
       {
         "resources" : {
@@ -1833,10 +1884,11 @@
       }
     }
   },
+
   "61" : {
     "type" : "character",
     "period":2,
-    "name" : "Fattore",
+    "name" : "Peasant",
     "cost" : [
       {
         "resources" : {
@@ -1851,10 +1903,11 @@
       }
     }
   },
+
   "62" : {
     "type" : "character",
     "period":2,
-    "name" : "Studioso",
+    "name" : "Scholar",
     "cost" : [
       {
         "resources" : {
@@ -1869,10 +1922,11 @@
       }
     }
   },
+
   "63" : {
     "type" : "character",
     "period":2,
-    "name" : "Messo Papale",
+    "name" : "Papal Messenger",
     "cost" : [
       {
         "resources" : {
@@ -1890,10 +1944,11 @@
       }
     }
   },
+
   "64" : {
     "type" : "character",
     "period":2,
-    "name" : "Messo Reale",
+    "name" : "Royal Messenger",
     "cost" : [
       {
         "resources" : {
@@ -1909,10 +1964,11 @@
       }
     }
   },
+
   "65" : {
     "type" : "character",
     "period":3,
-    "name" : "Nobile",
+    "name" : "Noble",
     "cost" : [
       {
         "resources" : {
@@ -1934,10 +1990,11 @@
       }
     }
   },
+
   "66" : {
     "type" : "character",
     "period":3,
-    "name" : "Governatore",
+    "name" : "Governor",
     "cost" : [
       {
         "resources" : {
@@ -1959,10 +2016,11 @@
       }
     }
   },
+
   "67" : {
     "type" : "character",
     "period":3,
-    "name" : "Cortigiana",
+    "name" : "Paramour",
     "cost" : [
       {
         "resources" : {
@@ -1984,10 +2042,11 @@
       }
     }
   },
+
   "68" : {
     "type" : "character",
     "period":3,
-    "name" : "Araldo",
+    "name" : "Herald",
     "cost" : [
       {
         "resources" : {
@@ -2009,10 +2068,11 @@
       }
     }
   },
+
   "69" : {
     "type" : "character",
     "period":3,
-    "name" : "Cardinale",
+    "name" : "Cardinal",
     "cost" : [
       {
         "resources" : {
@@ -2034,10 +2094,11 @@
       }
     }
   },
+
   "70" : {
     "type" : "character",
     "period":3,
-    "name" : "Vescovo",
+    "name" : "Bishop",
     "cost" : [
       {
         "resources" : {
@@ -2059,10 +2120,11 @@
       }
     }
   },
+
   "71" : {
     "type" : "character",
     "period":3,
-    "name" : "Generale",
+    "name" : "General",
     "cost" : [
       {
         "resources" : {
@@ -2084,10 +2146,11 @@
       }
     }
   },
+
   "72" : {
     "type" : "character",
     "period":3,
-    "name" : "Ambasciatore",
+    "name" : "Ambassador",
     "cost" : [
       {
         "resources" : {
@@ -2107,10 +2170,11 @@
       }
     }
   },
+
   "73": {
     "type": "venture",
     "period": 1,
-    "name": "Ingaggiare Reclute",
+    "name": "Hiring Recruits",
     "cost": [
       {
         "resources": {
@@ -2133,7 +2197,7 @@
   "74": {
     "type": "venture",
     "period": 1,
-    "name": "Riparare la Chiesa",
+    "name": "Repairing The Church",
     "cost": [
       {
         "resources": {
@@ -2160,7 +2224,7 @@
   "75": {
     "type": "venture",
     "period": 1,
-    "name": "Costruire le Mura",
+    "name": "Building The Walls",
     "cost": [
       {
         "resources": {
@@ -2187,7 +2251,7 @@
   "76": {
     "type": "venture",
     "period": 1,
-    "name": "Innalzare una Statua",
+    "name": "Raising a Statue",
     "cost": [
       {
         "resources": {
@@ -2211,7 +2275,7 @@
   "77": {
     "type": "venture",
     "period": 1,
-    "name": "Campagna Militare",
+    "name": "Military Campaign",
     "cost": [
       {
         "military": {
@@ -2237,7 +2301,7 @@
   "78": {
     "type": "venture",
     "period": 1,
-    "name": "Ospitare i Mendicanti",
+    "name": "Hosting Panhandlers",
     "cost": [
       {
         "resources": {
@@ -2262,7 +2326,7 @@
   "79": {
     "type": "venture",
     "period": 1,
-    "name": "Combattere le Eresie",
+    "name": "Fighting Heresies",
     "cost": [
       {
         "military": {
@@ -2288,7 +2352,7 @@
   "80": {
     "type": "venture",
     "period": 1,
-    "name": "Sostegno al Vescovo",
+    "name": "Support to the Bishop",
     "cost": [
       {
         "resources": {
@@ -2321,7 +2385,7 @@
   "81": {
     "type": "venture",
     "period": 2,
-    "name": "Ingaggiare Soldati",
+    "name": "Hiring Soldiers",
     "cost": [
       {
         "resources": {
@@ -2346,7 +2410,7 @@
   "82": {
     "type": "venture",
     "period": 2,
-    "name": "Riparare l'Abbazia",
+    "name": "Repairing the Abbey",
     "cost": [
       {
         "resources": {
@@ -2373,7 +2437,7 @@
   "83": {
     "type": "venture",
     "period": 2,
-    "name": "Costruire i Bastioni",
+    "name": "Building the Bastions",
     "cost": [
       {
         "resources": {
@@ -2399,7 +2463,7 @@
   "84": {
     "type": "venture",
     "period": 2,
-    "name": "Supporto al Re",
+    "name": "Support to the King",
     "cost": [
       {
         "military": {
@@ -2426,7 +2490,7 @@
   "85": {
     "type": "venture",
     "period": 2,
-    "name": "Scavare Canalizzazioni",
+    "name": "Improving the Canals",
     "cost": [
       {
         "resources": {
@@ -2453,7 +2517,7 @@
   "86": {
     "type": "venture",
     "period": 2,
-    "name": "Accogliere gli Stranieri",
+    "name": "Hosting Foreigners",
     "cost": [
       {
         "resources": {
@@ -2478,7 +2542,7 @@
   "87": {
     "type": "venture",
     "period": 2,
-    "name": "Crociata",
+    "name": "Crusade",
     "cost": [
       {
         "military": {
@@ -2507,7 +2571,7 @@
   "88": {
     "type": "venture",
     "period": 2,
-    "name": "Sostegno al Cardinale",
+    "name": "Support to the Cardinal",
     "cost": [
       {
         "resources": {
@@ -2538,7 +2602,7 @@
   "89": {
     "type": "venture",
     "period": 3,
-    "name": "Ingaggiare Mercenari",
+    "name": "Hiring Mercenaries",
     "cost": [
       {
         "resources": {
@@ -2561,7 +2625,7 @@
   "90": {
     "type": "venture",
     "period": 3,
-    "name": "Riparare la Cattedrale",
+    "name": "Repairing the Cathedral",
     "cost": [
       {
         "resources": {
@@ -2592,7 +2656,7 @@
   "91": {
     "type": "venture",
     "period": 3,
-    "name": "Costruire le Torri",
+    "name": "Building the Towers",
     "cost": [
       {
         "resources": {
@@ -2618,7 +2682,7 @@
   "92": {
     "type": "venture",
     "period": 3,
-    "name": "Commissionare Arte Sacra",
+    "name": "Promoting Sacred Art",
     "cost": [
       {
         "resources": {
@@ -2643,7 +2707,7 @@
   "93": {
     "type": "venture",
     "period": 3,
-    "name": "Conquista Militare",
+    "name": "Military Conquest",
     "cost": [
       {
         "military": {
@@ -2671,7 +2735,7 @@
   "94": {
     "type": "venture",
     "period": 3,
-    "name": "Migliorare le Strade",
+    "name": "Improving the Roads",
     "cost": [
       {
         "resources": {
@@ -2696,7 +2760,7 @@
   "95": {
     "type": "venture",
     "period": 3,
-    "name": "Guerra Santa",
+    "name": "Sacred War",
     "cost": [
       {
         "military": {
@@ -2722,7 +2786,7 @@
   "96": {
     "type": "venture",
     "period": 3,
-    "name": "Sostegno al Papa",
+    "name": "Support to the Pope",
     "cost": [
       {
         "resources": {
