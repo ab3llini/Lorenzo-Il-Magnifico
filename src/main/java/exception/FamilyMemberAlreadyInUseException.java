@@ -7,7 +7,7 @@ package exception;
 /**
  * This exception is raised whenever a player want to take a family member that is already in use
  */
-public class FamilyMemberAlreadyInUseException extends Exception {
+public class FamilyMemberAlreadyInUseException extends ActionException {
 
     public FamilyMemberAlreadyInUseException(String message){
 

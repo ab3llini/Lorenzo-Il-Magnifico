@@ -239,7 +239,7 @@ public class BoardConfigParser {
 
         Integer victoryBonus= 0;
 
-        //get JsonObject productionArea from boardConfig
+        //get JsonObject cardsBonusObject from boardConfig
         JsonObject cardsBonusObject = BoardConfigParser.getBoardConfig().getAsJsonObject("cardsToVictoryPoints");
 
         if(dvptCardType == DvptCardType.territory){
@@ -253,5 +253,31 @@ public class BoardConfigParser {
         }
 
         return  victoryBonus;
+    }
+
+    public static Integer getVictoryBonusFromFaith(Integer faithPoints){
+
+        Integer victoryBonus = 0;
+
+        //get JsonObject productionArea from boardConfig
+        JsonObject faithBonusObject = BoardConfigParser.getBoardConfig().getAsJsonObject("faithToVictoryPoints");
+
+        //TODO add try catch if it is necessary
+        victoryBonus = faithBonusObject.get(""+faithPoints).getAsInt();
+
+        return victoryBonus;
+    }
+
+    public static Integer getVictoryBonusFromRanking(Integer position){
+
+        Integer victoryBonus = 0;
+
+
+        //get JsonObject productionArea from boardConfig
+        JsonObject rankingBonusObject = BoardConfigParser.getBoardConfig().getAsJsonObject("militaryRankingVictoryPoints");
+
+        victoryBonus = rankingBonusObject.get(""+position).getAsInt();
+
+        return victoryBonus;
     }
 }

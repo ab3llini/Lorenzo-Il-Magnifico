@@ -6,7 +6,7 @@ package exception;
 /**
  * This exception is raised whenever a family member has not enough force to be positioned in the chosen place
  */
-public class NotStrongEnoughException extends Exception {
+public class NotStrongEnoughException extends ActionException {
 
     public NotStrongEnoughException(String message){
         super(message);

@@ -18,6 +18,8 @@ import server.utility.BoardConfigParser;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 
+import static server.utility.BoardConfigParser.getVictoryBonusFromRanking;
+
 /*
  * @author  ab3llini
  * @since   15/05/17.
@@ -292,6 +294,7 @@ public class MatchController implements Runnable {
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
                 ;}
 
+                //TODO multiplier
         return;
     }
 
@@ -635,11 +638,11 @@ public class MatchController implements Runnable {
     /**
      * this method calculate the final score of the players
      */
-    public void calculatesFinalScore(){
+    public LinkedHashMap<Player,Integer> calculatesFinalScore(){
 
-        for (Map.Entry<ClientHandler, Player> entry : this.playerHandlerMap.entrySet()) {
+        LinkedHashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
 
-            Player player = entry.getValue();
+        for (Player player : this.match.getPlayers()) {
 
             Integer totalScore = 0;
 
@@ -657,9 +660,34 @@ public class MatchController implements Runnable {
             totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.building,player.getPersonalBoard().getBuildingCards().size());
 
             //victory points that depends on character card on the player personal board
-            totalScore+= BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());
+            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());
 
+            //victory points that depends on faith points
+            totalScore += BoardConfigParser.getVictoryBonusFromFaith(player.getFaithPoints());
+
+            //victory points that depends on military points
+            totalScore += getMilitaryPointsBonus(player);
+
+            finalScore.put(player,totalScore);
         }
+
+        return  finalScore;
+    }
+
+    /**
+     * this method create the military points ranking and return the victory points for each player
+     */
+    public Integer getMilitaryPointsBonus(Player player){
+
+        Integer position = 1;
+
+        for (Player player1: this.match.getPlayers()) {
+
+            if(player.getMilitaryPoints() < player1.getMilitaryPoints())
+                position++;
+        }
+
+        return getVictoryBonusFromRanking(position);
     }
 
 }
