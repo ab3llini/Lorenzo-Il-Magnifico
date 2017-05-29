@@ -15,13 +15,8 @@ import server.model.valuable.Point;
 import server.model.valuable.Resource;
 import server.utility.BoardConfigParser;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
-
-import static java.util.Collections.shuffle;
 
 /*
  * @author  ab3llini
@@ -44,7 +39,10 @@ public class MatchController implements Runnable {
      */
     private BoardController boardController;
 
-    private LinkedHashMap<ClientHandler, Player> playerHandlerMap;
+    /**
+     * This property maps each player in the model with his relative remote one
+     */
+    private LinkedHashMap<Player, RemotePlayer> remotePlayerMap;
 
     /**
      * This queue holds all the action that need processing from the active player
@@ -71,7 +69,7 @@ public class MatchController implements Runnable {
         /*
          * Initialize the map
          */
-        this.playerHandlerMap = new LinkedHashMap<ClientHandler, Player>();
+        this.remotePlayerMap = new LinkedHashMap<Player, RemotePlayer>();
 
         /*
          * Create a temporary list of players that will be passed to the Match
@@ -83,7 +81,7 @@ public class MatchController implements Runnable {
 
             Player player = new Player(handler.getUsername());
 
-            this.playerHandlerMap.put(handler, player);
+            this.remotePlayerMap.put(player, handler);
 
             players.add(player);
 
@@ -102,7 +100,6 @@ public class MatchController implements Runnable {
          * Keep in mind that match.board must be initialized at this time
          */
         this.boardController = new BoardController(this.match.getBoard());
-
 
 
         //Init anything else in the future here..
@@ -183,14 +180,34 @@ public class MatchController implements Runnable {
 
     }
 
-    public void setDisablePlayerRelativeTo(ClientHandler handler, boolean value) {
+    /**
+     * This method is called from the lobby when a client leave/rejoin the match.
+     * We need to disable/enable the player
+     * If the value is true, the map entry gets removed, otherwise is added again
+     * @param handler the player handler
+     * @param value the value of the disabled state
+     */
+    public void disablePlayerRelativeTo(ClientHandler handler, boolean value) throws NoSuchPlayerException {
 
-        this.playerHandlerMap.get(handler).setDisabled(value);
+        Player target = this.match.getPlayerFromUsername(handler.getUsername());
+
+        target.setDisabled(value);
+
+        if (value) {
+
+            this.remotePlayerMap.remove(target);
+
+        }
+        else {
+
+            this.remotePlayerMap.put(target, handler);
+
+        }
 
     }
 
-    public LinkedHashMap<ClientHandler, Player> getPlayerHandlerMap() {
-        return playerHandlerMap;
+    public LinkedHashMap<Player, RemotePlayer> getRemotePlayerMap() {
+        return this.remotePlayerMap;
     }
 
     public Match getMatch() {

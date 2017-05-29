@@ -204,13 +204,8 @@ public class Lobby {
 
         try {
 
-            belongingPlayer = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
-
-            //Update his state! It was set to disabled
-            belongingPlayer.setDisabled(false);
-
-            //Remap the player with the new handler
-            this.matchController.getPlayerHandlerMap().put(handler, belongingPlayer);
+            //Add again the reference entry into the match controller and re enable the player
+            this.matchController.disablePlayerRelativeTo(handler, false);
 
             //Re add the client to the handlers list
             this.handlers.add(handler);
@@ -255,12 +250,17 @@ public class Lobby {
 
             Logger.log(Level.WARNING, this.toString(), "Client " + handler.getUsername() + " disconnected while playing, disabling player..");
 
-            //Permanently disable the player
-            this.matchController.setDisablePlayerRelativeTo(handler, true);
+            try {
 
+                //Permanently disable the player
+                //Remove the reference even into the match controller
+                this.matchController.disablePlayerRelativeTo(handler, true);
 
-            //Remove the reference even into the match controller
-            this.matchController.getPlayerHandlerMap().remove(handler);
+            } catch (NoSuchPlayerException e) {
+
+                Logger.log(Level.SEVERE, this.toString(), "Unable to disable player after client leave!", e);
+
+            }
 
         }
         else {
