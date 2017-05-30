@@ -629,8 +629,20 @@ public class MatchController implements Runnable {
 
     public void activateLeaderCard (LeaderCardActivationActionRequest action, Player player) {
 
-        if(player.hasEnoughLeaderRequirements(action.getLeaderCardIndex())){ //verify the requirements to activate Leader Card
+        if(player.hasEnoughLeaderRequirements(action.getLeaderCardIndex())) { //verify the requirements to activate Leader Card
+
+            if (GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex()).getLeaderEffect().getOnceARound() != null) {
+
+                for (Resource resource : GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex()).getLeaderEffect().getOnceARound().getResources())
+                    player.addGenericResource(resource.getType(), resource.getAmount());
+
+                for (Point point : GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex()).getLeaderEffect().getOnceARound().getPoints())
+                    player.addGenericPoint(point.getType(), point.getAmount());
+
+            }
+
         }
+
 
     }
 

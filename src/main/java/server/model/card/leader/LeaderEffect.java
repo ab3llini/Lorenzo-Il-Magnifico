@@ -7,11 +7,19 @@ import server.model.effect.PermanentLeaderEffectType;
  * Created by LBARCELLA on 17/05/2017.
  */
 public class LeaderEffect {
-    OnceARoundEffect OnceARound;
-    PermanentLeaderEffectType permanentEffect;
+    private OnceARoundEffect OnceARound;
+    private PermanentLeaderEffectType permanentEffect;
 
     public LeaderEffect(OnceARoundEffect onceARound, PermanentLeaderEffectType permanentEffect){
         this.OnceARound=onceARound;
         this.permanentEffect=permanentEffect;
+    }
+
+    public OnceARoundEffect getOnceARound() {
+        return OnceARound;
+    }
+
+    public PermanentLeaderEffectType getPermanentEffect() {
+        return permanentEffect;
     }
 }

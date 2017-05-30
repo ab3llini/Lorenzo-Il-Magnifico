@@ -132,7 +132,7 @@ public class BoardController {
      * A method that inserts the cards into board towers
      */
 
-    public void prepareTowers(Board board, Integer round, ArrayList<Deck<DvptCard>> deckArray) {
+    public void prepareTowers(Integer round, ArrayList<Deck<DvptCard>> deckArray) {
 
         Integer period = 0;
 
@@ -224,7 +224,7 @@ public class BoardController {
      * A method that inserts the ban cards into cathedral
      */
 
-    public void prepareCathedral(ArrayList<Deck<BanCard>> bancards, Board board) {
+    public void prepareCathedral(ArrayList<Deck<BanCard>> bancards) {
 
         ArrayList<BanCard> temporaryBanCardArray = new ArrayList<BanCard>();
 

@@ -22,4 +22,20 @@ public class OnceARoundEffect {
         this.action=action;
         this.sixEffect=sixEffect;
     }
+
+    public ArrayList<Resource> getResources() {
+        return resources;
+    }
+
+    public ArrayList<Point> getPoints() {
+        return points;
+    }
+
+    public Boolean getSixEffect() {
+        return sixEffect;
+    }
+
+    public HashMap<ActionType, Integer> getAction() {
+        return action;
+    }
 }
