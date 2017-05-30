@@ -69,6 +69,8 @@ public class BoardController {
      */
 
     private Board board;
+    private ArrayList<Deck<DvptCard>> decks = createDecks();
+    private ArrayList<Deck<BanCard>> banCardDecks = createBanDecks();
 
     public BoardController(Board board) {
 
@@ -84,8 +86,6 @@ public class BoardController {
      */
     public ArrayList<Deck<DvptCard>> createDecks() {
 
-        GameSingleton singleton = GameSingleton.getInstance();
-
         ArrayList<Deck<DvptCard>> deckArray = new ArrayList<Deck<DvptCard>>();
 
         for (int deckIndex = 0; deckIndex < TOTAL_PERIODS * TOTAL_TOWERS; deckIndex++) {
@@ -94,7 +94,7 @@ public class BoardController {
 
             for (int cardIndex = deckIndex * DVPT_CARD_OFFSET; cardIndex < deckIndex * DVPT_CARD_OFFSET + DVPT_CARD_OFFSET; cardIndex++) {
 
-                deck.addCard(singleton.getSpecificDvptCard(cardIndex));
+                deck.addCard(GameSingleton.getInstance().getSpecificDvptCard(cardIndex));
 
             }
 
@@ -107,8 +107,6 @@ public class BoardController {
 
     public ArrayList<Deck<BanCard>> createBanDecks() {
 
-        GameSingleton singleton = GameSingleton.getInstance();
-
         ArrayList<Deck<BanCard>> banDeckArray = new ArrayList<Deck<BanCard>>();
 
         for (int deckIndex = 0; deckIndex < 3; deckIndex++) {
@@ -117,13 +115,14 @@ public class BoardController {
 
             for (int cardIndex = deckIndex * BAN_CARD_OFFSET; cardIndex < deckIndex * BAN_CARD_OFFSET + BAN_CARD_OFFSET; cardIndex++) {
 
-                deck.addCard(singleton.getSpecificBanCard(cardIndex));
+                deck.addCard(GameSingleton.getInstance().getSpecificBanCard(cardIndex));
 
             }
 
             banDeckArray.add(deck.shuffle());
 
         }
+
         return banDeckArray;
 
     }
@@ -132,9 +131,7 @@ public class BoardController {
      * A method that inserts the cards into board towers
      */
 
-    public void prepareTowers(Integer round, ArrayList<Deck<DvptCard>> deckArray) {
-
-        Integer period = 0;
+    public void updateTowersForTurn (Integer period, Integer turn) {
 
         ArrayList<DvptCard> temporaryTerritory = new ArrayList<DvptCard>();
 
@@ -144,36 +141,27 @@ public class BoardController {
 
         ArrayList<DvptCard> temporaryVenture = new ArrayList<DvptCard>();
 
-        if(round == 1 || round == 2)
-            period = 1;
-
-        if(round == 3 || round == 4)
-            period = 2;
-
-        if(round == 5 || round == 6)
-            period = 3;
-
         // If it is the first turn of a period, every tower will contain the first half of his specific deck, according to his authenticationType and period
 
-        if (round % 2 == 1) {
+        if (turn % 2 == 1) {
 
             for (int i = 0; i < 4; i++) {
-                temporaryTerritory.add(deckArray.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                temporaryTerritory.add(decks.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
             }
 
             for (int i = 0; i < 4; i++) {
-                temporaryBuilding.add(deckArray.get(BUILDING_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                temporaryBuilding.add(decks.get(BUILDING_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
             }
 
 
             for (int i = 0; i < 4; i++) {
-                temporaryCharacter.add(deckArray.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                temporaryCharacter.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
             }
 
 
             for (int i = 0; i < 4; i++) {
-                temporaryVenture.add(deckArray.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                temporaryVenture.add(decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
             }
 
         }
@@ -184,27 +172,27 @@ public class BoardController {
 
             for (int i = 4; i < 8; i++) {
 
-                temporaryTerritory.add(deckArray.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                temporaryTerritory.add(decks.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
             }
 
             for (int i = 4; i < 8; i++) {
 
-                temporaryBuilding.add(deckArray.get(BUILDING_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
-
-            }
-
-
-            for (int i = 4; i < 8; i++) {
-
-                temporaryCharacter.add(deckArray.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                temporaryBuilding.add(decks.get(BUILDING_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
             }
 
 
             for (int i = 4; i < 8; i++) {
 
-                temporaryVenture.add(deckArray.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                temporaryCharacter.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+
+            }
+
+
+            for (int i = 4; i < 8; i++) {
+
+                temporaryVenture.add(decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
             }
 
@@ -224,13 +212,13 @@ public class BoardController {
      * A method that inserts the ban cards into cathedral
      */
 
-    public void prepareCathedral(ArrayList<Deck<BanCard>> bancards) {
+    public void prepareCathedral() {
 
         ArrayList<BanCard> temporaryBanCardArray = new ArrayList<BanCard>();
 
         for (int banCardDeckIndex = 0; banCardDeckIndex < 3; banCardDeckIndex++) {
 
-            temporaryBanCardArray.add(bancards.get(banCardDeckIndex).getCards().get(0));
+            temporaryBanCardArray.add(banCardDecks.get(banCardDeckIndex).getCards().get(0));
 
         }
 

@@ -170,7 +170,7 @@ public class MatchController implements Runnable {
         while (roundIterator.hasNext()) {
 
             //TODO: Fix this call
-            this.boardController.prepareTowers(this.match.getCurrentTurn(), this.boardController.createDecks());
+            this.boardController.updateTowersForTurn(this.match.getCurrentPeriod().toInt(), this.match.getCurrentTurn());
 
             Logger.log(Level.FINEST, "MatchController", "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
