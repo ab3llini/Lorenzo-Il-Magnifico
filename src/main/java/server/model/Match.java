@@ -1,15 +1,13 @@
 package server.model;
 
 import exception.NoSuchPlayerException;
+import netobject.NetObject;
+import netobject.NetObjectType;
 import server.model.board.Board;
 import server.model.board.Period;
 import server.model.board.Player;
-import server.model.board.TowerSlot;
-import server.model.card.developement.DvptCard;
-
 import java.util.*;
 
-import static java.util.Collections.shuffle;
 
 
 /**
@@ -17,10 +15,11 @@ import static java.util.Collections.shuffle;
  * Additions made by ab3llini
  */
 
-public class Match {
+public class Match extends NetObject {
 
     private Board board;
     private ArrayList<Player> players;
+
     private ArrayList<Player> roundOrder;
 
     private int currentPeriod;
@@ -33,6 +32,8 @@ public class Match {
      * @param players the players who are actually in game
      */
     public Match(ArrayList<Player> players) {
+
+        super(NetObjectType.Model);
 
         //Assign the players to the model reference
         this.players = players;
@@ -85,6 +86,7 @@ public class Match {
     public Period getCurrentPeriod() {
         return Period.toEnum(currentPeriod);
     }
+
 
     public int getCurrentTurn() {
         return currentTurn;

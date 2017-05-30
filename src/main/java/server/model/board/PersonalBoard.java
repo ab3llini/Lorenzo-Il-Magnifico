@@ -3,12 +3,13 @@ package server.model.board;
 import exception.SixCardsLimitReachedException;
 import server.model.card.developement.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Federico on 11/05/2017.
  */
-public class PersonalBoard {
+public class PersonalBoard implements Serializable {
     private BonusTile bonusTile;
     private ArrayList<TerritoryDvptCard> territoryCards;
     private ArrayList<BuildingDvptCard> buildingCards;

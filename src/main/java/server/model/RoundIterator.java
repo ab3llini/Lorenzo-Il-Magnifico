@@ -20,12 +20,12 @@ import java.util.Queue;
  */
 public class RoundIterator implements Iterator<Queue<Player>> {
 
-
     private static final int PERIODS = 3;
     private static final int TURNS = 2;
     private static final int ROUNDS = 4;
 
-    private static final int FIRST_ROUND = 0;
+    private static final int FIRST_ROUND = 1;
+    private static final int LAST_ROUND = 4;
 
     private Match match;
 
@@ -35,10 +35,12 @@ public class RoundIterator implements Iterator<Queue<Player>> {
 
     }
 
-
     public boolean hasNext() {
 
-        return (this.match.getCurrentPeriod() <= PERIODS && this.match.getCurrentTurn() <= TURNS && this.match.getCurrentRound() <= ROUNDS);
+        if (this.match.getCurrentPeriod().toInt() == PERIODS && this.match.getCurrentTurn() == TURNS && this.match.getCurrentRound() == ROUNDS)
+            return false;
+        else
+            return (this.match.getCurrentPeriod().toInt() <= PERIODS && this.match.getCurrentTurn() <= TURNS && this.match.getCurrentRound() <= ROUNDS);
 
     }
 
@@ -50,46 +52,51 @@ public class RoundIterator implements Iterator<Queue<Player>> {
         //A queue of banned players that need to be put at the end of the round queue
         Queue<Player> banned = new LinkedList<Player>();
 
-        //For every round, setup the players in the queue
-        for (int roundNr = 0; roundNr < ROUNDS; roundNr++) {
+        //Check if the player that is being added to the queue has been banned
+        for (Player p : this.match.getRoundOrder()) {
 
-            if (roundNr == FIRST_ROUND) {
+            boolean isBanned = false;
 
-                //Check if one of the players got the ban card that prevents him from making the move
-                for (Player player : this.match.getRoundOrder()) {
+            for (BanCard c : p.getBanCards()) {
 
-                    //Lookup the player cards, does it have the bad one ?
-                    for (BanCard card : player.getBanCards()) {
+                if (c.getType() == BanType.special && ((SpecialBanCard)c).getSpecialEffect() == SpecialEffectType.noFirstAction) {
 
-                        if (card.getType() == BanType.special && ((SpecialBanCard)card).getSpecialEffect() == SpecialEffectType.noFirstAction) {
+                    isBanned = true;
 
-                            //If yes, we add it to the banned queue
-                            banned.add(player);
+                    //He is banned, need to put it in the banned queue only if it is the last round of the turn
+                    if (this.match.getCurrentRound() == LAST_ROUND) {
 
-                            //Continue looping!
-                            continue;
-
-                        }
+                        banned.add(p);
 
                     }
-
-                    //Otherwise we add it to the next round order queue as they are
-                    roundOrder.add(player);
 
                 }
 
             }
+
+            if (!isBanned) {
+
+                roundOrder.add(p);
+
+            }
             else {
 
-                //Otherwise add all the players in the current order since nothing may change this
-                roundOrder.addAll(this.match.getRoundOrder());
+                if (this.match.getCurrentRound() != FIRST_ROUND) {
+
+                    roundOrder.add(p);
+
+                }
 
             }
 
         }
 
-        //After the roundOrder has been defined, lets add the banned players at the end of the queue
-        roundOrder.addAll(banned);
+        //Add the banned ones in the last round
+        if (this.match.getCurrentRound() == LAST_ROUND) {
+
+            roundOrder.addAll(banned);
+
+        }
 
         //Update period, turn & round
         if (this.match.getCurrentRound() < ROUNDS) {
@@ -99,14 +106,21 @@ public class RoundIterator implements Iterator<Queue<Player>> {
         }
         else if (this.match.getCurrentTurn() < TURNS) {
 
+            this.match.setCurrentRound(1);
+
             this.match.setCurrentTurn(this.match.getCurrentTurn() + 1);
 
         }
-        else if (this.match.getCurrentPeriod() < PERIODS) {
+        else if (this.match.getCurrentPeriod().toInt() < PERIODS) {
 
-            this.match.setCurrentPeriod(this.match.getCurrentPeriod() + 1);
+            this.match.setCurrentRound(1);
+
+            this.match.setCurrentTurn(1);
+
+            this.match.setCurrentPeriod(this.match.getCurrentPeriod().toInt() + 1);
 
         }
+
 
         return roundOrder;
 

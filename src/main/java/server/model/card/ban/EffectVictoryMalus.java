@@ -4,12 +4,13 @@ import server.model.valuable.Point;
 import server.model.valuable.Resource;
 import server.model.valuable.ResourceType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Federico on 10/05/2017.
  */
-public class EffectVictoryMalus {
+public class EffectVictoryMalus implements Serializable {
     private ArrayList<Point> causedByPoints;
     private ArrayList<Resource> causedByResources;
     private Integer malus;

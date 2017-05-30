@@ -16,16 +16,12 @@ import client.view.utility.AsyncInputStreamObserver;
 import client.view.cmd.Cmd;
 import logger.Level;
 import logger.Logger;
-import netobject.NetObject;
-import netobject.NetObjectType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
 import netobject.notification.Notification;
-import netobject.notification.NotificationType;
 import netobject.request.auth.LoginRequest;
-import netobject.response.Response;
+import server.model.Match;
 import singleton.GameConfig;
-import sun.nio.ch.Net;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -60,6 +56,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      */
     private final Object connectionMutex;
 
+    private final Object moveMutex;
 
     /**
      * Event though the CLI thread might be suspended, the Asynchronous stream will never be
@@ -72,6 +69,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      * Please see the relative enum for more details
      */
     private CliContext ctx;
+
+    /**
+     * The copy of the match model
+     */
+    private Match match;
 
     /**
      * The command line interface constructor
@@ -88,6 +90,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Init the mutex
         this.connectionMutex = new Object();
 
+        //Init the mutex
+        this.moveMutex = new Object();
+
         //Initialization procedure
         this.keyboard = new AsyncInputStream(System.in);
 
@@ -103,7 +108,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
     }
 
     /**
-     * Pauses the main thread until a notify is performed on the provided mutex object
+     * Pauses the main thread until a onLobbyNotification is performed on the provided mutex object
      * @param mutex the object on which the lock is acquired
      */
     private void waitOnMutex(Object mutex) {
@@ -276,7 +281,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Perform login request
         this.client.login(new LoginRequest(username, password));
 
-        //On RMI clients the login method, after has returned, has already called the notify.
+        //On RMI clients the login method, after has returned, has already called the onLobbyNotification.
         //We need to wait only for socket logins
         if (this.client instanceof SocketClient) {
 
@@ -344,8 +349,21 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         this.keyboardEnabled = true;
 
+        this.play();
+
     }
 
+    private void play() {
+
+        this.ctx = CliContext.Match;
+
+        synchronized (this.moveMutex) {
+
+            //TODO : Make the move!
+
+        }
+
+    }
 
     public void onDisconnection(Client client) {
 
@@ -376,7 +394,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    public void onNotification(Client client, Notification not) {
+    public void onLobbyNotification(Client client, LobbyNotification not) {
 
         this.notificationQueue.add(not);
 
@@ -388,4 +406,37 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
+
+
+    public void onModelUpdate(Client sender, Match model) {
+
+        this.match = model;
+
+        this.match.getBoard().printBoard();
+
+    }
+
+    public void onMoveEnabled(Client sender, String message) {
+
+        Cmd.notify(message);
+
+    }
+
+    public void onMoveDisabled(Client sender, String message) {
+
+        Cmd.notify(message);
+
+    }
+
+    public void onTimeoutExpired(Client sender, String message) {
+
+        Cmd.notify(message);
+
+    }
+
+    public void onActionRefused(Client sender, String message) {
+
+        Cmd.notify(message);
+
+    }
 }

@@ -2,10 +2,12 @@ package server.model.card.ban;
 
 import javafx.scene.effect.Effect;
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 20/05/2017.
  */
-public class DiceBanCard extends BanCard {
+public class DiceBanCard extends BanCard implements Serializable {
 
     EffectDiceMalus effectDiceMalus;
 

@@ -3,13 +3,14 @@ package server.model.effect;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by LBARCELLA on 17/05/2017.
  */
-public class OnceARoundEffect {
+public class OnceARoundEffect implements Serializable {
 
     private ArrayList<Resource> resources;
     private ArrayList<Point> points;

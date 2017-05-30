@@ -41,7 +41,7 @@ public class AsyncInputStream extends Thread implements Observable<AsyncInputStr
     }
 
     /**
-     * For every line that is sent notify the observers
+     * For every line that is sent onLobbyNotification the observers
      */
     @Override
     public void run() {

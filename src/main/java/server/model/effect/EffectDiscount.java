@@ -3,10 +3,12 @@ package server.model.effect;
 import server.model.card.developement.DvptCardType;
 import server.model.valuable.Valuable;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 10/05/2017.
  */
-public class EffectDiscount {
+public class EffectDiscount implements Serializable {
     private DvptCardType type;
     private Valuable what;
 

@@ -4,12 +4,13 @@ import server.model.card.developement.DvptCardType;
 import server.model.valuable.Resource;
 import server.model.valuable.Valuable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by LBARCELLA on 12/05/2017.
  */
-public class EffectAction {
+public class EffectAction implements Serializable {
     private ActionType target;
     private DvptCardType type;
     private Integer force;

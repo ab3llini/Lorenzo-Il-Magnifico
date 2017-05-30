@@ -7,9 +7,10 @@ package server.model.card.developement;
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BuildingDvptCard extends DvptCard {
+public class BuildingDvptCard extends DvptCard implements Serializable {
 
     private final ArrayList<Cost> cost;
 

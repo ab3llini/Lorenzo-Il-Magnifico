@@ -5,11 +5,12 @@ package server.controller.network.Socket;
  */
 
 
-import exception.ActionException;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
-import netobject.notification.Notification;
+import netobject.notification.LobbyNotification;
+import netobject.notification.MatchNotification;
+import netobject.notification.MatchNotificationType;
 import server.controller.network.ClientHandler;
 import server.controller.network.Observable;
 import server.model.Match;
@@ -190,27 +191,39 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     }
 
-    public void sendNotification(Notification not) {
+    public void sendLobbyNotification(LobbyNotification not) {
         this.sendObject(not);
     }
 
-    public void updateModel(Match model) {
+    public void notifyModelUpdate(Match model) {
+
+        this.sendObject(model);
 
     }
 
-    public void notifyMoveEnabled() {
+    public void notifyMoveEnabled(String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.MoveEnabled, message));
 
     }
 
-    public void notifyMoveDisabled() {
+    public void notifyMoveDisabled(String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.MoveDisabled, message));
+
 
     }
 
-    public void notifyMoveTimeoutExpired() {
+    public void notifyMoveTimeoutExpired(String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.TimeoutExpired, message));
 
     }
 
-    public void notifyActionRefused(ActionException exception) {
+    public void notifyActionRefused(String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.ActionRefused, message));
+
 
     }
 }

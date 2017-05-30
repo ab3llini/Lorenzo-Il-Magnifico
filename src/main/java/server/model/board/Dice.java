@@ -1,9 +1,11 @@
 package server.model.board;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 11/05/2017.
  */
-public class Dice {
+public class Dice implements Serializable {
     private ColorType color;
     private Integer value;
 

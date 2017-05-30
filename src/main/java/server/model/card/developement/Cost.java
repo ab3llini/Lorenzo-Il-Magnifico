@@ -4,9 +4,10 @@ package server.model.card.developement;/*
 
 import server.model.valuable.Resource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cost {
+public class Cost implements Serializable {
 
     private ArrayList<Resource> resources;
     private MilitaryCost military;

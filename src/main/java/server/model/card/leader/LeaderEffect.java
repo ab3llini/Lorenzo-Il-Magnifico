@@ -3,10 +3,12 @@ package server.model.card.leader;
 import server.model.effect.OnceARoundEffect;
 import server.model.effect.PermanentLeaderEffectType;
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 17/05/2017.
  */
-public class LeaderEffect {
+public class LeaderEffect implements Serializable {
     private OnceARoundEffect OnceARound;
     private PermanentLeaderEffectType permanentEffect;
 

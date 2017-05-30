@@ -4,13 +4,14 @@ import server.model.card.developement.DvptCardType;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by Federico on 10/05/2017.
  */
-public class Requirement {
+public class Requirement implements Serializable {
     private ArrayList<Resource> resourceRequired;
     private ArrayList<Point> pointsRequired;
     private HashMap<DvptCardType,Integer> cardsRequired;

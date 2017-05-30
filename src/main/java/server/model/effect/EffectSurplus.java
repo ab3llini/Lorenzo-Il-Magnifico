@@ -1,11 +1,12 @@
 package server.model.effect;
+import java.io.Serializable;
 import java.util.ArrayList;
 import server.model.valuable.*;
 
 /**
  * Created by Federico on 10/05/2017.
  */
-public class EffectSurplus {
+public class EffectSurplus implements Serializable {
     private ArrayList<Resource> resources;
     private ArrayList<Point> points;
     private Integer council;

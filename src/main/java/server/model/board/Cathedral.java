@@ -2,12 +2,13 @@ package server.model.board;
 
 import server.model.card.ban.BanCard;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by LBARCELLA on 18/05/2017.
  */
-public class Cathedral {
+public class Cathedral  implements Serializable {
 
     private HashMap<Period,BanCard> banCards;
 

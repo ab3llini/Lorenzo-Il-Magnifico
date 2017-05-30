@@ -2,7 +2,9 @@ package server.model.card.developement;/*
  * Created by alberto on 09/05/17.
  */
 
-public enum DvptCardType {
+import java.io.Serializable;
+
+public enum DvptCardType implements Serializable {
     territory,
     character,
     building,

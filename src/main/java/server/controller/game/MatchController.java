@@ -6,6 +6,9 @@ import netobject.request.action.*;
 import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
+import server.model.card.ban.BanType;
+import server.model.card.ban.SpecialBanCard;
+import server.model.card.ban.SpecialEffectType;
 import server.model.card.developement.*;
 import server.model.effect.*;
 import server.model.effect.ActionType;
@@ -19,7 +22,6 @@ import singleton.GameConfig;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
 
 import static server.utility.BoardConfigParser.getVictoryBonusFromRanking;
 
@@ -105,6 +107,12 @@ public class MatchController implements Runnable {
          */
         this.match = new Match(players);
 
+        //TODO: DELETE THIS ! DEBUG ONLY
+
+        this.match.getBoard().getCathedral().setBanCard(Period.first, new SpecialBanCard(1, Period.first.toInt(), SpecialEffectType.noFirstAction));
+        this.match.getBoard().getCathedral().setBanCard(Period.second, new SpecialBanCard(2, Period.second.toInt(), SpecialEffectType.noFirstAction));
+        this.match.getBoard().getCathedral().setBanCard(Period.third, new SpecialBanCard(3, Period.third.toInt(), SpecialEffectType.noFirstAction));
+
 
         /*
          * Assign the board controller
@@ -161,13 +169,25 @@ public class MatchController implements Runnable {
 
         while (roundIterator.hasNext()) {
 
+            //TODO: Fix this call
+            this.boardController.prepareTowers(this.match.getCurrentTurn(), this.boardController.createDecks());
+
+            Logger.log(Level.FINEST, "MatchController", "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
+
+            this.sendUpdatedModel();
+
             Queue<Player> currentRound = roundIterator.next();
 
             //Foreach round handle the current player
             for (Player p : currentRound) {
 
                 //Skip each disabled player
-                if (p.isDisabled()) continue;
+                if (p.isDisabled()) {
+
+                    Logger.log(Level.FINEST, "MatchController", "Skipping player " + p.getUsername() +" because it is disabled");
+
+                    continue;
+                }
 
                 //Update the current player
                 this.currentPlayer = p;
@@ -178,8 +198,10 @@ public class MatchController implements Runnable {
 
                     do {
 
+                        Logger.log(Level.FINEST, "MatchController", "It is " + this.currentPlayer.getUsername() + "'s turn!");
+
                         //Tell the player that it is his turn
-                        this.remotePlayerMap.get(this.currentPlayer).notifyMoveEnabled();
+                        this.remotePlayerMap.get(this.currentPlayer).notifyMoveEnabled(GameMessage.MoveEnabled.getLiteral() + " You have " + MOVE_DELAY +"s");
 
                         //Setup a new timeout for the move
                         this.currentPlayerTimeout = new Timer();
@@ -210,10 +232,13 @@ public class MatchController implements Runnable {
                         //Check if the action is legit, if not skip this player. It might just have expired the timeout
                         if (actionRequest.getActionType() == netobject.request.action.ActionType.ExpiredAction) {
 
-                            Logger.log(Level.FINEST, "MatchController", "Timeout for the move expired");
+                            Logger.log(Level.FINEST, "MatchController", "Move timeout expired");
 
                             //Tell the player that the timeout expired
-                            this.remotePlayerMap.get(this.currentPlayer).notifyMoveTimeoutExpired();
+                            this.remotePlayerMap.get(this.currentPlayer).notifyMoveTimeoutExpired(GameMessage.TimeoutExpired.getLiteral());
+
+                            //Disable the player
+                            this.currentPlayer.setDisabled(true);
 
                             //Break the loop
                             break;
@@ -235,16 +260,16 @@ public class MatchController implements Runnable {
                     Logger.log(Level.FINEST, "MatchController", "The player " + this.currentPlayer.getUsername() + "finished his round");
 
                     //Tell the player that the he can't make any more moves
-                    this.remotePlayerMap.get(this.currentPlayer).notifyMoveDisabled();
+                    this.remotePlayerMap.get(this.currentPlayer).notifyMoveDisabled(GameMessage.MoveDisabled.getLiteral());
 
 
                 } catch (InterruptedException e) {
 
                     Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
 
-                } catch (ActionException e) {
+                } catch (ActionException reason) {
 
-                    this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(e);
+                    this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(GameMessage.InvalidAction.getLiteral() + " Reason: " + reason.getMessage());
 
                 }
 
@@ -301,6 +326,16 @@ public class MatchController implements Runnable {
 
     }
 
+    public void sendUpdatedModel() {
+
+
+        for (Player p : this.match.getPlayers()) {
+
+            this.remotePlayerMap.get(p).notifyModelUpdate(this.match);
+
+        }
+
+    }
 
     public LinkedHashMap<Player, RemotePlayer> getRemotePlayerMap() {
         return this.remotePlayerMap;

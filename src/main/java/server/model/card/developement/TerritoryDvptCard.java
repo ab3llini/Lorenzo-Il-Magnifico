@@ -6,7 +6,9 @@ package server.model.card.developement;
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
-public class TerritoryDvptCard extends DvptCard {
+import java.io.Serializable;
+
+public class TerritoryDvptCard extends DvptCard implements Serializable {
     public TerritoryDvptCard(Integer id, String name, Integer period, ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
         super(id, DvptCardType.territory, name, period, immediateEffect, permanentEffect);
     }

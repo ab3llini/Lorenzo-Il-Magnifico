@@ -5,9 +5,10 @@ package server.model.card.developement;/*
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class DvptCard {
+public abstract class DvptCard implements Serializable {
 
     private final Integer id;
     private final DvptCardType type;

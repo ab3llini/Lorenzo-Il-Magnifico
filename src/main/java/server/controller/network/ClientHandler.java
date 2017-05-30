@@ -1,8 +1,6 @@
 package server.controller.network;
-import netobject.NetObject;
-import netobject.notification.Notification;
+import netobject.notification.LobbyNotification;
 import server.controller.game.RemotePlayer;
-import server.model.Match;
 
 /*
  * @author  ab3llini
@@ -22,7 +20,7 @@ public abstract class ClientHandler implements Runnable, RemotePlayer {
 
     }
 
-    public abstract void sendNotification(Notification not);
+    public abstract void sendLobbyNotification(LobbyNotification not);
 
     public void setUsername(String username) {
         this.username = username;

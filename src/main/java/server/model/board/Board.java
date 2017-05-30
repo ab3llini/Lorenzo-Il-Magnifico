@@ -6,6 +6,7 @@ import server.model.card.ban.BanCard;
 import server.model.card.developement.*;
 import server.utility.BoardConfigParser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static server.model.board.Period.*;
@@ -13,7 +14,7 @@ import static server.model.board.Period.*;
 /**
  * Created by LBARCELLA on 19/05/2017.
  */
-public class Board {
+public class Board implements Serializable {
     private ArrayList<TowerSlot> territoryTower;
     private ArrayList<TowerSlot> characterTower;
     private ArrayList<TowerSlot> buildingTower;

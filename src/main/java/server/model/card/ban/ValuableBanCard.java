@@ -4,12 +4,13 @@ import server.model.valuable.Point;
 import server.model.valuable.Resource;
 import server.model.valuable.Valuable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by LBARCELLA on 20/05/2017.
  */
-public class ValuableBanCard extends BanCard {
+public class ValuableBanCard extends BanCard implements Serializable {
 
     ArrayList<Resource> resources;
     ArrayList<Point> points;

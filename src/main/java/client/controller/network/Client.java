@@ -1,9 +1,10 @@
 package client.controller.network;
 
-import netobject.notification.Notification;
+import netobject.notification.LobbyNotification;
 import netobject.request.auth.LoginRequest;
-import netobject.NetObject;
+import server.controller.game.RemotePlayer;
 import server.controller.network.Observable;
+import server.model.Match;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 /**
  * The class describes a generic client and provides some basic functionality
  */
-public abstract class Client implements Observable<ClientObserver> {
+public abstract class Client implements Observable<ClientObserver>, RemotePlayer {
 
     //The list of observers
     protected ArrayList<ClientObserver> observers = new ArrayList<ClientObserver>();
@@ -25,13 +26,6 @@ public abstract class Client implements Observable<ClientObserver> {
     protected boolean connected;
 
     protected boolean authenticated;
-
-    /**
-     * Method that should be implemented to send an object to the server
-     * @param object the object to be sent
-     * @return true upon success, false otherwise.
-     */
-    public abstract boolean sendObject(NetObject object);
 
     /**
      * Method that should be implemented to connect to the remote server
@@ -92,11 +86,11 @@ public abstract class Client implements Observable<ClientObserver> {
 
     }
 
-    protected void notifyNotificationReceived(Notification not) {
+    protected void notifyLobbyNotificationReceived(LobbyNotification not) {
 
         for (ClientObserver o : this.observers) {
 
-            o.onNotification(this, not);
+            o.onLobbyNotification(this, not);
 
         }
 
@@ -111,6 +105,60 @@ public abstract class Client implements Observable<ClientObserver> {
     public boolean removeObserver(ClientObserver o) {
 
         return o != null && this.observers.remove(o);
+
+    }
+
+    /*
+     * Remote player implementation
+     */
+
+    public void notifyModelUpdate(Match model) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onModelUpdate(this, model);
+
+        }
+
+    }
+
+    public void notifyMoveEnabled(String message) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onMoveEnabled(this, message);
+
+        }
+
+    }
+
+    public void notifyMoveDisabled(String message) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onMoveDisabled(this, message);
+
+        }
+
+    }
+
+    public void notifyMoveTimeoutExpired(String message){
+
+        for (ClientObserver o : this.observers) {
+
+            o.onTimeoutExpired(this, message);
+
+        }
+
+    }
+
+    public void notifyActionRefused(String message){
+
+        for (ClientObserver o : this.observers) {
+
+            o.onActionRefused(this, message);
+
+        }
 
     }
 

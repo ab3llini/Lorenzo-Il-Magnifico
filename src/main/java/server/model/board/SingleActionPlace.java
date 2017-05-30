@@ -3,11 +3,13 @@ package server.model.board;
 import server.model.effect.EffectSurplus;
 import server.model.effect.ImmediateEffect;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 11/05/2017.
  * Methods implemented by LBARCELLA on 18/05/2017.
  */
-public class SingleActionPlace extends ActionPlace {
+public class SingleActionPlace extends ActionPlace implements Serializable {
     private FamilyMember familyMember;
     private boolean occupied;
 

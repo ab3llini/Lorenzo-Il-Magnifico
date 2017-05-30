@@ -8,6 +8,7 @@ public enum NetObjectType {
 
     Request,
     Response,
-    Notification
+    Notification,
+    Model
 
 }

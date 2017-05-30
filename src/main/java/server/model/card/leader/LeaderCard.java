@@ -2,7 +2,9 @@ package server.model.card.leader;/*
  * Created by alberto on 09/05/17.
  */
 
-public class LeaderCard {
+import java.io.Serializable;
+
+public class LeaderCard implements Serializable {
     private final Integer id;
     private final String name;
     private final Requirement requirement;

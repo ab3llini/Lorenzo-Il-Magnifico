@@ -4,12 +4,13 @@ import client.controller.network.Client;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObjectType;
-import netobject.notification.Notification;
+import netobject.notification.*;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
 import netobject.response.Response;
 import netobject.response.ResponseType;
 import netobject.response.auth.LoginResponse;
+import server.model.Match;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -159,14 +160,55 @@ public class SocketClient extends Client implements Runnable {
         }
         else if (object.getType() == NetObjectType.Notification) {
 
-            this.notifyNotificationReceived((Notification)object);
+            Notification not = (Notification)object;
+
+            if (not.getNotificationType() == NotificationType.Lobby) {
+
+                this.notifyLobbyNotificationReceived((LobbyNotification)not);
+
+            }
+            else if (not.getNotificationType() == NotificationType.Match) {
+
+                MatchNotification matchNot = (MatchNotification)not;
+
+                if (matchNot.getMatchNotificationType() == MatchNotificationType.MoveEnabled) {
+
+                    this.notifyMoveEnabled(matchNot.getMessage());
+
+                }
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.MoveDisabled) {
+
+                    this.notifyMoveDisabled(matchNot.getMessage());
+
+                }
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.TimeoutExpired) {
+
+                    this.notifyMoveTimeoutExpired(matchNot.getMessage());
+
+                }
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.ActionRefused) {
+
+                    this.notifyActionRefused(matchNot.getMessage());
+
+                }
+
+            }
+
+        }
+        else if (object.getType() == NetObjectType.Model) {
+
+            this.notifyModelUpdate((Match)object);
 
         }
 
-
     }
 
-    public boolean sendObject(NetObject object) {
+    /**
+     * Method that should be implemented to send an object to the server
+     * @param object the object to be sent
+     * @return true upon success, false otherwise.
+     */
+    private boolean sendObject(NetObject object) {
 
         try {
 
@@ -186,14 +228,5 @@ public class SocketClient extends Client implements Runnable {
 
     }
 
-    public static void main(String[] args) {
-
-        SocketClient s = new SocketClient("127.0.0.1", 4545);
-
-        s.connect();
-
-        s.login(new LoginRequest("alberto", "unix"));
-
-    }
 
 }

@@ -1,9 +1,11 @@
 package server.model.valuable;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 10/05/2017.
  */
-public class Valuable {
+public class Valuable implements Serializable {
 
     private final Integer amount;
 

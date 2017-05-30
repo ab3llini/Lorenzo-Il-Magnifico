@@ -9,6 +9,7 @@ import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
 import server.model.valuable.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,7 +19,7 @@ import static server.model.card.developement.DvptCardType.*;
  * Created by alberto on 10/05/17.
  * All method signature has been implemented by LBARCELLA on 15/05/17
  */
-public class Player {
+public class Player implements Serializable {
 
     private String username;
     private PersonalBoard personalBoard;

@@ -7,6 +7,6 @@ package netobject.notification;
 public enum NotificationType {
 
     Lobby,
-    Game
+    Match
 
 }

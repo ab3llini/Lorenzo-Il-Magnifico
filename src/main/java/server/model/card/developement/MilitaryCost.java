@@ -1,9 +1,11 @@
 package server.model.card.developement;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 10/05/2017.
  */
-public class MilitaryCost {
+public class MilitaryCost implements Serializable {
     private Integer required;
     private Integer malus;
 

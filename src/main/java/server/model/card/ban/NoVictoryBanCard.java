@@ -2,10 +2,12 @@ package server.model.card.ban;
 
 import server.model.card.developement.DvptCardType;
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 20/05/2017.
  */
-public class NoVictoryBanCard extends BanCard {
+public class NoVictoryBanCard extends BanCard implements Serializable {
 
     DvptCardType cardType;
 

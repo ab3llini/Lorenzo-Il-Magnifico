@@ -2,7 +2,9 @@ package server.model.card.ban;/*
  * Created by alberto on 09/05/17.
  */
 
-public abstract class BanCard {
+import java.io.Serializable;
+
+public abstract class BanCard implements Serializable {
     private Integer id;
     private Integer period;
     private BanType type;

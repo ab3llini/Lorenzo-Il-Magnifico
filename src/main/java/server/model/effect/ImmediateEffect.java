@@ -2,7 +2,9 @@ package server.model.effect;/*
  * Created by alberto on 09/05/17.
  */
 
-public class ImmediateEffect {
+import java.io.Serializable;
+
+public class ImmediateEffect implements Serializable {
 
     private EffectSurplus surplus;
     private EffectAction effectAction;

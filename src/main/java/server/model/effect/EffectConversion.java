@@ -1,9 +1,11 @@
 package server.model.effect;
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 13/05/2017.
  */
-public class EffectConversion {
+public class EffectConversion implements Serializable {
 
     private EffectSurplus from;
     private EffectSurplus to;

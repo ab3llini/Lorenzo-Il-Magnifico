@@ -1,10 +1,12 @@
 package server.model.board;
 
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 18/05/2017.
  */
-public enum Period {
+public enum Period implements Serializable {
     first(1),
     second(2),
     third(3);

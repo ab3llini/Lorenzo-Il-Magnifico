@@ -26,3 +26,4 @@ public class LobbyNotification extends Notification {
         return message;
     }
 }
+

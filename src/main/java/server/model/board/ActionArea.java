@@ -1,9 +1,11 @@
 package server.model.board;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 11/05/2017.
  */
-public class ActionArea {
+public class ActionArea implements Serializable {
     private ActionType type;
     private SingleActionPlace mainPlace;
     private PHCompositeActionPlace secondaryPlace;

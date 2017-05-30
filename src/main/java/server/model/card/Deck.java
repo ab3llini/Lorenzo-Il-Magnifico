@@ -5,6 +5,7 @@ package server.model.card;
  * @since   19/05/17.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,7 +13,7 @@ import java.util.Collections;
  *  * Represents a card desk of custom authenticationType
  * @param <T> the authenticationType of the deck cards
  */
-public class Deck<T> {
+public class Deck<T>  implements Serializable {
 
     /**
      * The cards contained in the deck

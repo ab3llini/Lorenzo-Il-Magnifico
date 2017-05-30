@@ -87,13 +87,13 @@ public class Logger {
 
         if (e != null) {
 
-            System.out.println(message + " | Exception : " + e.getMessage());
+            System.out.println(message + " | Exception : " + e.getMessage() + AnsiColors.ANSI_RESET);
 
         }
 
         else {
 
-            System.out.println(message);
+            System.out.println(message + AnsiColors.ANSI_RESET);
 
         }
 

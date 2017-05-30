@@ -1,17 +1,16 @@
 package client.controller.network.RMI;
 
 import client.controller.network.Client;
-import exception.authentication.AlreadyLoggedInException;
 import exception.ConnectionFailedException;
 import exception.authentication.AuthenticationException;
-import exception.authentication.LoginFailedException;
 import exception.authentication.NotConnectedException;
 import logger.Level;
 import logger.Logger;
+import netobject.notification.LobbyNotification;
 import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
-import netobject.NetObject;
 import server.controller.network.RMI.RMIServerInterface;
+import server.model.Match;
 
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
@@ -62,17 +61,33 @@ public class RMIClient extends Client implements RMIClientInterface {
         return true;
     }
 
-    public void disconnect() throws RemoteException {
+    public void terminate() throws RemoteException {
         System.exit(0);
+
     }
 
-    public void notify(Notification not) throws RemoteException {
-        this.notifyNotificationReceived(not);
+    public void onLobbyNotification(LobbyNotification not) throws RemoteException {
+        this.notifyLobbyNotificationReceived(not);
     }
 
+    public void onModelUpdate(Match model) {
+        this.notifyModelUpdate(model);
+    }
 
-    public boolean sendObject(NetObject object) {
-        return false;
+    public void onMoveEnabled(String message) {
+        this.notifyMoveEnabled(message);
+    }
+
+    public void onMoveDisabled(String message) {
+        this.notifyMoveDisabled(message);
+    }
+
+    public void onMoveTimeoutExpired(String message) {
+        this.notifyMoveTimeoutExpired(message);
+    }
+
+    public void onActionRefused(String message) {
+        this.notifyActionRefused(message);
     }
 
     public boolean connect() {
@@ -118,7 +133,6 @@ public class RMIClient extends Client implements RMIClientInterface {
 
         Logger.log(Level.FINE, "RMIClient::connect", "Unable to connect.");
 
-
         return false;
     }
 
@@ -153,14 +167,4 @@ public class RMIClient extends Client implements RMIClientInterface {
 
     }
 
-
-    public static void main(String[] args) {
-
-        RMIClient c = new RMIClient("127.0.0.1", 1099, "server");
-
-        c.connect();
-
-        c.login(new LoginRequest("alberto", "unix"));
-
-    }
 }

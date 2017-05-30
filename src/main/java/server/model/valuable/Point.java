@@ -1,9 +1,11 @@
 package server.model.valuable;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 10/05/2017.
  */
-public class Point extends Valuable {
+public class Point extends Valuable implements Serializable {
 
     private PointType type;
     private Multiplier multiplier;

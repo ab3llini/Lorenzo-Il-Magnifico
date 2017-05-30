@@ -4,9 +4,10 @@ package server.model.effect;/*
 
 import server.model.valuable.Multiplier;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PermanentEffect {
+public class PermanentEffect implements Serializable {
     private Integer minForce;
     private Integer vPoints;
     private EffectSurplus surplus;

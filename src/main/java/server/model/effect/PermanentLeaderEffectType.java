@@ -1,9 +1,11 @@
 package server.model.effect;
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 16/05/2017.
  */
-public enum PermanentLeaderEffectType {
+public enum PermanentLeaderEffectType implements Serializable {
     cesareEffect,
     filippoEffect,
     lorenzoEffect,

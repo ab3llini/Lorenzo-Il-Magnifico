@@ -1,11 +1,12 @@
 package server.model.board;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by LBARCELLA on 19/05/2017.
  */
-public class Market {
+public class Market implements Serializable {
 
     private ArrayList<SingleActionPlace> marketPlaces;
 

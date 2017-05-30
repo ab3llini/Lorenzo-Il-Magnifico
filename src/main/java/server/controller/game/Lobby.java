@@ -10,7 +10,6 @@ import logger.Level;
 import logger.Logger;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
-import netobject.notification.Notification;
 import server.controller.network.ClientHandler;
 import server.model.board.Player;
 import singleton.GameConfig;
@@ -221,7 +220,7 @@ public class Lobby {
 
             Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
 
-            handler.sendNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
+            handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
 
         } catch (NoSuchPlayerException e) {
 
@@ -367,17 +366,17 @@ public class Lobby {
 
     private void welcomeClient(ClientHandler handler) {
 
-        handler.sendNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername() + ", welcome to " + this.toString()));
+        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername() + ", welcome to " + this.toString()));
 
     }
 
-    private synchronized void notifyAllExcept(ClientHandler handler, Notification not) {
+    private synchronized void notifyAllExcept(ClientHandler handler, LobbyNotification not) {
 
         for (ClientHandler c : this.handlers) {
 
             if (c != handler) {
 
-                c.sendNotification(not);
+                c.sendLobbyNotification(not);
 
             }
 
@@ -385,11 +384,11 @@ public class Lobby {
 
     }
 
-    private synchronized void notifyAll(Notification not) {
+    private synchronized void notifyAll(LobbyNotification not) {
 
         for (ClientHandler c : this.handlers) {
 
-            c.sendNotification(not);
+            c.sendLobbyNotification(not);
             
         }
 

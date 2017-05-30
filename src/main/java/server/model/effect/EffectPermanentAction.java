@@ -3,12 +3,13 @@ package server.model.effect;
 import server.model.card.developement.DvptCardType;
 import server.model.valuable.Resource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by LBARCELLA on 13/05/2017.
  */
-public class EffectPermanentAction {
+public class EffectPermanentAction implements Serializable {
 
     private ActionType target;
     private DvptCardType type;

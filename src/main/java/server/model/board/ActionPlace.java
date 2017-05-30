@@ -3,10 +3,12 @@ package server.model.board;
 import server.model.effect.EffectSurplus;
 import server.model.effect.ImmediateEffect;
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 18/05/2017.
  */
-public class ActionPlace {
+public class ActionPlace implements Serializable {
     protected EffectSurplus effectSurplus;
     protected Integer entryForce;
     protected Integer minPlayers;

@@ -3,13 +3,14 @@ package server.model.board;
 import server.model.effect.EffectSurplus;
 import server.model.effect.ImmediateEffect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Federico on 11/05/2017.
  * Method implemented by LBARCELLA on 18/05/2017.
  */
-public class PHCompositeActionPlace extends CompositeActionPlace {
+public class PHCompositeActionPlace extends CompositeActionPlace implements Serializable {
     private Integer forceMalus;
 
 

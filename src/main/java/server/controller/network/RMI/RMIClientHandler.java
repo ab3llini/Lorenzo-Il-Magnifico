@@ -5,11 +5,9 @@ package server.controller.network.RMI;
  */
 
 import client.controller.network.RMI.RMIClientInterface;
-import exception.ActionException;
 import logger.Level;
 import logger.Logger;
-import netobject.NetObject;
-import netobject.notification.Notification;
+import netobject.notification.LobbyNotification;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
@@ -152,11 +150,11 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
     }
 
 
-    public void sendNotification(Notification not) {
+    public void sendLobbyNotification(LobbyNotification not) {
 
         try {
 
-            this.clientRef.notify(not);
+            this.clientRef.onLobbyNotification(not);
 
         } catch (RemoteException e) {
 
@@ -165,23 +163,53 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
-    public void updateModel(Match model) {
+    public void notifyModelUpdate(Match model) {
+
+        try {
+            this.clientRef.onModelUpdate(model);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void notifyMoveEnabled() {
+    public void notifyMoveEnabled(String message) {
+
+        try {
+            this.clientRef.onMoveEnabled(message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void notifyMoveDisabled() {
+    public void notifyMoveDisabled(String message) {
+
+        try {
+            this.clientRef.onMoveDisabled(message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void notifyMoveTimeoutExpired() {
+    public void notifyMoveTimeoutExpired(String message) {
+
+        try {
+            this.clientRef.onMoveTimeoutExpired(message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void notifyActionRefused(ActionException exception) {
+    public void notifyActionRefused(String message) {
+
+        try {
+            this.clientRef.onActionRefused(message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -1,12 +1,12 @@
 package client.controller.network;
 
-import netobject.notification.Notification;
+import netobject.notification.LobbyNotification;
 
 /*
  * @author  ab3llini
  * @since   23/05/17.
  */
-public interface ClientObserver {
+public interface ClientObserver extends RemotePlayerObserver {
 
     void onDisconnection(Client client);
 
@@ -14,6 +14,6 @@ public interface ClientObserver {
 
     void onLoginSuccess(Client client);
 
-    void onNotification(Client client, Notification not);
+    void onLobbyNotification(Client client, LobbyNotification not);
 
 }

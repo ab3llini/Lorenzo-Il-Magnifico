@@ -2,10 +2,12 @@ package server.model.board;
 
 import server.model.effect.EffectSurplus;
 
+import java.io.Serializable;
+
 /**
  * Created by LBARCELLA on 18/05/2017.
  */
-public class BonusTile {
+public class BonusTile implements Serializable {
     private Integer id;
     private Integer productionMinForce;
     private EffectSurplus productionSurplus;

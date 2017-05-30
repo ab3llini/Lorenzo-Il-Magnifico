@@ -5,9 +5,10 @@ package server.model.card.developement;/*
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class VentureDvptCard extends DvptCard {
+public class VentureDvptCard extends DvptCard implements Serializable {
 
     private final ArrayList<Cost> cost;
 

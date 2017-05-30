@@ -1,10 +1,10 @@
 package client.controller.network.RMI;
 
-import netobject.notification.Notification;
+import netobject.notification.LobbyNotification;
+import server.model.Match;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.RemoteServer;
 
 /*
  * @author  ab3llini
@@ -21,11 +21,22 @@ public interface RMIClientInterface extends Remote {
     boolean heartbeat() throws RemoteException;
 
     /**
-     * Method called by the server to disconnect the client
+     * Method called by the server to terminate the client process
      * @throws RemoteException required
      */
-    void disconnect() throws RemoteException;
+    void terminate() throws RemoteException;
 
-    void notify(Notification not) throws RemoteException;
+    void onLobbyNotification(LobbyNotification not) throws RemoteException;
+
+    void onModelUpdate(Match model) throws RemoteException;
+
+    void onMoveEnabled(String message) throws RemoteException;
+
+    void onMoveDisabled(String message) throws RemoteException;
+
+    void onMoveTimeoutExpired(String message) throws RemoteException;
+
+    void onActionRefused(String message) throws RemoteException;
+
 
 }

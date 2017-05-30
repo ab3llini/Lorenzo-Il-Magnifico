@@ -3,10 +3,12 @@ package server.model.card.ban;
 import server.model.card.developement.DvptCardType;
 import server.model.effect.ActionType;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 10/05/2017.
  */
-public class EffectDiceMalus {
+public class EffectDiceMalus implements Serializable {
     private ActionType target;
     private DvptCardType type;
     private Integer RoundDiceMalus;

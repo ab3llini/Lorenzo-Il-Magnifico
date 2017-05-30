@@ -1,9 +1,11 @@
 package server.model.board;
 
+import java.io.Serializable;
+
 /**
  * Created by Federico on 11/05/2017.
  */
-public class FamilyMember {
+public class FamilyMember implements Serializable {
     private Player player;
     private ColorType color;
     private Boolean busy;
