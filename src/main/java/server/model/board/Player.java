@@ -7,10 +7,8 @@ import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
-import server.model.valuable.Point;
-import server.model.valuable.PointType;
-import server.model.valuable.Resource;
-import server.model.valuable.ResourceType;
+import server.model.valuable.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -848,7 +846,22 @@ public class Player {
 
     }
 
+    /** this method gets the size of cards of a specific type on the personal board that must be multiplied **/
 
+    public Integer getSizeMultipliedType (MultipliedType type){
+
+        if(type == MultipliedType.territory)
+            return this.personalBoard.getTerritoryCards().size();
+
+        if(type == MultipliedType.building)
+            return this.personalBoard.getBuildingCards().size();
+
+        if(type == MultipliedType.character)
+            return this.personalBoard.getCharacterCards().size();
+
+        else
+            return this.personalBoard.getVentureCards().size();
+    }
 
     /**
      * this method checks if all requirement of a LeaderCard with a specific

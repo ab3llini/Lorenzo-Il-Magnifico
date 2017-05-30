@@ -9,8 +9,10 @@ import server.model.board.*;
 import server.model.card.developement.*;
 import server.model.effect.*;
 import server.model.effect.ActionType;
+import server.model.valuable.Multiplier;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
+import server.model.valuable.ResultType;
 import server.utility.BoardConfigParser;
 import singleton.GameConfig;
 
@@ -663,9 +665,13 @@ public class MatchController implements Runnable {
 
             applyEffectSurplus(player, card.getPermanentEffect().getSurplus());
 
-        if(!card.getPermanentEffect().getConversion().isEmpty())
+        if(card.getPermanentEffect().getConversion() != null )
 
             applyConversion(player, card.getPermanentEffect().getConversion() , choice);
+
+        if(card.getPermanentEffect().getMultiplier() != null)
+
+            applyMultiplier(player, card.getPermanentEffect().getMultiplier());
 
     }
 
@@ -712,6 +718,18 @@ public class MatchController implements Runnable {
                 player.addGenericPoint(to.getType(), to.getAmount());
 
         }
+
+    }
+
+    public void applyMultiplier (Player player, Multiplier multiplier) throws NotEnoughResourcesException, NotEnoughPointsException {
+
+        int bonus = (int) (player.getSizeMultipliedType (multiplier.getWhat()) * multiplier.getCoefficient());
+
+        if(multiplier.getResult() == ResultType.coins)
+            player.addCoins(bonus);
+
+        if(multiplier.getResult() == ResultType.victory)
+            player.addVictoryPoints(bonus);
 
     }
 
@@ -826,6 +844,8 @@ public class MatchController implements Runnable {
 
             }
             //TODO effect discount
+
+
         }
 
         return  action;

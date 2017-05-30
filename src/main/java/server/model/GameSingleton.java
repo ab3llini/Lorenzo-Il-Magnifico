@@ -1,13 +1,11 @@
 package server.model;
 
+import server.model.board.BonusTile;
 import server.model.board.CouncilPalace;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
 import server.model.card.leader.LeaderCard;
-import server.utility.BanCardParser;
-import server.utility.BoardConfigParser;
-import server.utility.DvptCardParser;
-import server.utility.LeaderCardParser;
+import server.utility.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -27,6 +25,8 @@ public class GameSingleton {
 
     private ArrayList<LeaderCard> leaderCards = new ArrayList<LeaderCard>();
 
+    private ArrayList<BonusTile> bonusTiles = new ArrayList<BonusTile>();
+
     private GameSingleton() {} //costructor
 
     public static GameSingleton getInstance() {
@@ -42,6 +42,8 @@ public class GameSingleton {
                 instance.banCards = BanCardParser.parse();
 
                 instance.leaderCards = LeaderCardParser.parse();
+
+                instance.bonusTiles = BonusTilesParser.parse();
 
             } catch (IOException e1) {
 
@@ -85,4 +87,11 @@ public class GameSingleton {
 
     }
 
+    public ArrayList<LeaderCard> getLeaderCards() {
+        return leaderCards;
+    }
+
+    public ArrayList<BonusTile> getBonusTiles() {
+        return bonusTiles;
+    }
 }

@@ -600,7 +600,7 @@
         "type": "multiplier",
         "multiplier": {
           "what": "building",
-          "result": "victory",
+          "result": "coins",
           "coefficient": 1
         }
       }
