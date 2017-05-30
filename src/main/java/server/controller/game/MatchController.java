@@ -279,7 +279,7 @@ public class MatchController implements Runnable {
      * @throws SixCardsLimitReachedException Exception raised when the player cannot take another card of that type
      * @throws PlayerAlreadyOccupiedTowerException Exception raised when the player tries to put another player on a tower that has already been used by him
      */
-    private void onPlayerAction(Player player, ActionRequest action) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException, NotEnoughResourcesException, NotEnoughPointsException, SixCardsLimitReachedException, PlayerAlreadyOccupiedTowerException {
+    private void onPlayerAction(Player player, ActionRequest action) throws ActionException{
 
         if(action instanceof FamilyMemberPlacementActionRequest){
 
@@ -317,7 +317,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void ApplyDvptCardCost(Player player, DvptCard card,CostOptionType costOptionType) throws NotEnoughResourcesException, NotEnoughMilitaryPointsException {
+    public void ApplyDvptCardCost(Player player, DvptCard card,CostOptionType costOptionType) throws ActionException {
 
         //territory cards doesn't have cost
         if(card.getType() == DvptCardType.territory)
@@ -356,7 +356,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughPointsException
      */
-    public void applyImmediateEffect(Player player, DvptCard card) throws NotEnoughResourcesException, NotEnoughPointsException {
+    public void applyImmediateEffect(Player player, DvptCard card) throws ActionException {
         //TODO
         FamilyMemberPlacementActionRequest action;
         ImmediateEffect immediateEffect = card.getImmediateEffect();
@@ -388,7 +388,7 @@ public class MatchController implements Runnable {
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
                 ;}
 
-                //TODO multiplier
+        //TODO multiplier
     }
 
     /**
@@ -397,7 +397,7 @@ public class MatchController implements Runnable {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws NotStrongEnoughException, FamilyMemberAlreadyInUseException, NotEnoughPlayersException, PlaceOccupiedException, NotEnoughResourcesException, NotEnoughPointsException, SixCardsLimitReachedException, PlayerAlreadyOccupiedTowerException {
+    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws ActionException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
@@ -649,7 +649,7 @@ public class MatchController implements Runnable {
     /** this method applies the Production Chain
      * this character chain consists in the activation of all the building card permanent effect**/
 
-    public void applyProductionChain (Player player, Integer force) throws NotEnoughPointsException,NotEnoughResourcesException {
+    public void applyProductionChain (Player player, Integer force) throws ActionException {
 
         for (DvptCard card : player.getPersonalBoard().getBuildingCards()
                 ) {
@@ -671,7 +671,7 @@ public class MatchController implements Runnable {
      *
      * */
 
-    public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws NotEnoughResourcesException, NotEnoughPointsException{
+    public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws ActionException{
 
         if(card.getPermanentEffect().getSurplus() != null)
 
@@ -697,7 +697,7 @@ public class MatchController implements Runnable {
      */
 
 
-    public void applyConversion (Player player, ArrayList<EffectConversion> conversionList, Integer choice) throws NotEnoughResourcesException, NotEnoughPointsException {
+    public void applyConversion (Player player, ArrayList<EffectConversion> conversionList, Integer choice) throws ActionException {
 
         if(!conversionList.get(choice).getFrom().getResources().isEmpty()) {
 
@@ -820,12 +820,14 @@ public class MatchController implements Runnable {
      * @param player
      * @return
      */
-    public FamilyMemberPlacementActionRequest actionCharacterFilter(FamilyMemberPlacementActionRequest action, Player player){
+    public FamilyMemberPlacementActionRequest actionCharacterFilter(FamilyMemberPlacementActionRequest action, Player player) throws PreacherEffectException {
 
+        //scroll through the character cards of a player looking for permanent effect action
         for (CharacterDvptCard card: player.getPersonalBoard().getCharacterCards()) {
 
             EffectPermanentAction permanentEffectAction = card.getPermanentEffect().getAction();
 
+            //if a permanent effect is relative to harvest type, check whether the action target is CompositeHarvestPlace or SingleHarvestPlace and modify the action
             if(permanentEffectAction.getTarget() == ActionType.harvest) {
 
                 if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace || action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
@@ -833,12 +835,15 @@ public class MatchController implements Runnable {
                 }
             }
 
+            //if a permanent effect is relative to production type, check whether the action target is CompositeProductionPlace or SingleProductionPlace and modify the action
             if(permanentEffectAction.getTarget() == ActionType.production) {
 
                 if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace || action.getActionTarget() == BoardSectorType.SingleProductionPlace) {
                     action.increaseBonus(permanentEffectAction.getForceBonus());
                 }
             }
+
+            //if a permanent effect is relative to cardtype, check the DvptCardType type and modify the action
 
             if(permanentEffectAction.getTarget() == ActionType.card){
                 System.out.println(permanentEffectAction.getType());
@@ -853,15 +858,48 @@ public class MatchController implements Runnable {
 
                 if(permanentEffectAction.getType() == DvptCardType.venture)
                     action.increaseBonus(permanentEffectAction.getForceBonus());
-
+                //TODO effect discount
             }
-            //TODO effect discount
 
+            //if the effect is the preacher penality forbid the action if the placement index is > 1
+            if(card.getPermanentEffect().isPenality()){
+                if (action.getPlacementIndex()>1) {
+                    throw new PreacherEffectException("Preacher's permanent effect forbid it");
+                }
+            }
+
+            //TODO effect discount
 
         }
 
         return  action;
 
+    }
+
+    public void handleVaticanReport(Player player){
+
+        //get minimum number of faith points for current period
+        Integer minPeriodFaith = this.match.getBoard().getCathedral().getMinFaith(this.match.getCurrentPeriod());
+
+        //if the player has not enough faith points he receive the excommunication
+        if(player.getFaithPoints() < minPeriodFaith)
+            player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
+
+        else
+        {
+            //TODO player interation
+
+            if(true){
+                //the player has enough faith points but doesn't want to use them to avoid excommunication
+               player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
+        }
+            else
+                //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
+                player.addVictoryPoints(BoardConfigParser.getVictoryBonusFromFaith(player.getFaithPoints()));
+
+                //the player cannot choose how many faith points to use
+                player.setFaithPoints(0);
+        }
     }
 
 }

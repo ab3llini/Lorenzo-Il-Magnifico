@@ -43,4 +43,17 @@ public class Cathedral {
         return banCards.get(period);
     }
 
+    public Integer getMinFaith(Period period){
+        
+        if(period == Period.first)
+            return getFirstMinFaith();
+
+        if(period == Period.second)
+            return getSecondMinFaith();
+
+        else
+            return getThirdMinFaith();
+    }
+
+
 }

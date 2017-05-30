@@ -1,5 +1,5 @@
 {
-  "1" : {
+  "20" : {
 	"name":"Bartolomeo Colleoni",
     "requirement" : {
         "cards":{
@@ -16,7 +16,7 @@
     }
   },
   
-  "2" : {
+  "17" : {
 	"name":"Cesare Borgia",
     "requirement" : {
         "resources" : {
@@ -34,7 +34,7 @@
     }
   },
   
-  "3" : {
+  "19" : {
 	"name":"Cosimo de' Medici",
     "requirement" : {
         "cards":{
@@ -68,7 +68,7 @@
     }
   },
   
-   "5" : {
+   "3" : {
 	"name":"Filippo Brunelleschi",
     "requirement" : {
         "cards":{
@@ -80,7 +80,7 @@
     }
   },
   
-   "6" : {
+   "1" : {
 	"name":"Francesco Sforza",
     "requirement" : {
         "cards":{
@@ -97,7 +97,7 @@
     }
   },
   
-  "7" : {
+  "6" : {
 	"name":"Giovanni dalle bande nere",
     "requirement" : {
 		"points":{
@@ -115,7 +115,7 @@
     }
   },
   
-  "8" : {
+  "5" : {
 	"name":"Girolamo Savonarola",
     "requirement" : {
         "resources" : {
@@ -131,7 +131,7 @@
     }
   },
   
-  "9" : {
+  "10" : {
 	"name":"Leonardo da Vinci",
     "requirement" : {
         "cards":{
@@ -149,7 +149,7 @@
     }
   },
   
-  "10" : {
+  "15" : {
 	"name":"Lorenzo de' Medici",
     "requirement" : {
 		"points":{
@@ -161,7 +161,7 @@
     }
   },
   
-  "11" : {
+  "13" : {
 	"name":"Lucrezia Borgia",
     "requirement" : {
 		"sixIdentical":true
@@ -171,7 +171,7 @@
     }
   },
   
-   "12" : {
+   "9" : {
 	"name":"Ludovico III Gonzaga",
     "requirement" : {
         "resources" : {
@@ -187,7 +187,7 @@
     }
   },
   
-   "13" : {
+   "2" : {
 	"name":"Ludovico Ariosto",
     "requirement" : {
         "cards":{
@@ -199,7 +199,7 @@
     }
   },
   
-   "14" : {
+   "16" : {
 	"name":"Ludovico il Moro",
     "requirement" : {
         "cards":{
@@ -214,7 +214,7 @@
     }
   },
   
-   "15" : {
+   "8" : {
 	"name":"Michelangelo Buonarroti",
     "requirement" : {
         "resources" : {
@@ -230,7 +230,7 @@
     }
   },
   
-   "16" : {
+   "11" : {
 	"name":"Pico della Mirandola",
     "requirement" : {
         "cards":{
@@ -243,7 +243,7 @@
     }
   },
   
-   "17" : {
+   "7" : {
 	"name":"Sandro Botticelli",
     "requirement" : {
         "resources" : {
@@ -272,7 +272,7 @@
     }
   },
   
-   "19" : {
+   "14" : {
 	"name":"Sigismondo Malatesta",
     "requirement" : {
 		"points":{
@@ -285,7 +285,7 @@
     }
   },
   
-   "20" : {
+   "12" : {
 	"name":"Sisto IV",
     "requirement" : {
         "resources" : {

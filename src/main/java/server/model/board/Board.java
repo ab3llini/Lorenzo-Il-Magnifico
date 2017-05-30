@@ -58,7 +58,6 @@ public class Board {
         return characterTower;
     }
 
-
     public ArrayList<TowerSlot> getVentureTower() {
         return ventureTower;
     }

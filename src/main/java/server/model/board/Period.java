@@ -24,6 +24,7 @@ public enum Period {
      * @return
      */
     public static Period next(Period period) {
+
         if(period==first)
             return second;
         if(period==second)
@@ -31,6 +32,18 @@ public enum Period {
         else
             return first;
         }
+
+    public static Period toEnum(int num){
+
+        if(num == 1)
+            return Period.first;
+
+        if(num == 2)
+            return Period.second;
+
+        else
+            return Period.third;
+    }
 
 }
 

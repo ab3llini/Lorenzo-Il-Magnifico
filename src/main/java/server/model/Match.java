@@ -2,6 +2,7 @@ package server.model;
 
 import exception.NoSuchPlayerException;
 import server.model.board.Board;
+import server.model.board.Period;
 import server.model.board.Player;
 import server.model.board.TowerSlot;
 import server.model.card.developement.DvptCard;
@@ -81,8 +82,8 @@ public class Match {
     }
 
 
-    public int getCurrentPeriod() {
-        return currentPeriod;
+    public Period getCurrentPeriod() {
+        return Period.toEnum(currentPeriod);
     }
 
     public int getCurrentTurn() {
