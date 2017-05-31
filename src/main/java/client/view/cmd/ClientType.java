@@ -10,7 +10,9 @@ package client.view.cmd;
 /**
  * Client connectivity method command
  */
-public enum ClientTypeCmd implements Command {
+
+
+public enum ClientType implements CliPrintable {
 
     Socket("Socket", "1"),
     RMI("RMI", "2");
@@ -18,7 +20,7 @@ public enum ClientTypeCmd implements Command {
     private final String name;
     private final String value;
 
-    ClientTypeCmd(String name, String value) {
+    ClientType(String name, String value) {
 
         this.name = name;
         this.value = value;

@@ -73,7 +73,7 @@ public class BoardConfigParser {
     /**
      * this method parse productionArea attributes; production area is composed by two parts : single production place, composite production place.
      * this method uses getSingleActionPlace and getCompositeActionPlace to obtain his attributes.
-     * @return ActionRequest Area (production) that will be used in board model
+     * @return StandardActionRequest Area (production) that will be used in board model
      */
     public static ActionArea getProductionActionArea(){
 
@@ -92,7 +92,7 @@ public class BoardConfigParser {
     /**
      * this method parse harvestArea attributes; harvest area is composed by two parts : single production place, composite production place.
      * this method uses getSingleActionPlace and getCompositeActionPlace to obtain his attributes.
-     * @return ActionRequest Area (harvest) that will be used in board model
+     * @return StandardActionRequest Area (harvest) that will be used in board model
      */
     public static ActionArea getHarvestActionArea(){
 

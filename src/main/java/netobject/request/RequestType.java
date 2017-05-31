@@ -8,6 +8,8 @@ public enum RequestType {
 
     Login,
     Registration,
-    Action
+    StandardAction,
+    ImmediateAction,
+    Invalid
 
 }

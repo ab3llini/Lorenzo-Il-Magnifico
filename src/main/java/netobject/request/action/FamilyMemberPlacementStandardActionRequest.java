@@ -1,14 +1,13 @@
 package netobject.request.action;
 
 import server.model.board.ColorType;
-import server.model.board.FamilyMember;
 
 /**
  * Created by Federico on 22/05/2017.
  * Edited by ab3llini on 23/05/2017
  */
 
-public class FamilyMemberPlacementActionRequest extends ActionRequest {
+public class FamilyMemberPlacementStandardActionRequest extends StandardActionRequest {
 
     private final BoardSectorType actionTarget; //sector of the board which is target of the action
 
@@ -22,9 +21,9 @@ public class FamilyMemberPlacementActionRequest extends ActionRequest {
 
     private int characterBonus;
 
-    public FamilyMemberPlacementActionRequest(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, CostOptionType costOptionType) {
+    public FamilyMemberPlacementStandardActionRequest(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, CostOptionType costOptionType) {
 
-        super(ActionType.FamilyMemberPlacement);
+        super(StandardActionType.FamilyMemberPlacement);
 
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;

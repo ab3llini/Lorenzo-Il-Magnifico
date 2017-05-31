@@ -8,7 +8,7 @@ import client.controller.network.RMI.RMIClientInterface;
 import exception.*;
 
 import exception.authentication.*;
-import netobject.request.action.ActionRequest;
+import netobject.request.action.StandardActionRequest;
 
 import logger.*;
 import netobject.request.auth.LoginRequest;
@@ -256,7 +256,7 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
     }
 
-    public synchronized boolean performAction(String connectionToken, ActionRequest actionRequest) throws RemoteException, NotRegisteredException {
+    public synchronized boolean performAction(String connectionToken, StandardActionRequest standardActionRequest) throws RemoteException, NotRegisteredException {
         return false;
     }
 

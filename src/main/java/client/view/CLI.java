@@ -9,16 +9,16 @@ import client.controller.network.Client;
 import client.controller.network.ClientObserver;
 import client.controller.network.RMI.RMIClient;
 import client.controller.network.Socket.SocketClient;
-import client.view.cmd.AuthTypeCmd;
-import client.view.cmd.ClientTypeCmd;
+import client.view.cmd.*;
 import client.view.utility.AsyncInputStream;
 import client.view.utility.AsyncInputStreamObserver;
-import client.view.cmd.Cmd;
 import logger.Level;
 import logger.Logger;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
 import netobject.notification.Notification;
+import netobject.request.action.StandardActionType;
+import netobject.request.action.BoardSectorType;
 import netobject.request.auth.LoginRequest;
 import server.model.Match;
 import singleton.GameConfig;
@@ -74,6 +74,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      * The copy of the match model
      */
     private Match match;
+
+
+    private boolean canMakeMove = false;
 
     /**
      * The command line interface constructor
@@ -155,6 +158,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         String hostIP;
         String connection;
 
+        Command<ClientType> clientCmd = new Command<ClientType>(ClientType.class);
+
         //Request the IP
         Cmd.askFor("Please enter the IP address of the host");
 
@@ -174,25 +179,25 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         Cmd.askFor("Select which connection method you would like to use");
 
         //Print the available choices
-        Cmd.printChoices(ClientTypeCmd.values());
+        clientCmd.printChoiches();
 
         //Read the selection
         connection = this.inputQueue.take();
 
         //Check it
-        while (!Cmd.isValid(ClientTypeCmd.values(), connection)) {
+        while (!clientCmd.isValid(connection)) {
 
             connection = this.inputQueue.take();
 
         }
 
         //Select the proper client interface
-        if (connection.equals(ClientTypeCmd.Socket.getValue())) {
+        if (connection.equals(ClientType.Socket.getValue())) {
 
             this.client = new SocketClient(hostIP, GameConfig.getInstance().getSocketPort());
 
         }
-        else if (connection.equals(ClientTypeCmd.RMI.getValue())) {
+        else if (connection.equals(ClientType.RMI.getValue())) {
 
             this.client = new RMIClient(hostIP, GameConfig.getInstance().getRmiPort(), "server");
 
@@ -224,27 +229,29 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Switch context
         this.ctx = CliContext.Authentication;
 
+        Command<AuthType> authCmd = new Command<AuthType>(AuthType.class);
+
         //Request the IP
         Cmd.askFor("Please select how to authenticate");
 
         //Print the available choices
-        Cmd.printChoices(AuthTypeCmd.values());
+        authCmd.printChoiches();
 
         String choice = this.inputQueue.take();
 
         //Check it
-        while (!Cmd.isValid(AuthTypeCmd.values(), choice)) {
+        while (!authCmd.isValid(choice)) {
 
             choice = this.inputQueue.take();
 
         }
 
-        if (choice.equals(AuthTypeCmd.Login.getValue())) {
+        if (authCmd.choiceMatch(choice, AuthType.Login)) {
 
             this.login();
 
         }
-        else if (choice.equals(AuthTypeCmd.Registration.getValue())) {
+        else if (authCmd.choiceMatch(choice, AuthType.Registration)) {
 
             this.register();
 
@@ -353,15 +360,78 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    private void play() {
+    private void play() throws InterruptedException {
 
         this.ctx = CliContext.Match;
 
-        synchronized (this.moveMutex) {
+        while(true) {
 
-            //TODO : Make the move!
+            this.waitOnMutex(this.moveMutex);
+
+            this.makeMove();
 
         }
+
+
+    }
+
+    private void makeMove() throws InterruptedException {
+
+        Command<StandardActionType> cmd = new Command<StandardActionType>(StandardActionType.class);
+
+        Cmd.askFor("Please select the move you would like to perform");
+
+        cmd.printChoiches();
+
+        String choice = this.inputQueue.take();
+
+        //Check it
+        while (!cmd.isValid(choice) && this.canMakeMove) {
+
+            choice = this.inputQueue.take();
+
+        }
+
+        if (cmd.choiceMatch(choice, StandardActionType.FamilyMemberPlacement)) {
+
+            Command<BoardSectorType> sectorCmd = new Command<BoardSectorType>(BoardSectorType.class);
+
+
+            Cmd.askFor("Please select where you would like to place your family member");
+
+            sectorCmd.printChoiches();
+
+            choice = this.inputQueue.take();
+
+            //Check it
+            while (!sectorCmd.isValid(choice) && this.canMakeMove) {
+
+                choice = this.inputQueue.take();
+
+            }
+
+            Cmd.askFor("Please select the color of the family member you would like to use");
+            /*
+            choice = this.inputQueue.take();
+
+            //Check it
+            while (!Cmd.isValid(AuthType.values(), choice) && this.canMakeMove) {
+
+                choice = this.inputQueue.take();
+
+            }
+
+
+            */
+        }
+
+        else {
+
+            Logger.log(Level.SEVERE, "Make move", "Bad selection");;
+
+        }
+
+        Cmd.notify("You did not perform any move");
 
     }
 
@@ -419,6 +489,15 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
     public void onMoveEnabled(Client sender, String message) {
 
         Cmd.notify(message);
+
+        synchronized (this.moveMutex) {
+
+            //Enable the move
+            moveMutex.notify();
+
+        }
+
+
 
     }
 

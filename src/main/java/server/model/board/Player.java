@@ -4,7 +4,6 @@ import exception.*;
 import server.model.GameSingleton;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.Cost;
-import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
 import server.model.valuable.*;
@@ -64,7 +63,7 @@ public class Player implements Serializable {
         familyMembers.add(new FamilyMember(this, ColorType.Black));
         familyMembers.add(new FamilyMember(this, ColorType.Orange));
         familyMembers.add(new FamilyMember(this, ColorType.White));
-        familyMembers.add(new FamilyMember(this, ColorType.Uncoloured));
+        familyMembers.add(new FamilyMember(this, ColorType.Nautral));
 
         //initialize player's board
         this.personalBoard = new PersonalBoard();

@@ -2,11 +2,11 @@ package server.controller.game;
 import exception.*;
 import logger.Level;
 import logger.Logger;
+import netobject.request.RequestType;
 import netobject.request.action.*;
 import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
-import server.model.card.ban.BanType;
 import server.model.card.ban.SpecialBanCard;
 import server.model.card.ban.SpecialEffectType;
 import server.model.card.developement.*;
@@ -54,7 +54,7 @@ public class MatchController implements Runnable {
     /**
      * This queue holds all the action that need processing from the active player
      */
-    private BlockingQueue<ActionRequest> actionRequests;
+    private BlockingQueue<StandardActionRequest> standardActionRequests;
 
     /**
      * Holds a reference to the player of the model who is performing the move
@@ -123,7 +123,7 @@ public class MatchController implements Runnable {
         /*
          * Initialize the blocking queue for requests
          */
-        this.actionRequests = new LinkedBlockingQueue<ActionRequest>();
+        this.standardActionRequests = new LinkedBlockingQueue<StandardActionRequest>();
 
         //Init anything else in the future here..
 
@@ -169,7 +169,6 @@ public class MatchController implements Runnable {
 
         while (roundIterator.hasNext()) {
 
-            //TODO: Fix this call
             this.boardController.updateTowersForTurn(this.match.getCurrentPeriod().toInt(), this.match.getCurrentTurn());
 
             Logger.log(Level.FINEST, "MatchController", "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
@@ -194,7 +193,7 @@ public class MatchController implements Runnable {
 
                 try {
 
-                    ActionRequest actionRequest;
+                    StandardActionRequest standardActionRequest;
 
                     do {
 
@@ -216,7 +215,7 @@ public class MatchController implements Runnable {
                                 MatchController.this.currentPlayer.setDisabled(true);
 
                                 //To wake up the thread, inject a poisonous action
-                                MatchController.this.actionRequests.add(new ActionRequest(netobject.request.action.ActionType.ExpiredAction));
+                                MatchController.this.standardActionRequests.add(new StandardActionRequest());
 
 
                             }
@@ -224,13 +223,13 @@ public class MatchController implements Runnable {
 
                         //Take the action request in the queue and check if we shall proceed
                         //Note that this is a blocking queue
-                        actionRequest = this.actionRequests.take();
+                        standardActionRequest = this.standardActionRequests.take();
 
                         //When we get here the player took its move or the timeout for the move expired, clear the interval.
                         this.currentPlayerTimeout.cancel();
 
                         //Check if the action is legit, if not skip this player. It might just have expired the timeout
-                        if (actionRequest.getActionType() == netobject.request.action.ActionType.ExpiredAction) {
+                        if (standardActionRequest.getRequestType() == RequestType.Invalid) {
 
                             Logger.log(Level.FINEST, "MatchController", "Move timeout expired");
 
@@ -249,13 +248,13 @@ public class MatchController implements Runnable {
                             Logger.log(Level.FINEST, "MatchController", "Parsing action request, the active player is " + this.currentPlayer.getUsername());
 
                             //Parse the action
-                            this.onPlayerAction(this.currentPlayer, actionRequest);
+                            this.onPlayerAction(this.currentPlayer, standardActionRequest);
 
                         }
 
 
                     }
-                    while (actionRequest.getActionType() != netobject.request.action.ActionType.RoundFinished);
+                    while (standardActionRequest.getStandardActionType() != StandardActionType.TerminateRound);
 
                     Logger.log(Level.FINEST, "MatchController", "The player " + this.currentPlayer.getUsername() + "finished his round");
 
@@ -284,9 +283,9 @@ public class MatchController implements Runnable {
      * Specifically, it is used by client handler to dispatch their client requests
      * @param request
      */
-    public void dispatchNewActionRequest(ActionRequest request) {
+    public void dispatchNewActionRequest(StandardActionRequest request) {
 
-        this.actionRequests.add(request);
+        this.standardActionRequests.add(request);
 
     }
 
@@ -304,21 +303,21 @@ public class MatchController implements Runnable {
      * @throws SixCardsLimitReachedException Exception raised when the player cannot take another card of that type
      * @throws PlayerAlreadyOccupiedTowerException Exception raised when the player tries to put another player on a tower that has already been used by him
      */
-    private void onPlayerAction(Player player, ActionRequest action) throws ActionException{
+    private void onPlayerAction(Player player, StandardActionRequest action) throws ActionException{
 
-        if(action instanceof FamilyMemberPlacementActionRequest){
+        if(action instanceof FamilyMemberPlacementStandardActionRequest){
 
-            placeFamilyMember((FamilyMemberPlacementActionRequest) action,player);
-
-        }
-
-        if(action instanceof LeaderCardActivationActionRequest){
-
-            activateLeaderCard((LeaderCardActivationActionRequest) action, player);
+            placeFamilyMember((FamilyMemberPlacementStandardActionRequest) action,player);
 
         }
 
-        if(action instanceof RollDiceActionRequest){
+        if(action instanceof LeaderCardActivationStandardActionRequest){
+
+            activateLeaderCard((LeaderCardActivationStandardActionRequest) action, player);
+
+        }
+
+        if(action instanceof RollDiceStandardActionRequest){
 
             rollDices();
 
@@ -393,7 +392,7 @@ public class MatchController implements Runnable {
      */
     public void applyImmediateEffect(Player player, DvptCard card) throws ActionException {
         //TODO
-        FamilyMemberPlacementActionRequest action;
+        FamilyMemberPlacementStandardActionRequest action;
         ImmediateEffect immediateEffect = card.getImmediateEffect();
 
 
@@ -411,9 +410,15 @@ public class MatchController implements Runnable {
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
                 ;
 
-            if(immediateEffect.getEffectAction().getType() == DvptCardType.character)
+            if(immediateEffect.getEffectAction().getType() == DvptCardType.character) {
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
                 ;
+
+                //Richiede l'interazione..
+                this.remotePlayerMap.get(this.currentPlayer).notifyMoveEnabled("");
+
+
+            }
 
             if(immediateEffect.getEffectAction().getType() == DvptCardType.building)
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
@@ -432,7 +437,7 @@ public class MatchController implements Runnable {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyMemberPlacementActionRequest action, Player player) throws ActionException {
+    public void placeFamilyMember(FamilyMemberPlacementStandardActionRequest action, Player player) throws ActionException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
@@ -662,7 +667,7 @@ public class MatchController implements Runnable {
     }
 
 
-    public void activateLeaderCard (LeaderCardActivationActionRequest action, Player player) {
+    public void activateLeaderCard (LeaderCardActivationStandardActionRequest action, Player player) {
 
         if(player.hasEnoughLeaderRequirements(action.getLeaderCardIndex())) { //verify the requirements to activate Leader Card
 
@@ -855,7 +860,7 @@ public class MatchController implements Runnable {
      * @param player
      * @return
      */
-    public FamilyMemberPlacementActionRequest actionCharacterFilter(FamilyMemberPlacementActionRequest action, Player player) throws PreacherEffectException {
+    public FamilyMemberPlacementStandardActionRequest actionCharacterFilter(FamilyMemberPlacementStandardActionRequest action, Player player) throws PreacherEffectException {
 
         //scroll through the character cards of a player looking for permanent effect action
         for (CharacterDvptCard card: player.getPersonalBoard().getCharacterCards()) {

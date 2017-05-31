@@ -1,6 +1,5 @@
 package server.model.board;
 
-import exception.FamilyMemberAlreadyInUseException;
 import logger.AnsiColors;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.*;
@@ -532,7 +531,7 @@ public class Board implements Serializable {
                 System.out.print(AnsiColors.ANSI_RESET);
             }
 
-            if (familyMember.getColor() == ColorType.Uncoloured) {
+            if (familyMember.getColor() == ColorType.Nautral) {
                 System.out.print("UF");
             }
 
