@@ -9,6 +9,7 @@ import exception.NoSuchCommandException;
 import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
+import netobject.action.BoardSectorType;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -133,7 +134,7 @@ public class Command<T extends Enum<T>> {
 
     }
 
-    public T getEnumEntryFromName(String name) {
+    public T getEnumEntryFromChoice(String choice) {
 
         if (this.initEnum == null) {
 
@@ -143,12 +144,20 @@ public class Command<T extends Enum<T>> {
 
         }
 
-        for (T val : this.initEnum.getEnumConstants()) {
+        try {
 
-            if (val.toString().equals(name))
+            String cmd = this.getCommandForValue(choice);
 
-                return val;
+            for (T val : this.initEnum.getEnumConstants()) {
 
+                if (val.toString().equals(cmd))
+
+                    return val;
+
+            }
+
+        } catch (NoSuchCommandException e) {
+            e.printStackTrace();
         }
 
         return null;

@@ -10,6 +10,7 @@ import exception.authentication.LoginFailedException;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObjectType;
+import netobject.action.Action;
 import netobject.request.Request;
 import netobject.request.RequestType;
 import netobject.request.auth.LoginRequest;
@@ -87,6 +88,11 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                 }
 
             }
+
+        }
+        else if (object.getType() == NetObjectType.Action) {
+
+            this.notifyAction(handler, (Action)object);
 
         }
 

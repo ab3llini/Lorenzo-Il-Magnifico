@@ -1,10 +1,13 @@
 package client.controller.network;
 
+import client.controller.LocalPlayer;
+import netobject.action.ActionType;
 import netobject.notification.LobbyNotification;
 import netobject.request.auth.LoginRequest;
 import server.controller.game.RemotePlayer;
 import server.controller.network.Observable;
 import server.model.Match;
+import server.model.board.Player;
 
 import java.util.ArrayList;
 
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 /**
  * The class describes a generic client and provides some basic functionality
  */
-public abstract class Client implements Observable<ClientObserver>, RemotePlayer {
+public abstract class Client implements Observable<ClientObserver>, RemotePlayer, LocalPlayer {
 
     //The list of observers
     protected ArrayList<ClientObserver> observers = new ArrayList<ClientObserver>();
@@ -122,41 +125,51 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     }
 
-    public void notifyMoveEnabled(String message) {
+    public void notifyTurnEnabled(Player player, String message) {
 
         for (ClientObserver o : this.observers) {
 
-            o.onMoveEnabled(this, message);
+            o.onTurnEnabled(this, player, message);
 
         }
 
     }
 
-    public void notifyMoveDisabled(String message) {
+    public void notifyTurnDisabled(Player player, String message) {
 
         for (ClientObserver o : this.observers) {
 
-            o.onMoveDisabled(this, message);
+            o.onTurnDisabled(this, player, message);
 
         }
 
     }
 
-    public void notifyMoveTimeoutExpired(String message){
+    public void notifyActionTimeoutExpired(Player player, String message) {
 
         for (ClientObserver o : this.observers) {
 
-            o.onTimeoutExpired(this, message);
+            o.onTimeoutExpired(this, player, message);
 
         }
 
     }
 
-    public void notifyActionRefused(String message){
+    public void notifyActionRefused(String message) {
 
         for (ClientObserver o : this.observers) {
 
             o.onActionRefused(this, message);
+
+        }
+
+    }
+
+    public void notifyImmediateActionAvailable(ActionType actionType, Player player, String message) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onImmediateActionAvailable(this, actionType, player, message);
 
         }
 

@@ -409,6 +409,10 @@ public class Lobby {
 
     }
 
+    public MatchController getMatchController() {
+        return matchController;
+    }
+
     public boolean hasStarted() {
         return this.matchDidStart;
     }

@@ -152,14 +152,14 @@ public class DvptCardParser {
 
     private static ImmediateEffect getImmediateEffect(JsonObject effect) {
 
-        //initialize effect surplus and effect action in order to avoid null pointers
+        //initialize effect surplus and effect Action in order to avoid null pointers
         EffectSurplus effectSurplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(), 0);
         EffectAction effectAction = new EffectAction(ActionType.unknown,null,0,new ArrayList<Resource>());
 
         //extract immediate from JsonObject
         JsonObject immediate = effect.getAsJsonObject("immediate");
 
-        //get keys from immediate (surplus || action)
+        //get keys from immediate (surplus || Action)
         ArrayList<String> effectKeys = Json.getObjectKeys(immediate);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
@@ -169,7 +169,7 @@ public class DvptCardParser {
                 effectSurplus = getEffectSurplus(immediate);
             }
 
-            if (effectKey.equals("action")) {
+            if (effectKey.equals("Action")) {
                 effectAction = getEffectAction(immediate);
             }
         }
@@ -190,7 +190,7 @@ public class DvptCardParser {
         //extract permanent from JsonObject effect
         JsonObject permanent = effect.getAsJsonObject("permanent");
 
-        //get keys from permanent (minforce || type || surplus || conversion || action || discount || penality)
+        //get keys from permanent (minforce || type || surplus || conversion || Action || discount || penality)
         ArrayList<String> effectKeys = Json.getObjectKeys(permanent);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost
@@ -312,9 +312,9 @@ public class DvptCardParser {
         ArrayList<Resource> discount = new ArrayList<Resource>();
 
         //get JsonObject surplus from immediate
-        JsonObject actions=immediate.getAsJsonObject("action");
+        JsonObject actions=immediate.getAsJsonObject("Action");
 
-        //get keys from actions(target || type || force || discount) that identify all the different keys of action
+        //get keys from actions(target || type || force || discount) that identify all the different keys of Action
         ArrayList<String> actionKeys = Json.getObjectKeys(actions);
 
         for (String actionKey: actionKeys) {
@@ -338,7 +338,7 @@ public class DvptCardParser {
         Integer forceBonus=0;
         ArrayList<Resource> discount=new ArrayList<Resource>();
 
-        //get keys from permanent (minForce || type || surplus || conversion || action || discount || penality)
+        //get keys from permanent (minForce || type || surplus || conversion || Action || discount || penality)
         ArrayList<String> permanentKeys = Json.getObjectKeys(permanent);
 
         //get effectSurplus and effectAction..so i have both 'items' to create the cost

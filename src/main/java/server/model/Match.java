@@ -44,9 +44,9 @@ public class Match extends NetObject {
         //Initialize the board
         this.board = new Board();
 
-        this.currentPeriod = 1;
-        this.currentTurn = 1;
-        this.currentRound = 1;
+        this.currentPeriod = 0;
+        this.currentTurn = 0;
+        this.currentRound = 0;
 
     }
 

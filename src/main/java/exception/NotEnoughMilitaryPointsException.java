@@ -5,7 +5,7 @@ package exception;
  */
 
 /**
- * This exception is raised whenever a player has not enough military points to do an action
+ * This exception is raised whenever a player has not enough military points to do an Action
  */
 public class NotEnoughMilitaryPointsException extends NotEnoughPointsException {
 

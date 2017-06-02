@@ -2,8 +2,12 @@ package server.controller.game;
 import exception.*;
 import logger.Level;
 import logger.Logger;
-import netobject.request.RequestType;
-import netobject.request.action.*;
+import netobject.NetObjectType;
+import netobject.action.*;
+import netobject.action.ActionType;
+import netobject.action.standard.LeaderCardActivationAction;
+import netobject.action.standard.RollDicesAction;
+import netobject.action.standard.StandardPlacementAction;
 import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
@@ -11,7 +15,6 @@ import server.model.card.ban.SpecialBanCard;
 import server.model.card.ban.SpecialEffectType;
 import server.model.card.developement.*;
 import server.model.effect.*;
-import server.model.effect.ActionType;
 import server.model.valuable.Multiplier;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
@@ -52,9 +55,9 @@ public class MatchController implements Runnable {
     private LinkedHashMap<Player, RemotePlayer> remotePlayerMap;
 
     /**
-     * This queue holds all the action that need processing from the active player
+     * This queue holds all the actions that need processing from the active player
      */
-    private BlockingQueue<StandardActionRequest> standardActionRequests;
+    private BlockingQueue<Action> actions;
 
     /**
      * Holds a reference to the player of the model who is performing the move
@@ -62,14 +65,14 @@ public class MatchController implements Runnable {
     private Player currentPlayer;
 
     /**
-     * Timeout for the action
+     * Timeout for the Action
      */
     private Timer currentPlayerTimeout;
 
     /**
      * Constants
      */
-    private static final int MOVE_DELAY =  GameConfig.getInstance().getPlayerTimeout() * 1000;
+    private static final int MOVE_DELAY =  GameConfig.getInstance().getPlayerTimeout();
 
 
     /**
@@ -121,9 +124,9 @@ public class MatchController implements Runnable {
         this.boardController = new BoardController(this.match.getBoard());
 
         /*
-         * Initialize the blocking queue for requests
+         * Initialize the blocking queue for the actions
          */
-        this.standardActionRequests = new LinkedBlockingQueue<StandardActionRequest>();
+        this.actions = new LinkedBlockingQueue<Action>();
 
         //Init anything else in the future here..
 
@@ -150,6 +153,11 @@ public class MatchController implements Runnable {
         this.boardController = new BoardController(this.match.getBoard());
 
 
+    //TODO: DELETE THIS ! DEBUG ONLY
+
+        this.match.getBoard().getCathedral().setBanCard(Period.first, new SpecialBanCard(1, Period.first.toInt(), SpecialEffectType.noFirstAction));
+        this.match.getBoard().getCathedral().setBanCard(Period.second, new SpecialBanCard(2, Period.second.toInt(), SpecialEffectType.noFirstAction));
+        this.match.getBoard().getCathedral().setBanCard(Period.third, new SpecialBanCard(3, Period.third.toInt(), SpecialEffectType.noFirstAction));
 
         //Init anything else in the future here..
 
@@ -158,7 +166,7 @@ public class MatchController implements Runnable {
     /**
      * The run method is the Runnable implementation of the match controller
      * Every match controller requires its own thread
-     * This because it should be able to wait (literally) for the players to perform an action/choice
+     * This because it should be able to wait (literally) for the players to perform an Action/choice
      *
      * When this method is called (using a thread.start()) it automatically set up a timeout for the player move.
      */
@@ -173,6 +181,7 @@ public class MatchController implements Runnable {
 
             Logger.log(Level.FINEST, "MatchController", "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
+            //Update the model
             this.sendUpdatedModel();
 
             Queue<Player> currentRound = roundIterator.next();
@@ -191,86 +200,97 @@ public class MatchController implements Runnable {
                 //Update the current player
                 this.currentPlayer = p;
 
-                try {
-
-                    StandardActionRequest standardActionRequest;
-
-                    do {
-
-                        Logger.log(Level.FINEST, "MatchController", "It is " + this.currentPlayer.getUsername() + "'s turn!");
-
-                        //Tell the player that it is his turn
-                        this.remotePlayerMap.get(this.currentPlayer).notifyMoveEnabled(GameMessage.MoveEnabled.getLiteral() + " You have " + MOVE_DELAY +"s");
-
-                        //Setup a new timeout for the move
-                        this.currentPlayerTimeout = new Timer();
-
-                        //Define what to do when, and if, the timeout expires
-                        this.currentPlayerTimeout.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-
-                                //By the time this method gets fired the player should has already taken his move.
-                                //If not, we set the player as disabled and continue
-                                MatchController.this.currentPlayer.setDisabled(true);
-
-                                //To wake up the thread, inject a poisonous action
-                                MatchController.this.standardActionRequests.add(new StandardActionRequest());
+                //Notify the turn of the player
+                this.notifyAllTurnEnabled(this.currentPlayer);
 
 
-                            }
-                        }, MOVE_DELAY);
+                    Action Action;
 
-                        //Take the action request in the queue and check if we shall proceed
-                        //Note that this is a blocking queue
-                        standardActionRequest = this.standardActionRequests.take();
 
-                        //When we get here the player took its move or the timeout for the move expired, clear the interval.
-                        this.currentPlayerTimeout.cancel();
+                //Loop the players actions until he terminates his round
+                do {
 
-                        //Check if the action is legit, if not skip this player. It might just have expired the timeout
-                        if (standardActionRequest.getRequestType() == RequestType.Invalid) {
+                    Logger.log(Level.FINEST, "MatchController", "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
-                            Logger.log(Level.FINEST, "MatchController", "Move timeout expired");
+                    //Setup a new timeout for the Action
+                    this.currentPlayerTimeout = new Timer();
 
-                            //Tell the player that the timeout expired
-                            this.remotePlayerMap.get(this.currentPlayer).notifyMoveTimeoutExpired(GameMessage.TimeoutExpired.getLiteral());
+                    //Define what to do when, and if, the timeout expires
+                    this.currentPlayerTimeout.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
 
-                            //Disable the player
-                            this.currentPlayer.setDisabled(true);
+                            //By the time this method gets fired the player should has already taken his Action.
+                            //If not, we set the player as disabled and continue
+                            MatchController.this.currentPlayer.setDisabled(true);
 
-                            //Break the loop
-                            break;
+                            //To wake up the thread, inject a poisonous Action
+                            MatchController.this.actions.add(new Action());
+
 
                         }
-                        else {
+                    }, MOVE_DELAY * 1000);
 
-                            Logger.log(Level.FINEST, "MatchController", "Parsing action request, the active player is " + this.currentPlayer.getUsername());
+                    try {
+                        //Take the Action request in the queue and check if we shall proceed
+                        //Note that this is a blocking queue
+                        Action = this.actions.take();
 
-                            //Parse the action
-                            this.onPlayerAction(this.currentPlayer, standardActionRequest);
+                    } catch (InterruptedException e) {
+
+                        Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
+
+                        break;
+
+                    }
+
+                    //When we get here the player took its Action or the timeout for the Action expired, clear the interval.
+                    this.currentPlayerTimeout.cancel();
+
+                    //Check if the Action is legit, if not skip this player. It might just have expired the timeout
+                    if (Action.getType() == NetObjectType.Poison) {
+
+                        Logger.log(Level.FINEST, "MatchController", "Action timeout expired");
+
+                        //Tell the players that the timeout has expired expired for the active player
+                        this.notifyAllActionTimeoutExpired(this.currentPlayer);
+
+                        //Disable the player
+                        this.currentPlayer.setDisabled(true);
+
+                        //Break the loop
+                        break;
+
+                    }
+                    else {
+
+                        Logger.log(Level.FINEST, "MatchController", "Parsing Action request, the active player is " + this.currentPlayer.getUsername());
+
+                        try {
+
+                            //Handler the player Action
+                            this.onPlayerMove(this.currentPlayer, Action);
+
+                        }
+                        catch (ActionException reason) {
+
+                            //Inform the player that he can't take that action
+                            this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(GameMessage.InvalidAction.getLiteral() + " Reason: " + reason.getMessage());
 
                         }
 
 
                     }
-                    while (standardActionRequest.getStandardActionType() != StandardActionType.TerminateRound);
 
-                    Logger.log(Level.FINEST, "MatchController", "The player " + this.currentPlayer.getUsername() + "finished his round");
-
-                    //Tell the player that the he can't make any more moves
-                    this.remotePlayerMap.get(this.currentPlayer).notifyMoveDisabled(GameMessage.MoveDisabled.getLiteral());
-
-
-                } catch (InterruptedException e) {
-
-                    Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
-
-                } catch (ActionException reason) {
-
-                    this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(GameMessage.InvalidAction.getLiteral() + " Reason: " + reason.getMessage());
 
                 }
+                while (!this.currentPlayer.isDisabled() && Action.getActionType() != ActionType.TerminateRound);
+
+                Logger.log(Level.FINEST, "MatchController", "The player " + this.currentPlayer.getUsername() + "finished his round");
+
+                //Tell the players that the active one can't make any more actions
+                this.notifyAllTurnDisabled(this.currentPlayer);
+
 
             }
 
@@ -280,20 +300,20 @@ public class MatchController implements Runnable {
 
     /**
      * This method is the only one that should be called from other threads.
-     * Specifically, it is used by client handler to dispatch their client requests
-     * @param request
+     * Specifically, it is used by client handler to dispatch their client actions
+     * @param Action the Action
      */
-    public void dispatchNewActionRequest(StandardActionRequest request) {
+    public void dispatchNewPlayerAction(Action Action) {
 
-        this.standardActionRequests.add(request);
+        this.actions.add(Action);
 
     }
 
     /**
      * This method is called internally by the run loop
-     * It decides, based on the action performed by the active player, what should be performed
-     * @param player the player that performed the action, which is the active one
-     * @param action the action perfomed
+     * It decides, based on the Action performed by the active player, what should be performed
+     * @param player the player that performed the Action, which is the active one
+     * @param Action the Action perfomed
      * @throws NotStrongEnoughException Exception raised when the force is not enough strong
      * @throws FamilyMemberAlreadyInUseException Exception raised when the family member is already in use somewhere else
      * @throws NotEnoughPlayersException Exception raised when the zone is not enabled with the current amount of players
@@ -303,21 +323,21 @@ public class MatchController implements Runnable {
      * @throws SixCardsLimitReachedException Exception raised when the player cannot take another card of that type
      * @throws PlayerAlreadyOccupiedTowerException Exception raised when the player tries to put another player on a tower that has already been used by him
      */
-    private void onPlayerAction(Player player, StandardActionRequest action) throws ActionException{
+    private void onPlayerMove(Player player, Action Action) throws ActionException {
 
-        if(action instanceof FamilyMemberPlacementStandardActionRequest){
+        if(Action instanceof StandardPlacementAction){
 
-            placeFamilyMember((FamilyMemberPlacementStandardActionRequest) action,player);
-
-        }
-
-        if(action instanceof LeaderCardActivationStandardActionRequest){
-
-            activateLeaderCard((LeaderCardActivationStandardActionRequest) action, player);
+            placeFamilyMember((StandardPlacementAction) Action,player);
 
         }
 
-        if(action instanceof RollDiceStandardActionRequest){
+        if(Action instanceof LeaderCardActivationAction){
+
+            activateLeaderCard((LeaderCardActivationAction) Action, player);
+
+        }
+
+        if(Action instanceof RollDicesAction){
 
             rollDices();
 
@@ -325,7 +345,10 @@ public class MatchController implements Runnable {
 
     }
 
-    public void sendUpdatedModel() {
+    /**
+     * Sends the updated model to every player
+     */
+    private void sendUpdatedModel() {
 
 
         for (Player p : this.match.getPlayers()) {
@@ -335,6 +358,39 @@ public class MatchController implements Runnable {
         }
 
     }
+
+    private void notifyAllTurnEnabled(Player current) {
+
+        for (Player p : this.match.getPlayers()) {
+
+            this.remotePlayerMap.get(p).notifyTurnEnabled(current, current.getUsername() + " can take his move.");
+
+        }
+
+    }
+
+    private void notifyAllTurnDisabled(Player current) {
+
+        for (Player p : this.match.getPlayers()) {
+
+            this.remotePlayerMap.get(p).notifyTurnDisabled(current,  current.getUsername() + " terminated his turn.");
+
+        }
+
+    }
+
+    private void notifyAllActionTimeoutExpired(Player current) {
+
+        for (Player p : this.match.getPlayers()) {
+
+            this.remotePlayerMap.get(p).notifyActionTimeoutExpired(current, GameMessage.TimeoutExpired.getLiteral());
+
+        }
+
+    }
+
+
+
 
     public LinkedHashMap<Player, RemotePlayer> getRemotePlayerMap() {
         return this.remotePlayerMap;
@@ -351,7 +407,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void ApplyDvptCardCost(Player player, DvptCard card,CostOptionType costOptionType) throws ActionException {
+    public void ApplyDvptCardCost(Player player, DvptCard card,SelectionType costOptionType) throws ActionException {
 
         //territory cards doesn't have cost
         if(card.getType() == DvptCardType.territory)
@@ -392,20 +448,20 @@ public class MatchController implements Runnable {
      */
     public void applyImmediateEffect(Player player, DvptCard card) throws ActionException {
         //TODO
-        FamilyMemberPlacementStandardActionRequest action;
+        StandardPlacementAction action;
         ImmediateEffect immediateEffect = card.getImmediateEffect();
 
 
         applyEffectSurplus(player,immediateEffect.getSurplus());
 
 
-        if(immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
+        if(immediateEffect.getEffectAction().getTarget() == server.model.effect.ActionType.harvest)
             applyHarvestChain(player,immediateEffect.getEffectAction().getForce());
 
-        if(immediateEffect.getEffectAction().getTarget() == ActionType.production)
+        if(immediateEffect.getEffectAction().getTarget() == server.model.effect.ActionType.production)
             applyProductionChain(player,immediateEffect.getEffectAction().getForce());
 
-        if(immediateEffect.getEffectAction().getTarget() == ActionType.card){
+        if(immediateEffect.getEffectAction().getTarget() == server.model.effect.ActionType.card){
             if(immediateEffect.getEffectAction().getType() == DvptCardType.territory)
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
                 ;
@@ -415,7 +471,7 @@ public class MatchController implements Runnable {
                 ;
 
                 //Richiede l'interazione..
-                this.remotePlayerMap.get(this.currentPlayer).notifyMoveEnabled("");
+                this.notifyAllTurnEnabled(this.currentPlayer);
 
 
             }
@@ -432,12 +488,12 @@ public class MatchController implements Runnable {
     }
 
     /**
-     * this method receives an action and its author and places the familiar in the correct place (if it is strong enough)
+     * this method receives an Action and its author and places the familiar in the correct place (if it is strong enough)
      * @param action
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(FamilyMemberPlacementStandardActionRequest action, Player player) throws ActionException {
+    public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
@@ -518,7 +574,7 @@ public class MatchController implements Runnable {
             if(this.match.getBoard().getTerritoryTowerPlayers().size()>0){
                 player.subtractCoins(3);}
 
-            //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
+            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
 
             EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.territory, action.getPlacementIndex());
@@ -546,7 +602,7 @@ public class MatchController implements Runnable {
             if(this.match.getBoard().getBuildingTowerPlayers().size()>0)
                 player.subtractCoins(3);
 
-            //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
+            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
 
             EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.building, action.getPlacementIndex());
@@ -574,7 +630,7 @@ public class MatchController implements Runnable {
             if(this.match.getBoard().getCharacterTowerPlayers().size()>0)
                 player.subtractCoins(3);
 
-            //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
+            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
 
             EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.character, action.getPlacementIndex());
@@ -602,7 +658,7 @@ public class MatchController implements Runnable {
             if(this.match.getBoard().getVentureTowerPlayers().size()>0)
                 player.subtractCoins(3);
 
-            //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
+            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
             ApplyDvptCardCost(player,this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
 
             EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.venture, action.getPlacementIndex());
@@ -667,7 +723,7 @@ public class MatchController implements Runnable {
     }
 
 
-    public void activateLeaderCard (LeaderCardActivationStandardActionRequest action, Player player) {
+    public void activateLeaderCard (LeaderCardActivationAction action, Player player) {
 
         if(player.hasEnoughLeaderRequirements(action.getLeaderCardIndex())) { //verify the requirements to activate Leader Card
 
@@ -860,32 +916,32 @@ public class MatchController implements Runnable {
      * @param player
      * @return
      */
-    public FamilyMemberPlacementStandardActionRequest actionCharacterFilter(FamilyMemberPlacementStandardActionRequest action, Player player) throws PreacherEffectException {
+    public StandardPlacementAction actionCharacterFilter(StandardPlacementAction action, Player player) throws PreacherEffectException {
 
-        //scroll through the character cards of a player looking for permanent effect action
+        //scroll through the character cards of a player looking for permanent effect Action
         for (CharacterDvptCard card: player.getPersonalBoard().getCharacterCards()) {
 
             EffectPermanentAction permanentEffectAction = card.getPermanentEffect().getAction();
 
-            //if a permanent effect is relative to harvest type, check whether the action target is CompositeHarvestPlace or SingleHarvestPlace and modify the action
-            if(permanentEffectAction.getTarget() == ActionType.harvest) {
+            //if a permanent effect is relative to harvest type, check whether the Action target is CompositeHarvestPlace or SingleHarvestPlace and modify the Action
+            if(permanentEffectAction.getTarget() == server.model.effect.ActionType.harvest) {
 
                 if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace || action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
                     action.increaseBonus(permanentEffectAction.getForceBonus());
                 }
             }
 
-            //if a permanent effect is relative to production type, check whether the action target is CompositeProductionPlace or SingleProductionPlace and modify the action
-            if(permanentEffectAction.getTarget() == ActionType.production) {
+            //if a permanent effect is relative to production type, check whether the Action target is CompositeProductionPlace or SingleProductionPlace and modify the Action
+            if(permanentEffectAction.getTarget() == server.model.effect.ActionType.production) {
 
                 if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace || action.getActionTarget() == BoardSectorType.SingleProductionPlace) {
                     action.increaseBonus(permanentEffectAction.getForceBonus());
                 }
             }
 
-            //if a permanent effect is relative to cardtype, check the DvptCardType type and modify the action
+            //if a permanent effect is relative to cardtype, check the DvptCardType type and modify the Action
 
-            if(permanentEffectAction.getTarget() == ActionType.card){
+            if(permanentEffectAction.getTarget() == server.model.effect.ActionType.card){
                 System.out.println(permanentEffectAction.getType());
                 if(permanentEffectAction.getType() == DvptCardType.territory)
                     action.increaseBonus(permanentEffectAction.getForceBonus());
@@ -901,7 +957,7 @@ public class MatchController implements Runnable {
                 //TODO effect discount
             }
 
-            //if the effect is the preacher penality forbid the action if the placement index is > 1
+            //if the effect is the preacher penality forbid the Action if the placement index is > 1
             if(card.getPermanentEffect().isPenality()){
                 if (action.getPlacementIndex()>1) {
                     throw new PreacherEffectException("Preacher's permanent effect forbid it");
@@ -942,4 +998,7 @@ public class MatchController implements Runnable {
         }
     }
 
+    public BoardController getBoardController() {
+        return boardController;
+    }
 }

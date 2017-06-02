@@ -6,8 +6,9 @@ package netobject.notification;
  */
 public enum MatchNotificationType {
 
-    MoveEnabled,
-    MoveDisabled,
+    TurnEnabled,
+    TurnDisabled,
+    ImmediateAction,
     TimeoutExpired,
     ActionRefused
 

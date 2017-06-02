@@ -2,15 +2,19 @@ package client.controller.network.RMI;
 
 import client.controller.network.Client;
 import exception.ConnectionFailedException;
+import exception.NotRegisteredException;
 import exception.authentication.AuthenticationException;
 import exception.authentication.NotConnectedException;
 import logger.Level;
 import logger.Logger;
+import netobject.action.Action;
+import netobject.action.ActionType;
+import netobject.action.standard.StandardPlacementAction;
 import netobject.notification.LobbyNotification;
-import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
 import server.controller.network.RMI.RMIServerInterface;
 import server.model.Match;
+import server.model.board.Player;
 
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
@@ -74,20 +78,24 @@ public class RMIClient extends Client implements RMIClientInterface {
         this.notifyModelUpdate(model);
     }
 
-    public void onMoveEnabled(String message) {
-        this.notifyMoveEnabled(message);
+    public void onTurnEnabled(Player player, String message) {
+        this.notifyTurnEnabled(player, message);
     }
 
-    public void onMoveDisabled(String message) {
-        this.notifyMoveDisabled(message);
+    public void onTurnDisabled(Player player, String message) {
+        this.notifyTurnDisabled(player , message);
     }
 
-    public void onMoveTimeoutExpired(String message) {
-        this.notifyMoveTimeoutExpired(message);
+    public void onActionTimeoutExpired(Player player, String message) {
+        this.notifyActionTimeoutExpired(player, message);
     }
 
     public void onActionRefused(String message) {
         this.notifyActionRefused(message);
+    }
+
+    public void onImmediateActionAvailable(ActionType actionType, Player player, String message) throws RemoteException {
+        this.notifyImmediateActionAvailable(actionType, player, message);
     }
 
     public boolean connect() {
@@ -165,6 +173,18 @@ public class RMIClient extends Client implements RMIClientInterface {
 
         }
 
+    }
+
+    public void performAction(Action action) {
+        try {
+            this.serverRef.performAction(this.token, action);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotRegisteredException e) {
+            e.printStackTrace();
+        } catch (NotConnectedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

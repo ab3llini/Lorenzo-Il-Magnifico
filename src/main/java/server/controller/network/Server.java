@@ -4,6 +4,7 @@ import exception.authentication.AlreadyLoggedInException;
 import exception.authentication.LoginFailedException;
 import logger.Level;
 import logger.Logger;
+import netobject.action.Action;
 import netobject.request.Request;
 import netobject.request.RequestType;
 import netobject.request.auth.LoginRequest;
@@ -157,6 +158,22 @@ public abstract class Server implements Observable<ServerObserver> {
 
     }
 
+    protected final void notifyAction(ClientHandler handler, Action action) {
+
+        if (!handler.isAuthenticated()) {
+
+            return;
+
+        }
+
+        for (ServerObserver o : this.observers) {
+
+            o.onAction(this, handler, action);
+
+        }
+
+    }
+
 
     protected final synchronized boolean authenticate(ClientHandler handler, LoginRequest loginRequest) throws AlreadyLoggedInException, LoginFailedException {
 
@@ -219,6 +236,8 @@ public abstract class Server implements Observable<ServerObserver> {
         return false;
 
     }
+
+
 
 
 }

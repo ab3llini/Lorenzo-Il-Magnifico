@@ -232,7 +232,7 @@ public class BoardController {
      * @param familyMember
      * @param additionalServants that a player can use to increment his family member force
      * @param numberOfPlayers
-     * @return an effect surplus for the player that has performed the action
+     * @return an effect surplus for the player that has performed the Action
      * @throws NotStrongEnoughException
      * @throws NotEnoughPlayersException
      */
@@ -251,7 +251,7 @@ public class BoardController {
         }
 
         else
-            throw new NotStrongEnoughException("Not strong enough to do this action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
 
     }
 
@@ -262,7 +262,7 @@ public class BoardController {
      * @param additionalServants that a player can use to increment his family member force
      * @param placementIndex
      * @param numberOfPlayers
-     * @return an effect surplus for the player that has performed the action
+     * @return an effect surplus for the player that has performed the Action
      * @throws NotStrongEnoughException
      * @throws NotEnoughPlayersException
      * @throws PlaceOccupiedException
@@ -288,7 +288,7 @@ public class BoardController {
             return this.board.getMarket().getMarketPlaces().get(placementIndex).getEffectSurplus();
         }
         else
-            throw new NotStrongEnoughException("Not strong enough to do this action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
     }
 
     /**
@@ -323,7 +323,7 @@ public class BoardController {
             return this.board.getHarvestArea().getMainPlace().getEffectSurplus();
         }
         else
-            throw new NotStrongEnoughException("Not strong enough to do this action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
 
 
     }
@@ -353,7 +353,7 @@ public class BoardController {
             return this.board.getHarvestArea().getSecondaryPlace().getEffectSurplus();
         }
         else
-            throw new NotStrongEnoughException("Not strong enough to do this action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
 
 
     }
@@ -390,7 +390,7 @@ public class BoardController {
             return this.board.getProductionArea().getMainPlace().getEffectSurplus();
         }
         else
-            throw new NotStrongEnoughException("Not strong enough to do this action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
 
 
     }
@@ -420,7 +420,7 @@ public class BoardController {
             return this.board.getProductionArea().getSecondaryPlace().getEffectSurplus();
         }
         else
-            throw new NotStrongEnoughException("Not strong enough to do this action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
 
 
     }
@@ -450,7 +450,7 @@ public class BoardController {
             return this.board.getTower(towerType).get(index).getEffectSurplus();
         }
         else
-            throw new NotStrongEnoughException("Not strong enough to do this action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
 
     }
 }

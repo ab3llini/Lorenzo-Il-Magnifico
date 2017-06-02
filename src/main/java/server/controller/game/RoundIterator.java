@@ -1,5 +1,6 @@
-package server.model;
+package server.controller.game;
 
+import server.model.Match;
 import server.model.board.Player;
 import server.model.card.ban.BanCard;
 import server.model.card.ban.BanType;
@@ -52,6 +53,39 @@ public class RoundIterator implements Iterator<Queue<Player>> {
         //A queue of banned players that need to be put at the end of the round queue
         Queue<Player> banned = new LinkedList<Player>();
 
+
+        //Update period, turn &
+        if (this.match.getCurrentRound() == 0 && this.match.getCurrentTurn() == 0 && this.match.getCurrentPeriod().toInt() == 0) {
+
+            this.match.setCurrentRound(1);
+
+            this.match.setCurrentTurn(1);
+
+            this.match.setCurrentPeriod(1);
+
+        }
+        else if (this.match.getCurrentRound() < ROUNDS) {
+
+            this.match.setCurrentRound(this.match.getCurrentRound() + 1);
+
+        }
+        else if (this.match.getCurrentTurn() < TURNS) {
+
+            this.match.setCurrentRound(1);
+
+            this.match.setCurrentTurn(this.match.getCurrentTurn() + 1);
+
+        }
+        else if (this.match.getCurrentPeriod().toInt() < PERIODS) {
+
+            this.match.setCurrentRound(1);
+
+            this.match.setCurrentTurn(1);
+
+            this.match.setCurrentPeriod(this.match.getCurrentPeriod().toInt() + 1);
+
+        }
+
         //Check if the player that is being added to the queue has been banned
         for (Player p : this.match.getRoundOrder()) {
 
@@ -97,30 +131,6 @@ public class RoundIterator implements Iterator<Queue<Player>> {
             roundOrder.addAll(banned);
 
         }
-
-        //Update period, turn & round
-        if (this.match.getCurrentRound() < ROUNDS) {
-
-            this.match.setCurrentRound(this.match.getCurrentRound() + 1);
-
-        }
-        else if (this.match.getCurrentTurn() < TURNS) {
-
-            this.match.setCurrentRound(1);
-
-            this.match.setCurrentTurn(this.match.getCurrentTurn() + 1);
-
-        }
-        else if (this.match.getCurrentPeriod().toInt() < PERIODS) {
-
-            this.match.setCurrentRound(1);
-
-            this.match.setCurrentTurn(1);
-
-            this.match.setCurrentPeriod(this.match.getCurrentPeriod().toInt() + 1);
-
-        }
-
 
         return roundOrder;
 

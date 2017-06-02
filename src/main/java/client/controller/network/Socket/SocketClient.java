@@ -4,6 +4,7 @@ import client.controller.network.Client;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObjectType;
+import netobject.action.Action;
 import netobject.notification.*;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
@@ -171,19 +172,24 @@ public class SocketClient extends Client implements Runnable {
 
                 MatchNotification matchNot = (MatchNotification)not;
 
-                if (matchNot.getMatchNotificationType() == MatchNotificationType.MoveEnabled) {
+                if (matchNot.getMatchNotificationType() == MatchNotificationType.TurnEnabled) {
 
-                    this.notifyMoveEnabled(matchNot.getMessage());
+                    this.notifyTurnEnabled(matchNot.getPlayer(), matchNot.getMessage());
 
                 }
-                else if (matchNot.getMatchNotificationType() == MatchNotificationType.MoveDisabled) {
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.TurnDisabled) {
 
-                    this.notifyMoveDisabled(matchNot.getMessage());
+                    this.notifyTurnDisabled(matchNot.getPlayer(), matchNot.getMessage());
+
+                }
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.ImmediateAction) {
+
+                    this.notifyImmediateActionAvailable(matchNot.getActionType(), matchNot.getPlayer(), matchNot.getMessage());
 
                 }
                 else if (matchNot.getMatchNotificationType() == MatchNotificationType.TimeoutExpired) {
 
-                    this.notifyMoveTimeoutExpired(matchNot.getMessage());
+                    this.notifyActionTimeoutExpired(matchNot.getPlayer(), matchNot.getMessage());
 
                 }
                 else if (matchNot.getMatchNotificationType() == MatchNotificationType.ActionRefused) {
@@ -229,4 +235,9 @@ public class SocketClient extends Client implements Runnable {
     }
 
 
+    public void performAction(Action action) {
+
+        this.sendObject(action);
+
+    }
 }

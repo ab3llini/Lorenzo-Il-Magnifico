@@ -1,4 +1,4 @@
-package netobject.request.action;
+package netobject.action.standard;
 
 import client.view.cmd.CliPrintable;
 
@@ -8,10 +8,10 @@ import client.view.cmd.CliPrintable;
  */
 public enum StandardActionType implements CliPrintable {
 
-    FamilyMemberPlacement("Place a family member."),
-    LeaderCardActivation("Activate a leader card."),
-    RollDice("Roll the dices."),
-    TerminateRound("Terminate the round.");
+    FamilyMemberPlacement("Place a family member"),
+    LeaderCardActivation("Activate a leader card"),
+    RollDice("Roll the dices"),
+    TerminateRound("Terminate the round");
 
     private final String name;
 

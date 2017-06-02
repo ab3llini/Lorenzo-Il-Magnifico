@@ -7,11 +7,13 @@ package server.controller.network.RMI;
 import client.controller.network.RMI.RMIClientInterface;
 import logger.Level;
 import logger.Logger;
+import netobject.action.ActionType;
 import netobject.notification.LobbyNotification;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
 import server.model.Match;
+import server.model.board.Player;
 
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
@@ -173,30 +175,30 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
-    public void notifyMoveEnabled(String message) {
+    public void notifyTurnEnabled(Player player, String message) {
 
         try {
-            this.clientRef.onMoveEnabled(message);
+            this.clientRef.onTurnEnabled(player, message);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void notifyMoveDisabled(String message) {
+    public void notifyTurnDisabled(Player player, String message) {
 
         try {
-            this.clientRef.onMoveDisabled(message);
+            this.clientRef.onTurnDisabled(player, message);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void notifyMoveTimeoutExpired(String message) {
+    public void notifyActionTimeoutExpired(Player player, String message) {
 
         try {
-            this.clientRef.onMoveTimeoutExpired(message);
+            this.clientRef.onActionTimeoutExpired(player, message);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -212,4 +214,15 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         }
 
     }
+
+    public void notifyImmediateActionAvailable(ActionType actionType, Player player, String message) {
+
+        try {
+            this.clientRef.onImmediateActionAvailable(actionType, player, message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

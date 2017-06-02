@@ -1,5 +1,6 @@
-package netobject.request.action;
+package netobject.action.standard;
 
+import netobject.action.*;
 import server.model.board.ColorType;
 
 /**
@@ -7,30 +8,30 @@ import server.model.board.ColorType;
  * Edited by ab3llini on 23/05/2017
  */
 
-public class FamilyMemberPlacementStandardActionRequest extends StandardActionRequest {
+public class StandardPlacementAction extends Action {
 
-    private final BoardSectorType actionTarget; //sector of the board which is target of the action
+    private final StandardActionType standardActionType;
+
+    private final BoardSectorType actionTarget; //sector of the board which is target of the Action
 
     private final Integer placementIndex; //slot index of the board sector
 
     private final ColorType colorType;
 
-    private  int additionalServants;
+    private Integer additionalServants;
 
-    private final CostOptionType costOptionType;
+    private final SelectionType costOptionType;
 
-    private int characterBonus;
+    public StandardPlacementAction(StandardActionType standardActionType, BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType) {
 
-    public FamilyMemberPlacementStandardActionRequest(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, CostOptionType costOptionType) {
-
-        super(StandardActionType.FamilyMemberPlacement);
+        super(ActionType.Standard);
+        this.standardActionType = standardActionType;
 
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
         this.colorType = colorType;
         this.additionalServants = additionalServants;
         this.costOptionType = costOptionType;
-        this.characterBonus = 0;
     }
 
     public BoardSectorType getActionTarget() {
@@ -45,7 +46,7 @@ public class FamilyMemberPlacementStandardActionRequest extends StandardActionRe
             return colorType;
     }
 
-    public CostOptionType getCostOptionType() {
+    public SelectionType getCostOptionType() {
             return costOptionType;
     }
 
@@ -53,8 +54,11 @@ public class FamilyMemberPlacementStandardActionRequest extends StandardActionRe
             return additionalServants;
     }
 
-    public void increaseBonus(int bonus ) {
+    public void increaseBonus(int bonus) {
+
         this.additionalServants += bonus;
+
     }
+
 
 }

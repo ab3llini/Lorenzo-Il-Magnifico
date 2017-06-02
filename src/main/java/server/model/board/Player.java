@@ -259,7 +259,7 @@ public class Player implements Serializable {
 
 
     /**
-     * this method returns an array of family members that has enough force(or they can have with an addition of servants) to do an action
+     * this method returns an array of family members that has enough force(or they can have with an addition of servants) to do an Action
      *
      * @return
      */

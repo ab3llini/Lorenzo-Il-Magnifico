@@ -8,12 +8,15 @@ package server.controller.network.Socket;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
+import netobject.action.Action;
+import netobject.action.ActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
 import netobject.notification.MatchNotificationType;
 import server.controller.network.ClientHandler;
 import server.controller.network.Observable;
 import server.model.Match;
+import server.model.board.Player;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -201,22 +204,18 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     }
 
-    public void notifyMoveEnabled(String message) {
+    public void notifyTurnEnabled(Player player, String message) {
+        this.sendObject(new MatchNotification(MatchNotificationType.TurnEnabled, player, message));
+    }
 
-        this.sendObject(new MatchNotification(MatchNotificationType.MoveEnabled, message));
+    public void notifyTurnDisabled(Player player, String message) {
+        this.sendObject(new MatchNotification(MatchNotificationType.TurnDisabled, player, message));
 
     }
 
-    public void notifyMoveDisabled(String message) {
+    public void notifyActionTimeoutExpired(Player player, String message) {
 
-        this.sendObject(new MatchNotification(MatchNotificationType.MoveDisabled, message));
-
-
-    }
-
-    public void notifyMoveTimeoutExpired(String message) {
-
-        this.sendObject(new MatchNotification(MatchNotificationType.TimeoutExpired, message));
+        this.sendObject(new MatchNotification(MatchNotificationType.TimeoutExpired, player, message));
 
     }
 
@@ -224,6 +223,12 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         this.sendObject(new MatchNotification(MatchNotificationType.ActionRefused, message));
 
+    }
+
+    public void notifyImmediateActionAvailable(ActionType actionType, Player player, String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.ImmediateAction, actionType, player, message));
 
     }
+
 }

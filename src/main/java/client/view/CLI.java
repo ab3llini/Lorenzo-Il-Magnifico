@@ -14,13 +14,18 @@ import client.view.utility.AsyncInputStream;
 import client.view.utility.AsyncInputStreamObserver;
 import logger.Level;
 import logger.Logger;
+import netobject.action.ActionType;
+import netobject.action.SelectionType;
+import netobject.action.standard.StandardPlacementAction;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
 import netobject.notification.Notification;
-import netobject.request.action.StandardActionType;
-import netobject.request.action.BoardSectorType;
+import netobject.action.standard.StandardActionType;
+import netobject.action.BoardSectorType;
 import netobject.request.auth.LoginRequest;
 import server.model.Match;
+import server.model.board.ColorType;
+import server.model.board.Player;
 import singleton.GameConfig;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -394,35 +399,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         if (cmd.choiceMatch(choice, StandardActionType.FamilyMemberPlacement)) {
 
-            Command<BoardSectorType> sectorCmd = new Command<BoardSectorType>(BoardSectorType.class);
+            this.placeFamilyMember();
 
+            Cmd.notify("You took your move");
 
-            Cmd.askFor("Please select where you would like to place your family member");
+            return;
 
-            sectorCmd.printChoiches();
-
-            choice = this.inputQueue.take();
-
-            //Check it
-            while (!sectorCmd.isValid(choice) && this.canMakeMove) {
-
-                choice = this.inputQueue.take();
-
-            }
-
-            Cmd.askFor("Please select the color of the family member you would like to use");
-            /*
-            choice = this.inputQueue.take();
-
-            //Check it
-            while (!Cmd.isValid(AuthType.values(), choice) && this.canMakeMove) {
-
-                choice = this.inputQueue.take();
-
-            }
-
-
-            */
         }
 
         else {
@@ -432,6 +414,85 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
 
         Cmd.notify("You did not perform any move");
+
+    }
+
+    public void placeFamilyMember() throws InterruptedException {
+
+        StandardPlacementAction stdPlacement;
+
+        String choice;
+
+        BoardSectorType sectorType;
+        Integer index;
+        ColorType memberColor;
+        Integer additionalServants;
+        SelectionType costOption = SelectionType.First;
+
+
+        Cmd.askFor("Please select where you would like to place your family member");
+
+        Command<BoardSectorType> sectorCmd = new Command<BoardSectorType>(BoardSectorType.class);
+
+        sectorCmd.printChoiches();
+
+        choice = this.inputQueue.take();
+
+        //Check it
+        while (!sectorCmd.isValid(choice) && this.canMakeMove) {
+
+            choice = this.inputQueue.take();
+
+        }
+
+        sectorType = sectorCmd.getEnumEntryFromChoice(choice);
+
+        Cmd.askFor("Please select the placement index (minimum 1)");
+
+        index = Integer.parseInt(this.inputQueue.take());
+
+
+        Cmd.askFor("Please select the color of the family member you would like to use");
+
+        Command<ColorType> colorCmd = new Command<ColorType>(ColorType.class);
+
+        colorCmd.printChoiches();
+
+        choice = this.inputQueue.take();
+
+        //Check it
+        while (!colorCmd.isValid(choice) && this.canMakeMove) {
+
+            choice = this.inputQueue.take();
+
+        }
+
+        memberColor = colorCmd.getEnumEntryFromChoice(choice);
+
+        Cmd.askFor("Enter the amount of additional servants");
+
+        additionalServants = Integer.parseInt(this.inputQueue.take());
+
+        Cmd.askFor("Enter the cost option");
+
+        Command<SelectionType> costCmd = new Command<SelectionType>(SelectionType.class);
+
+        costCmd.printChoiches();
+
+        choice = this.inputQueue.take();
+
+        //Check it
+        while (!costCmd.isValid(choice) && this.canMakeMove) {
+
+            choice = this.inputQueue.take();
+
+        }
+
+        costOption = costCmd.getEnumEntryFromChoice(choice);
+
+        stdPlacement = new StandardPlacementAction(StandardActionType.FamilyMemberPlacement, sectorType, index, memberColor, additionalServants, costOption);
+
+        this.client.performAction(stdPlacement);
 
     }
 
@@ -486,36 +547,93 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    public void onMoveEnabled(Client sender, String message) {
+    public void onTurnEnabled(Client sender, Player player, String message) {
 
-        Cmd.notify(message);
+        //It it is our turn
+        if (player.getUsername().equals(this.client.getUsername())) {
 
-        synchronized (this.moveMutex) {
+            Cmd.notify(message);
 
-            //Enable the move
-            moveMutex.notify();
+            this.canMakeMove = true;
+
+            synchronized (this.moveMutex) {
+
+                //Enable the move
+                moveMutex.notify();
+
+            }
+
+        }
+        else {
+
+            Cmd.notify("It is " + player.getUsername() + "'s turn");
 
         }
 
+    }
 
+    public void onImmediateActionAvailable(Client sender, ActionType actionType, Player player, String message) {
+
+        //It it is our turn
+        if (player.getUsername().equals(this.client.getUsername())) {
+
+            Cmd.notify(message);
+
+            this.canMakeMove = true;
+
+        }
+        else {
+
+            Cmd.notify(player.getUsername() + " can make an immediate action");
+
+        }
 
     }
 
-    public void onMoveDisabled(Client sender, String message) {
+    public void onTurnDisabled(Client sender, Player player, String message) {
 
-        Cmd.notify(message);
+        //It it is our turn
+        if (player.getUsername().equals(this.client.getUsername())) {
+
+            Cmd.notify(message);
+
+            this.canMakeMove = false;
+
+
+        }
+        else {
+
+            Cmd.notify(player.getUsername() + " ended his turn");
+
+        }
 
     }
 
-    public void onTimeoutExpired(Client sender, String message) {
+    public void onTimeoutExpired(Client sender, Player player, String message) {
 
-        Cmd.notify(message);
+
+        //It it is our turn
+        if (player.getUsername().equals(this.client.getUsername())) {
+
+            Cmd.notify(message);
+
+            this.canMakeMove = false;
+
+
+        }
+        else {
+
+            Cmd.notify(player.getUsername() + "'s timeout to take his move expired. He was disabled.");
+
+        }
+
 
     }
 
     public void onActionRefused(Client sender, String message) {
 
-        Cmd.notify(message);
+        Cmd.notify("Action refused : " + message);
 
     }
+
 }

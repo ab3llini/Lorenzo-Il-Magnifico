@@ -6,7 +6,7 @@ import exception.authentication.AlreadyLoggedInException;
 import exception.authentication.LoginFailedException;
 import exception.authentication.NotConnectedException;
 import exception.authentication.UsernameAlreadyInUseException;
-import netobject.request.action.StandardActionRequest;
+import netobject.action.Action;
 import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 
@@ -52,12 +52,12 @@ public interface RMIServerInterface extends Remote {
     void register(String connectionToken, RegisterRequest authentication) throws RemoteException, UsernameAlreadyInUseException, AlreadyLoggedInException, LoginFailedException;
 
     /**
-     * Attempts to perform an standardActionRequest
+     * Attempts to perform an action
      * @param connectionToken The stub of the client
-     * @param standardActionRequest The standardActionRequest to be performed
+     * @param action The action to be performed
      * @return Upon success returns true, otherwise false.
      * @throws RemoteException Needed for RMI Pattern
      */
-    boolean performAction(String connectionToken, StandardActionRequest standardActionRequest) throws RemoteException, NotRegisteredException;
+    void performAction(String connectionToken, Action action) throws RemoteException, NotRegisteredException, NotConnectedException;
 
 }

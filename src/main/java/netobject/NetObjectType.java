@@ -9,6 +9,8 @@ public enum NetObjectType {
     Request,
     Response,
     Notification,
-    Model
+    Action,
+    Model,
+    Poison
 
 }

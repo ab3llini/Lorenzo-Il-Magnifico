@@ -1,7 +1,10 @@
 package client.controller.network.RMI;
 
+import client.controller.network.Client;
+import netobject.action.ActionType;
 import netobject.notification.LobbyNotification;
 import server.model.Match;
+import server.model.board.Player;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -30,13 +33,14 @@ public interface RMIClientInterface extends Remote {
 
     void onModelUpdate(Match model) throws RemoteException;
 
-    void onMoveEnabled(String message) throws RemoteException;
+    void onTurnEnabled(Player player, String message) throws RemoteException;
 
-    void onMoveDisabled(String message) throws RemoteException;
+    void onTurnDisabled(Player player, String message) throws RemoteException;
 
-    void onMoveTimeoutExpired(String message) throws RemoteException;
+    void onActionTimeoutExpired(Player player, String message) throws RemoteException;
 
     void onActionRefused(String message) throws RemoteException;
 
+    void onImmediateActionAvailable(ActionType actionType, Player player, String message) throws RemoteException;
 
 }

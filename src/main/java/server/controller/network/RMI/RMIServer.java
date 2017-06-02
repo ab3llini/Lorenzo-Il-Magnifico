@@ -8,9 +8,9 @@ import client.controller.network.RMI.RMIClientInterface;
 import exception.*;
 
 import exception.authentication.*;
-import netobject.request.action.StandardActionRequest;
 
 import logger.*;
+import netobject.action.Action;
 import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 import server.controller.game.GameEngine;
@@ -253,11 +253,13 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
 
 
+    }
+
+    public void performAction(String connectionToken, Action action) throws RemoteException, NotRegisteredException, NotConnectedException {
+
+        this.notifyAction(getClientHandler(connectionToken), action);
 
     }
 
-    public synchronized boolean performAction(String connectionToken, StandardActionRequest standardActionRequest) throws RemoteException, NotRegisteredException {
-        return false;
-    }
 
 }

@@ -109,7 +109,7 @@ public class BoardConfigParser {
     }
 
     /**
-     * this method parse market attributes and create the Market that is composed by an arrayList of action places
+     * this method parse market attributes and create the Market that is composed by an arrayList of Action places
      * @return Market that will be used in board model
      */
     public static Market getMarket(){

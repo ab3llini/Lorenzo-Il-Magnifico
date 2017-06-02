@@ -9,14 +9,13 @@ import exception.NoSuchLobbyException;
 import exception.PlayerNeverDisconnectedException;
 import logger.Level;
 import logger.Logger;
+import netobject.action.Action;
 import server.controller.network.*;
-import server.controller.network.RMI.RMIClientHandler;
 import server.controller.network.RMI.RMIServer;
 import server.controller.network.Socket.SocketServer;
 import singleton.GameConfig;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -193,6 +192,22 @@ public class GameEngine implements ServerObserver {
 
         }
 
+
+    }
+
+    public void onAction(Server server, ClientHandler handler, Action action) {
+
+        try {
+
+            this.getLobby(handler).getMatchController().dispatchNewPlayerAction(action);
+
+
+        }
+        catch (NoSuchLobbyException e) {
+
+            Logger.log(Level.SEVERE, "GameEngine", "Unable to find the lobby where the player is playing!", e);
+
+        }
 
     }
 

@@ -1,16 +1,16 @@
-package netobject.request.action;
+package netobject.action;
 
 /*
  * @author  ab3llini
  * @since   23/05/17.
  */
-public enum CostOptionType {
+public enum SelectionType {
 
     First(0),
     Second(1);
     int value;
 
-    CostOptionType(int value){
+    SelectionType(int value){
         this.value = value;
     }
 

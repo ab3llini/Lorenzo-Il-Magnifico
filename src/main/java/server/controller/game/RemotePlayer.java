@@ -1,6 +1,8 @@
 package server.controller.game;
 
+import netobject.action.ActionType;
 import server.model.Match;
+import server.model.board.Player;
 
 /*
  * @author  ab3llini
@@ -15,12 +17,14 @@ public interface RemotePlayer {
 
     void notifyModelUpdate(Match model);
 
-    void notifyMoveEnabled(String message);
+    void notifyTurnEnabled(Player player, String message);
 
-    void notifyMoveDisabled(String message);
+    void notifyTurnDisabled(Player player, String message);
 
-    void notifyMoveTimeoutExpired(String message);
+    void notifyActionTimeoutExpired(Player player, String message);
 
     void notifyActionRefused(String message);
+
+    void notifyImmediateActionAvailable(ActionType actionType, Player player, String message);
 
 }

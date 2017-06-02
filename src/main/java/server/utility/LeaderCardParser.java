@@ -169,7 +169,7 @@ public class LeaderCardParser {
 
     private static OnceARoundEffect getOnceARoundEffect(JsonObject effects){
 
-        //onceARound effect can be composed by resources,points,action. if sixEffect is true you can do one particular card action one a round
+        //onceARound effect can be composed by resources,points,Action. if sixEffect is true you can do one particular card Action one a round
         ArrayList<Resource> resources= new ArrayList<Resource>();
         ArrayList<Point> points = new ArrayList<Point>();
         HashMap<ActionType,Integer> action= new HashMap<ActionType, Integer>();
@@ -189,7 +189,7 @@ public class LeaderCardParser {
                 points = getPoints(onceARoundEffect);
             }
 
-            if (effectKey.equals("action")){
+            if (effectKey.equals("Action")){
                 action=getAction(onceARoundEffect);
             }
 
@@ -211,7 +211,7 @@ public class LeaderCardParser {
         HashMap<ActionType, Integer> action= new HashMap<ActionType, Integer>();
 
         //get Json object actionObject from onceARoundEffect
-        JsonObject actionObject = onceARoundEffect.getAsJsonObject("action");
+        JsonObject actionObject = onceARoundEffect.getAsJsonObject("Action");
 
         //get keys from onceARoundEffect(harvest|| production)
         ArrayList<String> effectKeys = Json.getObjectKeys(actionObject);

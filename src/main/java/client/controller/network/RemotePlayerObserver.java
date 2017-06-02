@@ -1,6 +1,8 @@
 package client.controller.network;
 
+import netobject.action.ActionType;
 import server.model.Match;
+import server.model.board.Player;
 
 /*
  * @author  ab3llini
@@ -10,11 +12,13 @@ public interface RemotePlayerObserver {
 
     void onModelUpdate(Client sender, Match model);
 
-    void onMoveEnabled(Client sender, String message);
+    void onTurnEnabled(Client sender, Player player, String message);
 
-    void onMoveDisabled(Client sender, String message);
+    void onImmediateActionAvailable(Client sender, ActionType actionType, Player player, String message);
 
-    void onTimeoutExpired(Client sender, String message);
+    void onTurnDisabled(Client sender, Player player, String message);
+
+    void onTimeoutExpired(Client sender, Player player, String message);
 
     void onActionRefused(Client sender, String message);
 

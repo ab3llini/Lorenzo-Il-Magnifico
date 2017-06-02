@@ -10,7 +10,7 @@ import server.controller.network.ClientHandlerObserver;
 public interface SocketClientHandlerObserver extends ClientHandlerObserver {
 
     /**
-     * Event raised whenever a client performs an action
+     * Event raised whenever a client performs an Action
      * @param handler The handler for the client
      * @param object The net object received
      */

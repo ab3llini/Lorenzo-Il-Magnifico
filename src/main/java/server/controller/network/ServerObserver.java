@@ -5,6 +5,8 @@ package server.controller.network;
  * @since   16/05/17.
  */
 
+import netobject.action.Action;
+
 /**
  * This interface provide methods for server observers
  */
@@ -30,5 +32,6 @@ public interface ServerObserver {
      */
     void onDisconnection(Server server, ClientHandler handler);
 
+    void onAction(Server server, ClientHandler handler, Action action);
 
 }
