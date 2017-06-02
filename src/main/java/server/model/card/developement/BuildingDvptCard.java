@@ -16,7 +16,7 @@ public class BuildingDvptCard extends DvptCard implements Serializable {
 
     public BuildingDvptCard(Integer id, String name, Integer period, ArrayList<Cost> cost, ImmediateEffect immediateEffect, PermanentEffect permanentEffect) {
 
-        super(id, DvptCardType.venture, name, period, immediateEffect, permanentEffect);
+        super(id, DvptCardType.building, name, period, immediateEffect, permanentEffect);
 
         this.cost = cost;
     }

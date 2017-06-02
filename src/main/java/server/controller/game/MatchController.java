@@ -153,7 +153,7 @@ public class MatchController implements Runnable {
         this.boardController = new BoardController(this.match.getBoard());
 
 
-    //TODO: DELETE THIS ! DEBUG ONLY
+        //TODO: DELETE THIS ! DEBUG ONLY
 
         this.match.getBoard().getCathedral().setBanCard(Period.first, new SpecialBanCard(1, Period.first.toInt(), SpecialEffectType.noFirstAction));
         this.match.getBoard().getCathedral().setBanCard(Period.second, new SpecialBanCard(2, Period.second.toInt(), SpecialEffectType.noFirstAction));
@@ -204,7 +204,7 @@ public class MatchController implements Runnable {
                 this.notifyAllTurnEnabled(this.currentPlayer);
 
 
-                    Action Action;
+                Action Action;
 
 
                 //Loop the players actions until he terminates his round
@@ -407,7 +407,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void ApplyDvptCardCost(Player player, DvptCard card,SelectionType costOptionType) throws ActionException {
+    public void applyDvptCardCost(Player player, DvptCard card, SelectionType costOptionType) throws ActionException {
 
         //territory cards doesn't have cost
         if(card.getType() == DvptCardType.territory)
@@ -417,7 +417,7 @@ public class MatchController implements Runnable {
 
         //some cards could have a double cost
         if(card.getCost().size()>1)
-          i = costOptionType.toInt();
+            i = costOptionType.toInt();
 
         //get the choosen one cost
         Cost costo = card.getCost().get(i);
@@ -484,7 +484,11 @@ public class MatchController implements Runnable {
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
                 ;}
 
-        //TODO multiplier
+        //multiplier immediate effect is always in the first slot of points array
+        if(immediateEffect.getSurplus().getPoints().size()>0){
+            if(immediateEffect.getSurplus().getPoints().get(0).getMultiplier()!= null)
+                applyMultiplier(player,immediateEffect.getSurplus().getPoints().get(0).getMultiplier());
+        }
     }
 
     /**
@@ -505,7 +509,7 @@ public class MatchController implements Runnable {
         if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
             EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
-            }
+        }
 
         //if boardSectorType is Market we place the family member in the correct market place (from index 0 to index 3)
         //once positioned the market place give to the player an effectSurplus
@@ -562,115 +566,38 @@ public class MatchController implements Runnable {
 
         }
 
-        //if boardSectorType is TerritoryTower we place the family member in the correct (placementIndex) towerSlot of the tower
+        //if boardSectorType is a tower sector we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
-        if(action.getActionTarget() == BoardSectorType.TerritoryTower) {
+        if (action.getActionTarget() == BoardSectorType.VentureTower || action.getActionTarget() == BoardSectorType.CharacterTower || action.getActionTarget() == BoardSectorType.BuildingTower || action.getActionTarget() == BoardSectorType.TerritoryTower) {
+
+            //get tower type from board sector
+            DvptCardType towerType = getTowerType(action.getActionTarget());
+
+            //control if the towerSlot is already occupied
+            if(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).isOccupied())
+                throw new PlaceOccupiedException("This place is already occupied");
 
             //control if the player has another family member in the tower
-            if(this.match.getBoard().getTerritoryTowerPlayers().contains(player))
+            if (this.match.getBoard().getPlayersInTower(towerType).contains(player))
                 throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
 
             //if the tower is already occupied tha player have to pay 3 coins
-            if(this.match.getBoard().getTerritoryTowerPlayers().size()>0){
-                player.subtractCoins(3);}
-
-            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
-            ApplyDvptCardCost(player,this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
-
-            EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.territory, action.getPlacementIndex());
-            applyEffectSurplus(player,surplus);
-
-            //add to the personal board of the player the territory card set in the tower slot
-            player.getPersonalBoard().addTerritoryCard((TerritoryDvptCard) this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).getDvptCard());
-
-            applyImmediateEffect(player,this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).getDvptCard());
-
-            //set the dvptCard of the tower to null value because no one can choose or take it now
-            this.match.getBoard().getTerritoryTower().get(action.getPlacementIndex()).setDvptCard(null);
-
-        }
-
-        //if boardSectorType is BuildingTower we place the family member in the correct (placementIndex) towerSlot of the tower
-        //once positioned the towerSlot give to the player an effectSurplus
-        if(action.getActionTarget() == BoardSectorType.BuildingTower) {
-
-            //control if the player has another family member in the tower
-            if(this.match.getBoard().getBuildingTowerPlayers().contains(player))
-                throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
-
-            //if the tower is already occupied tha player have to pay 3 coins
-            if(this.match.getBoard().getBuildingTowerPlayers().size()>0)
+            if (this.match.getBoard().getTower(towerType).size() > 0)
                 player.subtractCoins(3);
 
-            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
-            ApplyDvptCardCost(player,this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
+            //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getCostOptionType());
 
-            EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.building, action.getPlacementIndex());
-            applyEffectSurplus(player,surplus);
-
-            //add to the personal board of the player the building card set in the tower slot
-            player.getPersonalBoard().addBuildingCard((BuildingDvptCard) this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).getDvptCard());
-
-            applyImmediateEffect(player,this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).getDvptCard());
-
-            //set the dvptCard of the tower to null value because no one can choose or take it now
-            this.match.getBoard().getBuildingTower().get(action.getPlacementIndex()).setDvptCard(null);
-
-        }
-
-        //if boardSectorType is CharacterTower we place the family member in the correct (placementIndex) towerSlot of the tower
-        //once positioned the towerSlot give to the player an effectSurplus
-        if(action.getActionTarget() == BoardSectorType.CharacterTower) {
-
-            //control if the player has another family member in the tower
-            if(this.match.getBoard().getCharacterTowerPlayers().contains(player))
-                throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
-
-            //if the tower is already occupied tha player have to pay 3 coins
-            if(this.match.getBoard().getCharacterTowerPlayers().size()>0)
-                player.subtractCoins(3);
-
-            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
-            ApplyDvptCardCost(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
-
-            EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.character, action.getPlacementIndex());
-            applyEffectSurplus(player,surplus);
+            EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
+            applyEffectSurplus(player, effectSurplus);
 
             //add to the personal board of the player the building card set in the tower slot
-            player.getPersonalBoard().addCharacterCard((CharacterDvptCard) this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
+            player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-            applyImmediateEffect(player,this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).getDvptCard());
-
-            //set the dvptCard of the tower to null value because no one can choose or take it now
-            this.match.getBoard().getCharacterTower().get(action.getPlacementIndex()).setDvptCard(null);
-
-        }
-
-        //if boardSectorType is VentureTower we place the family member in the correct (placementIndex) towerSlot of the tower
-        //once positioned the towerSlot give to the player an effectSurplus
-        if(action.getActionTarget() == BoardSectorType.VentureTower) {
-
-            //control if the player has another family member in the tower
-            if(this.match.getBoard().getVentureTowerPlayers().contains(player))
-                throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
-
-            //if the tower is already occupied tha player have to pay 3 coins
-            if(this.match.getBoard().getVentureTowerPlayers().size()>0)
-                player.subtractCoins(3);
-
-            //try to apply card cost to the player that made the Action .. if this method return an exception no family members will be set here
-            ApplyDvptCardCost(player,this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).getDvptCard(),action.getCostOptionType());
-
-            EffectSurplus surplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(),DvptCardType.venture, action.getPlacementIndex());
-            applyEffectSurplus(player,surplus);
-
-            //add to the personal board of the player the building card set in the tower slot
-            player.getPersonalBoard().addVentureCard((VentureDvptCard) this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).getDvptCard());
-
-            applyImmediateEffect(player,this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).getDvptCard());
+            applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
-            this.match.getBoard().getVentureTower().get(action.getPlacementIndex()).setDvptCard(null);
+            this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
 
         }
 
@@ -870,7 +797,7 @@ public class MatchController implements Runnable {
 
             //each venture card give a victory bonus
             for (VentureDvptCard card: player.getPersonalBoard().getVentureCards()) {
-                    totalScore += card.getPermanentEffect().getvPoints();
+                totalScore += card.getPermanentEffect().getvPoints();
             }
 
             //one victory point from every 5 resources of all type
@@ -987,15 +914,30 @@ public class MatchController implements Runnable {
 
             if(true){
                 //the player has enough faith points but doesn't want to use them to avoid excommunication
-               player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
-        }
+                player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
+            }
             else
                 //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
                 player.addVictoryPoints(BoardConfigParser.getVictoryBonusFromFaith(player.getFaithPoints()));
 
-                //the player cannot choose how many faith points to use
-                player.setFaithPoints(0);
+            //the player cannot choose how many faith points to use
+            player.setFaithPoints(0);
         }
+    }
+
+    public DvptCardType getTowerType(BoardSectorType boardSectorType){
+
+        if(boardSectorType == BoardSectorType.BuildingTower)
+            return DvptCardType.building;
+
+        if(boardSectorType == BoardSectorType.CharacterTower)
+            return DvptCardType.character;
+
+        if(boardSectorType == BoardSectorType.TerritoryTower)
+            return DvptCardType.territory;
+
+
+        return DvptCardType.venture;
     }
 
     public BoardController getBoardController() {

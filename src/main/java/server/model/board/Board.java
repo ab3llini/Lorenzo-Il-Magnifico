@@ -74,10 +74,10 @@ public class Board implements Serializable {
         }
 
         if (towerType == DvptCardType.territory) {
-            return this.territoryTower;
-        } else {
-            return this.ventureTower;
-        }
+            return this.territoryTower;}
+
+
+        return this.ventureTower;
 
     }
 
