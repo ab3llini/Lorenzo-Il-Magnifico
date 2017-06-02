@@ -1,10 +1,10 @@
-import exception.NotEnoughCoinsException;
-import exception.NotEnoughMilitaryPointsException;
-import exception.NotEnoughResourcesException;
-import exception.NotEnoughVictoryPointsException;
+import exception.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import server.model.Match;
 import server.model.board.Player;
+import server.model.valuable.PointType;
 import server.model.valuable.ResourceType;
 
 /**
@@ -80,10 +80,32 @@ public class TestPlayer {
     }
 
     @Test
-    public void familyMembersSuitable() {
+    public void familyMembersSuitableTest() {
 
         assertEquals(player.getFamilyMembers(),player.getFamilyMembersSuitable(0));
         assertNotEquals(player.getFamilyMembers(),player.getFamilyMembersSuitable(2));
+    }
+
+    @Test
+    public void getFamilyMemberTest()  {
+
+        for(int i=0; i<100 ; i++){
+
+            if((int)(Math.random()*100)%2 == 0){
+                player.getFamilyMembers().get(0).setBusy(false);
+            }
+            else{
+                player.getFamilyMembers().get(0).setBusy(true);
+            }
+
+           try{
+               player.getFamilyMember(player.getFamilyMembers().get(0).getColor());
+               assertEquals(false,player.getFamilyMembers().get(0).isBusy());
+           }
+           catch (FamilyMemberAlreadyInUseException e){
+                assertEquals(true,player.getFamilyMembers().get(0).isBusy());
+           }
+        }
     }
 
     @Test
@@ -106,7 +128,7 @@ public class TestPlayer {
     }
 
     @Test
-    public void addGenericTest() {
+    public void addGenericResourceTest() {
 
         ResourceType resourceType = ResourceType.Wood;
 
@@ -130,7 +152,7 @@ public class TestPlayer {
     }
 
     @Test
-    public void subtractGenericTest() {
+    public void subtractGenericResourceTest() {
 
         ResourceType resourceType = ResourceType.Wood;
         player.setWood(20);
@@ -162,5 +184,56 @@ public class TestPlayer {
         }
     }
 
+    @Test
+    public void addGenericPointTest() {
+
+        PointType pointType = PointType.Victory;
+
+        for(int i=0;i<2000;i++){
+
+            if(i%3 == 0)
+                pointType = PointType.Faith;
+
+            if(i%4 == 0)
+                pointType = PointType.Military;
+
+            int random = (int)Math.random()*100;
+
+            player.addGenericPoint(pointType,random);
+
+            assertEquals(random,(int)player.getPoints(pointType));
+        }
+    }
+
+    @Test
+    public void subtractGenericPointTest() {
+
+        PointType pointType = PointType.Victory;
+        player.setVictoryPoints(20);
+
+        for(int i=0;i<2000;i++){
+
+            if(i%3 == 0){
+                pointType = PointType.Faith;
+                player.setFaithPoints(20);}
+
+            if(i%4 == 0){
+                pointType = PointType.Military;
+                player.setMilitaryPoints(20);}
+
+
+            int random = (int)Math.random()*100;
+
+            try{
+                player.subtractGenericPoint(pointType,random);
+
+                assertEquals(20 - random,(int)player.getPoints(pointType));
+            }
+            catch (NotEnoughPointsException e){
+
+                assertEquals(20,(int)player.getPoints(pointType));
+            }
+        }
+    }
 
 }

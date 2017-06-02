@@ -581,8 +581,8 @@ public class MatchController implements Runnable {
             if (this.match.getBoard().getPlayersInTower(towerType).contains(player))
                 throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
 
-            //if the tower is already occupied tha player have to pay 3 coins
-            if (this.match.getBoard().getTower(towerType).size() > 0)
+            //if the tower is already occupied the player have to pay 3 coins
+            if (this.match.getBoard().getPlayersInTower(towerType).size() > 0)
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here

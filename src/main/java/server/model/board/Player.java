@@ -141,6 +141,25 @@ public class Player implements Serializable {
         return this.points.get(PointType.Military);
     }
 
+    public Integer getVictoryPoints() {
+        return this.points.get(PointType.Victory);
+    }
+
+    public Integer getFaithPoints() {
+        return this.points.get(PointType.Faith);
+    }
+
+    public Integer getPoints(PointType pointType){
+
+        if(pointType == PointType.Military)
+            return getMilitaryPoints();
+
+        if(pointType == PointType.Faith)
+            return getFaithPoints();
+
+        return getVictoryPoints();
+    }
+
     public void setMilitaryPoints(Integer militaryPoints) {
         this.points.put(PointType.Military, militaryPoints);
     }
@@ -151,14 +170,6 @@ public class Player implements Serializable {
 
     public void setFaithPoints(Integer faithPoints) {
         this.points.put(PointType.Faith, faithPoints);
-    }
-
-    public Integer getVictoryPoints() {
-        return this.points.get(PointType.Victory);
-    }
-
-    public Integer getFaithPoints() {
-        return this.points.get(PointType.Faith);
     }
 
     public ArrayList<FamilyMember> getFamilyMembers() {

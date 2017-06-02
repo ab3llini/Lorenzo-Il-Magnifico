@@ -22,5 +22,6 @@ public class Market implements Serializable {
 
         this.getMarketPlaces().get(placementIndex).setOccupied(true);
         this.getMarketPlaces().get(placementIndex).setFamilyMember(familyMember);
+
     }
 }

@@ -1,4 +1,5 @@
 import exception.ActionException;
+import exception.SixCardsLimitReachedException;
 import netobject.action.BoardSectorType;
 import netobject.action.SelectionType;
 import netobject.action.standard.StandardActionType;
@@ -149,6 +150,61 @@ public class TestMachController {
         }
     }
 
+    @Test
+    public void applyHarvestChainTest() throws IOException, URISyntaxException, SixCardsLimitReachedException {
+
+        ArrayList<DvptCard> cards = DvptCardParser.parse();
+
+        ArrayList<BonusTile> tiles = BonusTilesParser.parse();
+
+        ArrayList<TerritoryDvptCard> territoryCards = new ArrayList<TerritoryDvptCard>();
+
+        for (DvptCard card: cards) {
+
+            if(card.getType() == DvptCardType.territory)
+                territoryCards.add((TerritoryDvptCard)card);
+        }
+
+        for(int i=0; i<10000;i++){
+
+            Player testPlayer = new Player("testPlayer");
+            Player testPlayer2 = new Player("testPlayer2");
+
+            int random = (int)(Math.random()*100)%5;
+
+            testPlayer2.getPersonalBoard().setBonusTile(tiles.get(random));
+
+            int firstCard = (int)(Math.random()*100)%24;
+            int secondCard = (int)(Math.random()*100)%24;
+            int thirdCard = (int)(Math.random()*100)%24;
+            int fourthCard = (int)(Math.random()*100)%24;
+            int fifthCard = (int)(Math.random()*100)%24;
+            int sixthCard = (int)(Math.random()*100)%24;
+
+            mc.applyEffectSurplus(testPlayer,territoryCards.get(firstCard).getPermanentEffect().getSurplus());
+            mc.applyEffectSurplus(testPlayer,territoryCards.get(secondCard).getPermanentEffect().getSurplus());
+            mc.applyEffectSurplus(testPlayer,territoryCards.get(thirdCard).getPermanentEffect().getSurplus());
+            mc.applyEffectSurplus(testPlayer,territoryCards.get(fourthCard).getPermanentEffect().getSurplus());
+            mc.applyEffectSurplus(testPlayer,territoryCards.get(fifthCard).getPermanentEffect().getSurplus());
+            mc.applyEffectSurplus(testPlayer,territoryCards.get(sixthCard).getPermanentEffect().getSurplus());
+            mc.applyEffectSurplus(testPlayer,tiles.get(random).getHarvestSurplus());
+
+            testPlayer2.getPersonalBoard().addTerritoryCard(territoryCards.get(firstCard));
+            testPlayer2.getPersonalBoard().addTerritoryCard(territoryCards.get(secondCard));
+            testPlayer2.getPersonalBoard().addTerritoryCard(territoryCards.get(thirdCard));
+            testPlayer2.getPersonalBoard().addTerritoryCard(territoryCards.get(fourthCard));
+            testPlayer2.getPersonalBoard().addTerritoryCard(territoryCards.get(fifthCard));
+            testPlayer2.getPersonalBoard().addTerritoryCard(territoryCards.get(sixthCard));
+
+            mc.applyHarvestChain(testPlayer2,6);
+
+            assertEquals(testPlayer.getWood(),testPlayer2.getWood());
+            assertEquals(testPlayer.getCoins(),testPlayer2.getCoins());
+            assertEquals(testPlayer.getServants(),testPlayer2.getServants());
+            assertEquals(testPlayer.getStones(),testPlayer2.getStones());
+
+        }
+    }
 
     @Test
     public void placeFamilyMemberTest() throws IOException, URISyntaxException {
@@ -193,11 +249,12 @@ public class TestMachController {
         mc.getMatch().getBoard().setDvptCardOnCharacterTower(mazzettoCharacter);
         mc.getMatch().getBoard().setDvptCardOnVentureTower(mazzettoVenture);
 
-        StandardPlacementAction standardPlacementAction = new StandardPlacementAction(StandardActionType.FamilyMemberPlacement, BoardSectorType.TerritoryTower,3, ColorType.Black,1,SelectionType.First);
+        StandardPlacementAction standardPlacementAction1 = new StandardPlacementAction(StandardActionType.FamilyMemberPlacement, BoardSectorType.TerritoryTower,3, ColorType.Black,1,SelectionType.First);
         try {
-            mc.placeFamilyMember(standardPlacementAction,player1);
+            mc.placeFamilyMember(standardPlacementAction1,player1);
             assertEquals(12,(int)player1.getStones());
             assertEquals(12,(int)player1.getWood());
+            assertEquals(10,(int)player1.getCoins());
             assertEquals(true,mc.getMatch().getBoard().getTerritoryTower().get(3).isOccupied());
             assertEquals(true,player1.getFamilyMembers().get(0).isBusy());
         }
@@ -206,6 +263,31 @@ public class TestMachController {
             assertEquals(10,(int)player1.getStones());
             assertEquals(10,(int)player1.getServants());
             assertEquals(10,(int)player1.getWood());
+            assertEquals(10,(int)player1.getMilitaryPoints());
+            assertEquals(10,(int)player1.getVictoryPoints());
+            assertEquals(10,(int)player1.getFaithPoints());
+        }
+
+        StandardPlacementAction standardPlacementAction2 = new StandardPlacementAction(StandardActionType.FamilyMemberPlacement, BoardSectorType.BuildingTower,3, ColorType.Orange,1,SelectionType.First);
+        try {
+            DvptCard cartaPresa = mc.getMatch().getBoard().getBuildingTower().get(3).getDvptCard();
+            mc.placeFamilyMember(standardPlacementAction2,player1);
+
+            assertEquals(12,(int)player1.getStones());
+            assertEquals(8,(int)player1.getCoins());
+            assertEquals(10,(int)player1.getWood());
+            assertEquals(12,(int)player1.getMilitaryPoints());
+            assertEquals(16,(int)player1.getVictoryPoints());
+            assertEquals(true,mc.getMatch().getBoard().getBuildingTower().get(3).isOccupied());
+            assertEquals(true,player1.getFamilyMembers().get(1).isBusy());
+            assertEquals(cartaPresa,player1.getPersonalBoard().getBuildingCards().get(0));
+            assertEquals(null,mc.getMatch().getBoard().getBuildingTower().get(3).getDvptCard());
+        }
+        catch (ActionException e){
+            assertEquals(10,(int)player1.getCoins());
+            assertEquals(12,(int)player1.getStones());
+            assertEquals(10,(int)player1.getServants());
+            assertEquals(12,(int)player1.getWood());
             assertEquals(10,(int)player1.getMilitaryPoints());
             assertEquals(10,(int)player1.getVictoryPoints());
             assertEquals(10,(int)player1.getFaithPoints());
