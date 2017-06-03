@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Multiplier implements Serializable {
     private MultipliedType what;
     private ResultType result;
-    private Float coefficient;
+    private float coefficient;
 
     public Multiplier(MultipliedType what, ResultType result, Float coefficient){
         this.what=what;
@@ -16,7 +16,7 @@ public class Multiplier implements Serializable {
         this.coefficient=coefficient;
     }
 
-    public Float getCoefficient() {
+    public float getCoefficient() {
         return coefficient;
     }
 

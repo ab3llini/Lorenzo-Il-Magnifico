@@ -6,14 +6,12 @@ import netobject.action.standard.StandardActionType;
 import netobject.action.standard.StandardPlacementAction;
 import org.junit.Test;
 import server.controller.game.MatchController;
+import server.model.GameSingleton;
 import server.model.board.BonusTile;
 import server.model.board.ColorType;
 import server.model.board.FamilyMember;
 import server.model.board.Player;
-import server.model.card.developement.Cost;
-import server.model.card.developement.DvptCard;
-import server.model.card.developement.DvptCardType;
-import server.model.card.developement.TerritoryDvptCard;
+import server.model.card.developement.*;
 import server.model.effect.EffectSurplus;
 import server.model.valuable.*;
 import server.utility.BonusTilesParser;
@@ -48,7 +46,6 @@ public class TestMachController {
         points.add(new Point(PointType.Victory,10,null));
 
         int council = 0;
-
 
 
 
@@ -294,4 +291,203 @@ public class TestMachController {
         }
 
     }
+
+    @Test
+    public void applyProductionChainTest() throws IOException, URISyntaxException, SixCardsLimitReachedException {
+
+       player1.getPersonalBoard().setBonusTile(GameSingleton.getInstance().getBonusTiles().get(4));
+       player1.getPersonalBoard().addTerritoryCard((TerritoryDvptCard)GameSingleton.getInstance().getSpecificDvptCard(0));
+       player1.getPersonalBoard().addCharacterCard((CharacterDvptCard)GameSingleton.getInstance().getSpecificDvptCard(48));
+       player1.getPersonalBoard().addVentureCard((VentureDvptCard)GameSingleton.getInstance().getSpecificDvptCard(72));
+
+        for(int i=24; i<48; i++) {
+
+            player1.setCoins(10);
+            player1.setServants(10);
+            player1.setStones(10);
+            player1.setMilitaryPoints(10);
+            player1.setWood(10);
+            player1.setVictoryPoints(10);
+            player1.setFaithPoints(10);
+
+            int coinsMalus = 0;
+            int servantsMalus = 0;
+            int stonesMalus = 0;
+            int militaryMalus = 0;
+            int woodMalus = 0;
+            int victoryMalus = 0;
+            int faithMalus = 0;
+            int coinsBonus = 0;
+            int servantsBonus = 0;
+            int stonesBonus = 0;
+            int militaryBonus = 0;
+            int woodBonus = 0;
+            int victoryBonus = 0;
+            int faithBonus = 0;
+            int councilBonus = 0;
+
+            DvptCard card = GameSingleton.getInstance().getSpecificDvptCard(i);
+            player1.getPersonalBoard().addBuildingCard((BuildingDvptCard) card);
+
+            if (card.getPermanentEffect().getMultiplier() != null) {
+
+                if (GameSingleton.getInstance().getSpecificDvptCard(i).getPermanentEffect().getMultiplier().getResult() == ResultType.coins)
+                    coinsBonus = (int) (card.getPermanentEffect().getMultiplier().getCoefficient()) * player1.getSizeMultipliedType(card.getPermanentEffect().getMultiplier().getWhat());
+
+                else
+                    victoryBonus = (int) (card.getPermanentEffect().getMultiplier().getCoefficient()) * player1.getSizeMultipliedType(card.getPermanentEffect().getMultiplier().getWhat());
+
+            }
+
+            if (card.getPermanentEffect().getConversion() != null) {
+
+                if (card.getPermanentEffect().getConversion().get(0).getFrom().getResources() != null) {
+
+                    for (Resource resource : card.getPermanentEffect().getConversion().get(0).getFrom().getResources()) {
+
+                        if (resource.getType() == ResourceType.Coins)
+                                coinsMalus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Servants)
+                                servantsMalus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Wood)
+                                woodMalus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Stones)
+                                stonesMalus = resource.getAmount();
+
+                    }
+                }
+
+                if (card.getPermanentEffect().getConversion().get(0).getFrom().getPoints() != null) {
+
+                     for (Point point : card.getPermanentEffect().getConversion().get(0).getFrom().getPoints()) {
+
+                         if (point.getType() == PointType.Military)
+                             militaryMalus = point.getAmount();
+
+                         if (point.getType() == PointType.Faith)
+                             faithMalus = point.getAmount();
+
+                         if (point.getType() == PointType.Victory)
+                             victoryMalus = point.getAmount();
+
+                        }
+
+                    }
+
+                if (card.getPermanentEffect().getConversion().get(0).getTo().getResources() != null) {
+
+                    for (Resource resource : card.getPermanentEffect().getConversion().get(0).getTo().getResources()) {
+
+                        if (resource.getType() == ResourceType.Coins)
+                            coinsBonus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Servants)
+                            servantsBonus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Wood)
+                            woodBonus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Stones)
+                            stonesBonus = resource.getAmount();
+
+                    }
+
+                }
+
+                if (card.getPermanentEffect().getConversion().get(0).getTo().getPoints() != null) {
+
+                    for (Point point : card.getPermanentEffect().getConversion().get(0).getTo().getPoints()) {
+
+                        if (point.getType() == PointType.Military)
+                            militaryBonus = point.getAmount();
+
+                        if (point.getType() == PointType.Faith)
+                            faithBonus = point.getAmount();
+
+                        if (point.getType() == PointType.Victory)
+                            victoryBonus = point.getAmount();
+                     }
+
+                }
+
+            }
+
+            if(card.getPermanentEffect().getSurplus() != null) {
+
+                if (card.getPermanentEffect().getSurplus().getResources() != null) {
+
+                    for (Resource resource : card.getPermanentEffect().getSurplus().getResources()) {
+
+                        if (resource.getType() == ResourceType.Coins)
+                            coinsBonus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Servants)
+                            servantsBonus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Wood)
+                            woodBonus = resource.getAmount();
+
+                        if (resource.getType() == ResourceType.Stones)
+                            stonesBonus = resource.getAmount();
+
+                    }
+
+                }
+
+                if (card.getPermanentEffect().getSurplus().getPoints() != null) {
+
+                    for (Point point : card.getPermanentEffect().getSurplus().getPoints()) {
+
+                        if (point.getType() == PointType.Military)
+                            militaryBonus = point.getAmount();
+
+                        if (point.getType() == PointType.Faith)
+                            faithBonus = point.getAmount();
+
+                        if (point.getType() == PointType.Victory)
+                            victoryBonus = point.getAmount();
+
+                    }
+
+                }
+
+                councilBonus = card.getPermanentEffect().getSurplus().getCouncil();
+
+            }
+
+
+        try {
+
+            mc.applyProductionChain(player1, 6);
+            assertEquals(10 + victoryBonus - victoryMalus, (int) player1.getVictoryPoints());
+            assertEquals(10 + woodBonus - woodMalus, (int) player1.getWood());
+            assertEquals(11 + militaryBonus - militaryMalus, (int) player1.getMilitaryPoints());
+            assertEquals(12 + coinsBonus - coinsMalus, (int) player1.getCoins());
+            assertEquals(10 + servantsBonus - servantsMalus, (int) player1.getServants());
+            assertEquals(10 + stonesBonus - stonesMalus, (int) player1.getStones());
+            assertEquals(10 + faithBonus - faithMalus, (int) player1.getFaithPoints());
+
+            }
+
+        catch (ActionException e) {
+
+            assertEquals(12,(int)player1.getCoins());
+            assertEquals(10,(int)player1.getStones());
+            assertEquals(10,(int)player1.getServants());
+            assertEquals(10,(int)player1.getWood());
+            assertEquals(11,(int)player1.getMilitaryPoints());
+            assertEquals(10,(int)player1.getVictoryPoints());
+            assertEquals(10,(int)player1.getFaithPoints());
+
+        }
+
+            player1.getPersonalBoard().getBuildingCards().remove(0);
+
+        }
+
+    }
+
 }
