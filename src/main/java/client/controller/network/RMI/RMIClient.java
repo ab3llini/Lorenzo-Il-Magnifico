@@ -9,6 +9,7 @@ import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
 import netobject.action.ActionType;
+import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.StandardPlacementAction;
 import netobject.notification.LobbyNotification;
 import netobject.request.auth.LoginRequest;
@@ -94,10 +95,16 @@ public class RMIClient extends Client implements RMIClientInterface {
         this.notifyActionRefused(message);
     }
 
-    public void onImmediateActionAvailable(ActionType actionType, Player player, String message) throws RemoteException {
+    public void onImmediateActionAvailable(ImmediateActionType actionType, Player player, String message) throws RemoteException {
         this.notifyImmediateActionAvailable(actionType, player, message);
+
     }
 
+    public void onActionPerformed(Player player, Action action, String message) throws RemoteException {
+        this.notifyActionPerformed(player, action, message);
+
+    }
+    
     public boolean connect() {
         try {
 

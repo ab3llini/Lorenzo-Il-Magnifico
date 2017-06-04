@@ -281,6 +281,7 @@ public class Board implements Serializable {
 
     /** This method prints the entire board in all its component in that moment**/
 
+
     public void printBoard() {
 
         System.out.println("__________________________________________________________________________________________");

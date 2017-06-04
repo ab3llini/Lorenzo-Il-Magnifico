@@ -7,7 +7,6 @@ package netobject.action;
 public enum ActionType {
 
     Standard,
-    Immediate,
-    TerminateRound
+    Immediate
 
 }

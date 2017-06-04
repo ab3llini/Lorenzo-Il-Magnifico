@@ -1,16 +1,19 @@
 package netobject.notification;
 
+import netobject.action.Action;
 import netobject.action.ActionType;
+import netobject.action.immediate.ImmediateActionType;
 import server.model.board.Player;
 
 public class MatchNotification extends Notification {
 
     private final MatchNotificationType matchNotificationType;
-    private ActionType actionType;
+    private ImmediateActionType actionType;
     private Player player;
+    private Action action;
     private final String message;
 
-    public MatchNotification(MatchNotificationType matchNotificationType, ActionType actionType, Player player, String message) {
+    public MatchNotification(MatchNotificationType matchNotificationType, ImmediateActionType actionType, Player player, String message) {
 
         super(NotificationType.Match);
         this.matchNotificationType = matchNotificationType;
@@ -34,6 +37,15 @@ public class MatchNotification extends Notification {
         this.message = message;
     }
 
+    public MatchNotification(MatchNotificationType matchNotificationType, Player player, Action action, String message) {
+
+        super(NotificationType.Match);
+        this.matchNotificationType = matchNotificationType;
+        this.player = player;
+        this.action = action;
+        this.message = message;
+    }
+
     public MatchNotificationType getMatchNotificationType() {
         return matchNotificationType;
     }
@@ -46,7 +58,11 @@ public class MatchNotification extends Notification {
         return player;
     }
 
-    public ActionType getActionType() {
+    public ImmediateActionType getActionType() {
         return actionType;
+    }
+
+    public Action getAction() {
+        return action;
     }
 }

@@ -1,7 +1,9 @@
 package client.controller.network.RMI;
 
 import client.controller.network.Client;
+import netobject.action.Action;
 import netobject.action.ActionType;
+import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import server.model.Match;
 import server.model.board.Player;
@@ -41,6 +43,9 @@ public interface RMIClientInterface extends Remote {
 
     void onActionRefused(String message) throws RemoteException;
 
-    void onImmediateActionAvailable(ActionType actionType, Player player, String message) throws RemoteException;
+    void onImmediateActionAvailable(ImmediateActionType actionType, Player player, String message) throws RemoteException;
+
+    void onActionPerformed(Player player, Action action, String message) throws RemoteException;
+
 
 }

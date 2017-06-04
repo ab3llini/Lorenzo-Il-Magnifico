@@ -9,7 +9,7 @@ import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
 import netobject.action.Action;
-import netobject.action.ActionType;
+import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
 import netobject.notification.MatchNotificationType;
@@ -225,9 +225,15 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     }
 
-    public void notifyImmediateActionAvailable(ActionType actionType, Player player, String message) {
+    public void notifyImmediateActionAvailable(ImmediateActionType immediateActionType, Player player, String message) {
 
-        this.sendObject(new MatchNotification(MatchNotificationType.ImmediateAction, actionType, player, message));
+        this.sendObject(new MatchNotification(MatchNotificationType.ImmediateAction, immediateActionType, player, message));
+
+    }
+
+    public void notifyActionPerformed(Player player, Action action, String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.ActionPerformed, player, action, message));
 
     }
 

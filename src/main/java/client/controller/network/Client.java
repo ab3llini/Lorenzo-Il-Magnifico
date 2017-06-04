@@ -1,7 +1,8 @@
 package client.controller.network;
 
 import client.controller.LocalPlayer;
-import netobject.action.ActionType;
+import netobject.action.Action;
+import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.request.auth.LoginRequest;
 import server.controller.game.RemotePlayer;
@@ -165,11 +166,21 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     }
 
-    public void notifyImmediateActionAvailable(ActionType actionType, Player player, String message) {
+    public void notifyImmediateActionAvailable(ImmediateActionType immediateActionType, Player player, String message) {
 
         for (ClientObserver o : this.observers) {
 
-            o.onImmediateActionAvailable(this, actionType, player, message);
+            o.onImmediateActionAvailable(this, immediateActionType, player, message);
+
+        }
+
+    }
+
+    public void notifyActionPerformed(Player player, Action action, String message) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onActionPerformed(this, player, action, message);
 
         }
 

@@ -4,10 +4,10 @@ import logger.Level;
 import logger.Logger;
 import netobject.NetObjectType;
 import netobject.action.*;
-import netobject.action.ActionType;
 import netobject.action.standard.LeaderCardActivationAction;
 import netobject.action.standard.RollDicesAction;
 import netobject.action.standard.StandardPlacementAction;
+import netobject.action.standard.TerminateRoundStandardAction;
 import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
@@ -174,14 +174,15 @@ public class MatchController implements Runnable {
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);
 
+        //Send once the model to each player
+        this.sendUpdatedModel();
+
         while (roundIterator.hasNext()) {
 
             this.boardController.updateTowersForTurn(this.match.getCurrentPeriod().toInt(), this.match.getCurrentTurn());
 
             Logger.log(Level.FINEST, "MatchController", "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
-            //Update the model
-            this.sendUpdatedModel();
 
             Queue<Player> currentRound = roundIterator.next();
 
@@ -191,109 +192,130 @@ public class MatchController implements Runnable {
                 //Skip each disabled player
                 if (p.isDisabled()) {
 
-                    Logger.log(Level.FINEST, "MatchController", "Skipping player " + p.getUsername() +" because it is disabled");
+                    Logger.log(Level.FINEST, "MatchController", "Skipping player " + p.getUsername() +" because he is disabled");
 
                     continue;
                 }
 
-                //Update the current player
-                this.currentPlayer = p;
-
-                //Notify the turn of the player
-                this.notifyAllTurnEnabled(this.currentPlayer);
-
-
-                Action Action;
-
-
-                //Loop the players actions until he terminates his round
-                do {
-
-                    Logger.log(Level.FINEST, "MatchController", "It is " + this.currentPlayer.getUsername() + "'s turn!");
-
-                    //Setup a new timeout for the Action
-                    this.currentPlayerTimeout = new Timer();
-
-                    //Define what to do when, and if, the timeout expires
-                    this.currentPlayerTimeout.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-
-                            //By the time this method gets fired the player should has already taken his Action.
-                            //If not, we set the player as disabled and continue
-                            MatchController.this.currentPlayer.setDisabled(true);
-
-                            //To wake up the thread, inject a poisonous Action
-                            MatchController.this.actions.add(new Action());
-
-
-                        }
-                    }, MOVE_DELAY * 1000);
-
-                    try {
-                        //Take the Action request in the queue and check if we shall proceed
-                        //Note that this is a blocking queue
-                        Action = this.actions.take();
-
-                    } catch (InterruptedException e) {
-
-                        Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
-
-                        break;
-
-                    }
-
-                    //When we get here the player took its Action or the timeout for the Action expired, clear the interval.
-                    this.currentPlayerTimeout.cancel();
-
-                    //Check if the Action is legit, if not skip this player. It might just have expired the timeout
-                    if (Action.getType() == NetObjectType.Poison) {
-
-                        Logger.log(Level.FINEST, "MatchController", "Action timeout expired");
-
-                        //Tell the players that the timeout has expired expired for the active player
-                        this.notifyAllActionTimeoutExpired(this.currentPlayer);
-
-                        //Disable the player
-                        this.currentPlayer.setDisabled(true);
-
-                        //Break the loop
-                        break;
-
-                    }
-                    else {
-
-                        Logger.log(Level.FINEST, "MatchController", "Parsing Action request, the active player is " + this.currentPlayer.getUsername());
-
-                        try {
-
-                            //Handler the player Action
-                            this.onPlayerMove(this.currentPlayer, Action);
-
-                        }
-                        catch (ActionException reason) {
-
-                            //Inform the player that he can't take that action
-                            this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(GameMessage.InvalidAction.getLiteral() + " Reason: " + reason.getMessage());
-
-                        }
-
-
-                    }
-
-
-                }
-                while (!this.currentPlayer.isDisabled() && Action.getActionType() != ActionType.TerminateRound);
-
-                Logger.log(Level.FINEST, "MatchController", "The player " + this.currentPlayer.getUsername() + "finished his round");
-
-                //Tell the players that the active one can't make any more actions
-                this.notifyAllTurnDisabled(this.currentPlayer);
-
+                this.handlePlayerRound(p);
 
             }
 
         }
+
+    }
+
+    /**
+     * Handles a player round.
+     * Listens for actions
+     * @param player the player
+     */
+    private void handlePlayerRound(Player player) {
+
+        //Update the current player
+        this.currentPlayer = player;
+
+        //Notify the turn of the player
+        this.notifyAllTurnEnabled(this.currentPlayer);
+
+        Action action;
+
+        //Loop the players actions until he terminates his round
+        do {
+
+            Logger.log(Level.FINEST, "MatchController", "It is " + this.currentPlayer.getUsername() + "'s turn!");
+
+            //Setup a new timeout for the action
+            this.currentPlayerTimeout = new Timer();
+
+            //Define what to do when, and if, the timeout expires
+            this.currentPlayerTimeout.schedule(new TimerTask() {
+                @Override
+                public void run() {
+
+                    //By the time this method gets fired the player should has already taken his action.
+                    //If not, we set the player as disabled and continue
+                    MatchController.this.currentPlayer.setDisabled(true);
+
+                    //To wake up the thread, inject a poisonous action
+                    MatchController.this.actions.add(new Action());
+
+
+                }
+            }, MOVE_DELAY * 1000);
+
+            try {
+                //Take the action request in the queue and check if we shall proceed
+                //Note that this is a blocking queue
+                action = this.actions.take();
+
+            } catch (InterruptedException e) {
+
+                Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
+
+                break;
+
+            }
+
+            //When we get here the player took its action or the timeout for the action expired, clear the interval.
+            this.currentPlayerTimeout.cancel();
+
+            //Check if the action is legit, if not skip this player. It might just have expired the timeout
+            if (action.getType() == NetObjectType.Poison) {
+
+                Logger.log(Level.FINEST, "MatchController", "The action timeout for player " + this.currentPlayer.getUsername() + " expired");
+
+                //Tell the players that the timeout has expired expired for the active player
+                this.notifyAllActionTimeoutExpired(this.currentPlayer);
+
+                //Disable the player
+                this.currentPlayer.setDisabled(true);
+
+                //Tell the players that the active one can't make any more actions
+                this.notifyAllTurnDisabled(this.currentPlayer);
+
+                //Break the loop
+                break;
+
+            }
+            else if (action instanceof TerminateRoundStandardAction) {
+
+                Logger.log(Level.FINEST, "MatchController", "The player " + this.currentPlayer.getUsername() + " terminated his round");
+
+                //Tell the players that the active one can't make any more actions
+                this.notifyAllTurnDisabled(this.currentPlayer);
+
+                break;
+
+            }
+            else {
+
+                Logger.log(Level.FINEST, "MatchController", "Parsing action request, the active player is " + this.currentPlayer.getUsername());
+
+                try {
+
+                    //Handler the player action
+                    this.handlePlayerAction(this.currentPlayer, action);
+
+                    //If we get here without exceptions we can notify of the succeeded action
+                    this.notifyAllActionPerformed(this.currentPlayer, action);
+
+                    //Update the model
+                    this.sendUpdatedModel();
+
+                }
+                catch (ActionException reason) {
+
+                    //Inform the player that he can't take that action
+                    this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(GameMessage.InvalidAction.getLiteral() + " Reason: " + reason.getMessage());
+
+                }
+
+            }
+
+        }
+        while (!this.currentPlayer.isDisabled());
+
 
     }
 
@@ -322,7 +344,7 @@ public class MatchController implements Runnable {
      * @throws SixCardsLimitReachedException Exception raised when the player cannot take another card of that type
      * @throws PlayerAlreadyOccupiedTowerException Exception raised when the player tries to put another player on a tower that has already been used by him
      */
-    private void onPlayerMove(Player player, Action Action) throws ActionException {
+    private void handlePlayerAction(Player player, Action Action) throws ActionException {
 
         if(Action instanceof StandardPlacementAction){
 
@@ -362,7 +384,7 @@ public class MatchController implements Runnable {
 
         for (Player p : this.match.getPlayers()) {
 
-            this.remotePlayerMap.get(p).notifyTurnEnabled(current, current.getUsername() + " can take his move.");
+            this.remotePlayerMap.get(p).notifyTurnEnabled(current, "It is " + current.getUsername() + "'s turn");
 
         }
 
@@ -382,12 +404,21 @@ public class MatchController implements Runnable {
 
         for (Player p : this.match.getPlayers()) {
 
-            this.remotePlayerMap.get(p).notifyActionTimeoutExpired(current, GameMessage.TimeoutExpired.getLiteral());
+            this.remotePlayerMap.get(p).notifyActionTimeoutExpired(current, current.getUsername() + "'s timeout to take his move expired. He was disabled.");
 
         }
 
     }
 
+    private void notifyAllActionPerformed(Player current, Action action) {
+
+        for (Player p : this.match.getPlayers()) {
+
+            this.remotePlayerMap.get(p).notifyActionPerformed(current, action, current.getUsername() + " performed an action");
+
+        }
+
+    }
 
 
 

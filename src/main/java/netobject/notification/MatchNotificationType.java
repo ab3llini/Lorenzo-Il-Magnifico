@@ -10,6 +10,7 @@ public enum MatchNotificationType {
     TurnDisabled,
     ImmediateAction,
     TimeoutExpired,
-    ActionRefused
+    ActionRefused,
+    ActionPerformed
 
 }

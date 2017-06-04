@@ -1,6 +1,7 @@
 package server.controller.game;
 
-import netobject.action.ActionType;
+import netobject.action.Action;
+import netobject.action.immediate.ImmediateActionType;
 import server.model.Match;
 import server.model.board.Player;
 
@@ -25,6 +26,8 @@ public interface RemotePlayer {
 
     void notifyActionRefused(String message);
 
-    void notifyImmediateActionAvailable(ActionType actionType, Player player, String message);
+    void notifyImmediateActionAvailable(ImmediateActionType immediateActionType, Player player, String message);
+
+    void notifyActionPerformed(Player player, Action action, String message);
 
 }

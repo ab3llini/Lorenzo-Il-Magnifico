@@ -7,7 +7,8 @@ package server.controller.network.RMI;
 import client.controller.network.RMI.RMIClientInterface;
 import logger.Level;
 import logger.Logger;
-import netobject.action.ActionType;
+import netobject.action.Action;
+import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
@@ -215,10 +216,20 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
-    public void notifyImmediateActionAvailable(ActionType actionType, Player player, String message) {
+    public void notifyImmediateActionAvailable(ImmediateActionType immediateActionType, Player player, String message) {
 
         try {
-            this.clientRef.onImmediateActionAvailable(actionType, player, message);
+            this.clientRef.onImmediateActionAvailable(immediateActionType, player, message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void notifyActionPerformed(Player player, Action action, String message) {
+
+        try {
+            this.clientRef.onActionPerformed(player, action, message);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

@@ -197,6 +197,11 @@ public class SocketClient extends Client implements Runnable {
                     this.notifyActionRefused(matchNot.getMessage());
 
                 }
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.ActionPerformed) {
+
+                    this.notifyActionPerformed(matchNot.getPlayer(), matchNot.getAction(), matchNot.getMessage());
+
+                }
 
             }
 

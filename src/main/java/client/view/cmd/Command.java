@@ -26,7 +26,7 @@ public class Command<T extends Enum<T>> {
 
     private Class<T> initEnum = null;
 
-    public Command() {
+    private Command() {
 
         this.commandsCache = new LinkedHashMap<String, String>();
 

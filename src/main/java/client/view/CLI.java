@@ -12,11 +12,14 @@ import client.controller.network.Socket.SocketClient;
 import client.view.cmd.*;
 import client.view.utility.AsyncInputStream;
 import client.view.utility.AsyncInputStreamObserver;
+import exception.NoActionPerformedException;
 import logger.Level;
 import logger.Logger;
-import netobject.action.ActionType;
+import netobject.action.Action;
 import netobject.action.SelectionType;
+import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.StandardPlacementAction;
+import netobject.action.standard.TerminateRoundStandardAction;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
 import netobject.notification.Notification;
@@ -61,7 +64,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      */
     private final Object connectionMutex;
 
-    private final Object moveMutex;
+    private final Object roundMutext;
+
+    private final Object selectionMutex;
 
     /**
      * Event though the CLI thread might be suspended, the Asynchronous stream will never be
@@ -75,17 +80,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      */
     private CliContext ctx;
 
-    /**
-     * The copy of the match model
-     */
-    private Match match;
-
-
-    private boolean canMakeMove = false;
+    private LocalMatchController localMatchController;
 
     /**
      * The command line interface constructor
-     * Initializes the required objects and proceeds with a bootstrap phase
+     * Initializes the required objects and proceeds with a play phase
      */
     private CLI() {
 
@@ -99,7 +98,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         this.connectionMutex = new Object();
 
         //Init the mutex
-        this.moveMutex = new Object();
+        this.roundMutext = new Object();
+
+        this.selectionMutex = new Object();
 
         //Initialization procedure
         this.keyboard = new AsyncInputStream(System.in);
@@ -137,25 +138,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
     }
 
     /**
-     * Interface implementation for AsyncInputStreamObserver
-     * @param stream the stream that raised the event
-     * @param value the value associated with the stream, supposed to be always a string in this case
-     */
-    public void onInput(AsyncInputStream stream, String value) {
-
-        if (stream == this.keyboard && this.keyboardEnabled) {
-
-            this.inputQueue.add(value);
-
-        }
-
-    }
-
-    /**
      * Starts the command line interface
      * Requests the server ip address and the connection type
      */
-    private void bootstrap() throws InterruptedException {
+    private void play() throws InterruptedException {
 
         //Set the context
         this.ctx = CliContext.Bootstrap;
@@ -361,65 +347,109 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         this.keyboardEnabled = true;
 
-        this.play();
+        this.interactWithMatchController();
 
     }
 
-    private void play() throws InterruptedException {
+    private void interactWithMatchController() throws InterruptedException {
+
+        this.localMatchController = new LocalMatchController(this.client.getUsername());
 
         this.ctx = CliContext.Match;
 
-        while(true) {
+        while(!this.localMatchController.matchHasEnded()) {
 
-            this.waitOnMutex(this.moveMutex);
+            //Wait until is the player turn
+            this.waitOnMutex(this.roundMutext);
 
-            this.makeMove();
+            try {
+
+                StandardActionType actionPerformed;
+
+                do {
+
+                    actionPerformed = this.makeStandardAction();
+
+                }
+                while (actionPerformed != StandardActionType.TerminateRound);
+
+                Cmd.notify("You terminated your round");
+
+            }
+            catch (NoActionPerformedException e) {
+
+                Cmd.notify("The timeout for your action expired.");
+
+            }
 
         }
 
 
     }
 
-    private void makeMove() throws InterruptedException {
+    private StandardActionType makeStandardAction() throws InterruptedException, NoActionPerformedException {
 
-        Command<StandardActionType> cmd = new Command<StandardActionType>(StandardActionType.class);
+        //Ask the user which action he wants to perform printing the choices
+        Cmd.askFor("Which action would you like to perform ?");
 
-        Cmd.askFor("Please select the move you would like to perform");
+        //Create a command to show the possible actions
+        Command<StandardActionType> actionSelection = new Command<StandardActionType>(StandardActionType.class);
 
-        cmd.printChoiches();
+        //Show the choices
+        actionSelection.printChoiches();
 
-        String choice = this.inputQueue.take();
+        //Try to do an action before the timeout goes out
+        String choice;
 
-        //Check it
-        while (!cmd.isValid(choice) && this.canMakeMove) {
+        do {
 
-            choice = this.inputQueue.take();
+             choice = this.waitForActionSelection();
 
         }
+        while (!actionSelection.isValid(choice) && !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice)));
 
-        if (cmd.choiceMatch(choice, StandardActionType.FamilyMemberPlacement)) {
+        //If we got here then we entered a valid choice, go on asking the user what to do
+        //However the timeout is still ticking.
+        if (actionSelection.choiceMatch(choice, StandardActionType.FamilyMemberPlacement)) {
 
             this.placeFamilyMember();
 
-            Cmd.notify("You took your move");
+        }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.RollDice)) {
 
-            return;
+
+        }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
+
+
+        }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
+
+            this.terminateRound();
+
+            return actionSelection.getEnumEntryFromChoice(choice);
 
         }
 
-        else {
+        //Before setting the move as done, wait for server confirmation or refusal
+        this.localMatchController.setLastPendingAction(actionSelection.getEnumEntryFromChoice(choice));
 
-            Logger.log(Level.SEVERE, "Make move", "Bad selection");;
+        //Wait for a response
+        this.waitOnMutex(this.connectionMutex);
 
-        }
-
-        Cmd.notify("You did not perform any move");
+        //After the action was performed, return the choice made so that if the user wants to terminate the round we can know it
+        return actionSelection.getEnumEntryFromChoice(choice);
 
     }
 
-    public void placeFamilyMember() throws InterruptedException {
+    /**
+     * Creates an actions to place a family member and sends it to the server
+     * @throws InterruptedException if the thread gets interrupted
+     * @throws NoActionPerformedException if the action timeout expires
+     */
+    private void placeFamilyMember() throws InterruptedException, NoActionPerformedException {
 
-        StandardPlacementAction stdPlacement;
+        StandardPlacementAction standardPlacementAction;
 
         String choice;
 
@@ -432,20 +462,18 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         Cmd.askFor("Please select where you would like to place your family member");
 
-        Command<BoardSectorType> sectorCmd = new Command<BoardSectorType>(BoardSectorType.class);
+        Command<BoardSectorType> sectorSelection = new Command<BoardSectorType>(BoardSectorType.class);
 
-        sectorCmd.printChoiches();
+        sectorSelection.printChoiches();
 
-        choice = this.inputQueue.take();
+        do {
 
-        //Check it
-        while (!sectorCmd.isValid(choice) && this.canMakeMove) {
-
-            choice = this.inputQueue.take();
+            choice = this.waitForActionSelection();
 
         }
+        while (!sectorSelection.isValid(choice));
 
-        sectorType = sectorCmd.getEnumEntryFromChoice(choice);
+        sectorType = sectorSelection.getEnumEntryFromChoice(choice);
 
         Cmd.askFor("Please select the placement index (minimum 1)");
 
@@ -454,20 +482,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         Cmd.askFor("Please select the color of the family member you would like to use");
 
-        Command<ColorType> colorCmd = new Command<ColorType>(ColorType.class);
+        Command<ColorType> colorSelection = new Command<ColorType>(ColorType.class);
 
-        colorCmd.printChoiches();
+        colorSelection.printChoiches();
 
-        choice = this.inputQueue.take();
+        do {
 
-        //Check it
-        while (!colorCmd.isValid(choice) && this.canMakeMove) {
-
-            choice = this.inputQueue.take();
+            choice = this.waitForActionSelection();
 
         }
+        while (!colorSelection.isValid(choice));
 
-        memberColor = colorCmd.getEnumEntryFromChoice(choice);
+
+        memberColor = colorSelection.getEnumEntryFromChoice(choice);
 
         Cmd.askFor("Enter the amount of additional servants");
 
@@ -475,24 +502,81 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         Cmd.askFor("Enter the cost option");
 
-        Command<SelectionType> costCmd = new Command<SelectionType>(SelectionType.class);
+        Command<SelectionType> costSelection = new Command<SelectionType>(SelectionType.class);
 
-        costCmd.printChoiches();
+        costSelection.printChoiches();
 
-        choice = this.inputQueue.take();
+        do {
 
-        //Check it
-        while (!costCmd.isValid(choice) && this.canMakeMove) {
+            choice = this.waitForActionSelection();
 
-            choice = this.inputQueue.take();
+        }
+        while (!costSelection.isValid(choice));
+
+
+        costOption = costSelection.getEnumEntryFromChoice(choice);
+
+        standardPlacementAction = new StandardPlacementAction(StandardActionType.FamilyMemberPlacement, sectorType, index, memberColor, additionalServants, costOption);
+
+        this.client.performAction(standardPlacementAction);
+
+    }
+
+    private void terminateRound() {
+
+        this.client.performAction(new TerminateRoundStandardAction());
+
+
+    }
+
+    /**
+     * Waits until the user select something
+     * @return The selection
+     * @throws NoActionPerformedException if the timeout expired for taking the move
+     * @throws InterruptedException wait exception
+     */
+    private String waitForActionSelection() throws InterruptedException, NoActionPerformedException {
+
+        //Suspend the thread on a mutex and wait for the user to enter a command choice or for the timeout to expire
+        this.waitOnMutex(this.selectionMutex);
+
+        //If it was a move.. send it
+        if (this.inputQueue.isEmpty()) {
+
+            //The mutex was notified but the queue was empty. The timeout must have expired
+            throw new NoActionPerformedException("The user did not performed any move within the timeout provided");
+
+        }
+        else {
+
+            //The user performed an action, handle it
+            return this.inputQueue.take();
 
         }
 
-        costOption = costCmd.getEnumEntryFromChoice(choice);
+    }
 
-        stdPlacement = new StandardPlacementAction(StandardActionType.FamilyMemberPlacement, sectorType, index, memberColor, additionalServants, costOption);
+    /**
+     * Interface implementation for AsyncInputStreamObserver
+     * @param stream the stream that raised the event
+     * @param value the value associated with the stream, supposed to be always a string in this case
+     */
+    public void onInput(AsyncInputStream stream, String value) {
 
-        this.client.performAction(stdPlacement);
+        if (stream == this.keyboard && this.keyboardEnabled) {
+
+            this.inputQueue.add(value);
+
+            if (this.ctx == CliContext.Match) {
+
+                synchronized (this.selectionMutex) {
+
+                    this.selectionMutex.notify();
+
+                }
+            }
+
+        }
 
     }
 
@@ -501,7 +585,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         Cmd.notify("Connection lost.");
 
     }
-
 
     public void onLoginFailed(Client client, String reason) {
 
@@ -531,19 +614,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    public static void main(String[] args) throws InterruptedException {
-
-        (new CLI()).bootstrap();
-
-    }
-
-
-
     public void onModelUpdate(Client sender, Match model) {
 
-        this.match = model;
+        this.localMatchController.setMatch(model);
 
-        this.match.getBoard().printBoard();
+        this.localMatchController.getMatch().getBoard().printBoard();
 
     }
 
@@ -552,34 +627,30 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
-            Cmd.notify(message);
+            Cmd.notify("It is your turn!");
 
-            this.canMakeMove = true;
-
-            synchronized (this.moveMutex) {
+            synchronized (this.roundMutext) {
 
                 //Enable the move
-                moveMutex.notify();
+                roundMutext.notify();
 
             }
 
         }
         else {
 
-            Cmd.notify("It is " + player.getUsername() + "'s turn");
+            Cmd.notify(message);
 
         }
 
     }
 
-    public void onImmediateActionAvailable(Client sender, ActionType actionType, Player player, String message) {
+    public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
             Cmd.notify(message);
-
-            this.canMakeMove = true;
 
         }
         else {
@@ -597,9 +668,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             Cmd.notify(message);
 
-            this.canMakeMove = false;
-
-
         }
         else {
 
@@ -615,15 +683,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
-            Cmd.notify(message);
+            Cmd.notify("Your were disabled because your timeout to take the action expired");
 
-            this.canMakeMove = false;
+            synchronized (this.selectionMutex) {
+
+                this.selectionMutex.notify();
+
+            }
 
 
         }
         else {
 
-            Cmd.notify(player.getUsername() + "'s timeout to take his move expired. He was disabled.");
+            Cmd.notify(message);
 
         }
 
@@ -632,8 +704,54 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     public void onActionRefused(Client sender, String message) {
 
-        Cmd.notify("Action refused : " + message);
+        Cmd.notify("Action refused for reason: " + message);
+
+        synchronized (this.connectionMutex) {
+
+            this.connectionMutex.notify();
+
+        }
 
     }
+
+    public void onActionPerformed(Client sender, Player player, Action action, String message) {
+
+                //It it is our turn
+        if (player.getUsername().equals(this.client.getUsername())) {
+
+            Cmd.notify("Action performed successfully");
+
+            synchronized (this.connectionMutex) {
+
+                //Confirm last action
+                this.localMatchController.confirmLastPendingAction();
+
+                //Enable the move
+                connectionMutex.notify();
+
+            }
+
+        }
+        else {
+
+            Cmd.notify(message);
+
+        }
+
+        //Notify that the action completed successfully
+        synchronized (this.connectionMutex) {
+
+            this.connectionMutex.notify();
+
+        }
+
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+
+        (new CLI()).play();
+
+    }
+
 
 }
