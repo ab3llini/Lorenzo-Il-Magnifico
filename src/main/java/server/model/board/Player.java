@@ -147,7 +147,7 @@ public class Player implements Serializable {
 
     public Integer getFaithPoints() {
         return this.points.get(PointType.Faith);
-    }
+     }
 
     public Integer getPoints(PointType pointType){
 

@@ -534,13 +534,13 @@ public class MatchController implements Runnable {
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
         //some players' ban card can reduce family member's force
-            for (BanCard bancard : player.getBanCards()) {
-                if (bancard instanceof DiceBanCard) {
+        for (BanCard bancard : player.getBanCards()) {
+            if (bancard instanceof DiceBanCard) {
 
-                    familyMember.setForce(familyMember.getForce() - ((DiceBanCard) bancard).getEffectDiceMalus().getRoundDiceMalus());
+                familyMember.setForce(familyMember.getForce() - ((DiceBanCard) bancard).getEffectDiceMalus().getRoundDiceMalus());
 
-                    }
-                }
+            }
+        }
 
 
         //apply character cards permanent effect
@@ -883,7 +883,7 @@ public class MatchController implements Runnable {
 
         }
 
-                applyEffectSurplus(player, conversionList.get(choice).getTo());
+        applyEffectSurplus(player, conversionList.get(choice).getTo());
 
 
     }
@@ -927,25 +927,47 @@ public class MatchController implements Runnable {
 
             totalScore += player.getVictoryPoints();
 
-            //each venture card give a victory bonus
-            for (VentureDvptCard card: player.getPersonalBoard().getVentureCards()) {
-                totalScore += card.getPermanentEffect().getvPoints();
+            for(BanCard banCard : player.getBanCards()) {
+                if (banCard instanceof VictoryMalusBanCard) {
+                    for (Point point : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedByPoints()) {
+                        totalScore -= (int) (player.getVictoryPoints() / point.getAmount());
+                    }
+                }
             }
+
+            boolean territoryBan = false;
+            boolean characterBan = false;
+            boolean ventureBan = false;
+
+            for(BanCard banCard : player.getBanCards()) {
+                if(banCard instanceof NoVictoryBanCard) {
+                    if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.territory)
+                        territoryBan = true;
+                    if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.venture)
+                        ventureBan = true;
+                    if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.character)
+                        characterBan = true;
+                }
+            }
+
+            //each venture card give a victory bonus
+            if(ventureBan == false){
+                for (VentureDvptCard card: player.getPersonalBoard().getVentureCards()) {
+                totalScore += card.getPermanentEffect().getvPoints();
+            }}
 
             //one victory point from every 5 resources of all type
             totalScore += (player.getCoins() + player.getStones() + player.getWood() + player.getServants()) / 5;
 
             //victory points that depends on building card on the player personal board
-            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.territory,player.getPersonalBoard().getBuildingCards().size());
+            if(territoryBan == false){
+            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.territory,player.getPersonalBoard().getBuildingCards().size());}
 
-            //victory points that depends on character card on the player personal board
-            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());
+                //victory points that depends on character card on the player personal board
 
-            //victory points that depends on building card on the player personal board
-            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.building,player.getPersonalBoard().getCharacterCards().size());
+            if(characterBan == false){
+                totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());}
 
-            //victory points that depends on venture card on the player personal board
-            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.venture,player.getPersonalBoard().getCharacterCards().size());
 
             //victory points that depends on faith points
             totalScore += BoardConfigParser.getVictoryBonusFromFaith(player.getFaithPoints());
@@ -954,6 +976,8 @@ public class MatchController implements Runnable {
             totalScore += getMilitaryPointsBonus(player);
 
             finalScore.put(player,totalScore);
+
+            System.out.println(totalScore);
         }
 
         return  finalScore;
