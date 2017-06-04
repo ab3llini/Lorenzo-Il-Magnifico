@@ -79,6 +79,10 @@ public class BoardController {
 
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     /**
      * A method that creates the card decks
      *

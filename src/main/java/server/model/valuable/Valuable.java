@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class Valuable implements Serializable {
 
-    private final Integer amount;
+    private Integer amount;
 
     public Valuable(Integer amount) {
         this.amount = amount;
@@ -15,5 +15,9 @@ public class Valuable implements Serializable {
 
     public Integer getAmount() {
         return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 }

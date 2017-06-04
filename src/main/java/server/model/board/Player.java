@@ -802,7 +802,7 @@ public class Player implements Serializable {
 
                 return false;
 
-            }
+        }
 
         if (cards.containsKey(building)){
 
@@ -810,21 +810,21 @@ public class Player implements Serializable {
 
                 return false;
 
-            }
+        }
 
         if (cards.containsKey(character)){
 
             if (!this.hasEnoughCards(character, cards.get(character)))
 
                 return false;
-            }
+        }
 
         if (cards.containsKey(venture)) {
 
             if (!this.hasEnoughCards(venture, cards.get(venture)))
 
                 return false;
-            }
+        }
 
         return true;
 

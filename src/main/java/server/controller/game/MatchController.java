@@ -11,8 +11,7 @@ import netobject.action.standard.StandardPlacementAction;
 import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
-import server.model.card.ban.SpecialBanCard;
-import server.model.card.ban.SpecialEffectType;
+import server.model.card.ban.*;
 import server.model.card.developement.*;
 import server.model.effect.*;
 import server.model.valuable.Multiplier;
@@ -501,6 +500,16 @@ public class MatchController implements Runnable {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 
+        //some players' ban card can reduce family member's force
+            for (BanCard bancard : player.getBanCards()) {
+                if (bancard instanceof DiceBanCard) {
+
+                    familyMember.setForce(familyMember.getForce() - ((DiceBanCard) bancard).getEffectDiceMalus().getRoundDiceMalus());
+
+                    }
+                }
+
+
         //apply character cards permanent effect
         action = actionCharacterFilter(action,player);
 
@@ -615,7 +624,33 @@ public class MatchController implements Runnable {
 
         //effect surplus is composed by resources,points and council privilege
         ArrayList<Resource> resourcesSurplus = surplus.getResources();
+
+
+        //some players' ban card can reduce this surplus
+        for(Resource resource : resourcesSurplus) {
+            for (BanCard bancard : player.getBanCards()) {
+                if (bancard instanceof ValuableBanCard) {
+                    for (Resource resourceMalus : ((ValuableBanCard) bancard).getResources()) {
+                        if (resourceMalus.getType() == resource.getType())
+                            resource.setAmount(resource.getAmount() - resourceMalus.getAmount());
+                    }
+                }
+            }
+        }
+
         ArrayList<Point> pointsSurplus = surplus.getPoints();
+
+        for(Point point: pointsSurplus) {
+            for (BanCard bancard : player.getBanCards()) {
+                if (bancard instanceof ValuableBanCard) {
+                    for (Point pointMalus : ((ValuableBanCard) bancard).getPoints()) {
+                        if (pointMalus.getType() == point.getType())
+                            point.setAmount(point.getAmount() - pointMalus.getAmount());
+                    }
+                }
+            }
+        }
+
         Integer council = surplus.getCouncil();
 
         player.addResources(resourcesSurplus);
@@ -634,6 +669,14 @@ public class MatchController implements Runnable {
      * @param force
      */
     public void applyHarvestChain(Player player, Integer force){
+
+        //some ban cards can reduce player's power to activate production chain
+        for(BanCard bancard : player.getBanCards()){
+            if(bancard instanceof  DiceBanCard){
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getTarget() == server.model.effect.ActionType.harvest)
+                    force = force - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus();
+            }
+        }
 
         for (TerritoryDvptCard card:player.getPersonalBoard().getTerritoryCards()) {
 
@@ -673,6 +716,15 @@ public class MatchController implements Runnable {
      * this character chain consists in the activation of all the building card permanent effect**/
 
     public void applyProductionChain (Player player, Integer force) throws ActionException {
+
+
+        //some ban cards can reduce player's power to activate production chain
+        for(BanCard bancard : player.getBanCards()){
+            if(bancard instanceof  DiceBanCard){
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getTarget() == server.model.effect.ActionType.production)
+                    force = force - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus();
+            }
+        }
 
         for (DvptCard card : player.getPersonalBoard().getBuildingCards()
                 ) {
@@ -738,21 +790,8 @@ public class MatchController implements Runnable {
 
         }
 
-        if(!conversionList.get(choice).getTo().getResources().isEmpty()) {
+                applyEffectSurplus(player, conversionList.get(choice).getTo());
 
-            for(Resource to: conversionList.get(choice).getTo().getResources())
-
-                player.addGenericResource(to.getType(), to.getAmount());
-
-        }
-
-        if(!conversionList.get(choice).getTo().getPoints().isEmpty()) {
-
-            for(Point to: conversionList.get(choice).getTo().getPoints())
-
-                player.addGenericPoint(to.getType(), to.getAmount());
-
-        }
 
     }
 
