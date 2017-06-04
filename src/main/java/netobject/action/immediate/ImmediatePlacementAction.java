@@ -1,10 +1,7 @@
 package netobject.action.immediate;
 
 
-import netobject.action.BoardSectorType;
-import netobject.action.SelectionType;
-import netobject.action.Action;
-import netobject.action.ActionType;
+import netobject.action.*;
 
 /*
  * @author  ab3llini
@@ -12,9 +9,8 @@ import netobject.action.ActionType;
  */
 public class ImmediatePlacementAction extends Action {
 
-    private final ImmediateActionType immediateActionType;
 
-    private final BoardSectorType actionTarget; //sector of the board which is target of the Action
+    private final ImmediateBoardSectorType actionTarget; //sector of the board which is target of the Action
 
     private final Integer placementIndex; //slot index of the board sector
 
@@ -23,24 +19,37 @@ public class ImmediatePlacementAction extends Action {
     private int additionalServants;
 
 
-    public ImmediatePlacementAction(ImmediateActionType immediateActionType, BoardSectorType actionTarget, Integer placementIndex, SelectionType costOptionType) {
+    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, SelectionType costOptionType) {
 
         super(ActionType.Immediate);
 
-        this.immediateActionType = immediateActionType;
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
         this.costOptionType = costOptionType;
 
     }
 
-    public ImmediateActionType getImmediateActionType() {
-        return immediateActionType;
-    }
-
     public void increaseBonus(int bonus ) {
         this.additionalServants += bonus;
     }
 
+    public Integer getPlacementIndex() {
+        return placementIndex;
+    }
 
+    public ImmediateBoardSectorType getActionTarget() {
+        return actionTarget;
+    }
+
+    public int getAdditionalServants() {
+        return additionalServants;
+    }
+
+    public void setAdditionalServants(int additionalServants) {
+        this.additionalServants = additionalServants;
+    }
+
+    public SelectionType getCostOptionType() {
+        return costOptionType;
+    }
 }

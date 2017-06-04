@@ -10,8 +10,6 @@ import server.model.board.ColorType;
 
 public class StandardPlacementAction extends Action {
 
-    private final StandardActionType standardActionType;
-
     private final BoardSectorType actionTarget; //sector of the board which is target of the Action
 
     private final Integer placementIndex; //slot index of the board sector
@@ -22,11 +20,9 @@ public class StandardPlacementAction extends Action {
 
     private final SelectionType costOptionType;
 
-    public StandardPlacementAction(StandardActionType standardActionType, BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType) {
+    public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType) {
 
         super(ActionType.Standard);
-        this.standardActionType = standardActionType;
-
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
         this.colorType = colorType;

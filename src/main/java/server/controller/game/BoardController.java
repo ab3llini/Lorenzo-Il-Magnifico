@@ -457,5 +457,33 @@ public class BoardController {
             throw new NotStrongEnoughException("Not strong enough to do this Action");
 
     }
+
+    public EffectSurplus immediatePlacementOnTower(Integer force, Integer numberOfPlayers, DvptCardType towerType, Integer index) throws NotEnoughPlayersException, PlaceOccupiedException, NotStrongEnoughException {
+
+        //check if the match has enough player to use this tower slot
+        if(!(numberOfPlayers >= this.board.getTower(towerType).get(index).getMinPlayers())){
+
+            throw new NotEnoughPlayersException("Not enough players to use this place");}
+
+        //check if the tower slot is already in use
+        if(this.board.getTower(towerType).get(index).isOccupied()){
+
+            throw new PlaceOccupiedException("This place is already occupied");}
+
+
+        //check if the player has enough force to set on the tower slot
+        if(force >= this.board.getTower(towerType).get(index).getEntryForce()) {
+
+            //set the towerSlot occupied
+            this.board.getTower(towerType).get(index).setOccupied(true);
+
+            return this.board.getTower(towerType).get(index).getEffectSurplus();
+        }
+        else
+            throw new NotStrongEnoughException("Not strong enough to do this Action");
+
+    }
+
+
 }
 

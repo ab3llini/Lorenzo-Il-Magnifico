@@ -516,7 +516,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         costOption = costSelection.getEnumEntryFromChoice(choice);
 
-        standardPlacementAction = new StandardPlacementAction(StandardActionType.FamilyMemberPlacement, sectorType, index, memberColor, additionalServants, costOption);
+        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption);
 
         this.client.performAction(standardPlacementAction);
 
