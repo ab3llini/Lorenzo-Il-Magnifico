@@ -459,7 +459,7 @@ public class BoardController {
             return this.board.getTower(towerType).get(index).getEffectSurplus();
         }
         else
-            throw new NotStrongEnoughException("Not strong enough to do this Action");
+            throw new NotStrongEnoughException("Not strong enough to do this Action: entry force: "+this.board.getTower(towerType).get(index).getEntryForce()+" ,family member: "+familyMember.getForce()+", additional servants: "+additionalServants);
 
     }
 
