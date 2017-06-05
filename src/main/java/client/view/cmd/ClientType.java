@@ -14,26 +14,20 @@ package client.view.cmd;
 
 public enum ClientType implements CliPrintable {
 
-    Socket("Socket", "1"),
-    RMI("RMI", "2");
+    Socket("Socket"),
+    RMI("RMI");
 
     private final String name;
-    private final String value;
 
-    ClientType(String name, String value) {
+    ClientType(String name) {
 
         this.name = name;
-        this.value = value;
 
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String toString() {
+        return this.name;
     }
-
-    public String getValue() {
-        return value;
-    }
-
 }
 

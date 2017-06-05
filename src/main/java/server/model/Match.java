@@ -22,7 +22,7 @@ public class Match extends NetObject {
 
     private ArrayList<Player> roundOrder;
 
-    private int currentPeriod;
+    private Period currentPeriod;
     private int currentTurn;
     private int currentRound;
 
@@ -44,7 +44,7 @@ public class Match extends NetObject {
         //Initialize the board
         this.board = new Board();
 
-        this.currentPeriod = 0;
+        this.currentPeriod = Period.undefined;
         this.currentTurn = 0;
         this.currentRound = 0;
 
@@ -84,7 +84,7 @@ public class Match extends NetObject {
 
 
     public Period getCurrentPeriod() {
-        return Period.toEnum(currentPeriod);
+        return this.currentPeriod;
     }
 
 
@@ -97,7 +97,21 @@ public class Match extends NetObject {
     }
 
     public void setCurrentPeriod(int currentPeriod) {
-        this.currentPeriod = currentPeriod;
+        if (currentPeriod == 1) {
+
+            this.currentPeriod = Period.first;
+
+        }
+        else if (currentPeriod == 2) {
+
+            this.currentPeriod = Period.second;
+
+        }
+        else if (currentPeriod == 3) {
+
+            this.currentPeriod = Period.third;
+
+        }
     }
 
     public void setCurrentTurn(int currentTurn) {

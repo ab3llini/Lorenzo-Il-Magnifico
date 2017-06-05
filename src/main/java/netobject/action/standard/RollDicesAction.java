@@ -8,11 +8,10 @@ import netobject.action.ActionType;
  */
 public class RollDicesAction extends Action {
 
-    private final StandardActionType standardActionType;
+    public RollDicesAction() {
 
-    public RollDicesAction(StandardActionType standardActionType) {
         super(ActionType.Standard);
-        this.standardActionType = standardActionType;
+
     }
 }
 

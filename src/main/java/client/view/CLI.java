@@ -18,6 +18,7 @@ import logger.Logger;
 import netobject.action.Action;
 import netobject.action.SelectionType;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.action.standard.RollDicesAction;
 import netobject.action.standard.StandardPlacementAction;
 import netobject.action.standard.TerminateRoundStandardAction;
 import netobject.notification.LobbyNotification;
@@ -183,12 +184,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
 
         //Select the proper client interface
-        if (connection.equals(ClientType.Socket.getValue())) {
+        if (clientCmd.choiceMatch(connection, ClientType.Socket)) {
 
             this.client = new SocketClient(hostIP, GameConfig.getInstance().getSocketPort());
 
         }
-        else if (connection.equals(ClientType.RMI.getValue())) {
+        else if (clientCmd.choiceMatch(connection, ClientType.RMI)) {
 
             this.client = new RMIClient(hostIP, GameConfig.getInstance().getRmiPort(), "server");
 
@@ -399,14 +400,23 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         actionSelection.printChoiches();
 
         //Try to do an action before the timeout goes out
-        String choice;
+        String choice = this.waitForActionSelection();
 
-        do {
+        while (!actionSelection.isValid(choice) || this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
-             choice = this.waitForActionSelection();
+            if (this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+
+                Cmd.error("You cant perform that action twice!");
+
+            }
+
+            //Ask the user which action he wants to perform printing the choices
+            Cmd.askFor("Which action would you like to perform ?");
+
+            choice = this.waitForActionSelection();
 
         }
-        while (!actionSelection.isValid(choice) && !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice)));
+
 
         //If we got here then we entered a valid choice, go on asking the user what to do
         //However the timeout is still ticking.
@@ -416,6 +426,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
         else if (actionSelection.choiceMatch(choice, StandardActionType.RollDice)) {
+
+            this.client.performAction(new RollDicesAction());
 
 
         }
@@ -619,6 +631,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         this.localMatchController.setMatch(model);
 
         System.out.print(this.localMatchController.getMatch().getBoard());
+
+        this.localMatchController.printLocalPlayer();
 
     }
 

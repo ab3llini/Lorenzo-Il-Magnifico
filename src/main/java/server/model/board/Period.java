@@ -7,9 +7,12 @@ import java.io.Serializable;
  * Created by LBARCELLA on 18/05/2017.
  */
 public enum Period implements Serializable {
+
+    undefined(0),
     first(1),
     second(2),
     third(3);
+
     int value;
 
     Period(int value){

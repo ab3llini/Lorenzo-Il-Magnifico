@@ -18,7 +18,7 @@ public class Cmd {
      */
     public static void askFor(String title) {
 
-        System.out.println(AnsiColors.ANSI_BLUE + "> " + title);
+        System.out.println(AnsiColors.ANSI_BLUE + "> " + title + AnsiColors.ANSI_RESET);
 
     }
 
@@ -28,7 +28,14 @@ public class Cmd {
      */
     public static void notify(String title) {
 
-        System.out.println(AnsiColors.ANSI_PURPLE + "* " + title);
+        System.out.println(AnsiColors.ANSI_PURPLE + "* " + title + AnsiColors.ANSI_RESET);
+
+    }
+
+    public static void error(String title) {
+
+        System.out.println(AnsiColors.ANSI_RED + "* " + title + AnsiColors.ANSI_RESET);
+
 
     }
 

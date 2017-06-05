@@ -92,7 +92,7 @@ public class Command<T extends Enum<T>> {
 
             Map.Entry pair = (Map.Entry) it.next();
 
-            System.out.println(AnsiColors.ANSI_GREEN + "[" + pair.getKey() + "] " + pair.getValue());
+            System.out.println(AnsiColors.ANSI_GREEN + "[" + pair.getKey() + "] " + pair.getValue()  + AnsiColors.ANSI_RESET);
 
         }
 

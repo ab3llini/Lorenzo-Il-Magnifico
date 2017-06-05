@@ -5,6 +5,7 @@ package client.view;
  * @since   03/06/17.
  */
 
+import exception.NoSuchPlayerException;
 import netobject.action.standard.StandardActionType;
 import server.model.Match;
 
@@ -29,9 +30,16 @@ public class LocalMatchController {
 
     LocalMatchController(String playerUsername) {
 
+        this.playerUsername = playerUsername;
+
         this.actionsPerformedOnThisRound = new HashMap<StandardActionType, Boolean>();
 
-        this.playerUsername = playerUsername;
+        for (StandardActionType action : StandardActionType.values()) {
+
+            this.actionsPerformedOnThisRound.put(action, false);
+
+        }
+
 
     }
 
@@ -56,7 +64,10 @@ public class LocalMatchController {
      * Updates the model
      */
     public void setMatch(Match match) {
+
         this.match = match;
+
+
     }
 
     public boolean canPerformAction(StandardActionType action) {
@@ -77,6 +88,8 @@ public class LocalMatchController {
 
         this.actionsPerformedOnThisRound.put(action, value);
 
+        return;
+
     }
 
     public void setLastPendingAction(StandardActionType action) {
@@ -88,6 +101,20 @@ public class LocalMatchController {
     public void confirmLastPendingAction() {
 
         this.setActionPerformed(this.lastPendingAction, true);
+
+    }
+
+    public void printLocalPlayer() {
+
+        try {
+
+            System.out.println(this.match.getPlayerFromUsername(this.playerUsername));
+
+        } catch (NoSuchPlayerException e) {
+
+            e.printStackTrace();
+
+        }
 
     }
 

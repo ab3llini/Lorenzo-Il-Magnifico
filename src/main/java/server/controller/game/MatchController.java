@@ -104,7 +104,11 @@ public class MatchController implements Runnable {
 
         }
 
-        //TODO: Call method to init players resources before the match is created
+        /*
+         * Gives the proper resources to the players
+         * Order matters and follows game rules
+         */
+        this.initPlayerResource(players);
 
         /*
          * First up, create the model for the current match.
@@ -171,16 +175,20 @@ public class MatchController implements Runnable {
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);
 
-        //Send once the model to each player
-        this.sendUpdatedModel();
-
         while (roundIterator.hasNext()) {
 
             //Obtain the next round
             Queue<Player> currentRound = roundIterator.next();
 
-            //Update the towers for the current combination of round / turn / period
-            this.boardController.updateTowersForTurn(this.match.getCurrentPeriod().toInt(), this.match.getCurrentTurn());
+            if (this.match.getCurrentRound() == 1) {
+
+                //Update the towers for the current combination of round / turn / period
+                this.boardController.updateTowersForTurn(this.match.getCurrentTurn(), this.match.getCurrentPeriod().toInt());
+
+                //Send once the model to each player
+                this.sendUpdatedModel();
+
+            }
 
             Logger.log(Level.FINEST, "MatchController", "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
@@ -247,8 +255,6 @@ public class MatchController implements Runnable {
                         //Handler the player action
                         this.handlePlayerAction(this.currentPlayer, action);
 
-                        //Update the model
-                        this.sendUpdatedModel();
 
                     }
                     catch (ActionException reason) {
@@ -362,9 +368,13 @@ public class MatchController implements Runnable {
      */
     private void handlePlayerAction(Player player, Action action) throws ActionException {
 
+        String message = "";
+
         if(action instanceof StandardPlacementAction){
 
             placeFamilyMember((StandardPlacementAction) action,player);
+
+            message = "placed a family member on " + ((StandardPlacementAction)action).getActionTarget();
 
         }
 
@@ -372,8 +382,8 @@ public class MatchController implements Runnable {
 
             activateLeaderCard((LeaderCardActivationAction) action, player);
 
-            //If we get here without exceptions we can notify of the succeeded action
-            this.notifyAllActionPerformed(this.currentPlayer, action, player.getUsername() + " activated a leader card");
+            message = "activated a leader card";
+
 
         }
 
@@ -381,10 +391,15 @@ public class MatchController implements Runnable {
 
             rollDices();
 
-            //If we get here without exceptions we can notify of the succeeded action
-            this.notifyAllActionPerformed(this.currentPlayer, action, player.getUsername() + " rolled the dices");
+            message = "rolled the dices";
 
         }
+
+        //Update the model
+        this.sendUpdatedModel();
+
+        //If we get here without exceptions we can notify of the succeeded action
+        this.notifyAllActionPerformed(this.currentPlayer, action, player.getUsername() + " " + message);
 
     }
 
