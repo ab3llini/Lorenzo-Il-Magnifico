@@ -77,6 +77,9 @@ public class BoardController {
         //TODO: Load into the board model the proper values! Even throughout a constructor chain!
         this.board = board;
 
+        //Prepare the cathedral
+        this.prepareCathedral();
+
     }
 
     public Board getBoard() {

@@ -48,23 +48,23 @@ public class Logger {
             switch (lv) {
 
                 case Level.FINEST:
-                    print(AnsiColors.ANSI_CYAN + "[FINEST] " + ctx + " : " + message, e);
+                    print(AnsiColors.ANSI_CYAN + "[FINEST] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.FINE:
-                    print(AnsiColors.ANSI_GREEN + "[FINE] " + ctx + " : " + message, e);
+                    print(AnsiColors.ANSI_GREEN + "[FINE] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.INFO:
-                    print(AnsiColors.ANSI_BLUE + "[INFO] " + ctx + " : " + message, e);
+                    print(AnsiColors.ANSI_BLUE + "[INFO] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.WARNING:
-                    print(AnsiColors.ANSI_YELLOW + "[WARNING] " + ctx + " : " + message, e);
+                    print(AnsiColors.ANSI_YELLOW + "[WARNING] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.SEVERE:
-                    print(AnsiColors.ANSI_RED + "[SEVERE] " + ctx + " : " + message, e);
+                    print(AnsiColors.ANSI_RED + "[SEVERE] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
             }
