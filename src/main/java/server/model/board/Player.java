@@ -913,4 +913,27 @@ public class Player implements Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+
+        String playerString = "";
+
+        playerString += this.username;
+
+        playerString += "--------> coins: "+this.getCoins();
+
+        playerString += ", servants: "+this.getServants();
+
+        playerString += ", wood: "+this.getWood();
+
+        playerString += ", stones: "+this.getStones();
+
+        playerString += ", victory points: "+this.getVictoryPoints();
+
+        playerString += ", military points: "+this.getMilitaryPoints();
+
+        playerString += ", faith points: "+this.getFaithPoints();
+
+        return playerString;
+    }
 }

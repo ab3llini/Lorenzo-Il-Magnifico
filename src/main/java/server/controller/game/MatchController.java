@@ -1013,8 +1013,6 @@ public class MatchController implements Runnable {
             totalScore += getMilitaryPointsBonus(player);
 
             finalScore.put(player,totalScore);
-
-            System.out.println(totalScore);
         }
 
         return  finalScore;
@@ -1104,8 +1102,8 @@ public class MatchController implements Runnable {
         Integer minPeriodFaith = this.match.getBoard().getCathedral().getMinFaith(this.match.getCurrentPeriod());
 
         //if the player has not enough faith points he receive the excommunication
-        if(player.getFaithPoints() < minPeriodFaith)
-            player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
+        if(player.getFaithPoints() < minPeriodFaith){
+            player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));}
 
         else
         {
@@ -1158,6 +1156,10 @@ public class MatchController implements Runnable {
         return boardController;
     }
 
+    /**
+     * give the correct init resources to each player
+     * @param players
+     */
     public void initPlayerResource(ArrayList<Player> players) {
 
         int position=1;
