@@ -281,178 +281,177 @@ public class Board implements Serializable {
 
     /** This method prints the entire board in all its component in that moment**/
 
+    @Override
+    public String toString() {
+        String board = new String();
+        board += "__________________________________________________________________________________________\n";
+        board += ("|                                                                                        |\n");
+        board += ("| ");
+        board += (AnsiColors.ANSI_GREEN + "  TERRITORY            ");
+        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_YELLOW + " BUILDING           ");
+        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_BLUE + "   CHARACTER            ");
 
-    public void printBoard() {
+        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_PURPLE + " VENTURE            |\n");
 
-        System.out.println("__________________________________________________________________________________________");
+        board += (AnsiColors.ANSI_RESET);
+        board += ("| ");
+        board += (AnsiColors.ANSI_GREEN + "  TOWER               ");
+        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_YELLOW + "  TOWER              ");
+        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_BLUE + "   TOWER                ");
+        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_PURPLE + " TOWER              |\n");
 
-        System.out.println("|                                                                                        |");
+        board += (AnsiColors.ANSI_RESET);
 
-        System.out.print("| ");
-        System.out.print(AnsiColors.ANSI_GREEN + "  TERRITORY            ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_YELLOW + " BUILDING           ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_BLUE + "   CHARACTER            ");
+        board += ("|   ______                ______                ______                ______             |\n");
 
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_PURPLE + " VENTURE            |\n");
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
 
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print("| ");
-        System.out.print(AnsiColors.ANSI_GREEN + "  TOWER               ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_YELLOW + "  TOWER              ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_BLUE + "   TOWER                ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_PURPLE + " TOWER              |\n");
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
 
-        System.out.print(AnsiColors.ANSI_RESET);
+        board += printTowerLine(0);
 
-        System.out.println("|   ______                ______                ______                ______             |");
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
 
-        System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+        board += ("|   |____|                |____|                |____|                |____|             |\n");
 
-        System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
 
-        printTowerLine(0);
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
 
-        System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+        board +=  printTowerLine(1);
 
-        System.out.println("|   |____|                |____|                |____|                |____|             |");
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
 
-        System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+        board += ("|   |____|                |____|                |____|                |____|             |\n");
 
-        System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
 
-        printTowerLine(1);
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
 
-        System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+        board += printTowerLine(2);
 
-        System.out.println("|   |____|                |____|                |____|                |____|             |");
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
 
-        System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+        board += ("|   |____|                |____|                |____|                |____|             |\n");
 
-        System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
 
-        printTowerLine(2);
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
 
-        System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+        board += printTowerLine(3);
 
-        System.out.println("|   |____|                |____|                |____|                |____|             |");
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
 
-        System.out.println("|   |    |___             |    |___             |    |___             |    |___          |");
+        board += ("|   |____|                |____|                |____|                |____|             |\n");
 
-        System.out.println("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+        board += ("|                                                                                        |\n");
 
-        printTowerLine(3);
+        board += ("|                                                                                        |\n");
 
-        System.out.println("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+        board += ("|        CATHEDRAL                                            COUNCIL PALACE             |\n");
 
-        System.out.println("|   |____|                |____|                |____|                |____|             |");
+        board += ("|     ________________                                       _______________________     |\n");
 
-        System.out.println("|                                                                                        |");
+        board += printCouncilPalace();
 
-        System.out.println("|                                                                                        |");
+        board += printCathedralLine();
 
-        System.out.println("|        CATHEDRAL                                            COUNCIL PALACE             |");
+        board += ("|     |____|____|____|                                                                   |\n");
 
-        System.out.println("|     ________________                                       _______________________     |");
+        board += ("|                                                                                        |\n");
 
-        printCouncilPalace();
+        board += ("|                                                                                        |\n");
 
-        printCathedralLine();
+        board += ("|                                                                 MARKET                 |\n");
 
-        System.out.println("|     |____|____|____|                                                                   |");
+        board += ("|                                   5 COINS       5 SERVANTS   3 MILITARY   2 DIFF       |\n");
 
-        System.out.println("|                                                                                        |");
+        board += ("|                                                             + 2 COINS      COUNCILS    |\n");
 
-        System.out.println("|                                                                                        |");
+        board += ("|                                    _______      _______      _______      _______      |\n");
 
-        System.out.println("|                                                                 MARKET                 |");
+        board += printMarketLine();
 
-        System.out.println("|                                   5 COINS       5 SERVANTS   3 MILITARY   2 DIFF       |");
+        board += ("|                                    |_____|      |_____|      |_____|      |_____|      |\n");
 
-        System.out.println("|                                                             + 2 COINS      COUNCILS    |");
+        board += ("|      SINGLE  PLACES                                                                    |\n");
 
-        System.out.println("|                                    _______      _______      _______      _______      |");
+        board += ("|    PRODUCTION HARVEST                                                                  |\n");
 
-        printMarketLine();
+        board += ("|    _______     _______                                             DICES               |\n");
 
-        System.out.println("|                                    |_____|      |_____|      |_____|      |_____|      |");
+        board += printMainPHPlacesLine();
 
-        System.out.println("|      SINGLE  PLACES                                                                    |");
+        board += ("|    |_____|     |_____|                                                                 |\n");
 
-        System.out.println("|    PRODUCTION HARVEST                                                                  |");
+        board += ("|                                                  ");
+        board +=(AnsiColors.ANSI_BLACK);
+        board +=("     BLACK  ");
+        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_WHITE);
+        board += ("    WHITE  ");
+        board += (AnsiColors.ANSI_RESET);
+        board +=(AnsiColors.ANSI_RED);
+        board += ("    ORANGE   ");
+        board += (AnsiColors.ANSI_RESET);
+        board += ("  |\n");
 
-        System.out.println("|    _______     _______                                             DICES               |");
+        board += ("|                                                       _______    _______    _______    |\n");
 
-        printMainPHPlacesLine();
+        board += printDicesLine();
 
-        System.out.println("|    |_____|     |_____|                                                                 |");
+        board += ("|                                                       |_____|    |_____|    |_____|    |\n");
 
-        System.out.print("|                                                  ");
-        System.out.print(AnsiColors.ANSI_BLACK);
-        System.out.print("     BLACK  ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_WHITE);
-        System.out.print("    WHITE  ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print(AnsiColors.ANSI_RED);
-        System.out.print("    ORANGE   ");
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print("  |\n");
+        board += ("|     MULTIPLE  PLACES                                                                   |\n");
 
-        System.out.println("|                                                       _______    _______    _______    |");
+        board += ("|    PRODUCTION HARVEST                                                                  |\n");
 
-        printDicesLine();
+        board += ("|    _______     _______                                                                 |\n");
 
-        System.out.println("|                                                       |_____|    |_____|    |_____|    |");
+        board += printMultiplePHPlacesLine();
 
-        System.out.println("|     MULTIPLE  PLACES                                                                   |");
+        board += ("|    |_____|     |_____|                                                                 |\n");
 
-        System.out.println("|    PRODUCTION HARVEST                                                                  |");
+        board += ("|________________________________________________________________________________________|\n");
 
-        System.out.println("|    _______     _______                                                                 |");
-
-        printMultiplePHPlacesLine();
-
-        System.out.println("|    |_____|     |_____|                                                                 |");
-
-        System.out.println("|________________________________________________________________________________________|");
-
+        return board;
     }
 
     /** This method prints a line on the towers according to the different floor of them **/
 
-    public void printTowerLine(Integer line) {
-
+    public String printTowerLine(Integer line) {
+        String board = new String();
         if (this.getTerritoryTower().get(line).getDvptCard() == null && this.getTerritoryTower().get(line).getFamilyMember() == null)
-            System.out.print("|   |    |   |            ");
+            board += ("|   |    |   |            ");
 
         else {
 
             if (this.getTerritoryTower().get(line).getFamilyMember() == null) {
-                if (this.getTerritoryTower().get(0).getDvptCard().getId() < 10)
-                    System.out.print("|   |  " + this.getTerritoryTower().get(line).getDvptCard().getId() + " |   |            ");
+                if (this.getTerritoryTower().get(line).getDvptCard().getId() < 10)
+                    board += ("|   |  " + this.getTerritoryTower().get(line).getDvptCard().getId() + " |   |            ");
                 else
-                    System.out.print("|   | " + this.getTerritoryTower().get(line).getDvptCard().getId() + " |   |            ");
+                    board += ("|   | " + this.getTerritoryTower().get(line).getDvptCard().getId() + " |   |            ");
             }
 
             else {
 
-                if (this.getTerritoryTower().get(0).getDvptCard().getId() < 10) {
-                    System.out.print("|   |    | ");
-                    printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
-                    System.out.print("|            ");
+                if (this.getTerritoryTower().get(line).getDvptCard().getId() < 10) {
+                    board += ("|   |    | ");
+                    board += printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
+                    board += ("|            ");
 
                 }
 
                 else {
-                    System.out.print("|   |     | ");
-                    printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
-                    System.out.print("|            ");
+                    board += ("|   |     | ");
+                    board += (this.getTerritoryTower().get(line).getFamilyMember());
+                    board += ("|            ");
                 }
 
             }
@@ -461,163 +460,169 @@ public class Board implements Serializable {
 
         if (this.getBuildingTower().get(line).getDvptCard() == null && this.getBuildingTower().get(line).getFamilyMember() == null)
 
-            System.out.print("|    |   |            ");
+            board += ("|    |   |            ");
 
         else {
 
             if (this.getBuildingTower().get(line).getFamilyMember() == null) {
-                System.out.print("| " + this.getBuildingTower().get(line).getDvptCard().getId() + " |   |            ");
+                board += ("| " + this.getBuildingTower().get(line).getDvptCard().getId() + " |   |            ");
             }
 
             else {
-                System.out.print("|    | ");
-                printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
-                System.out.print("|            ");
+                board += ("|    | ");
+                board += printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
+                board += ("|            ");
             }
         }
 
         if (this.getCharacterTower().get(line).getDvptCard() == null && this.getCharacterTower().get(line).getFamilyMember() == null)
-            System.out.print("|    |   |            ");
+            board += ("|    |   |            ");
 
         else {
             if (this.getCharacterTower().get(line).getFamilyMember() == null) {
-                System.out.print("| " + this.getCharacterTower().get(line).getDvptCard().getId() + " |   |            ");
+                board += ("| " + this.getCharacterTower().get(line).getDvptCard().getId() + " |   |            ");
             } else {
-                System.out.print("|    | ");
-                printFamilyMember(this.getCharacterTower().get(line).getFamilyMember());
-                System.out.print("|            ");
+                board += ("|    | ");
+                board += printFamilyMember(this.getCharacterTower().get(line).getFamilyMember());
+                board += ("|            ");
             }
 
         }
 
         if (this.getVentureTower().get(line).getDvptCard() == null && this.getVentureTower().get(line).getFamilyMember() == null)
-            System.out.print("|   |     |   |         |");
+            board += ("|   |     |   |         |");
         else {
 
             if (this.getVentureTower().get(line).getFamilyMember() == null) {
-                System.out.print("| " + this.getVentureTower().get(line).getDvptCard().getId() + " |   |         |" + "\n");
+                board += ("| " + this.getVentureTower().get(line).getDvptCard().getId() + " |   |         |" + "\n");
             }
 
             else {
-                System.out.print("|    | ");
-                printFamilyMember(this.getVentureTower().get(line).getFamilyMember());
-                System.out.print("|         |" + "\n");
+                board += ("|    | ");
+                board += printFamilyMember(this.getVentureTower().get(line).getFamilyMember());
+                board += ("|         |" + "\n");
             }
 
         }
-
+        return board;
     }
 
     /** This method prints a particular family member**/
 
-    public void printFamilyMember(FamilyMember familyMember) {
+    public String printFamilyMember(FamilyMember familyMember) {
+        String board = new String();
 
         if(familyMember == null)
-            System.out.print("  ");
+            board += ("  ");
 
         else {
 
             if (familyMember.getColor() == ColorType.Orange) {
-                System.out.print(AnsiColors.ANSI_RED + "OF");
-                System.out.print(AnsiColors.ANSI_RESET);
+                board += (AnsiColors.ANSI_RED + "OF");
+                board += (AnsiColors.ANSI_RESET);
             }
 
             if (familyMember.getColor() == ColorType.Black) {
-                System.out.print(AnsiColors.ANSI_BLACK + "BF");
-                System.out.print(AnsiColors.ANSI_RESET);
+                board += (AnsiColors.ANSI_BLACK + "BF");
+                board += (AnsiColors.ANSI_RESET);
             }
 
             if (familyMember.getColor() == ColorType.White) {
-                System.out.print(AnsiColors.ANSI_WHITE + "WF");
-                System.out.print(AnsiColors.ANSI_RESET);
+                board += (AnsiColors.ANSI_WHITE + "WF");
+                board += (AnsiColors.ANSI_RESET);
             }
 
             if (familyMember.getColor() == ColorType.Nautral) {
-                System.out.print("UF");
+                board += ("UF");
             }
 
         }
-
+        return board;
     }
 
     /** This method prints a line which contains the BanCards occupying the CouncilPalace **/
 
-    public void printCathedralLine() {
+    public String printCathedralLine() {
+        String board = new String();
 
-        System.out.print("|     | ");
+        board += ("|     | ");
 
         if (getCathedral().getBanCard(first).getId() < 10) {
-            System.out.print(" ");
+            board += (" ");
         }
 
-        System.out.print(getCathedral().getBanCard(first).getId());
-        System.out.print(" | ");
+        board += (getCathedral().getBanCard(first).getId());
+        board += (" | ");
 
         if (getCathedral().getBanCard(second).getId() < 10)
-            System.out.print(" ");
+            board += (" ");
 
-        System.out.print(getCathedral().getBanCard(second).getId());
-        System.out.print(" | ");
-        System.out.print(getCathedral().getBanCard(third).getId());
-        System.out.print(" |                                      |_______________________|    |\n");
-
+        board += (getCathedral().getBanCard(second).getId());
+        board += (" | ");
+        board += (getCathedral().getBanCard(third).getId());
+        board += (" |                                      |_______________________|    |\n");
+        return board;
     }
 
     /** This method prints a line which contains the Family Members, ordered, occupying the Council Palace  **/
 
-    public void printCouncilPalace() {
-
-        System.out.print("|     |    |    |    |                                      |");
+    public String printCouncilPalace() {
+        String board = new String();
+        board += ("|     |    |    |    |                                      |");
 
         for(FamilyMember member : getCouncilPalace().getPlaces()) {
-            System.out.print(" ");
-            printFamilyMember(member);
-            System.out.print(" ");
+            board += (" ");
+            board += printFamilyMember(member);
+            board += (" ");
         }
 
-        System.out.print("\n");
+        board += ("\n");
+
+        return board;
 
     }
 
     /** This method prints a line which contains the Family Members occupying the Market **/
 
-    public void printMarketLine() {
+    public String printMarketLine() {
+        String board = new String();
 
-        System.out.print("|                                    | ");
+        board += ("|                                    | ");
 
         for (int i=0; i<4; i++) {
-            printFamilyMember(market.getMarketPlaces().get(i).getFamilyMember());
-            System.out.print("  |      | ");
+            board += printFamilyMember(market.getMarketPlaces().get(i).getFamilyMember());
+            board += ("  |      | ");
         }
 
-        System.out.print("\n");
+        board += ("\n");
 
+        return board;
     }
 
     /** This method prints a line which contains the Family Members occupying the main place of Production and Harvest Area**/
 
 
-    public void printMainPHPlacesLine() {
-
-        System.out.print("|    | ");
+    public String printMainPHPlacesLine() {
+        String board = new String();
+        board += ("|    | ");
 
         if(productionArea.getMainPlace().getFamilyMember() != null)
-            printFamilyMember(productionArea.getMainPlace().getFamilyMember());
+            board += printFamilyMember(productionArea.getMainPlace().getFamilyMember());
 
-        System.out.print("  |     | ");
+        board += ("  |     | ");
 
-        printFamilyMember(harvestArea.getMainPlace().getFamilyMember());
+        board += printFamilyMember(harvestArea.getMainPlace().getFamilyMember());
 
-        System.out.print("  |                                                                 |");
-        System.out.print("\n");
-
+        board += ("  |                                                                 |");
+        board += ("\n");
+        return board;
     }
 
 
     /** This method prints some lines that contain the Family Members occupying the multiple places of Production and Harvest Area **/
 
-    public void printMultiplePHPlacesLine() {
-
+    public String printMultiplePHPlacesLine() {
+        String board = new String();
         Integer max;
 
         if(productionArea.getSecondaryPlace().getPlaces().size() > harvestArea.getSecondaryPlace().getPlaces().size())
@@ -627,42 +632,44 @@ public class Board implements Serializable {
             max = harvestArea.getSecondaryPlace().getPlaces().size();
 
         for(int i=0; i<max; i++){
-            System.out.print("|    | ");
+            board += ("|    | ");
 
             if(productionArea.getSecondaryPlace().getPlaces().size() > i)
-                printFamilyMember(productionArea.getSecondaryPlace().getPlaces().get(i));
+                board += printFamilyMember(productionArea.getSecondaryPlace().getPlaces().get(i));
             else
-                System.out.print("  ");
-            System.out.print("  |     | ");
+                board += ("  ");
+            board += ("  |     | ");
 
             if(harvestArea.getSecondaryPlace().getPlaces().size() > i)
-                printFamilyMember(harvestArea.getSecondaryPlace().getPlaces().get(i));
+                board += printFamilyMember(harvestArea.getSecondaryPlace().getPlaces().get(i));
             else
-                System.out.print("  ");
+                board += ("  ");
 
-        System.out.print("  |                                                                 |");
-            System.out.print("\n");
+            board += ("  |                                                                 |");
+            board += ("\n");
         }
+
+        return board;
     }
 
     /** This method prints a line with the value of dices on board **/
 
-    public void printDicesLine(){
-
-        System.out.print("|                                                       | ");
-        System.out.print(AnsiColors.ANSI_BLACK);
-        System.out.print(dices.get(0).getValue());
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print("   |    | ");
-        System.out.print(AnsiColors.ANSI_WHITE);
-        System.out.print(dices.get(1).getValue());
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print("   |    | ");
-        System.out.print(AnsiColors.ANSI_RED);
-        System.out.print(dices.get(2).getValue());
-        System.out.print(AnsiColors.ANSI_RESET);
-        System.out.print("   |    | ");
-        System.out.print("\n");
-
+    public String printDicesLine(){
+        String board = new String();
+        board += ("|                                                       | ");
+        board += (AnsiColors.ANSI_BLACK);
+        board += (dices.get(0).getValue());
+        board += (AnsiColors.ANSI_RESET);
+        board += ("   |    | ");
+        board += (AnsiColors.ANSI_WHITE);
+        board += (dices.get(1).getValue());
+        board += (AnsiColors.ANSI_RESET);
+        board += ("   |    | ");
+        board += (AnsiColors.ANSI_RED);
+        board += (dices.get(2).getValue());
+        board += (AnsiColors.ANSI_RESET);
+        board += ("   |    | ");
+        board += ("\n");
+        return board;
     }
 }

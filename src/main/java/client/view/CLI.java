@@ -618,7 +618,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         this.localMatchController.setMatch(model);
 
-        this.localMatchController.getMatch().getBoard().printBoard();
+        System.out.print(this.localMatchController.getMatch().getBoard());
 
     }
 
