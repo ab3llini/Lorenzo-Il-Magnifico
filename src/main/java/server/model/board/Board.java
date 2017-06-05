@@ -443,88 +443,44 @@ public class Board implements Serializable {
     /** This method prints a line on the towers according to the different floor of them **/
 
     public String printTowerLine(Integer line) {
+
         String board = new String();
-        if (this.getTerritoryTower().get(line).getDvptCard() == null && this.getTerritoryTower().get(line).getFamilyMember() == null)
-            board += ("|   |    |   |            ");
 
-        else {
+        board += "|   | "  + printCardId(this.getTerritoryTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
 
-            if (this.getTerritoryTower().get(line).getFamilyMember() == null) {
-                if (this.getTerritoryTower().get(line).getDvptCard().getId() < 10)
-                    board += ("|   |  " + this.getTerritoryTower().get(line).getDvptCard().getId() + " |   |            ");
-                else
-                    board += ("|   | " + this.getTerritoryTower().get(line).getDvptCard().getId() + " |   |            ");
-            }
+        board += " |            | " + printCardId(this.getBuildingTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
 
-            else {
+        board += " |            | " + printCardId(this.getCharacterTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getCharacterTower().get(line).getFamilyMember());
 
-                if (this.getTerritoryTower().get(line).getDvptCard().getId() < 10) {
-                    board += ("|   |    | ");
-                    board += printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
-                    board += ("|            ");
+        board += " |            | " + printCardId(this.getVentureTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getCharacterTower().get(line).getFamilyMember()) + " |         |\n";
 
-                }
-
-                else {
-                    board += ("|   |     | ");
-                    board += (this.getTerritoryTower().get(line).getFamilyMember());
-                    board += ("|            ");
-                }
-
-            }
-
-        }
-
-        if (this.getBuildingTower().get(line).getDvptCard() == null && this.getBuildingTower().get(line).getFamilyMember() == null)
-
-            board += ("|    |   |            ");
-
-        else {
-
-            if (this.getBuildingTower().get(line).getFamilyMember() == null) {
-                board += ("| " + this.getBuildingTower().get(line).getDvptCard().getId() + " |   |            ");
-            }
-
-            else {
-                board += ("|    | ");
-                board += printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
-                board += ("|            ");
-            }
-        }
-
-        if (this.getCharacterTower().get(line).getDvptCard() == null && this.getCharacterTower().get(line).getFamilyMember() == null)
-            board += ("|    |   |            ");
-
-        else {
-            if (this.getCharacterTower().get(line).getFamilyMember() == null) {
-                board += ("| " + this.getCharacterTower().get(line).getDvptCard().getId() + " |   |            ");
-            } else {
-                board += ("|    | ");
-                board += printFamilyMember(this.getCharacterTower().get(line).getFamilyMember());
-                board += ("|            ");
-            }
-
-        }
-
-        if (this.getVentureTower().get(line).getDvptCard() == null && this.getVentureTower().get(line).getFamilyMember() == null)
-            board += ("|   |     |   |         |");
-        else {
-
-            if (this.getVentureTower().get(line).getFamilyMember() == null) {
-                board += ("| " + this.getVentureTower().get(line).getDvptCard().getId() + " |   |         |" + "\n");
-            }
-
-            else {
-                board += ("|    | ");
-                board += printFamilyMember(this.getVentureTower().get(line).getFamilyMember());
-                board += ("|         |" + "\n");
-            }
-
-        }
         return board;
+
     }
 
     /** This method prints a particular family member**/
+
+
+    public String printCardId(DvptCard card) {
+        String id = new String();
+        if (card == null)
+            id += "  ";
+        else if (card.getId() < 10)
+            id += (" " + card.getId());
+        else
+            id += (card.getId());
+        return id;
+    }
+
+    public String printBanId(BanCard card) {
+        String id = new String();
+        if (card == null)
+            id += "  ";
+        else if (card.getId() < 10)
+            id += (" " + card.getId());
+        else
+            id += (card.getId());
+    return id;}
 
     public String printFamilyMember(FamilyMember familyMember) {
         String board = new String();
@@ -562,22 +518,8 @@ public class Board implements Serializable {
     public String printCathedralLine() {
         String board = new String();
 
-        board += ("|     | ");
+        board += "|     | " + printBanId(getCathedral().getBanCard(first)) +" | " + printBanId(getCathedral().getBanCard(second)) + " | " + printBanId(getCathedral().getBanCard(third)) + " |                                      |_______________________|    |\n";
 
-        if (getCathedral().getBanCard(first).getId() < 10) {
-            board += (" ");
-        }
-
-        board += (getCathedral().getBanCard(first).getId());
-        board += (" | ");
-
-        if (getCathedral().getBanCard(second).getId() < 10)
-            board += (" ");
-
-        board += (getCathedral().getBanCard(second).getId());
-        board += (" | ");
-        board += (getCathedral().getBanCard(third).getId());
-        board += (" |                                      |_______________________|    |\n");
         return board;
     }
 
@@ -623,8 +565,7 @@ public class Board implements Serializable {
         String board = new String();
         board += ("|    | ");
 
-        if(productionArea.getMainPlace().getFamilyMember() != null)
-            board += printFamilyMember(productionArea.getMainPlace().getFamilyMember());
+        board += printFamilyMember(productionArea.getMainPlace().getFamilyMember());
 
         board += ("  |     | ");
 
@@ -675,15 +616,24 @@ public class Board implements Serializable {
         String board = new String();
         board += ("|                                                       | ");
         board += (AnsiColors.ANSI_BLACK);
-        board += (dices.get(0).getValue());
+        if(dices == null)
+            board += " ";
+        else
+            board += (dices.get(0).getValue());
         board += (AnsiColors.ANSI_RESET);
         board += ("   |    | ");
         board += (AnsiColors.ANSI_WHITE);
-        board += (dices.get(1).getValue());
+        if(dices == null)
+            board += " ";
+        else
+            board += (dices.get(1).getValue());
         board += (AnsiColors.ANSI_RESET);
         board += ("   |    | ");
         board += (AnsiColors.ANSI_RED);
-        board += (dices.get(2).getValue());
+        if(dices == null)
+            board += " ";
+        else
+            board += (dices.get(2).getValue());
         board += (AnsiColors.ANSI_RESET);
         board += ("   |    | ");
         board += ("\n");

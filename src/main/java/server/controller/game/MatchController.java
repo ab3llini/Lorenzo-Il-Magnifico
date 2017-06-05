@@ -16,10 +16,7 @@ import server.model.board.*;
 import server.model.card.ban.*;
 import server.model.card.developement.*;
 import server.model.effect.*;
-import server.model.valuable.Multiplier;
-import server.model.valuable.Point;
-import server.model.valuable.Resource;
-import server.model.valuable.ResultType;
+import server.model.valuable.*;
 import server.utility.BoardConfigParser;
 import singleton.GameConfig;
 
@@ -669,7 +666,7 @@ public class MatchController implements Runnable {
             if (this.match.getBoard().getPlayersInTower(towerType).contains(player))
                 throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
 
-            //if the tower is already occupied the player have to pay 3 coins
+            //if the tower is already occupied the player has to pay 3 coins
             if (this.match.getBoard().getPlayersInTower(towerType).size() > 0)
                 player.subtractCoins(3);
 
@@ -679,8 +676,11 @@ public class MatchController implements Runnable {
             EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
 
-            //add to the personal board of the player the building card set in the tower slot
+
+
+            //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+
 
             applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
@@ -973,19 +973,14 @@ public class MatchController implements Runnable {
 
         LinkedHashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
 
+
+
         for (Player player : this.match.getPlayers()) {
 
             Integer totalScore = 0;
 
             totalScore += player.getVictoryPoints();
 
-            for(BanCard banCard : player.getBanCards()) {
-                if (banCard instanceof VictoryMalusBanCard) {
-                    for (Point point : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedByPoints()) {
-                        totalScore -= (int) (player.getVictoryPoints() / point.getAmount());
-                    }
-                }
-            }
 
             boolean territoryBan = false;
             boolean characterBan = false;
@@ -1008,6 +1003,8 @@ public class MatchController implements Runnable {
                 totalScore += card.getPermanentEffect().getvPoints();
             }}
 
+
+
             //one victory point from every 5 resources of all type
             totalScore += (player.getCoins() + player.getStones() + player.getWood() + player.getServants()) / 5;
 
@@ -1026,6 +1023,53 @@ public class MatchController implements Runnable {
 
             //victory points that depends on military points
             totalScore += getMilitaryPointsBonus(player);
+
+            //If the player has some VictoryMalusBanCard, he's gonna lose some points according to the amount of his points or resources
+
+            for(BanCard banCard : player.getBanCards()) {
+                if (banCard instanceof VictoryMalusBanCard) {
+
+                    for (Resource resource : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedbyResources()) {
+
+                        if (resource.getType() == ResourceType.Coins) {
+                            totalScore -= (int) (player.getCoins() / resource.getAmount());
+                        }
+
+                        if (resource.getType() == ResourceType.Servants) {
+                            totalScore -= (int) (player.getServants() / resource.getAmount());
+                        }
+
+                        if (resource.getType() == ResourceType.Stones) {
+                            totalScore -= (int) (player.getStones() / resource.getAmount());
+                        }
+
+                        if (resource.getType() == ResourceType.Wood) {
+                            totalScore -= (int) (player.getWood() / resource.getAmount());
+                        }
+                    }
+
+                    for (Point point : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedByPoints()) {
+
+                        if (point.getType() == PointType.Victory) {
+                            totalScore -= (int) (player.getVictoryPoints() / point.getAmount());
+                        } else if (point.getType() == PointType.Military) {
+                            totalScore -= (int) (player.getMilitaryPoints() / point.getAmount());
+                        } else totalScore -= (int) (player.getFaithPoints() / point.getAmount());
+
+                    }
+
+                    if (((VictoryMalusBanCard) banCard).getEffectVictoryMalus().isRelatedToBuilding()) {
+                        for (BuildingDvptCard card : player.getPersonalBoard().getBuildingCards()) {
+                            for (Cost cost : card.getCost()) {
+                                for (Resource resource : cost.getResources()) {
+                                    if (resource.getType() == ResourceType.Wood)
+                                        totalScore -= resource.getAmount() * ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getMalus();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             finalScore.put(player,totalScore);
         }
