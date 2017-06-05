@@ -901,4 +901,16 @@ public class Player implements Serializable {
 
     }
 
+    /**
+     * this method free family members at the end of the round
+     */
+    public void freeFamilyMembers () {
+
+        for (FamilyMember familyMember: familyMembers) {
+
+            familyMember.setBusy(false);
+
+        }
+    }
+
 }

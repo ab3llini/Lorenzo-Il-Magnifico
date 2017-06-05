@@ -202,6 +202,8 @@ public class BoardController {
 
         }
 
+        board.cleanTowers();
+
         board.setDvptCardOnTerritoryTower(temporaryTerritory);
 
         board.setDvptCardOnBuildingTower(temporaryBuilding);

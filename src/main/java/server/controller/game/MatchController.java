@@ -570,6 +570,7 @@ public class MatchController implements Runnable {
             EffectSurplus surplus = boardController.placeOnSingleHarvestPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
             applyHarvestChain(player,familyMember.getForce() + action.getAdditionalServants());
+
         }
 
         //if boardSectorType is CompositeHarvestPlace we place the family member in the composite harvest place of the harvest area
@@ -582,6 +583,7 @@ public class MatchController implements Runnable {
 
             //we have to subtract force malus from activation force
             applyHarvestChain(player,familyMember.getForce() + action.getAdditionalServants() - this.match.getBoard().getHarvestArea().getSecondaryPlace().getForceMalus());
+
         }
 
         //if boardSectorType is SingleProductionPlace we place the family member in the single production place of the production area
@@ -642,6 +644,9 @@ public class MatchController implements Runnable {
             this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
 
         }
+
+        //subtract the additional servants used
+        player.subtractServants(action.getAdditionalServants());
 
         //set the familiar busy
         familyMember.setBusy(true);
@@ -706,6 +711,9 @@ public class MatchController implements Runnable {
             applyHarvestChain(player,action.getAdditionalServants());
 
         }
+
+        //subtract the additional servants used
+        player.subtractServants(action.getAdditionalServants());
     }
 
     /**
@@ -1119,5 +1127,15 @@ public class MatchController implements Runnable {
 
     public BoardController getBoardController() {
         return boardController;
+    }
+
+    public void initPlayerResource(ArrayList<Player> players) {
+
+        int position=1;
+
+        for (Player player: players) {
+            player.addResources(BoardConfigParser.getInitialResource(position));
+            position++;
+        }
     }
 }
