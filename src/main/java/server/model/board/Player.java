@@ -71,6 +71,23 @@ public class Player implements Serializable {
         this.banCards = new ArrayList<BanCard>();
 
         this.leaderCards = new ArrayList<LeaderCard>();
+
+    }
+
+    public void setFamilyMemberForce(ColorType color, int force) {
+
+        for (FamilyMember fm : this.familyMembers) {
+
+            if (fm.getColor() == color) {
+
+                fm.setForce(force);
+
+                break;
+
+            }
+
+        }
+
     }
 
     public void setPersonalBoard(PersonalBoard personalBoard) {

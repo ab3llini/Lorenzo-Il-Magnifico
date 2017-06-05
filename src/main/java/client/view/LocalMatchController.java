@@ -8,6 +8,7 @@ package client.view;
 import exception.NoSuchPlayerException;
 import netobject.action.standard.StandardActionType;
 import server.model.Match;
+import server.model.board.Dice;
 
 import java.util.HashMap;
 
@@ -40,7 +41,6 @@ public class LocalMatchController {
 
         }
 
-
     }
 
     /**
@@ -60,12 +60,39 @@ public class LocalMatchController {
 
     }
 
+    public boolean diceAreRolled() {
+
+        for (Dice d : this.match.getBoard().getDices()) {
+
+            if (d.getValue() == 0)
+
+                return false;
+
+        }
+
+        return true;
+
+    }
+
+    public boolean canRollDices() {
+
+        return  (this.match.getCurrentTurn() == 1 && this.match.getRoundOrder().get(0).getUsername().equals(this.playerUsername));
+
+    }
+
     /**
      * Updates the model
      */
     public void setMatch(Match match) {
 
         this.match = match;
+
+        //Check if the user can roll the dices
+        if (!this.canRollDices()) {
+
+            this.setActionPerformed(StandardActionType.RollDice, true);
+
+        }
 
 
     }

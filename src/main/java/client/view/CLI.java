@@ -406,7 +406,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             if (this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
-                Cmd.error("You cant perform that action twice!");
+                Cmd.error("The action : " + actionSelection.getEnumEntryFromChoice(choice) + " can't be performed again!");
 
             }
 
@@ -417,6 +417,27 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
 
+        if (!this.localMatchController.diceAreRolled() && actionSelection.getEnumEntryFromChoice(choice) != StandardActionType.TerminateRound) {
+
+            Cmd.error("You must roll the dices first!");
+
+            //Ask the user which action he wants to perform printing the choices
+            Cmd.askFor("Which action would you like to perform ?");
+
+            choice = this.waitForActionSelection();
+
+            while (!actionSelection.isValid(choice) || !actionSelection.choiceMatch(choice, StandardActionType.RollDice)) {
+
+                Cmd.error("You must roll the dices first!");
+
+                //Ask the user which action he wants to perform printing the choices
+                Cmd.askFor("Which action would you like to perform ?");
+
+                choice = this.waitForActionSelection();
+
+            }
+
+        }
 
         //If we got here then we entered a valid choice, go on asking the user what to do
         //However the timeout is still ticking.
@@ -680,12 +701,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
-            Cmd.notify(message);
+            Cmd.notify("Your turn ended");
 
         }
         else {
 
-            Cmd.notify(player.getUsername() + " ended his turn");
+            Cmd.notify(message);
 
         }
 
