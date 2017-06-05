@@ -385,7 +385,7 @@ public class DvptCardParser {
         return conversions;
     }
 
-    private static ArrayList<Resource> getResourceSurplus(JsonObject surplus){
+    public static ArrayList<Resource> getResourceSurplus(JsonObject surplus){
         return getResourceCost(surplus);
     }
 

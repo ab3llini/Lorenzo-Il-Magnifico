@@ -279,6 +279,23 @@ public class Board implements Serializable {
         return players;
     }
 
+    /**
+     * clean the tower at the end of the round
+     */
+    public void cleanTowers() {
+
+        for(DvptCardType type : DvptCardType.values()){
+
+            for (TowerSlot towerslot: getTower(type)) {
+
+                towerslot.setFamilyMember(null);
+                towerslot.setOccupied(false);
+
+            }
+        }
+
+    }
+
     /** This method prints the entire board in all its component in that moment**/
 
 

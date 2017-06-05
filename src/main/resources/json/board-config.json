@@ -1,323 +1,313 @@
 {
   "territoryTower": {
-
-    "1" : {
-      "minForce" : 1
+    "1": {
+      "minForce": 1
     },
-
-    "2" : {
-      "minForce" : 3
+    "2": {
+      "minForce": 3
     },
-
-    "3" : {
-      "minForce" : 5,
-      "surplus" : {
-        "resources" : {
-          "wood" : 1
+    "3": {
+      "minForce": 5,
+      "surplus": {
+        "resources": {
+          "wood": 1
         }
       }
     },
-
-    "4" : {
-      "minForce" : 7,
-      "surplus" : {
-        "resources" : {
-          "wood" : 2
+    "4": {
+      "minForce": 7,
+      "surplus": {
+        "resources": {
+          "wood": 2
         }
       }
     }
   },
-
   "characterTower": {
-
-    "1" : {
-      "minForce" : 1
+    "1": {
+      "minForce": 1
     },
-
-    "2" : {
-      "minForce" : 3
+    "2": {
+      "minForce": 3
     },
-
-    "3" : {
-      "minForce" : 5,
-      "surplus" : {
-        "resources" : {
-          "stones" : 1
+    "3": {
+      "minForce": 5,
+      "surplus": {
+        "resources": {
+          "stones": 1
         }
       }
     },
-
-    "4" : {
-      "minForce" : 7,
-      "surplus" : {
-        "resources" : {
-          "stones" : 2
+    "4": {
+      "minForce": 7,
+      "surplus": {
+        "resources": {
+          "stones": 2
         }
       }
     }
   },
-
   "buildingTower": {
-
-    "1" : {
-      "minForce" : 1
+    "1": {
+      "minForce": 1
     },
-
-    "2" : {
-      "minForce" : 3
+    "2": {
+      "minForce": 3
     },
-
-    "3" : {
-      "minForce" : 5,
-      "surplus" : {
-        "points" : {
-          "military" : 1
+    "3": {
+      "minForce": 5,
+      "surplus": {
+        "points": {
+          "military": 1
         }
       }
     },
-
-
-    "4" : {
-      "minForce" : 7,
-      "surplus" : {
-        "points" : {
-          "military" : 2
+    "4": {
+      "minForce": 7,
+      "surplus": {
+        "points": {
+          "military": 2
         }
       }
     }
   },
-
   "ventureTower": {
-
-    "1" : {
-      "minForce" : 1
+    "1": {
+      "minForce": 1
     },
-
-    "2" : {
-      "minForce" : 3
+    "2": {
+      "minForce": 3
     },
-
-    "3" : {
-      "minForce" : 5,
-      "surplus" : {
-        "resources" : {
-          "coins" : 1
+    "3": {
+      "minForce": 5,
+      "surplus": {
+        "resources": {
+          "coins": 1
         }
       }
     },
-
-    "4" : {
-      "minForce" : 7,
-      "surplus" : {
-        "resources" : {
-          "coins" : 2
+    "4": {
+      "minForce": 7,
+      "surplus": {
+        "resources": {
+          "coins": 2
         }
       }
     }
   },
-
-  "councilPalace" : {
-    "minForce" : 1,
-    "minPlayers" : 0,
-    "surplus" : {
-      "resources" : {
-        "coins" : 1
+  "councilPalace": {
+    "minForce": 1,
+    "minPlayers": 0,
+    "surplus": {
+      "resources": {
+        "coins": 1
       },
-      "council" : 1
+      "council": 1
     }
   },
-
-  "councilPrivilegeOptions":
-    [
-      {
-        "resources" : {
-          "coins" : 2
-        }
-      },
-
-      {
-        "resources" : {
-          "servants" : 2
-        }
-      },
-
-      {
-        "resources" : {
-          "wood" : 1,
-          "stones" : 1
-        }
-      },
-
-      {
-        "points" : {
-          "faith" : 1
-        }
-      },
-
-      {
-        "points" : {
-          "military" : 2
-        }
+  "councilPrivilegeOptions": [
+    {
+      "resources": {
+        "coins": 2
       }
-    ],
-
-
-  "cathedral" : {
-    "firstMinFaith" : 3,
-    "secondMinFaith" : 4,
-    "thirdMinFaith" : 5
-  },
-
-  "productionArea" : {
-
-    "singleActionPlace" : {
-      "minForce" : 1,
-      "minPlayers" : 0
     },
-
-    "phCompositeActionPlace" : {
-      "minPlayers" : 0,
-      "minForce" : 1,
-      "malus" : 3
+    {
+      "resources": {
+        "servants": 2
+      }
+    },
+    {
+      "resources": {
+        "wood": 1,
+        "stones": 1
+      }
+    },
+    {
+      "points": {
+        "faith": 1
+      }
+    },
+    {
+      "points": {
+        "military": 2
+      }
+    }
+  ],
+  "cathedral": {
+    "firstMinFaith": 3,
+    "secondMinFaith": 4,
+    "thirdMinFaith": 5
+  },
+  "productionArea": {
+    "singleActionPlace": {
+      "minForce": 1,
+      "minPlayers": 0
+    },
+    "phCompositeActionPlace": {
+      "minPlayers": 0,
+      "minForce": 1,
+      "malus": 3
     }
   },
-
-  "harvestArea" : {
-
-    "singleActionPlace" : {
-      "minForce" : 1,
-      "minPlayers" : 0
+  "harvestArea": {
+    "singleActionPlace": {
+      "minForce": 1,
+      "minPlayers": 0
     },
-
-    "phCompositeActionPlace" : {
-      "minPlayers" : 0,
-      "minForce" : 1,
-      "malus" : 3
+    "phCompositeActionPlace": {
+      "minPlayers": 0,
+      "minForce": 1,
+      "malus": 3
     }
   },
-
-  "market" : {
-    "1" : {
-      "minForce" : 1,
-      "minPlayers" : 0,
-      "surplus" : {
-        "resources" : {
-          "coins" :5
+  "market": {
+    "1": {
+      "minForce": 1,
+      "minPlayers": 0,
+      "surplus": {
+        "resources": {
+          "coins": 5
         }
       }
     },
-
-    "2" : {
-      "minForce" : 1,
-      "minPlayers" : 0,
-      "surplus" : {
-        "resources" : {
-          "servants" :5
+    "2": {
+      "minForce": 1,
+      "minPlayers": 0,
+      "surplus": {
+        "resources": {
+          "servants": 5
         }
       }
     },
-
-    "3" : {
-      "minForce" : 1,
-      "minPlayers" : 4,
-      "surplus" : {
-        "resources" : {
-          "coins" : 2
+    "3": {
+      "minForce": 1,
+      "minPlayers": 4,
+      "surplus": {
+        "resources": {
+          "coins": 2
         },
-        "points" : {
-          "military" : 3
+        "points": {
+          "military": 3
         }
       }
     },
-
-    "4" : {
-      "minForce" : 1,
-      "minPlayers" : 4,
-      "surplus" : {
-        "council" : 2
-        }
+    "4": {
+      "minForce": 1,
+      "minPlayers": 4,
+      "surplus": {
+        "council": 2
       }
-    },
-
-  "cardsToVictoryPoints" : {
-
-    "territoryCardToVictory" : {
-
-      "0" : 0,
-      "1" : 0,
-      "2" : 0,
-      "3" : 1,
-      "4" : 4,
-      "5" : 10,
-      "6" : 20
-
-    },
-
-    "characterCardToVictory" : {
-
-      "0" : 0,
-      "1" : 1,
-      "2" : 3,
-      "3" : 6,
-      "4" : 10,
-      "5" : 15,
-      "6" : 21
-
-    },
-
-    "buildingCardToVictory" : {
-
-      "0" : 0,
-      "1" : 0,
-      "2" : 0,
-      "3" : 0,
-      "4" : 0,
-      "5" : 0,
-      "6" : 0
-
-    },
-
-    "ventureCardToVictory" : {
-
-      "0" : 0,
-      "1" : 0,
-      "2" : 0,
-      "3" : 0,
-      "4" : 0,
-      "5" : 0,
-      "6" : 0
-
     }
   },
-
-  "faithToVictoryPoints" : {
-
-    "0" : 0,
-    "1" : 1,
-    "2" : 2,
-    "3" : 3,
-    "4" : 4,
-    "5" : 5,
-    "6" : 7,
-    "7" : 9,
-    "8" : 11,
-    "9" : 13,
-    "10" : 15,
-    "11" : 17,
-    "12" : 19,
-    "13" : 22,
-    "14" : 25,
-    "15" : 30
-
+  "cardsToVictoryPoints": {
+    "territoryCardToVictory": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1,
+      "4": 4,
+      "5": 10,
+      "6": 20
+    },
+    "characterCardToVictory": {
+      "0": 0,
+      "1": 1,
+      "2": 3,
+      "3": 6,
+      "4": 10,
+      "5": 15,
+      "6": 21
+    },
+    "buildingCardToVictory": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+    },
+    "ventureCardToVictory": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+    }
+  },
+  "faithToVictoryPoints": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 7,
+    "7": 9,
+    "8": 11,
+    "9": 13,
+    "10": 15,
+    "11": 17,
+    "12": 19,
+    "13": 22,
+    "14": 25,
+    "15": 30
+  },
+  "militaryRankingVictoryPoints": {
+    "1": 5,
+    "2": 2,
+    "3": 0,
+    "4": 0,
+    "5": 0
   },
 
-  "militaryRankingVictoryPoints" : {
-    "1" : 5,
-    "2" : 2,
-    "3" : 0,
-    "4" : 0,
-    "5" : 0
+  "initialResources": {
+
+    "1": {
+      "resources": {
+        "coins": 5,
+        "stones": 2,
+        "wood": 2,
+        "servants": 3
+      }
+    },
+
+    "2": {
+      "resources": {
+        "coins": 6,
+        "stones": 2,
+        "wood": 2,
+        "servants": 3
+      }
+    },
+
+    "3": {
+      "resources": {
+        "coins": 7,
+        "stones": 2,
+        "wood": 2,
+        "servants": 3
+      }
+    },
+
+    "4": {
+      "resources": {
+        "coins": 8,
+        "stones": 2,
+        "wood": 2,
+        "servants": 3
+      }
+    },
+
+    "5": {
+      "resources": {
+        "coins": 9,
+        "stones": 2,
+        "wood": 2,
+        "servants": 3
+      }
+    }
   }
-
-
 }

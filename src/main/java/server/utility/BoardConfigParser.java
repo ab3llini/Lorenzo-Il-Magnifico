@@ -3,19 +3,20 @@ package server.utility;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.sun.org.apache.regexp.internal.RE;
 import logger.Level;
 import logger.Logger;
 import server.model.board.*;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
+import server.model.effect.EffectPermanentAction;
 import server.model.effect.EffectSurplus;
 import server.model.valuable.Point;
 import server.model.valuable.Resource;
 
 import java.util.ArrayList;
 
-import static server.utility.DvptCardParser.getEffectSurplus;
-import static server.utility.DvptCardParser.getSurplus;
+import static server.utility.DvptCardParser.*;
 
 /**
  * Created by LBARCELLA on 18/05/2017.
@@ -279,5 +280,18 @@ public class BoardConfigParser {
         victoryBonus = rankingBonusObject.get(""+position).getAsInt();
 
         return victoryBonus;
+    }
+
+    public static ArrayList<Resource> getInitialResource(Integer initialPosition){
+
+       ArrayList<Resource> initResources;
+
+
+        //get JsonObject initial resources from boardConfig
+        JsonObject initResourcesObject = BoardConfigParser.getBoardConfig().getAsJsonObject("initialResources");
+
+        initResources = getResourceSurplus(initResourcesObject.get(""+initialPosition).getAsJsonObject());
+
+        return initResources;
     }
 }
