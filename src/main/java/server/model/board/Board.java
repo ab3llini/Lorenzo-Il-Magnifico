@@ -3,7 +3,13 @@ package server.model.board;
 import logger.AnsiColors;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.*;
+import server.model.effect.EffectSurplus;
+import server.model.valuable.Point;
+import server.model.valuable.PointType;
+import server.model.valuable.Resource;
+import server.model.valuable.ResourceType;
 import server.utility.BoardConfigParser;
+import server.utility.UnicodeChars;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -377,11 +383,9 @@ public class Board implements Serializable {
 
         board += ("|                                                                                        |\n");
 
-        board += ("|                                                                 MARKET                 |\n");
+        board += ("|                                                      MARKET                            |\n");
 
-        board += ("|                                   5 COINS       5 SERVANTS   3 MILITARY   2 DIFF       |\n");
-
-        board += ("|                                                             + 2 COINS      COUNCILS    |\n");
+        board += printMarketBonusLine();
 
         board += ("|                                    _______      _______      _______      _______      |\n");
 
@@ -533,7 +537,61 @@ public class Board implements Serializable {
 
     }
 
-    /** This method prints a line which contains the Family Members occupying the Market **/
+    /** This method prints a line which contains the bonus of the market places **/
+
+    public String printMarketBonusLine() {
+
+        String board = new String();
+
+        board += ("|                                     ");
+
+        for(int i=0; i<2; i++){
+            board += printMarketBonus(getMarket().getMarketPlaces().get(i).getEffectSurplus(),i);
+            board += "         ";
+        }
+
+        for(int i=2; i<4; i++){
+            board += printMarketBonus(getMarket().getMarketPlaces().get(i).getEffectSurplus(),i);
+            board += "       ";
+        }
+
+        board += "|\n";
+
+        return board;
+    }
+
+    public String printMarketBonus(EffectSurplus effectSurplus, Integer index) {
+        String bonus = new String();
+        if (effectSurplus.getResources() != null) {
+            for (Resource resource : getMarket().getMarketPlaces().get(index).getEffectSurplus().getResources()) {
+                if (resource.getType() == ResourceType.Coins)
+                    bonus += resource.getAmount() + "" + UnicodeChars.Coins + " ";
+                if (resource.getType() == ResourceType.Servants)
+                    bonus += resource.getAmount() + "" + UnicodeChars.Servants+ " ";
+                if (resource.getType() == ResourceType.Wood)
+                    bonus += resource.getAmount() + "" + UnicodeChars.Wood + " ";
+                if (resource.getType() == ResourceType.Stones)
+                    bonus += resource.getAmount() + "" + UnicodeChars.Stones + " ";
+            }
+        }
+        if (effectSurplus.getPoints() != null) {
+            for (Point point : getMarket().getMarketPlaces().get(index).getEffectSurplus().getPoints()) {
+                if (point.getType() == PointType.Victory)
+                    bonus += point.getAmount() + " " + UnicodeChars.VictoryPoints + " ";
+                if (point.getType() == PointType.Military)
+                    bonus += point.getAmount() + " " + UnicodeChars.MilitaryPoints + " ";
+                if (point.getType() == PointType.Faith)
+                    bonus += point.getAmount() + " " + UnicodeChars.FaithPoints + " ";
+            }
+        }
+
+        if (effectSurplus.getCouncil() != 0) {
+            bonus += getMarket().getMarketPlaces().get(index).getEffectSurplus().getCouncil() + " " + UnicodeChars.Council;
+        }
+
+        return bonus;
+
+    }
 
     public String printMarketLine() {
         String board = new String();
