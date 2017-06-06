@@ -37,6 +37,11 @@ import static server.utility.BoardConfigParser.getVictoryBonusFromRanking;
 public class MatchController implements Runnable {
 
     /**
+     * Hold a reference to the lobby
+     */
+    private Lobby lobby;
+
+    /**
      * The model instance of the match
      */
     private Match match;
@@ -77,7 +82,10 @@ public class MatchController implements Runnable {
      * It is called only by the lobby itself when the match starts
      * @param handlers the handlers of the model players
      */
-    public MatchController(ArrayList<ClientHandler> handlers) {
+    public MatchController(ArrayList<ClientHandler> handlers, Lobby lobby) {
+
+        //Set the lobby
+        this.lobby = lobby;
 
         /*
          * Initialize the map
@@ -171,16 +179,9 @@ public class MatchController implements Runnable {
 
         //TODO: Draft the bonus tiles
 
-        //Draft the leader cards
-        try {
+        //Draft the leader cards first
+        this.handleLeaderCardDraft();
 
-            this.handleLeaderCardDraft();
-
-        } catch (InterruptedException e) {
-
-            e.printStackTrace();
-
-        }
 
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);
@@ -200,7 +201,7 @@ public class MatchController implements Runnable {
 
             }
 
-            Logger.log(Level.FINEST, "MatchController", "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
+            Logger.log(Level.FINEST, this.toString(), "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
             //Foreach round handle the current player
             for (Player p : currentRound) {
@@ -208,7 +209,7 @@ public class MatchController implements Runnable {
                 //Skip each disabled player
                 if (p.isDisabled()) {
 
-                    Logger.log(Level.FINEST, "MatchController", "Skipping player " + p.getUsername() +" because he is disabled");
+                    Logger.log(Level.FINEST, this.toString(), "Skipping player " + p.getUsername() +" because he is disabled");
 
                     continue;
                 }
@@ -223,8 +224,11 @@ public class MatchController implements Runnable {
 
     /**
      * Handle the leader card draft
+     * Creates a number of draftable decks equal to the number of players
+     * It then sends every deck to the player and wait for any player to chose
+     * When all the players have selected one card, the draft takes places and the decks received from the nearby player are sent.
      */
-    private void handleLeaderCardDraft() throws InterruptedException {
+    private void handleLeaderCardDraft() {
 
         final int NUMBER_OF_CARDS_PER_DECK = 4;
 
@@ -265,7 +269,16 @@ public class MatchController implements Runnable {
             for (int j = 0; j < this.match.getPlayers().size(); j ++) {
 
                 //Get the shuffle action
-                ShuffleLeaderCardStandardAction shuffleAction = (ShuffleLeaderCardStandardAction)this.actions.take();
+                ShuffleLeaderCardStandardAction shuffleAction = null;
+                try {
+
+                    shuffleAction = (ShuffleLeaderCardStandardAction)this.actions.take();
+
+                } catch (InterruptedException e) {
+
+                    Logger.log(Level.WARNING, "Match controller", "Thread stopped while waiting on action queue", e);
+
+                }
 
                 //Get the selected card, DEBUG ONLY
                 LeaderCard selected = shuffleAction.getDeck().getCards().get(shuffleAction.getSelection());
@@ -277,6 +290,9 @@ public class MatchController implements Runnable {
                 try {
 
                     this.match.getPlayerFromUsername(shuffleAction.getSender()).addLeaderCard(selected);
+
+                    this.notifyAllActionPerformed(this.match.getPlayerFromUsername(shuffleAction.getSender()), shuffleAction, shuffleAction.getSender() + " drafted his leader cards, he selected '" + selected.getName() + "'");
+
 
                 } catch (NoSuchPlayerException e) {
 
@@ -293,8 +309,6 @@ public class MatchController implements Runnable {
 
             //Set the deck of each player to the deck of the previous one
             for (Map.Entry<String , Deck<LeaderCard>> e : draftingMap.entrySet()) {
-
-                Map.Entry<String, Deck<LeaderCard>> x =  draftingMap.firstEntry();
 
                 if (e.getKey().equals(draftingMap.firstEntry().getKey())) {
 
@@ -337,7 +351,7 @@ public class MatchController implements Runnable {
         //Update the current player
         this.currentPlayer = player;
 
-        Logger.log(Level.FINEST, "MatchController", "It is " + this.currentPlayer.getUsername() + "'s turn!");
+        Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
 
         //Notify the turn of the player
@@ -354,7 +368,7 @@ public class MatchController implements Runnable {
 
                 if (action instanceof TerminateRoundStandardAction) {
 
-                    Logger.log(Level.FINEST, "MatchController", "The player " + this.currentPlayer.getUsername() + " terminated his round");
+                    Logger.log(Level.FINEST, this.toString(), "The player " + this.currentPlayer.getUsername() + " terminated his round");
 
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
@@ -364,7 +378,7 @@ public class MatchController implements Runnable {
                 }
                 else {
 
-                    Logger.log(Level.FINEST, "MatchController", "Parsing action request, the active player is " + this.currentPlayer.getUsername());
+                    Logger.log(Level.FINEST, this.toString(), "Parsing action request, the active player is " + this.currentPlayer.getUsername());
 
                     try {
 
@@ -385,7 +399,7 @@ public class MatchController implements Runnable {
 
             } catch (NoActionPerformedException e) {
 
-                Logger.log(Level.WARNING, "MatchController", "The action timeout for player " + this.currentPlayer.getUsername() + " expired", e);
+                Logger.log(Level.WARNING, this.toString(), "The action timeout for player " + this.currentPlayer.getUsername() + " expired", e);
 
                 //Tell the players that the timeout has expired expired for the active player
                 this.notifyAllActionTimeoutExpired(this.currentPlayer);
@@ -402,7 +416,7 @@ public class MatchController implements Runnable {
 
             } catch (InterruptedException e) {
 
-                e.printStackTrace();
+                Logger.log(Level.WARNING, "Match controller", "Thread stopped while waiting on action queue", e);
 
             }
 
@@ -1421,7 +1435,7 @@ public class MatchController implements Runnable {
      * give the correct init resources to each player
      * @param players
      */
-    public void initPlayerResource(ArrayList<Player> players) {
+    private void initPlayerResource(ArrayList<Player> players) {
 
         int position=1;
 
@@ -1429,5 +1443,12 @@ public class MatchController implements Runnable {
             player.addResources(BoardConfigParser.getInitialResource(position));
             position++;
         }
+    }
+
+    @Override
+    public String toString() {
+
+        return this.lobby + " match controller";
+
     }
 }

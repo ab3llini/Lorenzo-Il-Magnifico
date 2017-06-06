@@ -342,7 +342,7 @@ public class Lobby {
 
         this.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match has started"));
 
-        this.matchController = new MatchController(this.handlers);
+        this.matchController = new MatchController(this.handlers, this);
 
         this.matchControllerRunner = new Thread(matchController);
 
@@ -367,6 +367,8 @@ public class Lobby {
     private void welcomeClient(ClientHandler handler) {
 
         handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername() + ", welcome to " + this.toString()));
+
+        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Rules:\nAction timeout = " + GameConfig.getInstance().getPlayerTimeout() + "s"));
 
     }
 

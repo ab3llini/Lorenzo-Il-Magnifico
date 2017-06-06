@@ -25,6 +25,7 @@ import netobject.notification.LobbyNotificationType;
 import netobject.notification.Notification;
 import netobject.action.BoardSectorType;
 import netobject.request.auth.LoginRequest;
+import server.model.GameSingleton;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.ColorType;
@@ -427,9 +428,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                 String choice = this.waitForActionSelection();
 
-                while (Integer.parseInt(choice) < 1 && Integer.parseInt(choice) > 4) {
+                while (this.isIntegerInRange(choice, 1, this.localMatchController.getDraftable().getCards().size())) {
 
-                    Cmd.error("Invalid choice, try again.");
+                    Cmd.error("'"+choice + "' is not a valid choice, try again.");
 
                     choice = this.waitForActionSelection();
 
@@ -449,7 +450,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             }
 
-            this.client.performAction(new ShuffleLeaderCardStandardAction(selection, this.localMatchController.getDraftable(), this.client.getUsername()));
+            this.client.performAction(new ShuffleLeaderCardStandardAction(selection - 1, this.localMatchController.getDraftable(), this.client.getUsername()));
 
             if (this.localMatchController.getDraftable().getCards().size() == 1) {
 
@@ -530,8 +531,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
 
         }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
+
+            this.showDvptCardDetail();
+
+        }
         else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
 
+            Cmd.notify("Command not available yet.");
 
         }
         else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
@@ -545,8 +552,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Before setting the move as done, wait for server confirmation or refusal
         this.localMatchController.setLastPendingAction(actionSelection.getEnumEntryFromChoice(choice));
 
-        //Wait for a response
-        this.waitOnMutex(this.connectionMutex);
+        //Wait for a response just if the action requires server interaction
+        if (!actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
+            this.waitOnMutex(this.connectionMutex);
+        }
 
         //After the action was performed, return the choice made so that if the user wants to terminate the round we can know it
         return actionSelection.getEnumEntryFromChoice(choice);
@@ -638,6 +647,28 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         this.client.performAction(new TerminateRoundStandardAction(this.client.getUsername()));
 
         this.localMatchController.flushActionsPerformed();
+
+    }
+
+    /**
+     * Asks the user for a development card ID and prints the card details
+     * @throws InterruptedException
+     */
+    private void showDvptCardDetail() throws InterruptedException {
+
+        String id = "";
+
+        Cmd.askFor("Enter the card ID of which you would like to see more details");
+
+        do {
+
+            id = this.inputQueue.take();
+
+        }
+        while (!this.isIntegerInRange(id, 1, GameSingleton.getInstance().getDvptCards().size()));
+
+
+        System.out.println(GameSingleton.getInstance().getSpecificDvptCard(Integer.parseInt(id)));
 
     }
 
@@ -861,7 +892,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    @Override
     public void onLeaderCardDraftRequest(Client sender, Deck<LeaderCard> cards, String message) {
 
         this.localMatchController.setDraftable(cards);
@@ -875,16 +905,53 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    @Override
     public void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message) {
 
     }
+
+    private boolean isInteger(String s) {
+
+        try {
+
+            Integer.parseInt(s);
+
+            return true;
+
+        } catch(Exception e) {
+
+            return false;
+
+        }
+
+
+    }
+
+
+    private boolean isIntegerInRange(String s, int min, int max) {
+
+        if (this.isInteger(s)) {
+
+            if (Integer.parseInt(s) < min || Integer.parseInt(s) > max) {
+
+                return false;
+
+            }
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
 
     public static void main(String[] args) throws InterruptedException {
 
         (new CLI()).play();
 
     }
+
 
 
 }
