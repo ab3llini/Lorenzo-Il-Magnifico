@@ -47,20 +47,37 @@ public class OnceARoundEffect implements Serializable {
     @Override
     public String toString() {
 
-        String onceARound = "Once a Round, ";
+        String onceARound = "";
 
         for (Resource resource: this.resources) {
 
-            onceARound += resource.toString()+", ";
+            if(resources.indexOf(resource) == resources.size()-1 && points.size()==0) {
+
+                onceARound += resource.toString();
+            }
+
+            else
+            {
+                onceARound += resource.toString()+", ";
+            }
         }
 
         for (Point point: this.points) {
 
-            onceARound += point.toString()+", ";
+            if(points.indexOf(point) == points.size()-1) {
+
+                onceARound += point.toString();
+            }
+            else {
+                onceARound += point.toString()+", ";
+            }
         }
 
-        if(council >=1)
+        if(council >=1){
+
             onceARound += "Council "+UnicodeChars.Council+" "+this.council;
+
+        }
 
         if(!action.isEmpty()){
 

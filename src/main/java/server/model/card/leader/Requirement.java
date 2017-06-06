@@ -50,20 +50,41 @@ public class Requirement implements Serializable {
 
         for (Resource resource: this.resourceRequired) {
 
-            requirement += resource.toString()+", ";
+            if(resourceRequired.indexOf(resource) == resourceRequired.size()-1 && pointsRequired.size()==0) {
+
+                requirement += resource.toString();
+            }
+
+            else
+            {
+                requirement += resource.toString()+", ";
+            }
         }
 
         for (Point point: this.pointsRequired) {
 
-            requirement += point.toString()+", ";
+            if(pointsRequired.indexOf(point) == pointsRequired.size()-1) {
+
+                requirement += point.toString();
+            }
+            else {
+                requirement += point.toString()+", ";
+            }
         }
 
         if(!cardsRequired.isEmpty()){
+
             Set types = cardsRequired.keySet();
+            int size = types.size();
+            int i=0;
 
             for (Object type: types) {
 
-                requirement += type+" cards " + UnicodeChars.Card +" "+cardsRequired.get(type)+", ";
+                if(size>i+1)
+                    requirement += type+" cards " + UnicodeChars.Card +" "+cardsRequired.get(type)+", ";
+                else
+                    requirement += type+" cards " + UnicodeChars.Card +" "+cardsRequired.get(type);
+                i++;
             }
         }
 

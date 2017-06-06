@@ -294,4 +294,12 @@ public class BoardConfigParser {
 
         return initResources;
     }
+
+    public static Integer getMinimumMilitaryPoints(int territoryCardWanted) {
+
+        //get JsonObject minimum from boardConfig
+        JsonObject minimumMilitaryPoints = BoardConfigParser.getBoardConfig().getAsJsonObject("minimumNumberOfMilitaryPointsForTerritory");
+
+        return minimumMilitaryPoints.get(""+territoryCardWanted).getAsInt();
+    }
 }
