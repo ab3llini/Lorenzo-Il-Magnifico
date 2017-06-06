@@ -651,8 +651,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         additionalServants = Integer.parseInt(choice);
 
-        index = Integer.parseInt(choice) - 1;
-
         Cmd.askFor("Enter the cost option");
 
         Command<SelectionType> costSelection = new Command<SelectionType>(SelectionType.class);
