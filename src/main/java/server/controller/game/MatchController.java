@@ -958,9 +958,22 @@ public class MatchController implements Runnable {
 
         Random random = new Random();
 
+        //Randomize the dice values
         for (Dice d : this.match.getBoard().getDices()) {
 
             d.setValue(random.nextInt(5) + 1);
+
+        }
+
+        //Update the family member values of each player
+        for (Player p : this.match.getPlayers()) {
+
+            //Looping through each dice
+            for (Dice d : this.match.getBoard().getDices()) {
+
+                p.setFamilyMemberForce(d.getColor(), d.getValue());
+
+            }
 
         }
 

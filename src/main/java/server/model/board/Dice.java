@@ -6,12 +6,15 @@ import java.io.Serializable;
  * Created by Federico on 11/05/2017.
  */
 public class Dice implements Serializable {
+
     private ColorType color;
     private Integer value;
 
+    private static final int DEFAULT_VALUE = 0;
+
     public Dice (ColorType color){
         this.color = color;
-        this.value = value;
+        this.value = DEFAULT_VALUE;
     }
 
     public ColorType getColor() {

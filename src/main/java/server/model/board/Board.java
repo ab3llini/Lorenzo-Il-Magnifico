@@ -300,30 +300,22 @@ public class Board implements Serializable {
 
     @Override
     public String toString() {
-        String board = new String();
+
+        String board = "";
+
         board += "__________________________________________________________________________________________\n";
         board += ("|                                                                                        |\n");
         board += ("| ");
-        board += (AnsiColors.ANSI_GREEN + "  TERRITORY            ");
-        board += (AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_YELLOW + " BUILDING           ");
-        board += (AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_BLUE + "   CHARACTER            ");
+        board += (AnsiColors.ANSI_GREEN + "  TERRITORY            " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_YELLOW + " BUILDING           " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_BLUE + "   CHARACTER            " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_PURPLE + " VENTURE            |\n" + AnsiColors.ANSI_RESET);
 
-        board += (AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_PURPLE + " VENTURE            |\n");
-
-        board += (AnsiColors.ANSI_RESET);
         board += ("| ");
-        board += (AnsiColors.ANSI_GREEN + "  TOWER               ");
-        board += (AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_YELLOW + "  TOWER              ");
-        board += (AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_BLUE + "   TOWER                ");
-        board += (AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_PURPLE + " TOWER              |\n");
-
-        board += (AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_GREEN + "  TOWER               " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_YELLOW + "  TOWER              " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_BLUE + "   TOWER                " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_PURPLE + " TOWER              |\n" + AnsiColors.ANSI_RESET);
 
         board += ("|   ______                ______                ______                ______             |\n");
 
