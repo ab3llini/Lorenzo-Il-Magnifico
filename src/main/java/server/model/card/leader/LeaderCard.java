@@ -33,5 +33,19 @@ public class LeaderCard implements Serializable {
         return leaderEffect;
     }
 
+    @Override
+    public String toString() {
 
+        String leader = "";
+
+        leader += "Card ID: "+this.id+"\n";
+
+        leader += "Name : "+this.name+"\n";
+
+        leader += "Requirements: "+this.requirement.toString()+"\n";
+
+        leader += "Effect: "+this.leaderEffect.toString()+"\n";
+
+        return leader;
+    }
 }

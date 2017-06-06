@@ -1,5 +1,7 @@
 package server.model.valuable;
 
+import server.utility.UnicodeChars;
+
 import java.io.Serializable;
 
 /**
@@ -16,5 +18,28 @@ public class Resource extends Valuable implements Serializable {
 
     public ResourceType getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        String resource= "";
+
+        if(type == ResourceType.Coins)
+            resource += "Coins "+ UnicodeChars.Coins;
+
+        if(type == ResourceType.Servants)
+            resource += "Servants "+UnicodeChars.Servants;
+
+        if(type == ResourceType.Stones)
+            resource += "Stones "+UnicodeChars.Stones;
+
+        if(type == ResourceType.Wood)
+            resource += "Wood "+UnicodeChars.Wood;
+
+        resource += " : ";
+        
+        resource += this.getAmount();
+
+        return resource;
     }
 }

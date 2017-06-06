@@ -7,6 +7,7 @@ import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
 import server.model.valuable.*;
+import server.utility.UnicodeChars;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -918,21 +919,21 @@ public class Player implements Serializable {
 
         String playerString = "";
 
-        playerString += this.username;
+        playerString += UnicodeChars.Man+" "+this.username+"\n";
 
-        playerString += "--------> coins: "+this.getCoins();
+        playerString += "- coins "+UnicodeChars.Coins+": "+this.getCoins()+"\n";
 
-        playerString += ", servants: "+this.getServants();
+        playerString += "- servants "+UnicodeChars.Servants+": "+this.getServants()+"\n";
 
-        playerString += ", wood: "+this.getWood();
+        playerString += "- wood "+UnicodeChars.Wood+": "+this.getWood()+"\n";
 
-        playerString += ", stones: "+this.getStones();
+        playerString += "- stones "+UnicodeChars.Stones+": "+this.getStones()+"\n";
 
-        playerString += ", victory points: "+this.getVictoryPoints();
+        playerString += "- victory points "+UnicodeChars.VictoryPoints+": "+this.getVictoryPoints()+"\n";
 
-        playerString += ", military points: "+this.getMilitaryPoints();
+        playerString += "- military points "+UnicodeChars.MilitaryPoints+": "+this.getMilitaryPoints()+"\n";
 
-        playerString += ", faith points: "+this.getFaithPoints();
+        playerString += "- faith points "+UnicodeChars.FaithPoints+": "+this.getFaithPoints()+"\n";
 
         return playerString;
     }

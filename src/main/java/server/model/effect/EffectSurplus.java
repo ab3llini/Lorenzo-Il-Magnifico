@@ -2,6 +2,7 @@ package server.model.effect;
 import java.io.Serializable;
 import java.util.ArrayList;
 import server.model.valuable.*;
+import server.utility.UnicodeChars;
 
 /**
  * Created by Federico on 10/05/2017.
@@ -30,5 +31,24 @@ public class EffectSurplus implements Serializable {
         return council;
     }
 
+    @Override
+    public String toString() {
 
+        String surplus = "";
+
+        for (Resource resource: this.resources) {
+
+            surplus += resource.toString()+", ";
+        }
+
+        for (Point point : this.points) {
+
+            surplus += point.toString()+", ";
+        }
+
+        if(council>=1)
+            surplus += "Council "+ UnicodeChars.Council+" : "+council;
+
+        return surplus;
+    }
 }

@@ -24,4 +24,17 @@ public class LeaderEffect implements Serializable {
     public PermanentLeaderEffectType getPermanentEffect() {
         return permanentEffect;
     }
+
+    @Override
+    public String toString() {
+
+        String leaderEffect = "";
+
+        if(OnceARound != null)
+            leaderEffect += OnceARound.toString();
+        else
+            leaderEffect += permanentEffect.toString();
+        
+        return leaderEffect;
+    }
 }

@@ -1,5 +1,7 @@
 package server.model.valuable;
 
+import server.utility.UnicodeChars;
+
 import java.io.Serializable;
 
 /**
@@ -23,5 +25,25 @@ public class Point extends Valuable implements Serializable {
 
     public PointType getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        String point= "";
+
+        if(type == PointType.Victory)
+            point += "Victory Points "+ UnicodeChars.VictoryPoints;
+
+        if(type == PointType.Faith)
+            point += "Faith Points "+UnicodeChars.FaithPoints;
+
+        if(type == PointType.Military)
+            point += "Military Points "+UnicodeChars.MilitaryPoints;
+
+        point += " : ";
+
+        point += this.getAmount();
+
+        return point;
     }
 }

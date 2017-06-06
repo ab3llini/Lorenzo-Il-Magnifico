@@ -1,6 +1,7 @@
 package server.model.board;
 
 import server.model.effect.EffectSurplus;
+import server.utility.UnicodeChars;
 
 import java.io.Serializable;
 
@@ -42,5 +43,27 @@ public class BonusTile implements Serializable {
 
     public EffectSurplus getProductionSurplus() {
         return productionSurplus;
+    }
+
+    @Override
+    public String toString() {
+
+        String tile="";
+
+        tile += "BONUS TILE N°"+this.id+"\n";
+
+        tile += "-->HARVEST "+ UnicodeChars.Harvest+"\n";
+
+        tile += "   Minforce: "+this.harvestMinForce+"\n";
+
+        tile += "   Surplus: "+this.getHarvestSurplus().toString()+"\n";
+
+        tile += "-->PRODUCTION "+ UnicodeChars.Production+"\n";
+
+        tile += "   Minforce: "+this.productionMinForce+"\n";
+
+        tile += "   Surplus: "+this.getProductionSurplus().toString()+"\n";
+
+        return tile;
     }
 }

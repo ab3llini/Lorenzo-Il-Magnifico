@@ -1,59 +1,47 @@
 {
-  "20" : {
-	"name":"Bartolomeo Colleoni",
+
+  "1" : {
+    "name":"Francesco Sforza",
     "requirement" : {
-        "cards":{
-		  "territory": 4,
-		  "venture":2
-		}
-	},
+      "cards":{
+        "venture":5
+      }
+    },
     "effects" : {
-		"onceARound":{
-			"points": {
-				"victory": 1
-			}
-		}
+      "onceARound":{
+        "action" : {
+          "target" : "harvest",
+          "force" : 1
+        }
+      }
     }
   },
-  
-  "17" : {
-	"name":"Cesare Borgia",
+
+  "2" : {
+    "name":"Ludovico Ariosto",
     "requirement" : {
-        "resources" : {
-          "coins" : 12
-        },
-		"points":{
-		  "faith":2
-        },
-        "cards":{
-		  "building":3
-		}
-	},
+      "cards":{
+        "character":5
+      }
+    },
     "effects" : {
-		"permanents":"cesareEffect"
+      "permanents":"ariostoEffect"
     }
   },
-  
-  "19" : {
-	"name":"Cosimo de' Medici",
+
+  "3" : {
+    "name":"Filippo Brunelleschi",
     "requirement" : {
-        "cards":{
-		  "character":2,
-		  "building":4
-		}
-	},
+      "cards":{
+        "building":5
+      }
+    },
     "effects" : {
-		"onceARound":{
-		  "resources": {
-				"servants": 3
-			},
-			"points": {
-				"victory": 1
-			}
-		}
+      "permanents":"filippoEffect"
     }
   },
-  
+
+
   "4" : {
 	"name":"Federico da Montefeltro",
     "requirement" : {
@@ -67,53 +55,7 @@
 		}
     }
   },
-  
-   "3" : {
-	"name":"Filippo Brunelleschi",
-    "requirement" : {
-        "cards":{
-		  "building":5
-		}
-	},
-    "effects" : {
-		"permanents":"filippoEffect"
-    }
-  },
-  
-   "1" : {
-	"name":"Francesco Sforza",
-    "requirement" : {
-        "cards":{
-		  "venture":5
-		}
-	},
-    "effects" : {
-		"onceARound":{
-		  "action" : {
-          "target" : "harvest", 
-          "force" : 1
-           }
-		}
-    }
-  },
-  
-  "6" : {
-	"name":"Giovanni dalle bande nere",
-    "requirement" : {
-		"points":{
-		  "military":12
-        }
-	},
-    "effects" : {
-		"onceARound":{
-		  "resources": {
-				"coins": 1,
-				"wood": 1,
-				"stones": 1
-			}
-		}
-    }
-  },
+
   
   "5" : {
 	"name":"Girolamo Savonarola",
@@ -130,25 +72,141 @@
 		}
     }
   },
-  
-  "10" : {
-	"name":"Leonardo da Vinci",
+
+  "6" : {
+    "name":"Giovanni dalle bande nere",
     "requirement" : {
-        "cards":{
-		  "territory": 2,
-		  "character":4
-		}
-	},
+      "points":{
+        "military":12
+      }
+    },
     "effects" : {
-		"onceARound":{
-			"action" : {
-			  "target" : "production", 
-			  "force" : 0
-			}
-		}
+      "onceARound":{
+        "resources": {
+          "coins": 1,
+          "wood": 1,
+          "stones": 1
+        }
+      }
     }
   },
-  
+
+  "7" : {
+    "name":"Sandro Botticelli",
+    "requirement" : {
+      "resources" : {
+        "wood"  : 10
+      }
+    },
+    "effects" : {
+      "onceARound":{
+        "points": {
+          "victory": 1,
+          "military": 1
+        }
+      }
+    }
+  },
+
+  "8" : {
+    "name":"Michelangelo Buonarroti",
+    "requirement" : {
+      "resources" : {
+        "stones"  : 10
+      }
+    },
+    "effects" : {
+      "onceARound":{
+        "resources": {
+          "coins": 3
+        }
+      }
+    }
+  },
+
+  "9" : {
+    "name":"Ludovico III Gonzaga",
+    "requirement" : {
+      "resources" : {
+        "servants" : 15
+      }
+    },
+    "effects" : {
+      "onceARound":{
+        "council" : 1
+      }
+    }
+  },
+
+  "10" : {
+    "name":"Leonardo da Vinci",
+    "requirement" : {
+      "cards":{
+        "territory": 2,
+        "character":4
+      }
+    },
+    "effects" : {
+      "onceARound":{
+        "action" : {
+          "target" : "production",
+          "force" : 0
+        }
+      }
+    }
+  },
+
+  "11" : {
+    "name":"Pico della Mirandola",
+    "requirement" : {
+      "cards":{
+        "venture":4,
+        "building":2
+      }
+    },
+    "effects" : {
+      "permanents":"picoEffect"
+    }
+  },
+
+  "12" : {
+    "name":"Sisto IV",
+    "requirement" : {
+      "resources" : {
+        "coins" : 6,
+        "wood"  : 6,
+        "stones"  : 6,
+        "servants" : 6
+      }
+    },
+    "effects" : {
+      "permanents":"sistoEffect"
+    }
+  },
+
+  "13" : {
+    "name":"Lucrezia Borgia",
+    "requirement" : {
+      "sixIdentical":true
+    },
+    "effects" : {
+      "permanents":"lucreziaEffect"
+    }
+  },
+
+  "14" : {
+    "name":"Sigismondo Malatesta",
+    "requirement" : {
+      "points":{
+        "military":7,
+        "faith":3
+      }
+    },
+    "effects" : {
+      "permanents":"sigismondoEffect"
+    }
+  },
+
   "15" : {
 	"name":"Lorenzo de' Medici",
     "requirement" : {
@@ -160,143 +218,87 @@
 		"permanents":"lorenzoEffect"
     }
   },
-  
-  "13" : {
-	"name":"Lucrezia Borgia",
+
+  "16" : {
+    "name":"Ludovico il Moro",
     "requirement" : {
-		"sixIdentical":true
+      "cards":{
+        "territory": 2,
+        "character":2,
+        "venture":2,
+        "building":2
+       }
+     },
+		"effects" : {
+			"permanents":"moroEffect"
+		}
 	},
+
+  "17" : {
+    "name":"Cesare Borgia",
+    "requirement" : {
+      "resources" : {
+        "coins" : 12
+      },
+      "points":{
+        "faith":2
+      },
+      "cards":{
+        "building":3
+      }
+    },
     "effects" : {
-		"permanents":"lucreziaEffect"
+      "permanents":"cesareEffect"
     }
   },
-  
-   "9" : {
-	"name":"Ludovico III Gonzaga",
+
+
+  "18" : {
+    "name":"Santa Rita",
     "requirement" : {
-        "resources" : {
-          "servants" : 15
-        }
-	},
+      "points":{
+        "faith":8
+			}
+		},
     "effects" : {
-		"onceARound":{
-		  "resources": {
-				"council":1
+      "permanents":"ritaEffect"
+		}
+	},
+
+  "19" : {
+    "name":"Cosimo de' Medici",
+    "requirement" : {
+      "cards":{
+        "character":2,
+        "building":4
+      }
+    },
+    "effects" : {
+      "onceARound":{
+        "resources": {
+          "servants": 3
+        },
+        "points": {
+          "victory": 1
+        }
+      }
+    }
+  },
+
+	"20" : {
+		"name":"Bartolomeo Colleoni",
+		"requirement" : {
+			"cards":{
+				"territory": 4,
+				"venture":2
+			}
+		},
+		"effects" : {
+			"onceARound":{
+				"points": {
+					"victory": 1
+				}
 			}
 		}
-    }
-  },
-  
-   "2" : {
-	"name":"Ludovico Ariosto",
-    "requirement" : {
-        "cards":{
-		  "character":5
-		}
-	},
-    "effects" : {
-		"permanents":"ariostoEffect"
-    }
-  },
-  
-   "16" : {
-	"name":"Ludovico il Moro",
-    "requirement" : {
-        "cards":{
-		  "territory": 2,
-		  "character":2,
-		  "venture":2,
-		  "building":2
-		}
-	},
-    "effects" : {
-		"permanents":"moroEffect"
-    }
-  },
-  
-   "8" : {
-	"name":"Michelangelo Buonarroti",
-    "requirement" : {
-        "resources" : {
-          "stones"  : 10
-        }
-	},
-    "effects" : {
-		"onceARound":{
-		  "resources": {
-				"coins": 3
-			}
-		}
-    }
-  },
-  
-   "11" : {
-	"name":"Pico della Mirandola",
-    "requirement" : {
-        "cards":{
-		  "venture":4,
-		  "building":2
-		}
-	},
-    "effects" : {
-		"permanents":"picoEffect"
-    }
-  },
-  
-   "7" : {
-	"name":"Sandro Botticelli",
-    "requirement" : {
-        "resources" : {
-          "wood"  : 10
-        }
-	},
-    "effects" : {
-		"onceARound":{
-			"points": {
-				"victory": 1,
-				"military": 1
-			}
-		}
-    }
-  },
-  
-   "18" : {
-	"name":"Santa Rita",
-    "requirement" : {
-		"points":{
-		  "faith":8
-        }
-	},
-    "effects" : {
-		"permanents":"ritaEffect"
-    }
-  },
-  
-   "14" : {
-	"name":"Sigismondo Malatesta",
-    "requirement" : {
-		"points":{
-		  "military":7,
-		  "faith":3
-        }
-	},
-    "effects" : {
-		"permanents":"sigismondoEffect"
-    }
-  },
-  
-   "12" : {
-	"name":"Sisto IV",
-    "requirement" : {
-        "resources" : {
-          "coins" : 6,
-          "wood"  : 6,
-          "stones"  : 6,
-          "servants" : 6
-        }
-	},
-    "effects" : {
-		"permanents":"sistoEffect"
-    }
-  }
+	}
  }
