@@ -64,7 +64,7 @@ public class BonusTilesParser {
                 if (key.equals("harvest")) {
 
                     //extract JsonObject harvestObject from tile
-                    JsonObject harvestObject = tile.getAsJsonObject("production");
+                    JsonObject harvestObject = tile.getAsJsonObject("harvest");
                     harvestMinForce = getMinForce(harvestObject);
                     harvestSurplus = getEffectSurplus(harvestObject);
 

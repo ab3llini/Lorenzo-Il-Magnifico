@@ -2,6 +2,7 @@ package server.model.card.developement;/*
  * Created by alberto on 09/05/17.
  */
 
+import logger.AnsiColors;
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
@@ -53,6 +54,40 @@ public abstract class DvptCard implements Serializable {
 
     public ImmediateEffect getImmediateEffect() {
         return immediateEffect;
+    }
+
+    @Override
+    public String toString() {
+
+        String card = "";
+
+        if(type == DvptCardType.territory)
+            card += (AnsiColors.ANSI_GREEN + this.name.toUpperCase()+" ( " +this.id+" ) "+"\n" + AnsiColors.ANSI_RESET);
+
+        if(type == DvptCardType.building)
+            card += (AnsiColors.ANSI_YELLOW + this.name.toUpperCase()+" ( " +this.id+" ) "+"\n" + AnsiColors.ANSI_RESET);
+
+        if(type == DvptCardType.character)
+            card += (AnsiColors.ANSI_BLUE + this.name.toUpperCase()+" ( " +this.id+" ) "+"\n" + AnsiColors.ANSI_RESET);
+
+        if(type == DvptCardType.venture)
+            card += (AnsiColors.ANSI_PURPLE + this.name.toUpperCase()+" ( " +this.id+" ) "+"\n" + AnsiColors.ANSI_RESET);
+
+
+        card += "Type : "+this.type+"\n";
+
+        card += "Period : "+this.period+"\n";
+
+        if(getCost()!=null) {
+            int i=1;
+
+            for (Cost cost : this.getCost()) {
+                card += i+"° "+"Cost : " + this.getCost().get(i-1).toString() + "\n";
+                i++;
+            }
+
+        }
+        return card;
     }
 }
 

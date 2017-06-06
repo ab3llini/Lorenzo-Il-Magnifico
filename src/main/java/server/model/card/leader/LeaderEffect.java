@@ -31,7 +31,7 @@ public class LeaderEffect implements Serializable {
         String leaderEffect = "";
 
         if(OnceARound != null)
-            leaderEffect += OnceARound.toString();
+            leaderEffect += "Once a Round -> "+OnceARound.toString();
         else
             leaderEffect += permanentEffect.toString();
         

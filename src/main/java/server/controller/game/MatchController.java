@@ -774,6 +774,12 @@ public class MatchController implements Runnable {
             //get tower type from board sector
             DvptCardType towerType = getTowerType(action.getActionTarget());
 
+            //control if the player can take another territory card
+            if(towerType == DvptCardType.territory){
+                if(player.getMilitaryPoints() < BoardConfigParser.getMinimumMilitaryPoints(player.getPersonalBoard().getTerritoryCards().size() + 1))
+                    throw new NotEnoughMilitaryPointsException("Not enough military points to take another territory card");
+            }
+
             //control if the towerSlot is already occupied
             if(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).isOccupied())
                 throw new PlaceOccupiedException("This place is already occupied");

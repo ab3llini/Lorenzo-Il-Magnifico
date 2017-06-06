@@ -38,12 +38,26 @@ public class EffectSurplus implements Serializable {
 
         for (Resource resource: this.resources) {
 
-            surplus += resource.toString()+", ";
+            if(resources.indexOf(resource) == resources.size()-1 && points.size()==0) {
+
+                surplus += resource.toString();
+            }
+
+            else
+            {
+                surplus += resource.toString()+", ";
+            }
         }
 
         for (Point point : this.points) {
 
-            surplus += point.toString()+", ";
+            if(points.indexOf(point) == points.size()-1) {
+
+                surplus += point.toString();
+            }
+            else {
+                surplus += point.toString()+", ";
+            }
         }
 
         if(council>=1)
