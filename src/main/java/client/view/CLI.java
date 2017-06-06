@@ -428,7 +428,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                 String choice = this.waitForActionSelection();
 
-                while (this.isIntegerInRange(choice, 1, this.localMatchController.getDraftable().getCards().size())) {
+                while (!this.isIntegerInRange(choice, 1, this.localMatchController.getDraftable().getCards().size())) {
 
                     Cmd.error("'"+choice + "' is not a valid choice, try again.");
 
