@@ -201,6 +201,12 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
         this.sendObject(not);
     }
 
+    public void notify(MatchNotification notification) {
+
+        this.sendObject(notification);
+
+    }
+
     public void notifyModelUpdate(Match model) {
 
         this.sendObject(model);

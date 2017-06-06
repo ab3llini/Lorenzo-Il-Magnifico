@@ -10,6 +10,7 @@ import logger.Logger;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
+import netobject.notification.MatchNotification;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
@@ -165,6 +166,17 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         } catch (RemoteException e) {
 
             Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to send notification", e);
+        }
+
+    }
+
+    @Override
+    public void notify(MatchNotification notification) {
+
+        try {
+            this.clientRef.onNotification(notification);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
     }

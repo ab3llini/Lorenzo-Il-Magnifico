@@ -10,6 +10,7 @@ import logger.Logger;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
+import netobject.notification.MatchNotification;
 import netobject.request.auth.LoginRequest;
 import server.controller.network.RMI.RMIServerInterface;
 import server.model.Match;
@@ -75,6 +76,10 @@ public class RMIClient extends Client implements RMIClientInterface {
 
     public void onLobbyNotification(LobbyNotification not) throws RemoteException {
         this.notifyLobbyNotificationReceived(not);
+    }
+
+    public void onNotification(MatchNotification notification) throws RemoteException {
+        this.notify(notification);
     }
 
     public void onModelUpdate(Match model) {
@@ -204,4 +209,8 @@ public class RMIClient extends Client implements RMIClientInterface {
         }
     }
 
+    @Override
+    public void notify(MatchNotification notification) {
+
+    }
 }

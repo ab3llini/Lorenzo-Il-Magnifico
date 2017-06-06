@@ -57,6 +57,7 @@ public class MatchNotification extends Notification {
         this.message = message;
     }
 
+
     public MatchNotificationType getMatchNotificationType() {
         return matchNotificationType;
     }

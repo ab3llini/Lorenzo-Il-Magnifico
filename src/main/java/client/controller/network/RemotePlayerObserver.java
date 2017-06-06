@@ -3,6 +3,7 @@ package client.controller.network;
 import netobject.action.Action;
 import netobject.action.ActionType;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.notification.MatchNotification;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
  * @since   30/05/17.
  */
 public interface RemotePlayerObserver {
+
+    void onNotification(Client sender, MatchNotification notification);
 
     void onModelUpdate(Client sender, Match model);
 

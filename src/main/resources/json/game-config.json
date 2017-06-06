@@ -1,9 +1,9 @@
 {
   "player": {
-    "timeout": 180
+    "timeout": 500
   },
   "match": {
-    "timeout": 20
+    "timeout": 10
   },
   "server": {
     "socket-port": 4545,

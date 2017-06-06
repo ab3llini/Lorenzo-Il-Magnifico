@@ -1,6 +1,7 @@
 package client.view.cmd;
 
 import logger.AnsiColors;
+import server.utility.UnicodeChars;
 
 /*
  * @author  ab3llini
@@ -18,24 +19,34 @@ public class Cmd {
      */
     public static void askFor(String title) {
 
-        System.out.println(AnsiColors.ANSI_BLUE + "> " + title + AnsiColors.ANSI_RESET);
+        System.out.println(AnsiColors.ANSI_BLUE + UnicodeChars.Enter + " " + title + AnsiColors.ANSI_RESET);
 
     }
-
     /**
      * Notify the user about something
      * @param title the notification
      */
     public static void notify(String title) {
 
-        System.out.println(AnsiColors.ANSI_PURPLE + "* " + title + AnsiColors.ANSI_RESET);
+        System.out.println(AnsiColors.ANSI_PURPLE + UnicodeChars.Info + " " + title + AnsiColors.ANSI_RESET);
 
     }
 
     public static void error(String title) {
 
-        System.out.println(AnsiColors.ANSI_RED + "* " + title + AnsiColors.ANSI_RESET);
+        System.out.println(AnsiColors.ANSI_RED  + UnicodeChars.Error + " " + title + AnsiColors.ANSI_RESET);
 
+    }
+
+    public static void forbidden(String title) {
+
+        System.out.println(AnsiColors.ANSI_RED + UnicodeChars.Forbidden + " " + title + AnsiColors.ANSI_RESET);
+
+    }
+
+    public static void success(String title) {
+
+        System.out.println(AnsiColors.ANSI_GREEN + UnicodeChars.Success + " " + title + AnsiColors.ANSI_RESET);
 
     }
 

@@ -5,6 +5,7 @@ import netobject.action.Action;
 import netobject.action.ActionType;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
+import netobject.notification.MatchNotification;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -36,6 +37,8 @@ public interface RMIClientInterface extends Remote {
     void terminate() throws RemoteException;
 
     void onLobbyNotification(LobbyNotification not) throws RemoteException;
+
+    void onNotification(MatchNotification notification) throws RemoteException;
 
     void onModelUpdate(Match model) throws RemoteException;
 

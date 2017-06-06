@@ -13,6 +13,7 @@ import client.view.cmd.*;
 import client.view.utility.AsyncInputStream;
 import client.view.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
+import exception.NoSuchPlayerException;
 import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
@@ -22,6 +23,7 @@ import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.*;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
+import netobject.notification.MatchNotification;
 import netobject.notification.Notification;
 import netobject.action.BoardSectorType;
 import netobject.request.auth.LoginRequest;
@@ -304,14 +306,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         if (this.client.hasAuthenticated()) {
 
-            Cmd.notify("Login successful, welcome back " + client.getUsername());
+            Cmd.success("Login successful, welcome back " + client.getUsername());
 
             this.interactWithLobby();
 
         }
         else {
 
-            Cmd.notify("Login failed");
+            Cmd.forbidden("Wrong username o password");
 
             this.authenticate();
 
@@ -430,7 +432,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                 while (!this.isIntegerInRange(choice, 1, this.localMatchController.getDraftable().getCards().size())) {
 
-                    Cmd.error("'"+choice + "' is not a valid choice, try again.");
+                    Cmd.forbidden("'"+choice + "' is not a valid choice, try again.");
 
                     choice = this.waitForActionSelection();
 
@@ -485,7 +487,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             if (!this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
-                Cmd.error("The action : " + actionSelection.getEnumEntryFromChoice(choice) + " can't be performed again!");
+                Cmd.error("The action '" + actionSelection.getEnumEntryFromChoice(choice) + "' can't be performed again!");
 
             }
 
@@ -574,7 +576,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         String choice;
 
         BoardSectorType sectorType;
-        Integer index;
+        Integer index = 0;
         ColorType memberColor;
         Integer additionalServants;
         SelectionType costOption = SelectionType.First;
@@ -595,10 +597,20 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         sectorType = sectorSelection.getEnumEntryFromChoice(choice);
 
-        Cmd.askFor("Please select the placement index (minimum 1)");
+        Cmd.askFor("Please select the placement index [1-4]");
 
-        index = Integer.parseInt(this.inputQueue.take());
+        choice = this.inputQueue.take();
 
+        while (!this.isIntegerInRange(choice, 1, 4)) {
+
+            Cmd.forbidden("Invalid input or index out of bounds, try again.");
+
+            choice = this.inputQueue.take();
+
+
+        }
+
+        index = Integer.parseInt(choice) - 1;
 
         Cmd.askFor("Please select the color of the family member you would like to use");
 
@@ -618,7 +630,28 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         Cmd.askFor("Enter the amount of additional servants");
 
-        additionalServants = Integer.parseInt(this.inputQueue.take());
+        choice = this.inputQueue.take();
+
+        try {
+
+            while (!this.isIntegerInRange(choice, 0, this.localMatchController.getMatch().getPlayerFromUsername(this.client.getUsername()).getServants())) {
+
+                Cmd.forbidden("Invalid input or not enough servants, try again");
+
+                choice = this.inputQueue.take();
+
+
+            }
+
+        } catch (NoSuchPlayerException e) {
+
+            e.printStackTrace();
+
+        }
+
+        additionalServants = Integer.parseInt(choice);
+
+        index = Integer.parseInt(choice) - 1;
 
         Cmd.askFor("Enter the cost option");
 
@@ -725,7 +758,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     public void onDisconnection(Client client) {
 
-        Cmd.notify("Connection lost.");
+        Cmd.error("Connection lost.");
 
     }
 
@@ -754,6 +787,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
     public void onLobbyNotification(Client client, LobbyNotification not) {
 
         this.notificationQueue.add(not);
+
+    }
+
+    public void onNotification(Client sender, MatchNotification notification) {
+
+        Cmd.notify(notification.getMessage());
 
     }
 
@@ -849,7 +888,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     public void onActionRefused(Client sender, String message) {
 
-        Cmd.notify("Action refused for reason: " + message);
+        Cmd.forbidden("Action refused for reason: " + message);
 
         synchronized (this.connectionMutex) {
 
@@ -864,7 +903,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                 //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
-            Cmd.notify("Action performed successfully");
+            Cmd.success("Action performed successfully");
 
             synchronized (this.connectionMutex) {
 
@@ -879,7 +918,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
         else {
 
-            Cmd.notify(message);
+            Cmd.success(message);
 
         }
 
@@ -926,7 +965,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-
     private boolean isIntegerInRange(String s, int min, int max) {
 
         if (this.isInteger(s)) {
@@ -944,7 +982,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         return false;
 
     }
-
 
     public static void main(String[] args) throws InterruptedException {
 

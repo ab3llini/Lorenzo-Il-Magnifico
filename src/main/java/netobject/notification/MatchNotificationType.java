@@ -7,6 +7,7 @@ package netobject.notification;
 public enum MatchNotificationType {
 
     TurnEnabled,
+    Message,
     TurnDisabled,
     ImmediateAction,
     LeaderDraft,

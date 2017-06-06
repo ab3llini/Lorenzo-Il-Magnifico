@@ -4,6 +4,7 @@ import client.controller.LocalPlayer;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
+import netobject.notification.MatchNotification;
 import netobject.request.auth.LoginRequest;
 import server.controller.game.RemotePlayer;
 import server.controller.network.Observable;
@@ -204,6 +205,16 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
         for (ClientObserver o : this.observers) {
 
             o.onBonusTileDraftRequest(this, tiles, message);
+
+        }
+
+    }
+
+    public void notify(MatchNotification notification) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onNotification(this, notification);
 
         }
 

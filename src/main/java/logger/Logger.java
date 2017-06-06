@@ -5,6 +5,8 @@ package logger;
  * @since   16/05/17.
  */
 
+import server.utility.UnicodeChars;
+
 public class Logger {
 
     private static boolean silenced = false;
@@ -48,23 +50,23 @@ public class Logger {
             switch (lv) {
 
                 case Level.FINEST:
-                    print(AnsiColors.ANSI_CYAN + "[FINEST] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
+                    print(AnsiColors.ANSI_CYAN + UnicodeChars.Ok + " {" + ctx + "} : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.FINE:
-                    print(AnsiColors.ANSI_GREEN + "[FINE] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
+                    print(AnsiColors.ANSI_GREEN + UnicodeChars.Thumb + " {" + ctx + "} : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.INFO:
-                    print(AnsiColors.ANSI_BLUE + "[INFO] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
+                    print(AnsiColors.ANSI_BLUE + UnicodeChars.Info + " {" + ctx + "} : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.WARNING:
-                    print(AnsiColors.ANSI_YELLOW + "[WARNING] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
+                    print(AnsiColors.ANSI_YELLOW + UnicodeChars.Warning + " {" + ctx + "} : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
                 case Level.SEVERE:
-                    print(AnsiColors.ANSI_RED + "[SEVERE] " + ctx + " : " + message + AnsiColors.ANSI_RESET, e);
+                    print(AnsiColors.ANSI_RED + UnicodeChars.Error + " {" + ctx + "} : " + message + AnsiColors.ANSI_RESET, e);
                     break;
 
             }
@@ -87,13 +89,13 @@ public class Logger {
 
         if (e != null) {
 
-            System.out.println(message + " | Exception : " + e.getMessage() + AnsiColors.ANSI_RESET);
+            System.out.println(message + " | Exception : " + e.getMessage());
 
         }
 
         else {
 
-            System.out.println(message + AnsiColors.ANSI_RESET);
+            System.out.println(message);
 
         }
 

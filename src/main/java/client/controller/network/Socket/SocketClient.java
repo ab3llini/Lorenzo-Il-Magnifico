@@ -211,6 +211,11 @@ public class SocketClient extends Client implements Runnable {
                     this.notifyLeaderCardDraftRequest(matchNot.getDeck(), matchNot.getMessage());
 
                 }
+                else {
+
+                    this.notify(matchNot);
+
+                }
 
             }
 
@@ -254,4 +259,5 @@ public class SocketClient extends Client implements Runnable {
         this.sendObject(action);
 
     }
+
 }

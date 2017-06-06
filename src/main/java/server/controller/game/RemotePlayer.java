@@ -2,6 +2,7 @@ package server.controller.game;
 
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.notification.MatchNotification;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
  * This interface is used by the match controller to interact with the client throughout the client handler
  */
 public interface RemotePlayer {
+
+    void notify(MatchNotification notification);
 
     void notifyModelUpdate(Match model);
 

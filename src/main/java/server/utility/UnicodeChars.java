@@ -31,8 +31,18 @@ public enum UnicodeChars implements CliPrintable {
     DieFaceThree(new int[]{0x2682}),
     DieFaceFour(new int[]{0x2683}),
     DieFaceFive(new int[]{0x2684}),
-    DieFaceSix(new int[]{0x2685});
-
+    DieFaceSix(new int[]{0x2685}),
+    Arrow(new int[]{0x2192}),
+    Start(new int[]{0x1F3C1}),
+    Forbidden(new int[]{0x1F6AB}),
+    Error(new int[]{0x274C}),
+    Info(new int[]{0x2139}),
+    Thumb(new int[]{0x1F44D}),
+    Ok(new int[]{0x1F197}),
+    Success(new int[]{0x2705}),
+    Warning(new int[]{0x26A0}),
+    Dots(new int[]{0x20DB}),
+    Enter(new int[]{0x2386});
 
 
     private final int[] value;

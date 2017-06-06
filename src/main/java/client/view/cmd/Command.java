@@ -10,6 +10,7 @@ import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
 import netobject.action.BoardSectorType;
+import server.utility.UnicodeChars;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -92,7 +93,7 @@ public class Command<T extends Enum<T>> {
 
             Map.Entry pair = (Map.Entry) it.next();
 
-            System.out.println(AnsiColors.ANSI_GREEN + "[" + pair.getKey() + "] " + pair.getValue()  + AnsiColors.ANSI_RESET);
+            System.out.println(AnsiColors.ANSI_GREEN + UnicodeChars.Arrow + "\t(" + pair.getValue() + ")\t" + pair.getKey()  + AnsiColors.ANSI_RESET);
 
         }
 
@@ -107,7 +108,7 @@ public class Command<T extends Enum<T>> {
 
         } catch (NoSuchCommandException e) {
 
-            System.out.println(AnsiColors.ANSI_RED + "Invalid choice '"+choice+"'" + AnsiColors.ANSI_RESET);
+            Cmd.forbidden("'"+choice+"' is not a valid choice, try again.");
 
             return false;
 
