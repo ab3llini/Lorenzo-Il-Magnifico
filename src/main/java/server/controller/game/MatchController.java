@@ -573,16 +573,10 @@ public class MatchController implements Runnable {
     public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
+        boolean noMarket = false;
 
         //some players' ban card can reduce family member's force
-        for (BanCard bancard : player.getBanCards()) {
-            if (bancard instanceof DiceBanCard) {
-
-                familyMember.setForce(familyMember.getForce() - ((DiceBanCard) bancard).getEffectDiceMalus().getRoundDiceMalus());
-
-            }
-        }
-
+        noMarket = applyBanEffect(action, player, familyMember, noMarket);
 
         //apply character cards permanent effect
         action = actionCharacterFilter(action,player);
@@ -598,8 +592,11 @@ public class MatchController implements Runnable {
         //once positioned the market place give to the player an effectSurplus
         if (action.getActionTarget() == BoardSectorType.Market) {
 
+            if(noMarket)
+                throw new NoMarketException("You can't place any family member in market because of the Special BanCard NoMarketMalus");
+            else{
             EffectSurplus surplus = boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants(),this.match.getPlayers().size());
-            applyEffectSurplus(player,surplus);
+            applyEffectSurplus(player,surplus);}
 
         }
 
@@ -696,6 +693,46 @@ public class MatchController implements Runnable {
         familyMember.setBusy(true);
     }
 
+    public boolean applyBanEffect(StandardPlacementAction action, Player player, FamilyMember familyMember, boolean noMarket) throws NotStrongEnoughException {
+        for (BanCard bancard : player.getBanCards()) {
+            if (bancard instanceof DiceBanCard) {
+
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getType() == DvptCardType.territory && action.getActionTarget() == BoardSectorType.TerritoryTower) {
+                    if (familyMember.getForce() + action.getAdditionalServants() - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus() < getMatch().getBoard().getTerritoryTower().get(action.getPlacementIndex()).getEntryForce()) {
+                        throw new NotStrongEnoughException("Not strong enough to make this move because of Territory DiceBanCard");
+                    }
+                }
+
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getType() == DvptCardType.building && action.getActionTarget() == BoardSectorType.BuildingTower) {
+                    if (familyMember.getForce() + action.getAdditionalServants() - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus() < getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).getEntryForce()) {
+                        throw new NotStrongEnoughException("Not strong enough to make this move because of Building DiceBanCard");
+                    }
+                }
+
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getType() == DvptCardType.character && action.getActionTarget() == BoardSectorType.CharacterTower) {
+                    if (familyMember.getForce() + action.getAdditionalServants() - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus() < getMatch().getBoard().getCharacterTower().get(action.getPlacementIndex()).getEntryForce()) {
+                        throw new NotStrongEnoughException("Not strong enough to make this move because of Character DiceBanCard");
+                    }
+                }
+
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getType() == DvptCardType.venture && action.getActionTarget() == BoardSectorType.VentureTower) {
+                    if (familyMember.getForce() + action.getAdditionalServants() - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus() < getMatch().getBoard().getVentureTower().get(action.getPlacementIndex()).getEntryForce()) {
+                        throw new NotStrongEnoughException("Not strong enough to make this move because of Venture DiceBanCard");
+                    }
+                }
+            }
+            if(bancard instanceof SpecialBanCard){
+                if(((SpecialBanCard) bancard).getSpecialEffect() == SpecialEffectType.servantsPowerMalus)
+                    action.setAdditionalServants(action.getAdditionalServants() / 2);
+            }
+            if(bancard instanceof SpecialBanCard){
+                if(((SpecialBanCard) bancard).getSpecialEffect() == SpecialEffectType.noMarketMalus)
+                    noMarket = true;
+            }
+        }
+        return noMarket;
+    }
+
     /**
      * this method receive an immediate action and its author and do it
      * @param action
@@ -758,6 +795,9 @@ public class MatchController implements Runnable {
 
         //subtract the additional servants used
         player.subtractServants(action.getAdditionalServants());
+
+
+
     }
 
     /**

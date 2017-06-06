@@ -50,6 +50,10 @@ public class StandardPlacementAction extends Action {
             return additionalServants;
     }
 
+    public void setAdditionalServants(Integer additionalServants) {
+        this.additionalServants = additionalServants;
+    }
+
     public void increaseBonus(int bonus) {
 
         this.additionalServants += bonus;
