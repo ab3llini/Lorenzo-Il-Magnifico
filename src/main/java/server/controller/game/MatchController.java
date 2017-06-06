@@ -576,7 +576,7 @@ public class MatchController implements Runnable {
         boolean noMarket = false;
 
         //some players' ban card can reduce family member's force
-        noMarket = applyBanEffect(action, player, familyMember, noMarket);
+        noMarket = applyDiceMalusBanCard(action, player, familyMember, noMarket);
 
         //apply character cards permanent effect
         action = actionCharacterFilter(action,player);
@@ -693,7 +693,7 @@ public class MatchController implements Runnable {
         familyMember.setBusy(true);
     }
 
-    public boolean applyBanEffect(StandardPlacementAction action, Player player, FamilyMember familyMember, boolean noMarket) throws NotStrongEnoughException {
+    public boolean applyDiceMalusBanCard(StandardPlacementAction action, Player player, FamilyMember familyMember, boolean noMarket) throws NotStrongEnoughException {
         for (BanCard bancard : player.getBanCards()) {
             if (bancard instanceof DiceBanCard) {
 
@@ -808,33 +808,9 @@ public class MatchController implements Runnable {
     public void applyEffectSurplus(Player player,EffectSurplus surplus){
 
         //effect surplus is composed by resources,points and council privilege
+        surplus = applyValuableBanCard(player, surplus);
         ArrayList<Resource> resourcesSurplus = surplus.getResources();
-
-
-        //some players' ban card can reduce this surplus
-        for(Resource resource : resourcesSurplus) {
-            for (BanCard bancard : player.getBanCards()) {
-                if (bancard instanceof ValuableBanCard) {
-                    for (Resource resourceMalus : ((ValuableBanCard) bancard).getResources()) {
-                        if (resourceMalus.getType() == resource.getType())
-                            resource.setAmount(resource.getAmount() - resourceMalus.getAmount());
-                    }
-                }
-            }
-        }
-
         ArrayList<Point> pointsSurplus = surplus.getPoints();
-
-        for(Point point: pointsSurplus) {
-            for (BanCard bancard : player.getBanCards()) {
-                if (bancard instanceof ValuableBanCard) {
-                    for (Point pointMalus : ((ValuableBanCard) bancard).getPoints()) {
-                        if (pointMalus.getType() == point.getType())
-                            point.setAmount(point.getAmount() - pointMalus.getAmount());
-                    }
-                }
-            }
-        }
 
         Integer council = surplus.getCouncil();
 
@@ -855,13 +831,7 @@ public class MatchController implements Runnable {
      */
     public void applyHarvestChain(Player player, Integer force){
 
-        //some ban cards can reduce player's power to activate production chain
-        for(BanCard bancard : player.getBanCards()){
-            if(bancard instanceof  DiceBanCard){
-                if(((DiceBanCard) bancard).getEffectDiceMalus().getTarget() == server.model.effect.ActionType.harvest)
-                    force = force - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus();
-            }
-        }
+        force = applyHarvestBan(player, force);
 
         for (TerritoryDvptCard card:player.getPersonalBoard().getTerritoryCards()) {
 
@@ -877,6 +847,52 @@ public class MatchController implements Runnable {
             applyEffectSurplus(player,player.getPersonalBoard().getBonusTile().getHarvestSurplus());
     }
 
+    Integer applyHarvestBan (Player player, Integer force){
+        for(BanCard bancard : player.getBanCards()){
+            if(bancard instanceof  DiceBanCard){
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getTarget() == server.model.effect.ActionType.harvest)
+                    force = force - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus();
+            }
+        }
+        return force;
+    }
+
+    Integer applyProductionBan (Player player, Integer force){
+        for(BanCard bancard : player.getBanCards()){
+            if(bancard instanceof  DiceBanCard){
+                if(((DiceBanCard) bancard).getEffectDiceMalus().getTarget() == server.model.effect.ActionType.production)
+                    force = force - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus();
+            }
+        }
+        return force;
+    }
+
+    /** this method controls if the surplus is reduced by some ban card effect **/
+    EffectSurplus applyValuableBanCard(Player player, EffectSurplus surplus) {
+
+        for (Resource resource : surplus.getResources()) {
+            for (BanCard bancard : player.getBanCards()) {
+                if (bancard instanceof ValuableBanCard) {
+                    for (Resource resourceMalus : ((ValuableBanCard) bancard).getResources()) {
+                        if (resourceMalus.getType() == resource.getType())
+                            resource.setAmount(resource.getAmount() - resourceMalus.getAmount());
+                    }
+                }
+            }
+        }
+
+        for (Point point : surplus.getPoints()) {
+            for (BanCard bancard : player.getBanCards()) {
+                if (bancard instanceof ValuableBanCard) {
+                    for (Point pointMalus : ((ValuableBanCard) bancard).getPoints()) {
+                        if (pointMalus.getType() == point.getType())
+                            point.setAmount(point.getAmount() - pointMalus.getAmount());
+                    }
+                }
+            }
+        }
+        return surplus;
+    }
 
     public void activateLeaderCard (LeaderCardActivationAction action, Player player) {
 
@@ -904,12 +920,7 @@ public class MatchController implements Runnable {
 
 
         //some ban cards can reduce player's power to activate production chain
-        for(BanCard bancard : player.getBanCards()){
-            if(bancard instanceof  DiceBanCard){
-                if(((DiceBanCard) bancard).getEffectDiceMalus().getTarget() == server.model.effect.ActionType.production)
-                    force = force - ((DiceBanCard) bancard).getEffectDiceMalus().getMalus();
-            }
-        }
+        force = applyProductionBan(player, force);
 
         for (DvptCard card : player.getPersonalBoard().getBuildingCards()
                 ) {
@@ -1034,24 +1045,12 @@ public class MatchController implements Runnable {
 
             totalScore += player.getVictoryPoints();
 
+            HashMap<DvptCardType,Boolean> BanFlag = applyNoVictoryBan(player);
 
-            boolean territoryBan = false;
-            boolean characterBan = false;
-            boolean ventureBan = false;
 
-            for(BanCard banCard : player.getBanCards()) {
-                if(banCard instanceof NoVictoryBanCard) {
-                    if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.territory)
-                        territoryBan = true;
-                    if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.venture)
-                        ventureBan = true;
-                    if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.character)
-                        characterBan = true;
-                }
-            }
 
             //each venture card give a victory bonus
-            if(ventureBan == false){
+            if(BanFlag.get(DvptCardType.venture) == false){
                 for (VentureDvptCard card: player.getPersonalBoard().getVentureCards()) {
                 totalScore += card.getPermanentEffect().getvPoints();
             }}
@@ -1062,12 +1061,12 @@ public class MatchController implements Runnable {
             totalScore += (player.getCoins() + player.getStones() + player.getWood() + player.getServants()) / 5;
 
             //victory points that depends on building card on the player personal board
-            if(territoryBan == false){
+            if(BanFlag.get(DvptCardType.building) == false){
             totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.territory,player.getPersonalBoard().getBuildingCards().size());}
 
                 //victory points that depends on character card on the player personal board
 
-            if(characterBan == false){
+            if(BanFlag.get(DvptCardType.territory) == false){
                 totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());}
 
 
@@ -1079,55 +1078,80 @@ public class MatchController implements Runnable {
 
             //If the player has some VictoryMalusBanCard, he's gonna lose some points according to the amount of his points or resources
 
-            for(BanCard banCard : player.getBanCards()) {
-                if (banCard instanceof VictoryMalusBanCard) {
+            totalScore = totalScoreWithVictoryMalus(player, totalScore);
 
-                    for (Resource resource : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedbyResources()) {
+            finalScore.put(player,totalScore);
+        }
+        return  finalScore;
+    }
 
-                        if (resource.getType() == ResourceType.Coins) {
-                            totalScore -= (int) (player.getCoins() / resource.getAmount());
-                        }
+    /**This method controls if there are some ban cards that could disable some bonus from amount of specific type card**/
 
-                        if (resource.getType() == ResourceType.Servants) {
-                            totalScore -= (int) (player.getServants() / resource.getAmount());
-                        }
+    HashMap<DvptCardType,Boolean> applyNoVictoryBan(Player player){
+        HashMap<DvptCardType, Boolean> banType = new HashMap<DvptCardType, Boolean>();
+        for(BanCard banCard : player.getBanCards()) {
+            if(banCard instanceof NoVictoryBanCard) {
+                if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.territory)
+                    banType.put(DvptCardType.territory, true);
+                if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.venture)
+                    banType.put(DvptCardType.venture, true);
+                if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.character)
+                    banType.put(DvptCardType.character, true);
+            }
+        }
+        return banType;
+    }
 
-                        if (resource.getType() == ResourceType.Stones) {
-                            totalScore -= (int) (player.getStones() / resource.getAmount());
-                        }
 
-                        if (resource.getType() == ResourceType.Wood) {
-                            totalScore -= (int) (player.getWood() / resource.getAmount());
-                        }
+    /**This method controls if there are some ban cards that could reduce victory points considering a specific amount of resources or points**/
+
+    Integer totalScoreWithVictoryMalus(Player player, Integer totalScore) {
+
+        for (BanCard banCard : player.getBanCards()) {
+            if (banCard instanceof VictoryMalusBanCard) {
+
+                for (Resource resource : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedbyResources()) {
+
+                    if (resource.getType() == ResourceType.Coins) {
+                        totalScore -= (int) (player.getCoins() / resource.getAmount());
                     }
 
-                    for (Point point : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedByPoints()) {
-
-                        if (point.getType() == PointType.Victory) {
-                            totalScore -= (int) (player.getVictoryPoints() / point.getAmount());
-                        } else if (point.getType() == PointType.Military) {
-                            totalScore -= (int) (player.getMilitaryPoints() / point.getAmount());
-                        } else totalScore -= (int) (player.getFaithPoints() / point.getAmount());
-
+                    if (resource.getType() == ResourceType.Servants) {
+                        totalScore -= (int) (player.getServants() / resource.getAmount());
                     }
 
-                    if (((VictoryMalusBanCard) banCard).getEffectVictoryMalus().isRelatedToBuilding()) {
-                        for (BuildingDvptCard card : player.getPersonalBoard().getBuildingCards()) {
-                            for (Cost cost : card.getCost()) {
-                                for (Resource resource : cost.getResources()) {
-                                    if (resource.getType() == ResourceType.Wood)
-                                        totalScore -= resource.getAmount() * ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getMalus();
-                                }
+                    if (resource.getType() == ResourceType.Stones) {
+                        totalScore -= (int) (player.getStones() / resource.getAmount());
+                    }
+
+                    if (resource.getType() == ResourceType.Wood) {
+                        totalScore -= (int) (player.getWood() / resource.getAmount());
+                    }
+                }
+
+                for (Point point : ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getCausedByPoints()) {
+
+                    if (point.getType() == PointType.Victory) {
+                        totalScore -= (int) (player.getVictoryPoints() / point.getAmount());
+                    } else if (point.getType() == PointType.Military) {
+                        totalScore -= (int) (player.getMilitaryPoints() / point.getAmount());
+                    } else totalScore -= (int) (player.getFaithPoints() / point.getAmount());
+
+                }
+
+                if (((VictoryMalusBanCard) banCard).getEffectVictoryMalus().isRelatedToBuilding()) {
+                    for (BuildingDvptCard card : player.getPersonalBoard().getBuildingCards()) {
+                        for (Cost cost : card.getCost()) {
+                            for (Resource resource : cost.getResources()) {
+                                if (resource.getType() == ResourceType.Wood)
+                                    totalScore -= resource.getAmount() * ((VictoryMalusBanCard) banCard).getEffectVictoryMalus().getMalus();
                             }
                         }
                     }
                 }
             }
-
-            finalScore.put(player,totalScore);
         }
-
-        return  finalScore;
+        return totalScore;
     }
 
     /**

@@ -307,14 +307,14 @@ public class Board implements Serializable {
         board += ("|                                                                                        |\n");
         board += ("| ");
         board += (AnsiColors.ANSI_GREEN + "  TERRITORY            " + AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_YELLOW + " BUILDING           " + AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_BLUE + "   CHARACTER            " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_BLUE + "CHARACTER             " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_YELLOW + "BUILDING              " + AnsiColors.ANSI_RESET);
         board += (AnsiColors.ANSI_PURPLE + " VENTURE            |\n" + AnsiColors.ANSI_RESET);
 
         board += ("| ");
         board += (AnsiColors.ANSI_GREEN + "  TOWER               " + AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_YELLOW + "  TOWER              " + AnsiColors.ANSI_RESET);
-        board += (AnsiColors.ANSI_BLUE + "   TOWER                " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_BLUE + "  TOWER              " + AnsiColors.ANSI_RESET);
+        board += (AnsiColors.ANSI_YELLOW + "   TOWER                " + AnsiColors.ANSI_RESET);
         board += (AnsiColors.ANSI_PURPLE + " TOWER              |\n" + AnsiColors.ANSI_RESET);
 
         board += ("|   ______                ______                ______                ______             |\n");
@@ -440,9 +440,9 @@ public class Board implements Serializable {
 
         board += "|   | "  + printCardId(this.getTerritoryTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
 
-        board += " |            | " + printCardId(this.getBuildingTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
-
         board += " |            | " + printCardId(this.getCharacterTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getCharacterTower().get(line).getFamilyMember());
+
+        board += " |            | " + printCardId(this.getBuildingTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
 
         board += " |            | " + printCardId(this.getVentureTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getVentureTower().get(line).getFamilyMember()) + " |         |\n";
 
