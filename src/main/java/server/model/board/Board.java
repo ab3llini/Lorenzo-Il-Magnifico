@@ -323,37 +323,37 @@ public class Board implements Serializable {
 
         board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
 
-        board += printTowerLine(0);
-
-        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
-
-        board += ("|   |____|                |____|                |____|                |____|             |\n");
-
-        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
-
-        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
-
-        board +=  printTowerLine(1);
-
-        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
-
-        board += ("|   |____|                |____|                |____|                |____|             |\n");
-
-        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
-
-        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
-
-        board += printTowerLine(2);
-
-        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
-
-        board += ("|   |____|                |____|                |____|                |____|             |\n");
-
-        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
-
-        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
-
         board += printTowerLine(3);
+
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
+
+        board += ("|   |____|                |____|                |____|                |____|             |\n");
+
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
+
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
+
+        board +=  printTowerLine(2);
+
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
+
+        board += ("|   |____|                |____|                |____|                |____|             |\n");
+
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
+
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
+
+        board += printTowerLine(1);
+
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
+
+        board += ("|   |____|                |____|                |____|                |____|             |\n");
+
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
+
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
+
+        board += printTowerLine(0);
 
         board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
 
@@ -444,7 +444,7 @@ public class Board implements Serializable {
 
         board += " |            | " + printCardId(this.getCharacterTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getCharacterTower().get(line).getFamilyMember());
 
-        board += " |            | " + printCardId(this.getVentureTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getCharacterTower().get(line).getFamilyMember()) + " |         |\n";
+        board += " |            | " + printCardId(this.getVentureTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getVentureTower().get(line).getFamilyMember()) + " |         |\n";
 
         return board;
 
