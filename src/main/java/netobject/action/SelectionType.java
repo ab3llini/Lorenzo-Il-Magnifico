@@ -1,22 +1,24 @@
 package netobject.action;
 
+import client.view.cmd.CliPrintable;
+
 /*
  * @author  ab3llini
  * @since   23/05/17.
  */
-public enum SelectionType {
+public enum SelectionType implements CliPrintable {
 
-    First(0),
-    Second(1);
-    int value;
+    First("First cost"),
+    Second("Second cost, if available");
 
-    SelectionType(int value){
-        this.value = value;
+    private final String  name;
+
+    SelectionType(String  name){
+        this.name = name;
     }
 
-    public int toInt(){
-        return this.value;
+    @Override
+    public String toString() {
+        return name;
     }
-
-
 }
