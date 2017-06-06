@@ -54,13 +54,17 @@ public class EffectSurplus implements Serializable {
             if(points.indexOf(point) == points.size()-1) {
 
                 surplus += point.toString();
+
             }
+
             else {
+
                 surplus += point.toString()+", ";
+
             }
         }
 
-        if(council>=1)
+        if(council >= 1)
             surplus += "Council "+ UnicodeChars.Council+" : "+council;
 
         return surplus;

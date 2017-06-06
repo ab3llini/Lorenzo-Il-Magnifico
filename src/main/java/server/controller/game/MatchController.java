@@ -621,8 +621,10 @@ public class MatchController implements Runnable {
         int i=0;
 
         //some cards could have a double cost
-        if(card.getCost().size()>1)
-            i = costOptionType.toInt();
+        if(card.getCost().size()>1){
+            if(costOptionType == SelectionType.Second)
+                i=1;
+        }
 
         //get the choosen one cost
         Cost costo = card.getCost().get(i);
