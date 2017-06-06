@@ -12,12 +12,16 @@ import netobject.response.Response;
 import netobject.response.ResponseType;
 import netobject.response.auth.LoginResponse;
 import server.model.Match;
+import server.model.board.BonusTile;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /*
  * @author  ab3llini
@@ -200,6 +204,11 @@ public class SocketClient extends Client implements Runnable {
                 else if (matchNot.getMatchNotificationType() == MatchNotificationType.ActionPerformed) {
 
                     this.notifyActionPerformed(matchNot.getPlayer(), matchNot.getAction(), matchNot.getMessage());
+
+                }
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.LeaderDraft) {
+
+                    this.notifyLeaderCardDraftRequest(matchNot.getDeck(), matchNot.getMessage());
 
                 }
 

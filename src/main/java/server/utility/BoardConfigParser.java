@@ -36,7 +36,7 @@ public class BoardConfigParser {
         try {
 
             //Fetch the config object
-            boardConfig = Loader.getJsonObjectFromFile("/json/board-config.json");
+            boardConfig = Loader.getJsonObjectFromFile("json/board-config.json");
 
         }
         catch (Exception e) {

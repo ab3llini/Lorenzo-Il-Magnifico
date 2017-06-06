@@ -11,9 +11,9 @@ public class TerminateRoundStandardAction extends Action {
 
     private final StandardActionType actionType;
 
-    public TerminateRoundStandardAction() {
+    public TerminateRoundStandardAction(String sender) {
 
-        super(ActionType.Standard);
+        super(ActionType.Standard, sender);
 
         this.actionType = StandardActionType.TerminateRound;
     }

@@ -8,9 +8,9 @@ import netobject.action.ActionType;
  */
 public class RollDicesAction extends Action {
 
-    public RollDicesAction() {
+    public RollDicesAction(String sender) {
 
-        super(ActionType.Standard);
+        super(ActionType.Standard, sender);
 
     }
 }

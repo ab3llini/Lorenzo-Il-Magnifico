@@ -38,7 +38,7 @@ public class BonusTilesParser {
         ArrayList<BonusTile> allBonusTiles = new ArrayList<BonusTile>();
 
         //get a JsonObject from the file stored in resource that contains all the bonusTiles in json
-        JsonObject bonusTilesSet = Loader.getJsonObjectFromFile("/json/bonusTiles.json");
+        JsonObject bonusTilesSet = Loader.getJsonObjectFromFile("json/bonusTiles.json");
 
         //extract one by one all the card from cardsSet and create a bonus tiles object from every single bunus tile in json file
         for (String bonusTilesId : Json.getObjectKeys(bonusTilesSet)) {

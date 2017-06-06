@@ -9,6 +9,8 @@ public enum MatchNotificationType {
     TurnEnabled,
     TurnDisabled,
     ImmediateAction,
+    LeaderDraft,
+    BonusTileDraft,
     TimeoutExpired,
     ActionRefused,
     ActionPerformed

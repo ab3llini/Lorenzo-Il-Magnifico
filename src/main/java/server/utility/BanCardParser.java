@@ -36,7 +36,7 @@ public class BanCardParser {
 
 
         //get a JsonObject from the file stored in resource that contains all the banCards in json
-        JsonObject cardsSet = Loader.getJsonObjectFromFile("/json/banCards.json");
+        JsonObject cardsSet = Loader.getJsonObjectFromFile("json/banCards.json");
 
         //extract one by one all the ban cards from cardsSet and create a banCard object from every single banCard in json file
         for (String banCardId : Json.getObjectKeys(cardsSet)) {

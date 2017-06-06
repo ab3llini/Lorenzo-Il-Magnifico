@@ -16,7 +16,10 @@ import netobject.notification.MatchNotificationType;
 import server.controller.network.ClientHandler;
 import server.controller.network.Observable;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.Player;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -234,6 +237,16 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
     public void notifyActionPerformed(Player player, Action action, String message) {
 
         this.sendObject(new MatchNotification(MatchNotificationType.ActionPerformed, player, action, message));
+
+    }
+
+    public void notifyLeaderCardDraftRequest(Deck<LeaderCard> cards, String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.LeaderDraft, cards, message));
+
+    }
+
+    public void notifyBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) {
 
     }
 

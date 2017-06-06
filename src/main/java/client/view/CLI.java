@@ -13,25 +13,27 @@ import client.view.cmd.*;
 import client.view.utility.AsyncInputStream;
 import client.view.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
+import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
 import netobject.action.SelectionType;
 import netobject.action.immediate.ImmediateActionType;
-import netobject.action.standard.RollDicesAction;
-import netobject.action.standard.StandardPlacementAction;
-import netobject.action.standard.TerminateRoundStandardAction;
+import netobject.action.standard.*;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
 import netobject.notification.Notification;
-import netobject.action.standard.StandardActionType;
 import netobject.action.BoardSectorType;
 import netobject.request.auth.LoginRequest;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.ColorType;
 import server.model.board.Player;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 import singleton.GameConfig;
 
+import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -66,6 +68,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
     private final Object connectionMutex;
 
     private final Object roundMutext;
+
+    private final Object draftMutex;
 
     private final Object selectionMutex;
 
@@ -102,6 +106,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         this.roundMutext = new Object();
 
         this.selectionMutex = new Object();
+
+        this.draftMutex = new Object();
 
         //Initialization procedure
         this.keyboard = new AsyncInputStream(System.in);
@@ -358,6 +364,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         this.ctx = CliContext.Match;
 
+        this.draftLeaderCards();
+
         while(!this.localMatchController.matchHasEnded()) {
 
             //Wait until is the player turn
@@ -385,6 +393,76 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
 
+    }
+
+    private void draftLeaderCards() {
+
+        this.waitOnMutex(this.draftMutex);
+
+        while (this.localMatchController.getDraftable().getCards().size() > 0) {
+
+            if (this.localMatchController.getDraftable().getCards().size() == 4) {
+
+                Cmd.notify("Leader cards draft started");
+
+            }
+
+            Cmd.askFor("Please select the leader card you want");
+
+            int i = 1;
+
+            for (LeaderCard c : this.localMatchController.getDraftable().getCards()) {
+
+                System.out.println(AnsiColors.ANSI_GREEN + "[" + i + "]" + AnsiColors.ANSI_RESET);
+
+                System.out.println(c);
+
+                i++;
+
+            }
+
+            int selection = 0;
+
+            try {
+
+                String choice = this.waitForActionSelection();
+
+                while (Integer.parseInt(choice) < 1 && Integer.parseInt(choice) > 4) {
+
+                    Cmd.error("Invalid choice, try again.");
+
+                    choice = this.waitForActionSelection();
+
+                }
+
+                selection = Integer.parseInt(choice);
+
+            } catch (InterruptedException e) {
+
+                Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
+
+
+            } catch (NoActionPerformedException e) {
+
+                Logger.log(Level.SEVERE, "MatchController", "No action performed", e);
+
+
+            }
+
+            this.client.performAction(new ShuffleLeaderCardStandardAction(selection, this.localMatchController.getDraftable(), this.client.getUsername()));
+
+            if (this.localMatchController.getDraftable().getCards().size() == 1) {
+
+                this.localMatchController.setDraftable(new Deck<>());
+
+            }
+            else {
+
+                this.waitOnMutex(this.draftMutex);
+
+            }
+        }
+
 
     }
 
@@ -402,9 +480,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Try to do an action before the timeout goes out
         String choice = this.waitForActionSelection();
 
-        while (!actionSelection.isValid(choice) || this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+        while (!actionSelection.isValid(choice) || !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
-            if (this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+            if (!this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
                 Cmd.error("The action : " + actionSelection.getEnumEntryFromChoice(choice) + " can't be performed again!");
 
@@ -417,7 +495,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
 
-        if (!this.localMatchController.diceAreRolled() && actionSelection.getEnumEntryFromChoice(choice) != StandardActionType.TerminateRound) {
+        if (!this.localMatchController.diceAreRolled() && actionSelection.getEnumEntryFromChoice(choice) != StandardActionType.RollDice) {
 
             Cmd.error("You must roll the dices first!");
 
@@ -448,7 +526,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
         else if (actionSelection.choiceMatch(choice, StandardActionType.RollDice)) {
 
-            this.client.performAction(new RollDicesAction());
+            this.client.performAction(new RollDicesAction(this.client.getUsername()));
 
 
         }
@@ -549,7 +627,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         costOption = costSelection.getEnumEntryFromChoice(choice);
 
-        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption);
+        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption, this.client.getUsername());
 
         this.client.performAction(standardPlacementAction);
 
@@ -557,8 +635,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     private void terminateRound() {
 
-        this.client.performAction(new TerminateRoundStandardAction());
+        this.client.performAction(new TerminateRoundStandardAction(this.client.getUsername()));
 
+        this.localMatchController.flushActionsPerformed();
 
     }
 
@@ -779,6 +858,25 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             this.connectionMutex.notify();
 
         }
+
+    }
+
+    @Override
+    public void onLeaderCardDraftRequest(Client sender, Deck<LeaderCard> cards, String message) {
+
+        this.localMatchController.setDraftable(cards);
+
+        //Wake up the thread that is waiting on the d
+        synchronized (this.draftMutex) {
+
+            this.draftMutex.notify();
+
+        }
+
+    }
+
+    @Override
+    public void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message) {
 
     }
 

@@ -9,6 +9,8 @@ import exception.NoSuchPlayerException;
 import netobject.action.standard.StandardActionType;
 import server.model.Match;
 import server.model.board.Dice;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 
 import java.util.HashMap;
 
@@ -21,6 +23,8 @@ public class LocalMatchController {
     private Match match;
 
     private String playerUsername;
+
+    private Deck<LeaderCard> draftable;
 
     private boolean matchEnded = false;
 
@@ -99,7 +103,7 @@ public class LocalMatchController {
 
     public boolean canPerformAction(StandardActionType action) {
 
-        return this.actionsPerformedOnThisRound.get(action);
+        return !this.actionsPerformedOnThisRound.get(action);
 
     }
 
@@ -143,6 +147,14 @@ public class LocalMatchController {
 
         }
 
+    }
+
+    public void setDraftable(Deck<LeaderCard> draftable) {
+        this.draftable = draftable;
+    }
+
+    public Deck<LeaderCard> getDraftable() {
+        return draftable;
     }
 
     public Match getMatch() {

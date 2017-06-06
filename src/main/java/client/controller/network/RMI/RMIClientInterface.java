@@ -6,10 +6,14 @@ import netobject.action.ActionType;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.Player;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /*
  * @author  ab3llini
@@ -46,6 +50,10 @@ public interface RMIClientInterface extends Remote {
     void onImmediateActionAvailable(ImmediateActionType actionType, Player player, String message) throws RemoteException;
 
     void onActionPerformed(Player player, Action action, String message) throws RemoteException;
+
+    void onLeaderCardDraftRequest(Deck<LeaderCard> cards, String message) throws RemoteException;
+
+    void onBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) throws RemoteException;
 
 
 }

@@ -8,10 +8,7 @@ package server.utility;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 
 /**
@@ -29,7 +26,7 @@ public abstract class Loader {
     public static JsonObject getJsonObjectFromFile(String filename) throws IOException, URISyntaxException {
 
         //The file
-        File file = new File(Loader.class.getResource(filename).toURI());
+        File file = new File(Loader.class.getClassLoader().getResource(filename).getFile());;
 
         //The file reader
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -39,5 +36,6 @@ public abstract class Loader {
 
         return parser.parse(reader).getAsJsonObject();
     }
+
 
 }

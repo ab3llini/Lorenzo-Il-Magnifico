@@ -35,7 +35,7 @@ public class DvptCardParser {
 
 
         //get a JsonObject from the file stored in resource that contains all the cards in json
-        JsonObject cardsSet = Loader.getJsonObjectFromFile("/json/cards.json");
+        JsonObject cardsSet = Loader.getJsonObjectFromFile("json/cards.json");
 
         //extract one by one all the card from cardsSet and create a Card object from every single card in json file
         for (String cardId : Json.getObjectKeys(cardsSet)) {

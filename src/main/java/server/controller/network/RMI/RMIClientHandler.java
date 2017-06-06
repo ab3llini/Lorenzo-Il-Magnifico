@@ -14,7 +14,10 @@ import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.Player;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
@@ -230,6 +233,26 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
         try {
             this.clientRef.onActionPerformed(player, action, message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void notifyLeaderCardDraftRequest(Deck<LeaderCard> cards, String message) {
+
+        try {
+            this.clientRef.onLeaderCardDraftRequest(cards, message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void notifyBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) {
+
+        try {
+            this.clientRef.onBonusTileDraftRequest(tiles, message);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

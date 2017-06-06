@@ -23,7 +23,7 @@ public class GameConfigParser {
         try {
 
             //Fetch the config object
-            config = Loader.getJsonObjectFromFile("/json/game-config.json");
+            config = Loader.getJsonObjectFromFile("json/game-config.json");
 
         }
         catch (Exception e) {

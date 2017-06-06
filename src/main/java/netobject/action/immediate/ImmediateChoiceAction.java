@@ -14,9 +14,9 @@ public class ImmediateChoiceAction extends Action {
 
     private final SelectionType selection;
 
-    public ImmediateChoiceAction(ImmediateActionType immediateActionType, SelectionType selection) {
+    public ImmediateChoiceAction(ImmediateActionType immediateActionType, SelectionType selection, String sender) {
 
-        super(ActionType.Immediate);
+        super(ActionType.Immediate, sender);
 
         this.immediateActionType = immediateActionType;
         this.selection = selection;

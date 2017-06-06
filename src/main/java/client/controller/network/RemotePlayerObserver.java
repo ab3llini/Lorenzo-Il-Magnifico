@@ -4,7 +4,13 @@ import netobject.action.Action;
 import netobject.action.ActionType;
 import netobject.action.immediate.ImmediateActionType;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.Player;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
+
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /*
  * @author  ab3llini
@@ -25,5 +31,9 @@ public interface RemotePlayerObserver {
     void onActionRefused(Client sender, String message);
 
     void onActionPerformed(Client sender, Player player, Action action, String message);
+
+    void onLeaderCardDraftRequest(Client sender, Deck<LeaderCard> cards, String message);
+
+    void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message);
 
 }

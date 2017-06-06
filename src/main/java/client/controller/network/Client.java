@@ -8,7 +8,10 @@ import netobject.request.auth.LoginRequest;
 import server.controller.game.RemotePlayer;
 import server.controller.network.Observable;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.Player;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 
 import java.util.ArrayList;
 
@@ -186,5 +189,24 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     }
 
+    public void notifyLeaderCardDraftRequest(Deck<LeaderCard> deck,  String message) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onLeaderCardDraftRequest(this, deck, message);
+
+        }
+
+    }
+
+    public void notifyBonusTileDraftRequest(ArrayList<BonusTile> tiles,  String message) {
+
+        for (ClientObserver o : this.observers) {
+
+            o.onBonusTileDraftRequest(this, tiles, message);
+
+        }
+
+    }
 
 }

@@ -19,9 +19,9 @@ public class ImmediatePlacementAction extends Action {
     private int additionalServants;
 
 
-    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, SelectionType costOptionType) {
+    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, SelectionType costOptionType, String sender) {
 
-        super(ActionType.Immediate);
+        super(ActionType.Immediate, sender);
 
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;

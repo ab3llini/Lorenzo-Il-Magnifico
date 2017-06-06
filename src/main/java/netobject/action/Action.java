@@ -11,17 +11,25 @@ public class Action extends NetObject {
 
     private ActionType actionType;
 
-    public Action(ActionType actionType) {
+    private String sender;
+
+    public Action(ActionType actionType, String sender) {
 
         super(NetObjectType.Action);
 
         this.actionType = actionType;
+        this.sender = sender;
+
     }
 
     public Action() {
 
         super(NetObjectType.Poison);
 
+    }
+
+    public String getSender() {
+        return sender;
     }
 
     public ActionType getActionType() {

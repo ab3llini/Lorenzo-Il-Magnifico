@@ -20,9 +20,9 @@ public class StandardPlacementAction extends Action {
 
     private final SelectionType costOptionType;
 
-    public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType) {
+    public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType, String sender) {
 
-        super(ActionType.Standard);
+        super(ActionType.Standard, sender);
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
         this.colorType = colorType;

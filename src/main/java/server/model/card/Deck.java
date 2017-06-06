@@ -42,6 +42,7 @@ public class Deck<T>  implements Serializable {
 
     }
 
+
     /**
      * Adds a card to the deck
      * @param card the card to be added
@@ -61,6 +62,12 @@ public class Deck<T>  implements Serializable {
     public boolean removeCard(T card) {
 
         return this.cards.remove(card);
+
+    }
+
+    public void removeCard(int index) {
+
+        this.cards.remove(index);
 
     }
 

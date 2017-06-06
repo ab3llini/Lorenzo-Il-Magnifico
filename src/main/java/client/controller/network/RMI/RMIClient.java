@@ -8,14 +8,15 @@ import exception.authentication.NotConnectedException;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
-import netobject.action.ActionType;
 import netobject.action.immediate.ImmediateActionType;
-import netobject.action.standard.StandardPlacementAction;
 import netobject.notification.LobbyNotification;
 import netobject.request.auth.LoginRequest;
 import server.controller.network.RMI.RMIServerInterface;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.Player;
+import server.model.card.Deck;
+import server.model.card.leader.LeaderCard;
 
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
@@ -24,6 +25,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 /*
  * @author  ab3llini
@@ -104,7 +106,15 @@ public class RMIClient extends Client implements RMIClientInterface {
         this.notifyActionPerformed(player, action, message);
 
     }
-    
+
+    public void onLeaderCardDraftRequest(Deck<LeaderCard> cards, String message) throws RemoteException {
+        this.notifyLeaderCardDraftRequest(cards, message);
+    }
+
+    public void onBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) throws RemoteException {
+        this.notifyBonusTileDraftRequest(tiles, message);
+    }
+
     public boolean connect() {
         try {
 

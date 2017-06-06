@@ -42,7 +42,7 @@ public class LeaderCardParser {
         ArrayList<LeaderCard> allLeaderCards = new ArrayList<LeaderCard>();    //this arrayList contains all the leaderCard already parsed
 
         //get a JsonObject from the file stored in resource that contains all the cards in json
-        JsonObject cardsSet = Loader.getJsonObjectFromFile("/json/leaderCards.json");
+        JsonObject cardsSet = Loader.getJsonObjectFromFile("json/leaderCards.json");
 
         //extract one by one all the card from cardsSet and create a Card object from every single card in json file
         for (String cardId : Json.getObjectKeys(cardsSet)) {

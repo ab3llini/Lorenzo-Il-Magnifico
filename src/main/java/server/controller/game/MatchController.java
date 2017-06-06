@@ -6,15 +6,14 @@ import netobject.NetObjectType;
 import netobject.action.*;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.immediate.ImmediatePlacementAction;
-import netobject.action.standard.LeaderCardActivationAction;
-import netobject.action.standard.RollDicesAction;
-import netobject.action.standard.StandardPlacementAction;
-import netobject.action.standard.TerminateRoundStandardAction;
+import netobject.action.standard.*;
 import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
+import server.model.card.Deck;
 import server.model.card.ban.*;
 import server.model.card.developement.*;
+import server.model.card.leader.LeaderCard;
 import server.model.effect.*;
 import server.model.valuable.*;
 import server.utility.BoardConfigParser;
@@ -122,8 +121,9 @@ public class MatchController implements Runnable {
 
         /*
          * Initialize the blocking queue for the actions
+         * Make it maximum size equals to the number of players so that in the draft we can block until it is full
          */
-        this.actions = new LinkedBlockingQueue<Action>();
+        this.actions = new LinkedBlockingQueue<Action>(players.size());
 
         //Init anything else in the future here..
 
@@ -169,6 +169,19 @@ public class MatchController implements Runnable {
      */
     public void run() {
 
+        //TODO: Draft the bonus tiles
+
+        //Draft the leader cards
+        try {
+
+            this.handleLeaderCardDraft();
+
+        } catch (InterruptedException e) {
+
+            e.printStackTrace();
+
+        }
+
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);
 
@@ -201,6 +214,112 @@ public class MatchController implements Runnable {
                 }
 
                 this.handlePlayerRound(p);
+
+            }
+
+        }
+
+    }
+
+    /**
+     * Handle the leader card draft
+     */
+    private void handleLeaderCardDraft() throws InterruptedException {
+
+        final int NUMBER_OF_CARDS_PER_DECK = 4;
+
+        //Create a deck with all the 20 leader cards and shuffle it
+        Deck<LeaderCard> deck = new Deck<>(GameSingleton.getInstance().getLeaderCards()).shuffle();
+
+        //Create a temporary map for each player username
+        TreeMap<String, Deck<LeaderCard>> draftingMap = new TreeMap<>();
+
+        int i = 0;
+
+        //Create n sub decks, where n is the number of players
+        for (Player p : this.match.getPlayers()) {
+
+            Deck<LeaderCard> draftableDeck = new Deck<>();
+
+            for (int j = 0; j < NUMBER_OF_CARDS_PER_DECK; j++) {
+
+                draftableDeck.addCard(deck.getCards().get((i * NUMBER_OF_CARDS_PER_DECK) + j));
+
+            }
+
+            draftingMap.put(p.getUsername(), draftableDeck);
+
+            //Tell the user the deck from which he can select a card
+            this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftableDeck, "Please select a leader card and draft");
+
+            Logger.log(Level.FINEST, "Match controller", "Sending draftable deck to " + p.getUsername());
+
+            i++;
+
+        }
+
+
+        for (i = 0; i < NUMBER_OF_CARDS_PER_DECK; i++) {
+
+            //Four times we need to wait until each player performs his draft
+            for (int j = 0; j < this.match.getPlayers().size(); j ++) {
+
+                //Get the shuffle action
+                ShuffleLeaderCardStandardAction shuffleAction = (ShuffleLeaderCardStandardAction)this.actions.take();
+
+                //Get the selected card, DEBUG ONLY
+                LeaderCard selected = shuffleAction.getDeck().getCards().get(shuffleAction.getSelection());
+
+                //Find the player in the map and remove
+                draftingMap.get(shuffleAction.getSender()).removeCard(shuffleAction.getSelection());
+
+                //Add the selected card to the leader cards of the player
+                try {
+
+                    this.match.getPlayerFromUsername(shuffleAction.getSender()).addLeaderCard(selected);
+
+                } catch (NoSuchPlayerException e) {
+
+                    Logger.log(Level.FINEST, "Match controller", "Can't find player!", e);
+
+                }
+
+                Logger.log(Level.FINEST, "Match controller", "Leader draft, step " + (i + 1) + ", " + shuffleAction.getSender() + " selected '" + selected.getName() + "'");
+
+            }
+
+
+            Deck<LeaderCard> first = null;
+
+            //Set the deck of each player to the deck of the previous one
+            for (Map.Entry<String , Deck<LeaderCard>> e : draftingMap.entrySet()) {
+
+                Map.Entry<String, Deck<LeaderCard>> x =  draftingMap.firstEntry();
+
+                if (e.getKey().equals(draftingMap.firstEntry().getKey())) {
+
+                    first = e.getValue();
+
+                }
+
+                if (e.getKey().equals(draftingMap.lastEntry().getKey())) {
+
+                    e.setValue(first);
+
+                }
+
+                else {
+
+                    e.setValue(draftingMap.higherEntry(e.getKey()).getValue());
+
+                }
+
+            }
+
+            //Send again the drafted decks
+            for (Player p : this.match.getPlayers()) {
+
+                this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftingMap.get(p.getUsername()), "Please select a leader card and draft");
 
             }
 
