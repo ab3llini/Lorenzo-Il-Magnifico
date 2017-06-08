@@ -43,7 +43,8 @@ public enum UnicodeChars implements CliPrintable {
     Warning(new int[]{0x26A0}),
     Dots(new int[]{0x20DB}),
     Enter(new int[]{0x2386}),
-    Force(new int[]{0x1F4AA});
+    Force(new int[]{0x1F4AA}),
+    Permanent(new int[]{0x221E});
 
     private final int[] value;
 

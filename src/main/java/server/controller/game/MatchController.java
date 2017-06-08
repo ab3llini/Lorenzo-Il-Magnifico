@@ -23,6 +23,7 @@ import singleton.GameConfig;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 import static server.utility.BoardConfigParser.getVictoryBonusFromRanking;
 
@@ -700,13 +701,16 @@ public class MatchController implements Runnable {
         applyEffectSurplus(player,immediateEffect.getSurplus());
 
 
-        if(immediateEffect.getEffectAction().getTarget() == server.model.effect.ActionType.harvest)
+        if(immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
             applyHarvestChain(player,immediateEffect.getEffectAction().getForce());
 
-        if(immediateEffect.getEffectAction().getTarget() == server.model.effect.ActionType.production)
+        if(immediateEffect.getEffectAction().getTarget() == ActionType.production)
             applyProductionChain(player,immediateEffect.getEffectAction().getForce());
 
-        if(immediateEffect.getEffectAction().getTarget() == server.model.effect.ActionType.card){
+        if(immediateEffect.getEffectAction().getTarget() == ActionType.card){
+            if(immediateEffect.getEffectAction().getTarget() == null){
+                //può fare qualsiasi azione di posizionamento sulla torre
+            }
             if(immediateEffect.getEffectAction().getType() == DvptCardType.territory)
                 //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
                 //mi salvo la forza che utilizzo poi per lanciare il metodo do immediate effect action
@@ -1214,6 +1218,7 @@ public class MatchController implements Runnable {
      */
     public LinkedHashMap<Player,Integer> calculatesFinalScore(){
 
+        HashMap<Integer,Player> playersScore = new HashMap<>();
         LinkedHashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
 
 
@@ -1264,6 +1269,12 @@ public class MatchController implements Runnable {
             finalScore.put(player,totalScore);
 
         }
+
+       finalScore.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
         return  finalScore;
     }
 

@@ -31,18 +31,40 @@ public class Point extends Valuable implements Serializable {
     public String toString() {
         String point= "";
 
-        if(type == PointType.Victory)
+        if(type == PointType.Victory){
+
             point += "Victory Points "+ UnicodeChars.VictoryPoints;
 
-        if(type == PointType.Faith)
+            point += " : ";
+
+            point += this.getAmount();
+
+        }
+
+        if(type == PointType.Faith){
+
             point += "Faith Points "+UnicodeChars.FaithPoints;
 
-        if(type == PointType.Military)
+            point += " : ";
+
+            point += this.getAmount();
+        }
+
+        if(type == PointType.Military){
+
             point += "Military Points "+UnicodeChars.MilitaryPoints;
 
-        point += " : ";
+            point += " : ";
 
-        point += this.getAmount();
+            point += this.getAmount();
+        }
+
+        if(multiplier!=null) {
+
+            point+= "Multiplier->";
+            point+= multiplier.getWhat()+" X"+multiplier.getCoefficient()+"= "+multiplier.getResult();
+        }
+
 
         return point;
     }

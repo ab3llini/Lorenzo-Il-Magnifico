@@ -193,7 +193,7 @@ public class DvptCardParser {
         //get keys from permanent (minforce || type || surplus || conversion || Action || discount || penality)
         ArrayList<String> effectKeys = Json.getObjectKeys(permanent);
 
-        //get effectSurplus and effectAction..so i have both 'items' to create the cost
+
         for (String effectKey : effectKeys) {
 
             if (effectKey.equals("vpoints")) {
@@ -390,7 +390,6 @@ public class DvptCardParser {
     }
 
     private static ArrayList<Resource> getDiscount(JsonObject actions){
-
         ArrayList<Resource> discount=new ArrayList<Resource>();
         //extract arrayDiscount from JsonObject
         JsonArray arrayDiscount = actions.getAsJsonArray("discount");

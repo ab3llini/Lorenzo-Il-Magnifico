@@ -3,6 +3,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import server.model.Match;
+import server.model.board.ColorType;
+import server.model.board.FamilyMember;
 import server.model.board.Player;
 import server.model.valuable.PointType;
 import server.model.valuable.ResourceType;
@@ -236,4 +238,46 @@ public class TestPlayer {
         }
     }
 
+    @Test
+    public void freeFamilyMemberTest(){
+
+        Player player = new Player("test");
+
+        for (FamilyMember familyMember: player.getFamilyMembers()) {
+
+            familyMember.setBusy(true);
+
+        }
+
+        player.freeFamilyMembers();
+
+        for (FamilyMember familyMember: player.getFamilyMembers()) {
+
+            assertEquals(false,familyMember.isBusy());
+
+        }
+    }
+
+    @Test
+    public void getFamilyMemberByColorTest() throws FamilyMemberAlreadyInUseException {
+
+        for(int i=0; i<100 ; i++){
+
+            int j=(int)(Math.random()*100)%2;
+            FamilyMember familyMember;
+            if(j%2 == 0){
+                familyMember = player.getFamilyMember(ColorType.Black);
+            }
+            else{
+                familyMember = player.getFamilyMember(ColorType.Nautral);
+            }
+
+            if(j%2 == 0){
+                assertEquals(ColorType.Black,familyMember.getColor());
+            }
+            else {
+                assertEquals(ColorType.Nautral,familyMember.getColor());
+            }
+        }
+    }
 }

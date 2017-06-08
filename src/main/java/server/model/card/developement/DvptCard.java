@@ -3,8 +3,10 @@ package server.model.card.developement;/*
  */
 
 import logger.AnsiColors;
+import server.model.effect.ActionType;
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
+import server.utility.UnicodeChars;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -82,16 +84,15 @@ public abstract class DvptCard implements Serializable {
             int i=1;
 
             for (Cost cost : this.getCost()) {
-                card += i+"° "+"Cost : " + this.getCost().get(i-1).toString() + "\n";
+                card += i+"° "+"COST : " + this.getCost().get(i-1).toString() + "\n";
                 i++;
             }
 
         }
 
-        card += "Immediate Effect: "+"\n";
-        card += "Surplus :" + this.getImmediateEffect().getSurplus().toString()+"\n";
-        if(getImmediateEffect().getEffectAction().getTarget()!= null)
-            card += "Effect Action: "+this.getImmediateEffect().getEffectAction().toString()+"\n";
+
+        card += "Immediate Effect "+UnicodeChars.Immediate+" : "+"\n"+this.getImmediateEffect().toString();
+
         return card;
     }
 }

@@ -20,6 +20,7 @@ import server.utility.DvptCardParser;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -495,4 +496,23 @@ public class TestMachController {
 
     }
 
+    @Test
+    public void calculateFinalScoreTest() {
+
+        ArrayList<Player> players = new ArrayList<>();
+
+        players.add(new Player("testA"));
+        players.add(new Player("testB"));
+
+        players.get(0).setMilitaryPoints(10);
+        players.get(1).setMilitaryPoints(11);
+
+        MatchController mc = new MatchController(players,0);
+
+        LinkedHashMap<Player,Integer> finalScore =mc.calculatesFinalScore();
+
+        assertEquals(2,(int)finalScore.get(players.get(0)));
+        assertEquals(5,(int)finalScore.get(players.get(1)));
+
+    }
 }
