@@ -2,6 +2,9 @@ package netobject.action.standard;
 
 import netobject.action.*;
 import server.model.board.ColorType;
+import server.model.valuable.Resource;
+
+import java.util.ArrayList;
 
 /**
  * Created by Federico on 22/05/2017.
@@ -20,6 +23,8 @@ public class StandardPlacementAction extends Action {
 
     private final SelectionType costOptionType;
 
+    private ArrayList<Resource> discount;
+
     public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType, String sender) {
 
         super(ActionType.Standard, sender);
@@ -28,6 +33,7 @@ public class StandardPlacementAction extends Action {
         this.colorType = colorType;
         this.additionalServants = additionalServants;
         this.costOptionType = costOptionType;
+        this.discount = new ArrayList<>();
     }
 
     public BoardSectorType getActionTarget() {
@@ -60,5 +66,10 @@ public class StandardPlacementAction extends Action {
 
     }
 
+    public void setDiscount(ArrayList<Resource> discount) {
+        this.discount = discount;}
 
+    public ArrayList<Resource> getDiscount() {
+        return discount;
+    }
 }

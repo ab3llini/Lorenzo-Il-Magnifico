@@ -80,7 +80,7 @@ public class TestMachController {
     }
 
     @Test
-    public void applyAllCardCostTest() throws IOException, URISyntaxException {
+    public void applyAllCardAndDiscountCostTest() throws IOException, URISyntaxException {
 
 
         ArrayList<DvptCard> mazzo = DvptCardParser.parse();
@@ -102,7 +102,12 @@ public class TestMachController {
             player1.setMilitaryPoints(5);
 
             try {
-                mc.applyDvptCardCost(player1,card, SelectionType.First);
+                ArrayList<Resource> discount = new ArrayList<>();
+                discount.add(new Resource(ResourceType.Servants,1));
+                discount.add(new Resource(ResourceType.Coins,1));
+                discount.add(new Resource(ResourceType.Stones,1));
+                discount.add(new Resource(ResourceType.Wood,1));
+                mc.applyDvptCardCost(player1,card,discount,SelectionType.First);
                 Cost cost = card.getCost().get(0);
 
                 int coinsMalus = 0;
@@ -113,16 +118,16 @@ public class TestMachController {
                 for (Resource resource : cost.getResources()) {
 
                     if(resource.getType() == ResourceType.Coins)
-                        coinsMalus += resource.getAmount();
+                        coinsMalus += resource.getAmount()-1;
 
                     if(resource.getType() == ResourceType.Wood)
-                        woodMalus += resource.getAmount();
+                        woodMalus += resource.getAmount()-1;
 
                     if(resource.getType() == ResourceType.Servants)
-                        servantsMalus += resource.getAmount();
+                        servantsMalus += (resource.getAmount()-1);
 
                     if(resource.getType() == ResourceType.Stones)
-                        stoneMalus += resource.getAmount();
+                        stoneMalus += resource.getAmount()-1;
 
                 }
 

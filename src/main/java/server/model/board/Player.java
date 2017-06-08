@@ -931,8 +931,7 @@ public class Player implements Serializable {
         }
     }
 
-    @Override
-    public String toString() {
+    public String toString2() {
 
         String playerString = "";
 
@@ -951,6 +950,24 @@ public class Player implements Serializable {
         playerString += "- military points "+UnicodeChars.MilitaryPoints+": "+this.getMilitaryPoints()+"\n";
 
         playerString += "- faith points "+UnicodeChars.FaithPoints+": "+this.getFaithPoints()+"\n";
+
+        return playerString;
+    }
+
+    @Override
+    public String toString() {
+
+        String playerString = "\n";
+
+        playerString += UnicodeChars.Man+" "+this.username.toUpperCase()+"\n";
+
+        playerString += UnicodeChars.Coins+"\t"+UnicodeChars.Wood+"\t"+UnicodeChars.Stones+"\t"+UnicodeChars.Servants+"\t";
+
+        playerString += UnicodeChars.VictoryPoints+"\t"+UnicodeChars.MilitaryPoints+"\t"+UnicodeChars.FaithPoints+"\n";
+
+        playerString += this.getCoins()+"\t"+this.getWood()+"\t"+this.getStones()+"\t"+this.getServants()+"\t";
+
+        playerString += this.getVictoryPoints()+"\t"+this.getMilitaryPoints()+"\t"+this.getFaithPoints();
 
         return playerString;
     }

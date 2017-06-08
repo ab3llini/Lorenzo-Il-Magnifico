@@ -15,6 +15,7 @@ public class MilitaryCost implements Serializable {
         this.required = required;
     }
 
+
     public Integer getMalus() {
         return malus;
     }

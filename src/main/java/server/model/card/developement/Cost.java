@@ -19,6 +19,26 @@ public class Cost implements Serializable {
         this.military = military;
     }
 
+    /**
+     * clone the cost
+     * @param cost
+     */
+    public Cost(Cost cost){
+
+        ArrayList<Resource> resources = new ArrayList<>();
+        MilitaryCost militaryCost;
+
+        for (Resource resource: cost.getResources()) {
+            resources.add(new Resource(resource.getType(),resource.getAmount()));
+        }
+
+        militaryCost = new MilitaryCost(cost.getMilitary().getRequired(),cost.getMilitary().getMalus());
+
+        this.resources  = resources;
+        this.military = militaryCost;
+
+    }
+
     public MilitaryCost getMilitary() {
         return military;
     }
@@ -26,6 +46,7 @@ public class Cost implements Serializable {
     public ArrayList<Resource> getResources() {
         return resources;
     }
+
 
     @Override
     public String toString() {
@@ -51,4 +72,6 @@ public class Cost implements Serializable {
 
         return cost;
     }
+
+
 }

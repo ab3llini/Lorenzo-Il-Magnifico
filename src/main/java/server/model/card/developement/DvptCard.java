@@ -87,6 +87,11 @@ public abstract class DvptCard implements Serializable {
             }
 
         }
+
+        card += "Immediate Effect: "+"\n";
+        card += "Surplus :" + this.getImmediateEffect().getSurplus().toString()+"\n";
+        if(getImmediateEffect().getEffectAction().getTarget()!= null)
+            card += "Effect Action: "+this.getImmediateEffect().getEffectAction().toString()+"\n";
         return card;
     }
 }

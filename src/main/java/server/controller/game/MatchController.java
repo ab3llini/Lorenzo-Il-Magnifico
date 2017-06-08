@@ -15,6 +15,7 @@ import server.model.card.ban.*;
 import server.model.card.developement.*;
 import server.model.card.leader.LeaderCard;
 import server.model.effect.*;
+import server.model.effect.ActionType;
 import server.model.valuable.*;
 import server.utility.BoardConfigParser;
 import singleton.GameConfig;
@@ -195,6 +196,13 @@ public class MatchController implements Runnable {
 
                 //Update the towers for the current combination of round / turn / period
                 this.boardController.updateTowersForTurn(this.match.getCurrentTurn(), this.match.getCurrentPeriod().toInt());
+
+                //Free family members for each player
+                for (Player player:this.getMatch().getPlayers()) {
+
+                    player.freeFamilyMembers();
+
+                }
 
                 //Send once the model to each player
                 this.sendUpdatedModel();
@@ -612,7 +620,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void applyDvptCardCost(Player player, DvptCard card, SelectionType costOptionType) throws ActionException {
+    public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Resource> discount,SelectionType costOptionType) throws ActionException {
 
         //territory cards doesn't have cost
         if(card.getType() == DvptCardType.territory)
@@ -627,7 +635,11 @@ public class MatchController implements Runnable {
         }
 
         //get the choosen one cost
-        Cost costo = card.getCost().get(i);
+        //clone the cost in order to modify a temporary variable
+        Cost costo = new Cost(card.getCost().get(i));
+
+        //apply discount
+        costo = applyDiscount(costo,discount);
 
         //try to apply military cost, if it does not succeed it returns an exception
         if(costo.getMilitary().getRequired() <= player.getMilitaryPoints())
@@ -644,6 +656,32 @@ public class MatchController implements Runnable {
         else
             throw new NotEnoughResourcesException("Not enough resources to do this");
 
+    }
+
+    /**
+     * this method subtract a discount from a cost
+     * @param costo
+     * @param discount
+     * @return
+     */
+    public Cost applyDiscount(Cost costo, ArrayList<Resource> discount){
+
+        for (Resource resource:costo.getResources()) {
+
+            for (Resource scount: discount) {
+
+                if(scount.getType() == resource.getType()){
+
+
+                    if(resource.getAmount() - scount.getAmount() >=0){
+                        resource.setAmount(resource.getAmount() - scount.getAmount());}
+                    else{
+                        resource.setAmount(0);}
+                }
+            }
+        }
+
+        return costo;
     }
 
     /**
@@ -809,7 +847,7 @@ public class MatchController implements Runnable {
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getCostOptionType());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscount(), action.getCostOptionType());
 
             EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
@@ -902,7 +940,7 @@ public class MatchController implements Runnable {
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getCostOptionType());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscount(), action.getCostOptionType());
 
             EffectSurplus effectSurplus = boardController.immediatePlacementOnTower(force+action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
@@ -1197,19 +1235,21 @@ public class MatchController implements Runnable {
             }}
 
 
-
             //one victory point from every 5 resources of all type
             totalScore += (player.getCoins() + player.getStones() + player.getWood() + player.getServants()) / 5;
 
             //victory points that depends on building card on the player personal board
-            if(BanFlag.get(DvptCardType.building) == false){
-            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.territory,player.getPersonalBoard().getBuildingCards().size());}
+            if(BanFlag.get(DvptCardType.territory) == false){
+            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.territory,player.getPersonalBoard().getTerritoryCards().size());}
 
                 //victory points that depends on character card on the player personal board
 
-            if(BanFlag.get(DvptCardType.territory) == false){
+            if(BanFlag.get(DvptCardType.character) == false){
                 totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());}
 
+            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.venture,player.getPersonalBoard().getVentureCards().size());
+
+            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.building,player.getPersonalBoard().getBuildingCards().size());
 
             //victory points that depends on faith points
             totalScore += BoardConfigParser.getVictoryBonusFromFaith(player.getFaithPoints());
@@ -1222,6 +1262,7 @@ public class MatchController implements Runnable {
             totalScore = totalScoreWithVictoryMalus(player, totalScore);
 
             finalScore.put(player,totalScore);
+
         }
         return  finalScore;
     }
@@ -1230,6 +1271,12 @@ public class MatchController implements Runnable {
 
     HashMap<DvptCardType,Boolean> applyNoVictoryBan(Player player){
         HashMap<DvptCardType, Boolean> banType = new HashMap<DvptCardType, Boolean>();
+
+        banType.put(DvptCardType.territory,false);
+        banType.put(DvptCardType.venture,false);
+        banType.put(DvptCardType.character,false);
+        banType.put(DvptCardType.building,false);
+
         for(BanCard banCard : player.getBanCards()) {
             if(banCard instanceof NoVictoryBanCard) {
                 if (((NoVictoryBanCard) banCard).getCardType() == DvptCardType.territory)
@@ -1342,20 +1389,12 @@ public class MatchController implements Runnable {
 
             //if a permanent effect is relative to cardtype, check the DvptCardType type and modify the Action
 
-            if(permanentEffectAction.getTarget() == server.model.effect.ActionType.card){
-                System.out.println(permanentEffectAction.getType());
-                if(permanentEffectAction.getType() == DvptCardType.territory)
+            if(permanentEffectAction.getTarget() == ActionType.card){
+
+                if(permanentEffectAction.getType() == getTowerType(action.getActionTarget()))
                     action.increaseBonus(permanentEffectAction.getForceBonus());
 
-                if(permanentEffectAction.getType() == DvptCardType.building)
-                    action.increaseBonus(permanentEffectAction.getForceBonus());
-
-                if(permanentEffectAction.getType() == DvptCardType.character)
-                    action.increaseBonus(permanentEffectAction.getForceBonus());
-
-                if(permanentEffectAction.getType() == DvptCardType.venture)
-                    action.increaseBonus(permanentEffectAction.getForceBonus());
-                //TODO effect discount
+                action.setDiscount(permanentEffectAction.getDiscount());
             }
 
             //if the effect is the preacher penality forbid the Action if the placement index is > 1
@@ -1364,8 +1403,6 @@ public class MatchController implements Runnable {
                     throw new PreacherEffectException("Preacher's permanent effect forbid it");
                 }
             }
-
-            //TODO effect discount
 
         }
 

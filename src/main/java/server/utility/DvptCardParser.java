@@ -41,8 +41,8 @@ public class DvptCardParser {
         for (String cardId : Json.getObjectKeys(cardsSet)) {
 
             //initialize immediateEffect to default value in order to avoid null pointers
-            ImmediateEffect immediateEffect = new ImmediateEffect(new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0),new EffectAction(ActionType.unknown,null,0,new ArrayList<Resource>()));
-            PermanentEffect permanentEffect = new PermanentEffect(0,0,new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0),null,null,new EffectPermanentAction(ActionType.unknown,null,0,null),false);
+            ImmediateEffect immediateEffect = new ImmediateEffect(new EffectSurplus(new ArrayList<>(),new ArrayList<>(),0),new EffectAction(ActionType.unknown,null,0,new ArrayList<>()));
+            PermanentEffect permanentEffect = new PermanentEffect(0,0,new EffectSurplus(new ArrayList<>(),new ArrayList<>(),0),null,null,new EffectPermanentAction(ActionType.unknown,null,0,new ArrayList<>()),false);
 
             //extract one single card
             JsonObject card = cardsSet.getAsJsonObject(cardId);
@@ -169,7 +169,7 @@ public class DvptCardParser {
                 effectSurplus = getEffectSurplus(immediate);
             }
 
-            if (effectKey.equals("Action")) {
+            if (effectKey.equals("action")) {
                 effectAction = getEffectAction(immediate);
             }
         }
@@ -312,7 +312,7 @@ public class DvptCardParser {
         ArrayList<Resource> discount = new ArrayList<Resource>();
 
         //get JsonObject surplus from immediate
-        JsonObject actions=immediate.getAsJsonObject("Action");
+        JsonObject actions=immediate.getAsJsonObject("action");
 
         //get keys from actions(target || type || force || discount) that identify all the different keys of Action
         ArrayList<String> actionKeys = Json.getObjectKeys(actions);

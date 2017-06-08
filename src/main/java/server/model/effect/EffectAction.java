@@ -3,6 +3,7 @@ package server.model.effect;
 import server.model.card.developement.DvptCardType;
 import server.model.valuable.Resource;
 import server.model.valuable.Valuable;
+import server.utility.UnicodeChars;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,5 +38,19 @@ public class EffectAction implements Serializable {
 
     public ArrayList<Resource> getDiscount() {
         return discount;
+    }
+
+    @Override
+    public String toString() {
+
+        String actionString="";
+
+        if(this.getTarget() == ActionType.harvest)
+            actionString += "harvest "+ UnicodeChars.Harvest+" --> "+"Force "+UnicodeChars.Force+"\n";
+
+        if(this.getTarget() == ActionType.production)
+            actionString += "production "+ UnicodeChars.Production+" --> "+"Force "+UnicodeChars.Force+" "+this.force+"\n";
+
+        return actionString;
     }
 }
