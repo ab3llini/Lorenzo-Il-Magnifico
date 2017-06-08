@@ -16,4 +16,12 @@ public class Discount {
         this.discount = discount;
 
     }
+
+    public void setDiscount(ArrayList<Resource> discount) {
+        this.discount = discount;
+    }
+
+    public ArrayList<Resource> getDiscount() {
+        return discount;
+    }
 }

@@ -154,7 +154,7 @@ public class DvptCardParser {
 
         //initialize effect surplus and effect Action in order to avoid null pointers
         EffectSurplus effectSurplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(), 0);
-        EffectAction effectAction = new EffectAction(ActionType.unknown,null,0,new ArrayList<Resource>());
+        EffectAction effectAction = new EffectAction(ActionType.unknown,null,0,new ArrayList<Discount>());
 
         //extract immediate from JsonObject
         JsonObject immediate = effect.getAsJsonObject("immediate");
@@ -309,7 +309,7 @@ public class DvptCardParser {
         ActionType target= ActionType.unknown;
         DvptCardType type=null;
         Integer force=0;
-        ArrayList<Resource> discount = new ArrayList<Resource>();
+        ArrayList<Discount> discount = new ArrayList<Discount>();
 
         //get JsonObject surplus from immediate
         JsonObject actions=immediate.getAsJsonObject("action");
@@ -336,7 +336,7 @@ public class DvptCardParser {
         ActionType target=null;
         DvptCardType type=null;
         Integer forceBonus=0;
-        ArrayList<Resource> discount=new ArrayList<Resource>();
+        ArrayList<Discount> discount=new ArrayList<>();
 
         //get keys from permanent (minForce || type || surplus || conversion || Action || discount || penality)
         ArrayList<String> permanentKeys = Json.getObjectKeys(permanent);
@@ -389,14 +389,18 @@ public class DvptCardParser {
         return getResourceCost(surplus);
     }
 
-    private static ArrayList<Resource> getDiscount(JsonObject actions){
-        ArrayList<Resource> discount=new ArrayList<Resource>();
+    private static ArrayList<Discount> getDiscount(JsonObject actions){
+
+        ArrayList<Discount> discounts = new ArrayList<>();
+
         //extract arrayDiscount from JsonObject
         JsonArray arrayDiscount = actions.getAsJsonArray("discount");
 
         for (int j = 0; j < arrayDiscount.size(); j++) {
             //extract JsonObject ObjectDiscount from actions
             JsonObject ObjectDiscount = arrayDiscount.get(j).getAsJsonObject();
+
+            ArrayList<Resource> discount=new ArrayList<Resource>();
 
             //foreach key of ObjectDiscount get his value
             for (String discountKey:Json.getObjectKeys(ObjectDiscount)) {
@@ -414,9 +418,9 @@ public class DvptCardParser {
                 }
 
             }
-
+            discounts.add(new Discount(discount));
         }
-        return discount;
+        return discounts;
     }
 
     public static ArrayList<Point> getPoints (JsonObject surplus){

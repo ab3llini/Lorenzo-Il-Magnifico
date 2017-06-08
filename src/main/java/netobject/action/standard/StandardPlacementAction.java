@@ -2,6 +2,7 @@ package netobject.action.standard;
 
 import netobject.action.*;
 import server.model.board.ColorType;
+import server.model.card.developement.Discount;
 import server.model.valuable.Resource;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class StandardPlacementAction extends Action {
 
     private final SelectionType costOptionType;
 
-    private ArrayList<Resource> discount;
+    private ArrayList<Discount> discounts;
 
     public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType, String sender) {
 
@@ -33,7 +34,7 @@ public class StandardPlacementAction extends Action {
         this.colorType = colorType;
         this.additionalServants = additionalServants;
         this.costOptionType = costOptionType;
-        this.discount = new ArrayList<>();
+        this.discounts = new ArrayList<>();
     }
 
     public BoardSectorType getActionTarget() {
@@ -66,10 +67,10 @@ public class StandardPlacementAction extends Action {
 
     }
 
-    public void setDiscount(ArrayList<Resource> discount) {
-        this.discount = discount;}
+    public void setDiscounts(ArrayList<Discount> discounts) {
+        this.discounts = discounts;}
 
-    public ArrayList<Resource> getDiscount() {
-        return discount;
+    public ArrayList<Discount> getDiscounts() {
+        return discounts;
     }
 }

@@ -108,7 +108,14 @@ public class TestMachController {
                 discount.add(new Resource(ResourceType.Coins,1));
                 discount.add(new Resource(ResourceType.Stones,1));
                 discount.add(new Resource(ResourceType.Wood,1));
-                mc.applyDvptCardCost(player1,card,discount,SelectionType.First);
+
+                ArrayList<Resource> test = new ArrayList<>();
+                test.add(new Resource(ResourceType.Servants,1));
+
+                ArrayList<Discount> discounts = new ArrayList<>();
+                discounts.add(new Discount(discount));
+                discounts.add(new Discount(test));
+                mc.applyDvptCardCost(player1,card,discounts,SelectionType.First);
                 Cost cost = card.getCost().get(0);
 
                 int coinsMalus = 0;

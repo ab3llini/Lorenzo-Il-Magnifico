@@ -1,5 +1,6 @@
 package server.model.effect;
 
+import server.model.card.developement.Discount;
 import server.model.card.developement.DvptCardType;
 import server.model.valuable.Resource;
 import server.model.valuable.Valuable;
@@ -15,13 +16,13 @@ public class EffectAction implements Serializable {
     private ActionType target;
     private DvptCardType type;
     private Integer force;
-    private ArrayList<Resource> discount;
+    private ArrayList<Discount> discounts;
 
-    public EffectAction(ActionType target, DvptCardType type, Integer force, ArrayList<Resource> discount){
+    public EffectAction(ActionType target, DvptCardType type, Integer force, ArrayList<Discount> discounts){
         this.target=target;
         this.type=type;
         this.force=force;
-        this.discount=discount;
+        this.discounts=discounts;
     }
 
     public DvptCardType getType() {
@@ -36,8 +37,8 @@ public class EffectAction implements Serializable {
         return force;
     }
 
-    public ArrayList<Resource> getDiscount() {
-        return discount;
+    public ArrayList<Discount> getDiscounts() {
+        return discounts;
     }
 
     @Override

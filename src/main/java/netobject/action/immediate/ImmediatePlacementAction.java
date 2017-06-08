@@ -2,6 +2,7 @@ package netobject.action.immediate;
 
 
 import netobject.action.*;
+import server.model.card.developement.Discount;
 import server.model.valuable.Resource;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class ImmediatePlacementAction extends Action {
 
     private int additionalServants;
 
-    private ArrayList<Resource> discount;
+    private ArrayList<Discount> discounts;
 
     public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, SelectionType costOptionType, String sender) {
 
@@ -30,7 +31,7 @@ public class ImmediatePlacementAction extends Action {
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
         this.costOptionType = costOptionType;
-        this.discount = new ArrayList<>();
+        this.discounts = new ArrayList<>();
 
     }
 
@@ -58,11 +59,11 @@ public class ImmediatePlacementAction extends Action {
         return costOptionType;
     }
 
-    public ArrayList<Resource> getDiscount() {
-        return discount;
+    public ArrayList<Discount> getDiscounts() {
+        return discounts;
     }
 
-    public void setDiscount(ArrayList<Resource> discount) {
-        this.discount = discount;
+    public void setDiscounts(ArrayList<Discount> discounts) {
+        this.discounts = discounts;
     }
 }

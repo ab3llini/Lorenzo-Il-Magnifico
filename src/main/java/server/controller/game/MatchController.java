@@ -621,7 +621,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Resource> discount,SelectionType costOptionType) throws ActionException {
+    public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Discount> discount,SelectionType costOptionType) throws ActionException {
 
         //territory cards doesn't have cost
         if(card.getType() == DvptCardType.territory)
@@ -665,11 +665,17 @@ public class MatchController implements Runnable {
      * @param discount
      * @return
      */
-    public Cost applyDiscount(Cost costo, ArrayList<Resource> discount){
+    public Cost applyDiscount(Cost costo, ArrayList<Discount> discount){
+
+        int choose = 0;
+
+        if(discount.size()>1){
+            System.out.println("chiedo all'utente cosa vuole tra: "+discount.get(0).getDiscount().get(0).getType()+" "+discount.get(1).getDiscount().get(0).getType());
+        }
 
         for (Resource resource:costo.getResources()) {
 
-            for (Resource scount: discount) {
+            for (Resource scount: discount.get(choose).getDiscount()) {
 
                 if(scount.getType() == resource.getType()){
 
@@ -851,7 +857,7 @@ public class MatchController implements Runnable {
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscount(), action.getCostOptionType());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts(), action.getCostOptionType());
 
             EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
@@ -944,7 +950,7 @@ public class MatchController implements Runnable {
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscount(), action.getCostOptionType());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts(), action.getCostOptionType());
 
             EffectSurplus effectSurplus = boardController.immediatePlacementOnTower(force+action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
@@ -1405,7 +1411,7 @@ public class MatchController implements Runnable {
                 if(permanentEffectAction.getType() == getTowerType(action.getActionTarget()))
                     action.increaseBonus(permanentEffectAction.getForceBonus());
 
-                action.setDiscount(permanentEffectAction.getDiscount());
+                action.setDiscounts(permanentEffectAction.getDiscounts());
             }
 
             //if the effect is the preacher penality forbid the Action if the placement index is > 1
