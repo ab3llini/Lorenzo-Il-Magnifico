@@ -535,8 +535,6 @@ public class MatchController implements Runnable {
 
         if(action instanceof LeaderCardActivationAction){
 
-            activateLeaderCard((LeaderCardActivationAction) action, player);
-
             message = "activated a leader card";
 
 
@@ -637,6 +635,7 @@ public class MatchController implements Runnable {
     public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Discount> discount,SelectionType costOptionType) throws ActionException {
 
         //territory cards doesn't have cost
+        if(card != null){
         if(card.getType() == DvptCardType.territory)
             return;
 
@@ -653,7 +652,9 @@ public class MatchController implements Runnable {
         Cost costo = new Cost(card.getCost().get(i));
 
         //apply discount
-        costo = applyDiscount(costo,discount);
+            costo = applyDiscount(costo,discount);
+
+
 
         //try to apply military cost, if it does not succeed it returns an exception
         if(costo.getMilitary().getRequired() <= player.getMilitaryPoints())
@@ -671,7 +672,7 @@ public class MatchController implements Runnable {
             throw new NotEnoughResourcesException("Not enough resources to do this");
 
     }
-
+    }
     /**
      * this method subtract a discount from a cost
      * @param costo
@@ -717,49 +718,52 @@ public class MatchController implements Runnable {
     public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException {
         //TODO
         StandardPlacementAction action;
-        ImmediateEffect immediateEffect = card.getImmediateEffect();
+        if(card != null) {
+            ImmediateEffect immediateEffect = card.getImmediateEffect();
 
 
-        applyEffectSurplus(player,immediateEffect.getSurplus());
+            applyEffectSurplus(player, immediateEffect.getSurplus());
 
 
-        if(immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
-            applyHarvestChain(player,immediateEffect.getEffectAction().getForce());
+            if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
+                applyHarvestChain(player, immediateEffect.getEffectAction().getForce());
 
-        if(immediateEffect.getEffectAction().getTarget() == ActionType.production)
-            applyProductionChain(player,immediateEffect.getEffectAction().getForce());
+            if (immediateEffect.getEffectAction().getTarget() == ActionType.production)
+                applyProductionChain(player, immediateEffect.getEffectAction().getForce());
 
-        if(immediateEffect.getEffectAction().getTarget() == ActionType.card){
-            if(immediateEffect.getEffectAction().getTarget() == null){
-                //può fare qualsiasi azione di posizionamento sulla torre
+            if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
+                if (immediateEffect.getEffectAction().getTarget() == null) {
+                    //può fare qualsiasi azione di posizionamento sulla torre
+                }
+                if (immediateEffect.getEffectAction().getType() == DvptCardType.territory)
+                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    //mi salvo la forza che utilizzo poi per lanciare il metodo do immediate effect action
+                    ;
+
+                if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
+                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    ;
+
+                    //Richiede l'interazione..
+                    this.notifyAllTurnEnabled(this.currentPlayer);
+
+
+                }
+
+                if (immediateEffect.getEffectAction().getType() == DvptCardType.building)
+                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    ;
+
+                if (immediateEffect.getEffectAction().getType() == DvptCardType.venture)
+                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
+                    ;
             }
-            if(immediateEffect.getEffectAction().getType() == DvptCardType.territory)
-                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                //mi salvo la forza che utilizzo poi per lanciare il metodo do immediate effect action
-                ;
 
-            if(immediateEffect.getEffectAction().getType() == DvptCardType.character) {
-                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                ;
-
-                //Richiede l'interazione..
-                this.notifyAllTurnEnabled(this.currentPlayer);
-
-
+            //multiplier immediate effect is always in the first slot of points array
+            if (immediateEffect.getSurplus().getPoints().size() > 0) {
+                if (immediateEffect.getSurplus().getPoints().get(0).getMultiplier() != null)
+                    applyMultiplier(player, immediateEffect.getSurplus().getPoints().get(0).getMultiplier());
             }
-
-            if(immediateEffect.getEffectAction().getType() == DvptCardType.building)
-                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                ;
-
-            if(immediateEffect.getEffectAction().getType() == DvptCardType.venture)
-                //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                ;}
-
-        //multiplier immediate effect is always in the first slot of points array
-        if(immediateEffect.getSurplus().getPoints().size()>0){
-            if(immediateEffect.getSurplus().getPoints().get(0).getMultiplier()!= null)
-                applyMultiplier(player,immediateEffect.getSurplus().getPoints().get(0).getMultiplier());
         }
     }
 
@@ -779,6 +783,8 @@ public class MatchController implements Runnable {
 
         //apply character cards permanent effect
         action = actionCharacterFilter(action,player);
+
+        action = applyLeaderCardEffect(player, action);
 
         //if boardSectorType is CouncilPalace we place the family member in the council palace
         //once positioned the council palace give to the player an effectSurplus
@@ -856,7 +862,7 @@ public class MatchController implements Runnable {
 
             //control if the player can take another territory card
             if(towerType == DvptCardType.territory){
-                if(player.getMilitaryPoints() < BoardConfigParser.getMinimumMilitaryPoints(player.getPersonalBoard().getTerritoryCards().size() + 1))
+                if(player.getMilitaryPoints() < BoardConfigParser.getMinimumMilitaryPoints(player.getPersonalBoard().getTerritoryCards().size() + 1) && !player.isPermanentLeaderActive(PermanentLeaderEffectType.cesareEffect))
                     throw new NotEnoughMilitaryPointsException("Not enough military points to take another territory card");
             }
 
@@ -869,16 +875,19 @@ public class MatchController implements Runnable {
                 throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
 
             //if the tower is already occupied the player has to pay 3 coins
-            if (this.match.getBoard().getPlayersInTower(towerType).size() > 0)
+            if (this.match.getBoard().getPlayersInTower(towerType).size() > 0 && !player.isPermanentLeaderActive(PermanentLeaderEffectType.filippoEffect))
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
             applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts(), action.getCostOptionType());
 
             EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
-            applyEffectSurplus(player, effectSurplus);
 
-
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ritaEffect)){
+                for(Resource resource: effectSurplus.getResources())
+                    resource.setAmount(resource.getAmount()*2);
+                }
+                applyEffectSurplus(player, effectSurplus);
 
             //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
@@ -897,6 +906,73 @@ public class MatchController implements Runnable {
         //set the familiar busy
         familyMember.setBusy(true);
     }
+
+    public StandardPlacementAction applyLeaderCardEffect(Player player, StandardPlacementAction action){
+
+            for(LeaderCard leaderCard : player.getActiveLeaderCards()){
+
+                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ariostoEffect)) {
+
+                    if (action.getActionTarget() == BoardSectorType.TerritoryTower)
+                        getMatch().getBoard().getTerritoryTower().get(action.getPlacementIndex()).setOccupied(false);
+
+                    if (action.getActionTarget() == BoardSectorType.BuildingTower)
+                        getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).setOccupied(false);
+
+                    if (action.getActionTarget() == BoardSectorType.CharacterTower)
+                        getMatch().getBoard().getCharacterTower().get(action.getPlacementIndex()).setOccupied(false);
+
+                    if (action.getActionTarget() == BoardSectorType.BuildingTower)
+                        getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).setOccupied(false);
+
+                    if (action.getActionTarget() == BoardSectorType.CouncilPalace)
+                        getMatch().getBoard().getCouncilPalace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+
+                    if (action.getActionTarget() == BoardSectorType.Market)
+                        getMatch().getBoard().getMarket().getMarketPlaces().get(action.getPlacementIndex()).setOccupied(false);
+
+                    if (action.getActionTarget() == BoardSectorType.SingleHarvestPlace)
+                        getMatch().getBoard().getHarvestArea().getMainPlace().setOccupied(false);
+
+                    if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace)
+                        getMatch().getBoard().getHarvestArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+
+                    if (action.getActionTarget() == BoardSectorType.SingleProductionPlace)
+                        getMatch().getBoard().getProductionArea().getMainPlace().setOccupied(false);
+
+                    if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace)
+                        getMatch().getBoard().getProductionArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+
+                }
+
+                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.sigismondoEffect) && action.getColorType() == ColorType.Nautral) {
+                    action.increaseBonus(3);
+                }
+
+                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect)) {
+                    action.increaseBonus(2);
+                }
+
+                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.moroEffect) && action.getColorType() != ColorType.Nautral) {
+                    try {
+                        action.increaseBonus(5-player.getFamilyMember(action.getColorType()).getForce());
+                    } catch (FamilyMemberAlreadyInUseException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.picoEffect)){
+                    ArrayList <Resource> coinDiscount = new ArrayList<Resource>();
+                    coinDiscount.add(new Resource(ResourceType.Coins, 3));
+                    Discount discount = new Discount(coinDiscount);
+                    action.getDiscounts().add(discount);
+                }
+            }
+
+            return action;
+
+    }
+
 
     public boolean applyDiceMalusBanCard(StandardPlacementAction action, Player player, FamilyMember familyMember, boolean noMarket) throws NotStrongEnoughException {
         for (BanCard bancard : player.getBanCards()) {
@@ -1158,23 +1234,41 @@ public class MatchController implements Runnable {
         return surplus;
     }
 
-    public void activateLeaderCard (LeaderCardActivationAction action, Player player) {
+    /**this method actives a leader effect, activable once a round**/
+
+    public void activateOnceARoundLeaderCard (LeaderCardActivationAction action, Player player) {
+
+        LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
         if(player.hasEnoughLeaderRequirements(action.getLeaderCardIndex())) { //verify the requirements to activate Leader Card
 
-            if (GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex()).getLeaderEffect().getOnceARound() != null) {
+            if (leaderCard.getLeaderEffect().getOnceARound() != null) {
 
-                for (Resource resource : GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex()).getLeaderEffect().getOnceARound().getResources())
+                for (Resource resource : leaderCard.getLeaderEffect().getOnceARound().getResources())
                     player.addGenericResource(resource.getType(), resource.getAmount());
 
-                for (Point point : GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex()).getLeaderEffect().getOnceARound().getPoints())
+                for (Point point : leaderCard.getLeaderEffect().getOnceARound().getPoints())
                     player.addGenericPoint(point.getType(), point.getAmount());
+
+                if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.harvest)) {
+                    try {
+                        applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest));
+                    } catch (NoActionPerformedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.production)) {
+                    try {
+                        applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production));
+                    } catch (NoActionPerformedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
             }
 
         }
-
-
     }
 
     /** this method applies the Production Chain
@@ -1519,10 +1613,13 @@ public class MatchController implements Runnable {
                 //the player has enough faith points but doesn't want to use them to avoid excommunication
                 player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
             }
-            else
+            else {
                 //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
                 player.addVictoryPoints(BoardConfigParser.getVictoryBonusFromFaith(player.getFaithPoints()));
-
+                if (player.isPermanentLeaderActive(PermanentLeaderEffectType.sistoEffect)) {
+                    player.addVictoryPoints(5);
+                }
+            }
             //the player cannot choose how many faith points to use
             player.setFaithPoints(0);
         }

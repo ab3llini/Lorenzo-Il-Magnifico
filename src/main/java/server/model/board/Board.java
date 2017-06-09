@@ -485,7 +485,7 @@ public class Board implements Serializable {
             id += (" " + card.getId());
         else
             id += (card.getId());
-    return id;}
+        return id;}
 
     public String printFamilyMember(FamilyMember familyMember) {
         String board = new String();

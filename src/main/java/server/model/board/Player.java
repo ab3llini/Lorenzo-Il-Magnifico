@@ -6,6 +6,7 @@ import server.model.card.ban.BanCard;
 import server.model.card.developement.Cost;
 import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
+import server.model.effect.PermanentLeaderEffectType;
 import server.model.valuable.*;
 import server.utility.UnicodeChars;
 
@@ -28,6 +29,9 @@ public class Player implements Serializable {
     private ArrayList<FamilyMember> familyMembers;
     private ArrayList<BanCard> banCards;
     private ArrayList<LeaderCard> leaderCards;
+    private HashMap<LeaderCard, Boolean>  activeLeaderCards;
+
+
 
     //Very important attribute both for match controller & lobby, do not edit unless 100% certain of what you are doing.
     private boolean disabled = false;
@@ -72,6 +76,8 @@ public class Player implements Serializable {
         this.banCards = new ArrayList<BanCard>();
 
         this.leaderCards = new ArrayList<LeaderCard>();
+
+        this.activeLeaderCards = new HashMap<LeaderCard, Boolean>();
 
     }
 
@@ -176,6 +182,29 @@ public class Player implements Serializable {
             return getFaithPoints();
 
         return getVictoryPoints();
+    }
+
+    public void setActiveLeaderCards(HashMap<LeaderCard, Boolean> activeLeaderCards) {
+        this.activeLeaderCards = activeLeaderCards;
+    }
+
+    public ArrayList<LeaderCard> getActiveLeaderCards() {
+        ArrayList<LeaderCard> activeLeaderCardsArray = new ArrayList<LeaderCard>();
+        for(int i=0; i<20; i++){
+            if( activeLeaderCards.containsKey(GameSingleton.getInstance().getLeaderCards().get(i))) {
+                if (activeLeaderCards.get(GameSingleton.getInstance().getLeaderCards().get(i)) == true)
+                    activeLeaderCardsArray.add(GameSingleton.getInstance().getLeaderCards().get(i));
+            }
+        }
+        return activeLeaderCardsArray;
+    }
+
+    public boolean isPermanentLeaderActive(PermanentLeaderEffectType permanentLeader){
+        for(LeaderCard leaderCard : getActiveLeaderCards()){
+            if(permanentLeader == leaderCard.getLeaderEffect().getPermanentEffect())
+                return true;
+        }
+        return false;
     }
 
     public void setMilitaryPoints(Integer militaryPoints) {

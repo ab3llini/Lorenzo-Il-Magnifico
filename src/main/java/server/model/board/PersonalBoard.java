@@ -99,18 +99,19 @@ public class PersonalBoard implements Serializable {
 
     public void addCard(DvptCard card) throws SixCardsLimitReachedException {
 
-        if(card.getType() == DvptCardType.territory)
-            addTerritoryCard((TerritoryDvptCard) card);
+        if(card != null) {
+            if (card.getType() == DvptCardType.territory)
+                addTerritoryCard((TerritoryDvptCard) card);
 
-        if(card.getType() == DvptCardType.building)
-            addBuildingCard((BuildingDvptCard) card);
+            if (card.getType() == DvptCardType.building)
+                addBuildingCard((BuildingDvptCard) card);
 
-        if(card.getType() == DvptCardType.character)
-            addCharacterCard((CharacterDvptCard) card);
+            if (card.getType() == DvptCardType.character)
+                addCharacterCard((CharacterDvptCard) card);
 
-        if(card.getType() == DvptCardType.venture)
-            addVentureCard(((VentureDvptCard) card));
-
+            if (card.getType() == DvptCardType.venture)
+                addVentureCard(((VentureDvptCard) card));
+        }
 
     }
 
