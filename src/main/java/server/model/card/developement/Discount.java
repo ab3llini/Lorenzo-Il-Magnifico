@@ -2,12 +2,13 @@ package server.model.card.developement;
 
 import server.model.valuable.Resource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by LBARCELLA on 08/06/2017.
  */
-public class Discount {
+public class Discount implements Serializable {
 
     ArrayList<Resource> discount;
 

@@ -5,6 +5,7 @@ import logger.Logger;
 import netobject.NetObjectType;
 import netobject.action.*;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.action.immediate.ImmediateChoiceAction;
 import netobject.action.immediate.ImmediatePlacementAction;
 import netobject.action.standard.*;
 import server.controller.network.ClientHandler;
@@ -76,7 +77,7 @@ public class MatchController implements Runnable {
     /**
      * Constants
      */
-    private static final int MOVE_DELAY =  GameConfig.getInstance().getPlayerTimeout();
+    private static final int ACTION_TIMEOUT =  GameConfig.getInstance().getPlayerTimeout();
 
 
     /**
@@ -184,7 +185,6 @@ public class MatchController implements Runnable {
         //Draft the leader cards first
         this.handleLeaderCardDraft();
 
-
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);
 
@@ -205,8 +205,12 @@ public class MatchController implements Runnable {
 
                 }
 
-                //Send once the model to each player
-                this.sendUpdatedModel();
+                //If the match has just started send the model before any move is performed
+                if (this.match.getCurrentRound() == 1 && this.match.getCurrentPeriod() == Period.first) {
+
+                    this.sendUpdatedModel();
+
+                }
 
             }
 
@@ -226,6 +230,9 @@ public class MatchController implements Runnable {
                 this.handlePlayerRound(p);
 
             }
+
+            //After each round finishes we must send the updated model to each player, always
+            this.sendUpdatedModel();
 
         }
 
@@ -373,7 +380,7 @@ public class MatchController implements Runnable {
 
             try {
 
-                action = this.waitForAction(MOVE_DELAY * 1000);
+                action = this.waitForAction(ACTION_TIMEOUT * 1000);
 
                 if (action instanceof TerminateRoundStandardAction) {
 
@@ -392,8 +399,16 @@ public class MatchController implements Runnable {
                     try {
 
                         //Handler the player action
-                        this.handlePlayerAction(this.currentPlayer, action);
+                        String status = this.handlePlayerAction(this.currentPlayer, action);
 
+                        //TODO: Send the model and std action confirmation before RETURNING or ASKING FOR AN IMMEDIATE ACTION
+
+                        //Update the model
+                        this.sendUpdatedModel();
+
+
+                        //If we get here without exceptions we can notify of the succeeded action
+                        this.notifyAllActionPerformed(this.currentPlayer, action, status);
 
                     }
                     catch (ActionException reason) {
@@ -441,7 +456,7 @@ public class MatchController implements Runnable {
      */
     private Action waitForAction(int timeout) throws NoActionPerformedException, InterruptedException {
 
-        Action action = null;
+        Action action;
 
         //Setup a new timeout for the action
         this.currentPlayerTimeout = new Timer();
@@ -496,6 +511,7 @@ public class MatchController implements Runnable {
      * It decides, based on the Action performed by the active player, what should be performed
      * @param player the player that performed the Action, which is the active one
      * @param action the Action perfomed
+     * @return A custom message of success
      * @throws NotStrongEnoughException Exception raised when the force is not enough strong
      * @throws FamilyMemberAlreadyInUseException Exception raised when the family member is already in use somewhere else
      * @throws NotEnoughPlayersException Exception raised when the zone is not enabled with the current amount of players
@@ -505,7 +521,7 @@ public class MatchController implements Runnable {
      * @throws SixCardsLimitReachedException Exception raised when the player cannot take another card of that type
      * @throws PlayerAlreadyOccupiedTowerException Exception raised when the player tries to put another player on a tower that has already been used by him
      */
-    private void handlePlayerAction(Player player, Action action) throws ActionException {
+    private String handlePlayerAction(Player player, Action action) throws ActionException, NoActionPerformedException {
 
         String message = "";
 
@@ -534,11 +550,8 @@ public class MatchController implements Runnable {
 
         }
 
-        //Update the model
-        this.sendUpdatedModel();
+        return player.getUsername() + " " + message;
 
-        //If we get here without exceptions we can notify of the succeeded action
-        this.notifyAllActionPerformed(this.currentPlayer, action, player.getUsername() + " " + message);
 
     }
 
@@ -596,11 +609,11 @@ public class MatchController implements Runnable {
 
     }
 
-    private void notifyImmediateActionAvailable(ImmediateActionType immediateActionType, Player current) {
+    private void notifyAllImmediateActionAvailable(ImmediateActionType immediateActionType, Player current, String message) {
 
         for (Player p : this.match.getPlayers()) {
 
-            this.remotePlayerMap.get(p).notifyImmediateActionAvailable(immediateActionType, current, current.getUsername() + " can perform an immediate action");
+            this.remotePlayerMap.get(p).notifyImmediateActionAvailable(immediateActionType, current, message);
 
         }
 
@@ -701,7 +714,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughPointsException
      */
-    public void applyImmediateEffect(Player player, DvptCard card) throws ActionException {
+    public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException {
         //TODO
         StandardPlacementAction action;
         ImmediateEffect immediateEffect = card.getImmediateEffect();
@@ -756,7 +769,7 @@ public class MatchController implements Runnable {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException {
+    public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException, NoActionPerformedException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
         boolean noMarket = false;
@@ -931,7 +944,7 @@ public class MatchController implements Runnable {
      * @param player
      * @throws ActionException
      */
-    public void doImmediateAction(ImmediatePlacementAction action, Integer force, Player player) throws ActionException {
+    public void doImmediateAction(ImmediatePlacementAction action, Integer force, Player player) throws ActionException, NoActionPerformedException {
 
         //if boardSectorType is a tower sector we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
@@ -988,8 +1001,6 @@ public class MatchController implements Runnable {
         //subtract the additional servants used
         player.subtractServants(action.getAdditionalServants());
 
-
-
     }
 
     /**
@@ -997,7 +1008,7 @@ public class MatchController implements Runnable {
      * @param player
      * @param surplus
      */
-    public void applyEffectSurplus(Player player,EffectSurplus surplus){
+    public void applyEffectSurplus(Player player,EffectSurplus surplus) throws NoActionPerformedException {
 
         //effect surplus is composed by resources,points and council privilege
         surplus = applyValuableBanCard(player, surplus);
@@ -1010,9 +1021,70 @@ public class MatchController implements Runnable {
         player.addPoints(pointsSurplus);
 
         //the client can choose which council privilege want to have
-        if(council >= 1)
-            //TODO
-            ;
+        if(council > 0) {
+
+            //We have one or more privileges available and must ask the player to chose one
+            int[] selections = new int[council];
+
+
+            for (int i = 0; i < council; i++) {
+
+                ImmediateChoiceAction choice = null;
+
+                //Foreach council privilege available, ask to chose
+                do {
+
+                    //1 - Ask
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCouncilPrivilege, this.currentPlayer, "Select a council privilege");
+
+                    //2 - Wait
+                    try {
+
+                        choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                    } catch (NoActionPerformedException e) {
+
+                        //The user did not select anything
+                        //Decide how to handle this event (Maybe assign a default privilege?)
+                        //Rethrow the exception
+
+                        throw e;
+
+                    } catch (InterruptedException e) {
+
+                        Logger.log(Level.WARNING, this.toString(), "Thread stopped while waiting for immediate action");
+
+                    }
+
+                }
+                while (this.contains(selections, choice.getSelection()));
+
+                //Add the selection
+                selections[i] = choice.getSelection();
+
+            }
+
+            //TODO: Here we have all the selections, go ahead and add the resources to the player
+
+        }
+
+    }
+
+    /**
+     * Utility method that checks if a builtin-type array contains an element
+     * @param a the array
+     * @param v the value
+     * @return true of false
+     */
+    private boolean contains(int[] a, int v) {
+
+        for (int x : a) {
+            if (x == v)
+                return true;
+        }
+
+        return false;
+
     }
 
     /**
@@ -1021,7 +1093,7 @@ public class MatchController implements Runnable {
      * @param player
      * @param force
      */
-    public void applyHarvestChain(Player player, Integer force){
+    public void applyHarvestChain(Player player, Integer force) throws NoActionPerformedException {
 
         force = applyHarvestBan(player, force);
 
@@ -1108,7 +1180,7 @@ public class MatchController implements Runnable {
     /** this method applies the Production Chain
      * this character chain consists in the activation of all the building card permanent effect**/
 
-    public void applyProductionChain (Player player, Integer force) throws ActionException {
+    public void applyProductionChain (Player player, Integer force) throws ActionException, NoActionPerformedException {
 
 
         //some ban cards can reduce player's power to activate production chain
@@ -1134,7 +1206,7 @@ public class MatchController implements Runnable {
      *
      * */
 
-    public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws ActionException{
+    public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws ActionException, NoActionPerformedException {
 
         if(card.getPermanentEffect().getSurplus() != null)
 
@@ -1160,7 +1232,7 @@ public class MatchController implements Runnable {
      */
 
 
-    public void applyConversion (Player player, ArrayList<EffectConversion> conversionList, Integer choice) throws ActionException {
+    public void applyConversion (Player player, ArrayList<EffectConversion> conversionList, Integer choice) throws ActionException, NoActionPerformedException {
 
         if(!conversionList.get(choice).getFrom().getResources().isEmpty()) {
 

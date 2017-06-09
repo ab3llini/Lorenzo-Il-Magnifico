@@ -20,6 +20,8 @@ import logger.Logger;
 import netobject.action.Action;
 import netobject.action.SelectionType;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.action.immediate.ImmediateActionTypeImpl;
+import netobject.action.immediate.ImmediateChoiceAction;
 import netobject.action.standard.*;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
@@ -31,6 +33,7 @@ import server.model.GameSingleton;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.ColorType;
+import server.model.board.CouncilPrivilege;
 import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
@@ -65,12 +68,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      */
     private final BlockingQueue<Notification> notificationQueue;
 
+    private final BlockingQueue<ImmediateActionType> immediateActionQueue;
+
     /**
      * This mutex is used to wait until a connection-driven event occurs
      */
     private final Object connectionMutex;
 
-    private final Object roundMutext;
+    private final Object roundMutex;
 
     private final Object draftMutex;
 
@@ -102,11 +107,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Init blocking queue for server data
         this.notificationQueue = new ArrayBlockingQueue<Notification>(10);
 
+        //Init the immediate action queue
+        this.immediateActionQueue = new ArrayBlockingQueue<ImmediateActionType>(1);
+
         //Init the mutex
         this.connectionMutex = new Object();
 
         //Init the mutex
-        this.roundMutext = new Object();
+        this.roundMutex = new Object();
 
         this.selectionMutex = new Object();
 
@@ -123,6 +131,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         //Log only important messages
         Logger.setMinLevel(Level.WARNING);
+
 
     }
 
@@ -372,7 +381,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         while(!this.localMatchController.matchHasEnded()) {
 
             //Wait until is the player turn
-            this.waitOnMutex(this.roundMutext);
+            this.waitOnMutex(this.roundMutex);
 
             try {
 
@@ -380,6 +389,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                 do {
 
+                    //Do a standard action
                     actionPerformed = this.makeStandardAction();
 
                 }
@@ -552,15 +562,87 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
 
         //Before setting the move as done, wait for server confirmation or refusal
-        this.localMatchController.setLastPendingAction(actionSelection.getEnumEntryFromChoice(choice));
+        this.localMatchController.setLastPendingStandardAction(actionSelection.getEnumEntryFromChoice(choice));
 
         //Wait for a response just if the action requires server interaction
         if (!actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
+
             this.waitOnMutex(this.connectionMutex);
+
+            //Perform eventual immediate actions (An immediate action may trigger another one and so on)
+            while (!this.immediateActionQueue.isEmpty() && this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+
+                //Perform the immediate action
+                this.performImmediateAction(this.immediateActionQueue.take());
+
+            }
+
         }
 
         //After the action was performed, return the choice made so that if the user wants to terminate the round we can know it
         return actionSelection.getEnumEntryFromChoice(choice);
+
+    }
+
+    /**
+     * Attempts to perform the immediate action.
+     * Upon success, the last pending immediate action gets cleared and the method return
+     * Otherwise the loop continues
+     * @param type the immediate action type
+     */
+    private void performImmediateAction(ImmediateActionType type) throws NoActionPerformedException, InterruptedException {
+
+
+        this.localMatchController.setLastPendingImmediateAction(type);
+
+        do {
+
+            if (type.getImpl() == ImmediateActionTypeImpl.Choice) {
+
+                ImmediateChoiceAction immediateChoiceAction = null;
+
+                switch (type) {
+
+                    case SelectCouncilPrivilege:
+
+                        Command<CouncilPrivilege> privilegeSelection = new Command<>(CouncilPrivilege.class);
+
+                        String choice = "";
+
+                        Cmd.askFor("Which council privilege would you like?");
+
+                        privilegeSelection.printChoiches();
+
+                        choice = this.waitForActionSelection();
+
+                        while (!privilegeSelection.isValid(choice)) {
+
+                            Cmd.askFor("Which council privilege would you like?");
+
+                            choice = this.waitForActionSelection();
+
+                        }
+
+                        immediateChoiceAction = new ImmediateChoiceAction(type, Integer.getInteger(choice) - 1, this.client.getUsername());
+
+                        break;
+
+                }
+
+                //Send the immediate choice
+                this.client.performAction(immediateChoiceAction);
+
+
+            }
+
+            //Wait for the server to respond
+            this.waitOnMutex(this.connectionMutex);
+
+
+        }
+        while (this.localMatchController.getLastPendingImmediateAction() != null);
+
+
 
     }
 
@@ -584,7 +666,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         Cmd.askFor("Please select where you would like to place your family member");
 
-        Command<BoardSectorType> sectorSelection = new Command<BoardSectorType>(BoardSectorType.class);
+        Command<BoardSectorType> sectorSelection = new Command<>(BoardSectorType.class);
 
         sectorSelection.printChoiches();
 
@@ -597,20 +679,24 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         sectorType = sectorSelection.getEnumEntryFromChoice(choice);
 
-        Cmd.askFor("Please select the placement index [1-4]");
+        if (sectorType.canChoseIndex()) {
 
-        choice = this.inputQueue.take();
-
-        while (!this.isIntegerInRange(choice, 1, 4)) {
-
-            Cmd.forbidden("Invalid input or index out of bounds, try again.");
+            Cmd.askFor("Please select the placement index [1-4]");
 
             choice = this.inputQueue.take();
 
+            while (!this.isIntegerInRange(choice, 1, 4)) {
+
+                Cmd.forbidden("Invalid input or index out of bounds, try again.");
+
+                choice = this.inputQueue.take();
+
+
+            }
+
+            index = Integer.parseInt(choice) - 1;
 
         }
-
-        index = Integer.parseInt(choice) - 1;
 
         Cmd.askFor("Please select the color of the family member you would like to use");
 
@@ -651,20 +737,24 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         additionalServants = Integer.parseInt(choice);
 
-        Cmd.askFor("Enter the cost option");
+        if (sectorType.canChoseIndex() && sectorType != BoardSectorType.Market) {
 
-        Command<SelectionType> costSelection = new Command<SelectionType>(SelectionType.class);
+            Cmd.askFor("Enter the cost option");
 
-        costSelection.printChoiches();
+            Command<SelectionType> costSelection = new Command<SelectionType>(SelectionType.class);
 
-        do {
+            costSelection.printChoiches();
 
-            choice = this.waitForActionSelection();
+            do {
+
+                choice = this.waitForActionSelection();
+
+            }
+            while (!costSelection.isValid(choice));
+
+            costOption = costSelection.getEnumEntryFromChoice(choice);
 
         }
-        while (!costSelection.isValid(choice));
-
-        costOption = costSelection.getEnumEntryFromChoice(choice);
 
         standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption, this.client.getUsername());
 
@@ -810,10 +900,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             Cmd.notify("It is your turn!");
 
-            synchronized (this.roundMutext) {
+            synchronized (this.roundMutex) {
 
                 //Enable the move
-                roundMutext.notify();
+                roundMutex.notify();
 
             }
 
@@ -832,6 +922,16 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         if (player.getUsername().equals(this.client.getUsername())) {
 
             Cmd.notify(message);
+
+            //Add the action to the queue
+            this.immediateActionQueue.add(actionType);
+
+            //Wake up the thread
+            synchronized (this.connectionMutex) {
+
+                this.connectionMutex.notify();
+
+            }
 
         }
         else {
@@ -919,12 +1019,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
 
-        //Notify that the action completed successfully
-        synchronized (this.connectionMutex) {
-
-            this.connectionMutex.notify();
-
-        }
+        this.localMatchController.confirmLastPendingImmediateAction();
 
     }
 

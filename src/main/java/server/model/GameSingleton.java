@@ -2,14 +2,17 @@ package server.model;
 
 import server.model.board.BonusTile;
 import server.model.board.CouncilPalace;
+import server.model.board.CouncilPrivilege;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
 import server.model.card.leader.LeaderCard;
+import server.model.effect.EffectSurplus;
 import server.utility.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Federico on 15/05/2017.
@@ -26,6 +29,7 @@ public class GameSingleton {
     private ArrayList<LeaderCard> leaderCards = new ArrayList<LeaderCard>();
 
     private ArrayList<BonusTile> bonusTiles = new ArrayList<BonusTile>();
+
 
     private GameSingleton() {} //costructor
 
@@ -44,6 +48,7 @@ public class GameSingleton {
                 instance.leaderCards = LeaderCardParser.parse();
 
                 instance.bonusTiles = BonusTilesParser.parse();
+
 
             } catch (IOException e1) {
 

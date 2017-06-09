@@ -12,6 +12,8 @@ public enum CliContext {
     Login,
     Registration,
     Lobby,
-    Match
+    Match,
+    StandardAction,
+    ImmediateAction
 
 }

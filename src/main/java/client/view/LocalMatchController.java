@@ -6,6 +6,7 @@ package client.view;
  */
 
 import exception.NoSuchPlayerException;
+import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.StandardActionType;
 import server.model.Match;
 import server.model.board.Dice;
@@ -28,7 +29,9 @@ public class LocalMatchController {
 
     private boolean matchEnded = false;
 
-    private StandardActionType lastPendingAction;
+    private StandardActionType lastPendingStandardAction;
+
+    private ImmediateActionType lastPendingImmediateAction;
 
     //actions performed by a player on this round
     HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;
@@ -54,7 +57,7 @@ public class LocalMatchController {
 
         this.actionsPerformedOnThisRound.clear();
 
-        this.lastPendingAction = null;
+        this.lastPendingStandardAction = null;
 
         for (StandardActionType action : StandardActionType.values()) {
 
@@ -123,15 +126,15 @@ public class LocalMatchController {
 
     }
 
-    public void setLastPendingAction(StandardActionType action) {
+    public void setLastPendingStandardAction(StandardActionType action) {
 
-        this.lastPendingAction = action;
+        this.lastPendingStandardAction = action;
 
     }
 
     public void confirmLastPendingAction() {
 
-        this.setActionPerformed(this.lastPendingAction, true);
+        this.setActionPerformed(this.lastPendingStandardAction, true);
 
     }
 
@@ -159,5 +162,21 @@ public class LocalMatchController {
 
     public Match getMatch() {
         return match;
+    }
+
+    public void confirmLastPendingImmediateAction() {
+        this.lastPendingImmediateAction = null;
+    }
+
+    public void setLastPendingImmediateAction(ImmediateActionType lastPendingImmediateAction) {
+        this.lastPendingImmediateAction = lastPendingImmediateAction;
+    }
+
+    public StandardActionType getLastPendingStandardAction() {
+        return lastPendingStandardAction;
+    }
+
+    public ImmediateActionType getLastPendingImmediateAction() {
+        return lastPendingImmediateAction;
     }
 }

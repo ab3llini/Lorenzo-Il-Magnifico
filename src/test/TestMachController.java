@@ -1,4 +1,5 @@
 import exception.ActionException;
+import exception.NoActionPerformedException;
 import exception.SixCardsLimitReachedException;
 import netobject.action.BoardSectorType;
 import netobject.action.SelectionType;
@@ -33,7 +34,7 @@ public class TestMachController {
     Player player1 = new Player("test");
 
     @Test
-    public void applyEffectSurplusTest() {
+    public void applyEffectSurplusTest() throws NoActionPerformedException {
 
         ArrayList<Resource> resources = new ArrayList<Resource>();
         resources.add(new Resource(ResourceType.Coins,3));
@@ -61,7 +62,7 @@ public class TestMachController {
     }
 
     @Test
-    public void applyImmediateEffectTest() throws IOException, URISyntaxException, ActionException {
+    public void applyImmediateEffectTest() throws IOException, URISyntaxException, ActionException, NoActionPerformedException{
 
         ArrayList<DvptCard> mazzo = DvptCardParser.parse();
 
@@ -161,7 +162,7 @@ public class TestMachController {
     }
 
     @Test
-    public void applyHarvestChainTest() throws IOException, URISyntaxException, SixCardsLimitReachedException {
+    public void applyHarvestChainTest() throws IOException, URISyntaxException, SixCardsLimitReachedException, NoActionPerformedException {
 
         ArrayList<DvptCard> cards = DvptCardParser.parse();
 
@@ -217,7 +218,7 @@ public class TestMachController {
     }
 
     @Test
-    public void placeFamilyMemberTest() throws IOException, URISyntaxException {
+    public void placeFamilyMemberTest() throws IOException, URISyntaxException, NoActionPerformedException {
 
         ArrayList<DvptCard> mazzo = DvptCardParser.parse();
         ArrayList<BonusTile> tiles = BonusTilesParser.parse();
@@ -306,7 +307,7 @@ public class TestMachController {
     }
 
     @Test
-    public void applyProductionChainTest() throws IOException, URISyntaxException, SixCardsLimitReachedException {
+    public void applyProductionChainTest() throws IOException, URISyntaxException, SixCardsLimitReachedException,NoActionPerformedException {
 
        player1.getPersonalBoard().setBonusTile(GameSingleton.getInstance().getBonusTiles().get(4));
        player1.getPersonalBoard().addTerritoryCard((TerritoryDvptCard)GameSingleton.getInstance().getSpecificDvptCard(0));

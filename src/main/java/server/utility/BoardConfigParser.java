@@ -224,6 +224,7 @@ public class BoardConfigParser {
     }
 
     public static ArrayList<EffectSurplus> getCouncilPrivilegeOptions(){
+
         ArrayList<EffectSurplus> councilPrivilegeOptions = new ArrayList<EffectSurplus>();
 
         JsonArray optionArray = BoardConfigParser.getBoardConfig().getAsJsonArray("councilPrivilegeOptions");
