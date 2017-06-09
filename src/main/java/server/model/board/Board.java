@@ -68,7 +68,6 @@ public class Board implements Serializable {
         return ventureTower;
     }
 
-
     public ArrayList<TowerSlot> getTower(DvptCardType towerType) {
 
         if (towerType == DvptCardType.building) {
@@ -155,10 +154,14 @@ public class Board implements Serializable {
      * @param banCards
      */
     public void setBanCardOnCathedral(ArrayList<BanCard> banCards) {
+
         Period period = Period.first;
+
         for (BanCard banCard : banCards) {
+
             this.cathedral.setBanCard(period, banCard);
             period = next(period);
+
         }
     }
 
@@ -238,7 +241,9 @@ public class Board implements Serializable {
         ArrayList<Player> players = new ArrayList<Player>();
 
         for (TowerSlot towerSlot : this.characterTower) {
+
             if (towerSlot.isOccupied()) {
+
                 players.add(towerSlot.getFamilyMember().getPlayer());
             }
         }
@@ -253,7 +258,9 @@ public class Board implements Serializable {
         for (TowerSlot towerSlot : this.ventureTower) {
 
             if (towerSlot.isOccupied()) {
+
                 players.add(towerSlot.getFamilyMember().getPlayer());
+
             }
         }
         return players;
@@ -266,7 +273,9 @@ public class Board implements Serializable {
         for (TowerSlot towerSlot : this.territoryTower) {
 
             if (towerSlot.isOccupied()) {
+
                 players.add(towerSlot.getFamilyMember().getPlayer());
+
             }
         }
         return players;

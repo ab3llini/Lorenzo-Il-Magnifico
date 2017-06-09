@@ -504,21 +504,23 @@ public class TestMachController {
     }
 
     @Test
-    public void calculateFinalScoreTest() {
+    public void calculateFinalScoreTest() throws SixCardsLimitReachedException, IOException, URISyntaxException {
 
         ArrayList<Player> players = new ArrayList<>();
-
+        ArrayList<DvptCard> cards = DvptCardParser.parse();
         players.add(new Player("testA"));
         players.add(new Player("testB"));
+
+        MatchController mc = new MatchController(players,0);
 
         players.get(0).setMilitaryPoints(10);
         players.get(1).setMilitaryPoints(11);
 
-        MatchController mc = new MatchController(players,0);
+        players.get(0).getPersonalBoard().addVentureCard((VentureDvptCard) cards.get(85));
 
         LinkedHashMap<Player,Integer> finalScore =mc.calculatesFinalScore();
 
-        assertEquals(2,(int)finalScore.get(players.get(0)));
+        assertEquals(2 + cards.get(85).getPermanentEffect().getvPoints(),(int)finalScore.get(players.get(0)));
         assertEquals(5,(int)finalScore.get(players.get(1)));
 
     }
