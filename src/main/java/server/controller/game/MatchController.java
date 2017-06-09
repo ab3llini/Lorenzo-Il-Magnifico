@@ -669,6 +669,9 @@ public class MatchController implements Runnable {
 
         int choose = 0;
 
+        if(discount.size() == 0)
+            return costo;
+
         if(discount.size()>1){
             System.out.println("chiedo all'utente cosa vuole tra: "+discount.get(0).getDiscount().get(0).getType()+" "+discount.get(1).getDiscount().get(0).getType());
         }

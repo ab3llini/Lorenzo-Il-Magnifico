@@ -42,7 +42,7 @@ public class TestMachController {
         resources.add(new Resource(ResourceType.Stones,5));
 
         ArrayList<Point> points = new ArrayList<Point>();
-        points.add(new Point(PointType.Military,5,new Multiplier(null,null,null)));
+        points.add(new Point(PointType.Military,5,new Multiplier(null,null,(float)0)));
         points.add(new Point(PointType.Faith,6,null));
         points.add(new Point(PointType.Victory,10,null));
 
