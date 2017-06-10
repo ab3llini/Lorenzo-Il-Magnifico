@@ -317,7 +317,6 @@ public class Board implements Serializable {
     public String toString() {
 
         String board = "";
-
         board += "__________________________________________________________________________________________\n";
         board += ("|                                                                                        |\n");
         board += ("| ");
@@ -334,41 +333,176 @@ public class Board implements Serializable {
 
         board += ("|   ______                ______                ______                ______             |\n");
 
+
         board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
 
-        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+
+        if (getTerritoryTower().get(3).getDvptCard() != null)
+        {
+
+            board += "   " + getTerritoryTower().get(3).getDvptCard().getId() + ". " + getTerritoryTower().get(3).getDvptCard().getName();
+
+        }
+        board += " Imm: " + printSurplus(getTerritoryTower().get(3).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
 
         board += printTowerLine(3);
 
-        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
+        if (getTerritoryTower().get(2).getDvptCard() != null)
+        {
 
-        board += ("|   |____|                |____|                |____|                |____|             |\n");
+            board += "   " + getTerritoryTower().get(2).getDvptCard().getId() + ". " + getTerritoryTower().get(2).getDvptCard().getName();
 
-        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
+        }
 
-        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
+        board += " Imm: " + printSurplus(getTerritoryTower().get(2).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+
+        if (getTerritoryTower().get(1).getDvptCard() != null)
+        {
+
+            board += "   " + getTerritoryTower().get(1).getDvptCard().getId() + ". " + getTerritoryTower().get(1).getDvptCard().getName();
+
+        }
+
+        board += " Imm: " + printSurplus(getTerritoryTower().get(1).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+        board += ("|   |____|                |____|                |____|                |____|             |" );
+
+        if (getTerritoryTower().get(0).getDvptCard() != null)
+        {
+
+            board += "   " + getTerritoryTower().get(0).getDvptCard().getId() + ". " + getTerritoryTower().get(0).getDvptCard().getName();
+
+        }
+        board += " Imm: " + printSurplus(getTerritoryTower().get(0).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |");
+
+        if (getCharacterTower().get(3).getDvptCard() != null)
+        {
+
+            board += "   " + getCharacterTower().get(3).getDvptCard().getId() + ". " + getBuildingTower().get(3).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(3).getDvptCard());
+
+        }
+        board += " Imm: " + printSurplus(getCharacterTower().get(3).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+
+        if (getCharacterTower().get(2).getDvptCard() != null)
+        {
+
+            board += "   " + getCharacterTower().get(2).getDvptCard().getId() + ". " + getBuildingTower().get(2).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(2).getDvptCard());
+
+        }
+        board += " Imm: " + printSurplus(getCharacterTower().get(2).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
 
         board +=  printTowerLine(2);
 
-        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
+        if (getCharacterTower().get(1).getDvptCard() != null)
+        {
 
-        board += ("|   |____|                |____|                |____|                |____|             |\n");
+            board += "   " + getCharacterTower().get(1).getDvptCard().getId() + ". " + getBuildingTower().get(1).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(1).getDvptCard());
 
-        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
+        }
+        board += " Imm: " + printSurplus(getCharacterTower().get(1).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
 
-        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
+
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
+
+        if (getCharacterTower().get(0).getDvptCard() != null)
+        {
+
+            board += "   " + getCharacterTower().get(0).getDvptCard().getId() + ". " + getCharacterTower().get(0).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(0).getDvptCard());
+
+        }
+        board += " Imm: " + printSurplus(getCharacterTower().get(0).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+        board += ("|   |____|                |____|                |____|                |____|             |");
+
+        if (getBuildingTower().get(3).getDvptCard() != null)
+        {
+
+            board += "   " + getBuildingTower().get(3).getDvptCard().getId() + ". " + getBuildingTower().get(3).getDvptCard().getName() +  "   Cost:  " + printDvptCost(getBuildingTower().get(3).getDvptCard());
+
+        }
+        board += " Imm: " + printSurplus(getBuildingTower().get(3).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |");
+
+        if (getBuildingTower().get(2).getDvptCard() != null)
+        {
+
+            board += "   " + getBuildingTower().get(2).getDvptCard().getId() + ". " + getBuildingTower().get(2).getDvptCard().getName() +  "   Cost:  " + printDvptCost(getBuildingTower().get(2).getDvptCard());
+
+        }
+        board += " Imm: " + printSurplus(getBuildingTower().get(2).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+        {
+
+            board += "   " + getBuildingTower().get(1).getDvptCard().getId() + ". " + getBuildingTower().get(1).getDvptCard().getName() +  "   Cost:  " + printDvptCost(getBuildingTower().get(1).getDvptCard());
+
+        }
+
+        board += " Imm: " + printSurplus(getBuildingTower().get(1).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
 
         board += printTowerLine(1);
 
-        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
+        if (getBuildingTower().get(0).getDvptCard() != null)
+        {
 
-        board += ("|   |____|                |____|                |____|                |____|             |\n");
+            board += "   " + getBuildingTower().get(0).getDvptCard().getId() + ". " + getBuildingTower().get(0).getDvptCard().getName() + "   Cost:  " + printDvptCost(getBuildingTower().get(0).getDvptCard());
 
-        board += ("|   |    |___             |    |___             |    |___             |    |___          |\n");
+        }
+        board += " Imm: " + printSurplus(getBuildingTower().get(0).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
 
-        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |\n");
+        board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
 
-        board += printTowerLine(0);
+        if (getVentureTower().get(3).getDvptCard() != null)
+
+        {
+            board += "   " + getVentureTower().get(3).getDvptCard().getId() + ". " + getVentureTower().get(3).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(3).getDvptCard()) ;
+
+        }
+        board += " Imm: " + printSurplus(getVentureTower().get(3).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+        board += ("|   |____|                |____|                |____|                |____|             |");
+
+
+
+        if (getVentureTower().get(2).getDvptCard() != null)
+        {
+
+            board += "   " + getVentureTower().get(2).getDvptCard().getId() + ". " + getVentureTower().get(2).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(2).getDvptCard());
+
+        }
+
+
+        board += " Imm: " + printSurplus(getVentureTower().get(2).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |");;
+
+        if (getVentureTower().get(1).getDvptCard() != null)
+        {
+
+            board += "   " + getVentureTower().get(1).getDvptCard().getId() + ". " + getVentureTower().get(1).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(1).getDvptCard());
+
+        }
+        board += " Imm: " + printSurplus(getVentureTower().get(1).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+        board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
+
+        if (getVentureTower().get(0).getDvptCard() != null)
+        {
+
+            board += "   " + getVentureTower().get(0).getDvptCard().getId() + ". " + getVentureTower().get(0).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(0).getDvptCard());
+
+        }
+        board += " Imm: " + printSurplus(getVentureTower().get(0).getDvptCard().getImmediateEffect().getSurplus()) + "\n";
+
+
+        board += printTowerLine(0) + "\n";
 
         board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |\n");
 
@@ -445,6 +579,23 @@ public class Board implements Serializable {
         return board;
     }
 
+
+    public String printDvptCost(DvptCard card) {
+
+        String board = new String();
+        for(Cost cost: card.getCost()){
+            if (cost.getResources() != null) {
+                for (Resource resource : cost.getResources())
+                    board += printSingleResource(resource);
+            }
+            if (cost.getMilitary() != null) {
+                board += printMilitaryCost(cost.getMilitary());
+            }
+            board += " ";
+        }
+        return board;
+    }
+
     /** This method prints a line on the towers according to the different floor of them **/
 
     public String printTowerLine(Integer line) {
@@ -457,7 +608,7 @@ public class Board implements Serializable {
 
         board += " |            | " + printCardId(this.getBuildingTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getBuildingTower().get(line).getFamilyMember());
 
-        board += " |            | " + printCardId(this.getVentureTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getVentureTower().get(line).getFamilyMember()) + " |         |\n";
+        board += " |            | " + printCardId(this.getVentureTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getVentureTower().get(line).getFamilyMember()) + " |         |";
 
         return board;
 
@@ -533,7 +684,6 @@ public class Board implements Serializable {
     public String printCouncilPalace() {
         String board = new String();
         board += ("|     |    |    |    |                                      |");
-
         for(FamilyMember member : getCouncilPalace().getPlaces()) {
             board += (" ");
             board += printFamilyMember(member);
@@ -555,12 +705,12 @@ public class Board implements Serializable {
         board += ("|                                     ");
 
         for(int i=0; i<2; i++){
-            board += printMarketBonus(getMarket().getMarketPlaces().get(i).getEffectSurplus(),i);
+            board += printSurplus(getMarket().getMarketPlaces().get(i).getEffectSurplus());
             board += "         ";
         }
 
         for(int i=2; i<4; i++){
-            board += printMarketBonus(getMarket().getMarketPlaces().get(i).getEffectSurplus(),i);
+            board += printSurplus(getMarket().getMarketPlaces().get(i).getEffectSurplus());
             board += "       ";
         }
 
@@ -569,33 +719,73 @@ public class Board implements Serializable {
         return board;
     }
 
-    public String printMarketBonus(EffectSurplus effectSurplus, Integer index) {
+    public String printSingleResource (Resource resource){
+        String board = new String();
+            if (resource.getType() == ResourceType.Coins)
+                board += resource.getAmount() + "" + UnicodeChars.Coins + " ";
+            if (resource.getType() == ResourceType.Servants)
+                board += resource.getAmount() + "" + UnicodeChars.Servants + " ";
+            if (resource.getType() == ResourceType.Wood)
+                board += resource.getAmount() + "" + UnicodeChars.Wood + " ";
+            if (resource.getType() == ResourceType.Stones)
+                board += resource.getAmount() + "" + UnicodeChars.Stones + " ";
+        return board;
+    }
+
+    public String printMilitaryCost (MilitaryCost militaryCost) {
+        String board = new String();
+
+        if (militaryCost != null && militaryCost.getRequired() != 0)
+            board += UnicodeChars.MilitaryPoints + " " + militaryCost.getRequired() + "/" + militaryCost.getMalus() + " ";
+
+        else
+            board += "";
+
+        return board;
+    }
+
+    public String printSurplus(EffectSurplus effectSurplus) {
         String bonus = new String();
+
         if (effectSurplus.getResources() != null) {
-            for (Resource resource : getMarket().getMarketPlaces().get(index).getEffectSurplus().getResources()) {
+
+            for (Resource resource : effectSurplus.getResources()) {
+
                 if (resource.getType() == ResourceType.Coins)
                     bonus += resource.getAmount() + "" + UnicodeChars.Coins + " ";
+
                 if (resource.getType() == ResourceType.Servants)
                     bonus += resource.getAmount() + "" + UnicodeChars.Servants+ " ";
+
                 if (resource.getType() == ResourceType.Wood)
                     bonus += resource.getAmount() + "" + UnicodeChars.Wood + " ";
+
                 if (resource.getType() == ResourceType.Stones)
                     bonus += resource.getAmount() + "" + UnicodeChars.Stones + " ";
+
             }
+
         }
+
         if (effectSurplus.getPoints() != null) {
-            for (Point point : getMarket().getMarketPlaces().get(index).getEffectSurplus().getPoints()) {
+
+            for (Point point : effectSurplus.getPoints()) {
+
                 if (point.getType() == PointType.Victory)
                     bonus += point.getAmount() + " " + UnicodeChars.VictoryPoints + " ";
+
                 if (point.getType() == PointType.Military)
                     bonus += point.getAmount() + " " + UnicodeChars.MilitaryPoints + " ";
+
                 if (point.getType() == PointType.Faith)
                     bonus += point.getAmount() + " " + UnicodeChars.FaithPoints + " ";
+
             }
+
         }
 
         if (effectSurplus.getCouncil() != 0) {
-            bonus += getMarket().getMarketPlaces().get(index).getEffectSurplus().getCouncil() + " " + UnicodeChars.Council;
+            bonus += effectSurplus.getCouncil() + " " + UnicodeChars.Council;
         }
 
         return bonus;
