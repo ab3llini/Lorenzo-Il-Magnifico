@@ -1,7 +1,5 @@
 package server.model.board;
 
-import client.view.cmd.Command;
-
 import java.io.Serializable;
 
 /**

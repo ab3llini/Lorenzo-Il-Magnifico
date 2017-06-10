@@ -1100,15 +1100,20 @@ public class MatchController implements Runnable {
         if(council > 0) {
 
             //We have one or more privileges available and must ask the player to chose one
-            int[] selections = new int[council];
-
+            ArrayList<Integer> selections = new ArrayList<>();
 
             for (int i = 0; i < council; i++) {
 
                 ImmediateChoiceAction choice = null;
 
                 //Foreach council privilege available, ask to chose
-                do {
+                while (choice == null || selections.contains(choice.getSelection())) {
+
+                    if (choice != null && selections.contains(choice.getSelection())) {
+
+                        this.remotePlayerMap.get(player).notifyActionRefused("Each privilege must be different");
+
+                    }
 
                     //1 - Ask
                     this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCouncilPrivilege, this.currentPlayer, "Select a council privilege");
@@ -1117,6 +1122,9 @@ public class MatchController implements Runnable {
                     try {
 
                         choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                        this.notifyAllActionPerformed(player, choice, "Performed an immediate action");
+
 
                     } catch (NoActionPerformedException e) {
 
@@ -1133,10 +1141,10 @@ public class MatchController implements Runnable {
                     }
 
                 }
-                while (this.contains(selections, choice.getSelection()));
 
                 //Add the selection
-                selections[i] = choice.getSelection();
+                selections.add(choice.getSelection());
+
 
             }
 

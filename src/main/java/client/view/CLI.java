@@ -18,6 +18,7 @@ import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
+import netobject.action.ActionType;
 import netobject.action.SelectionType;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.immediate.ImmediateActionTypeImpl;
@@ -37,6 +38,8 @@ import server.model.board.CouncilPrivilege;
 import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
+import server.model.effect.EffectSurplus;
+import server.utility.BoardConfigParser;
 import singleton.GameConfig;
 
 import java.util.ArrayList;
@@ -168,7 +171,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         String hostIP;
         String connection;
 
-        Command<ClientType> clientCmd = new Command<ClientType>(ClientType.class);
+        EnumCommand<ClientType> clientCmd = new EnumCommand<ClientType>(ClientType.class);
 
         //Request the IP
         Cmd.askFor("Please enter the IP address of the host");
@@ -239,7 +242,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Switch context
         this.ctx = CliContext.Authentication;
 
-        Command<AuthType> authCmd = new Command<AuthType>(AuthType.class);
+        EnumCommand<AuthType> authCmd = new EnumCommand<AuthType>(AuthType.class);
 
         //Request the IP
         Cmd.askFor("Please select how to authenticate");
@@ -485,7 +488,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         Cmd.askFor("Which action would you like to perform ?");
 
         //Create a command to show the possible actions
-        Command<StandardActionType> actionSelection = new Command<StandardActionType>(StandardActionType.class);
+        EnumCommand<StandardActionType> actionSelection = new EnumCommand<StandardActionType>(StandardActionType.class);
 
         //Show the choices
         actionSelection.printChoiches();
@@ -550,7 +553,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
         else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
 
-            Cmd.notify("Command not available yet.");
+            Cmd.notify("EnumCommand not available yet.");
 
         }
         else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
@@ -605,9 +608,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                     case SelectCouncilPrivilege:
 
-                        Command<CouncilPrivilege> privilegeSelection = new Command<>(CouncilPrivilege.class);
+                        ArrayCommand<EffectSurplus> privilegeSelection = new ArrayCommand<>(BoardConfigParser.getCouncilPrivilegeOptions());
 
-                        String choice = "";
+                        String choice;
 
                         Cmd.askFor("Which council privilege would you like?");
 
@@ -619,11 +622,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                             Cmd.askFor("Which council privilege would you like?");
 
+                            privilegeSelection.printChoiches();
+
                             choice = this.waitForActionSelection();
 
                         }
 
-                        immediateChoiceAction = new ImmediateChoiceAction(type, Integer.getInteger(choice) - 1, this.client.getUsername());
+                        immediateChoiceAction = new ImmediateChoiceAction(type, Integer.parseInt(choice) - 1, this.client.getUsername());
 
                         break;
 
@@ -666,7 +671,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         Cmd.askFor("Please select where you would like to place your family member");
 
-        Command<BoardSectorType> sectorSelection = new Command<>(BoardSectorType.class);
+        EnumCommand<BoardSectorType> sectorSelection = new EnumCommand<>(BoardSectorType.class);
 
         sectorSelection.printChoiches();
 
@@ -700,7 +705,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         Cmd.askFor("Please select the color of the family member you would like to use");
 
-        Command<ColorType> colorSelection = new Command<ColorType>(ColorType.class);
+        EnumCommand<ColorType> colorSelection = new EnumCommand<ColorType>(ColorType.class);
 
         colorSelection.printChoiches();
 
@@ -741,7 +746,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             Cmd.askFor("Enter the cost option");
 
-            Command<SelectionType> costSelection = new Command<SelectionType>(SelectionType.class);
+            EnumCommand<SelectionType> costSelection = new EnumCommand<SelectionType>(SelectionType.class);
 
             costSelection.printChoiches();
 
@@ -1005,7 +1010,16 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             synchronized (this.connectionMutex) {
 
                 //Confirm last action
-                this.localMatchController.confirmLastPendingAction();
+                if (action.getActionType() == ActionType.Standard) {
+
+                    this.localMatchController.confirmLastPendingAction();
+
+                }
+                else {
+
+                    this.localMatchController.confirmLastPendingImmediateAction();
+
+                }
 
                 //Enable the move
                 connectionMutex.notify();
