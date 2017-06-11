@@ -1244,11 +1244,9 @@ public class MatchController implements Runnable {
 
     /**this method actives a leader effect, activable once a round**/
 
-    public void activateOnceARoundLeaderCard (LeaderCardActivationAction action, Player player) {
+    public void activateOnceARoundLeaderCard (LeaderOnceARoundActivationAction action, Player player) {
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
-
-        if(player.hasEnoughLeaderRequirements(action.getLeaderCardIndex())) { //verify the requirements to activate Leader Card
 
             if (leaderCard.getLeaderEffect().getOnceARound() != null) {
 
@@ -1274,10 +1272,16 @@ public class MatchController implements Runnable {
                     }
                 }
 
+                if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect()) {
+                    try {
+                        applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production));
+                    } catch (NoActionPerformedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
         }
-    }
 
     /** this method applies the Production Chain
      * this character chain consists in the activation of all the building card permanent effect**/
