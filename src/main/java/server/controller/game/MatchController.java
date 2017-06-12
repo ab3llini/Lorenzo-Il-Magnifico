@@ -791,11 +791,12 @@ public class MatchController implements Runnable {
         if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
             EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
+
         }
 
         //if boardSectorType is Market we place the family member in the correct market place (from index 0 to index 3)
         //once positioned the market place give to the player an effectSurplus
-        if (action.getActionTarget() == BoardSectorType.Market) {
+        else if (action.getActionTarget() == BoardSectorType.Market) {
 
             if(noMarket)
                 throw new NoMarketException("You can't place any family member in market because of the Special BanCard NoMarketMalus");
@@ -808,7 +809,7 @@ public class MatchController implements Runnable {
         //if boardSectorType is SingleHarvestPlace we place the family member in the single harvest place of the harvest area
         //once positioned the single harvest place give to the player an effectSurplus
         //the harvestChain (activation of all the permanent effect of territory cards that has harvest type) is also started
-        if(action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
+        else if(action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
 
             EffectSurplus surplus = boardController.placeOnSingleHarvestPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
@@ -819,7 +820,7 @@ public class MatchController implements Runnable {
         //if boardSectorType is CompositeHarvestPlace we place the family member in the composite harvest place of the harvest area
         //once positioned the composite harvest place give to the player an effectSurplus
         //the harvestChain (activation of all the permanent effect of territory cards that has harvest type) is also started with a malus on the activation force
-        if(action.getActionTarget() == BoardSectorType.CompositeHarvestPlace) {
+        else if(action.getActionTarget() == BoardSectorType.CompositeHarvestPlace) {
 
             EffectSurplus surplus = boardController.placeOnCompositeHarvestPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
@@ -843,7 +844,7 @@ public class MatchController implements Runnable {
         //if boardSectorType is CompositeProductionPlace we place the family member in the composite production place of the production area
         //once positioned the composite production place give to the player an effectSurplus
         //the productionChain (activation of all the permanent effect of building cards that has production type) is also started with a malus on the activation force
-        if(action.getActionTarget() == BoardSectorType.CompositeProductionPlace) {
+        else if(action.getActionTarget() == BoardSectorType.CompositeProductionPlace) {
 
             EffectSurplus surplus = boardController.placeOnCompositeProductionPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
@@ -855,7 +856,7 @@ public class MatchController implements Runnable {
 
         //if boardSectorType is a tower sector we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
-        if (action.getActionTarget() == BoardSectorType.VentureTower || action.getActionTarget() == BoardSectorType.CharacterTower || action.getActionTarget() == BoardSectorType.BuildingTower || action.getActionTarget() == BoardSectorType.TerritoryTower) {
+        else if (action.getActionTarget() == BoardSectorType.VentureTower || action.getActionTarget() == BoardSectorType.CharacterTower || action.getActionTarget() == BoardSectorType.BuildingTower || action.getActionTarget() == BoardSectorType.TerritoryTower) {
 
             //get tower type from board sector
             DvptCardType towerType = getTowerType(action.getActionTarget());
@@ -1038,7 +1039,7 @@ public class MatchController implements Runnable {
                 throw new PlayerAlreadyOccupiedTowerException("The player already has a family member in this tower");
 
             //if the tower is already occupied the player have to pay 3 coins
-            if (this.match.getBoard().getPlayersInTower(towerType).size() > 0)
+            if (this.match.getBoard().getPlayersInTower(towerType).size() > 0 && !player.isPermanentLeaderActive(PermanentLeaderEffectType.filippoEffect))
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
@@ -1059,7 +1060,7 @@ public class MatchController implements Runnable {
         }
 
         //if boardSectorType is harvest the harvestChain (activation of all the permanent effect of building cards that has production type) started
-        if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
+        else if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
 
             //we have to subtract a force malus from activation force
             applyProductionChain(player,action.getAdditionalServants());
@@ -1067,7 +1068,7 @@ public class MatchController implements Runnable {
         }
 
         //if boardSectorType is harvest the productionChain (activation of all the permanent effect of territory cards that has harvest type) started
-        if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
+        else if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
 
             //we have to subtract a force malus from activation force
             applyHarvestChain(player,action.getAdditionalServants());
@@ -1101,6 +1102,8 @@ public class MatchController implements Runnable {
 
             //We have one or more privileges available and must ask the player to chose one
             ArrayList<Integer> selections = new ArrayList<>();
+
+            ArrayList<EffectSurplus> councilPrivileges = BoardConfigParser.getCouncilPrivilegeOptions();
 
             for (int i = 0; i < council; i++) {
 
@@ -1148,7 +1151,14 @@ public class MatchController implements Runnable {
 
             }
 
-            //TODO: Here we have all the selections, go ahead and add the resources to the player
+            //Add to the player the correct resource
+            for (Integer select : selections) {
+
+                player.addResources(councilPrivileges.get(select).getResources());
+
+                player.addPoints(councilPrivileges.get(select).getPoints());
+
+            }
 
         }
 
@@ -1578,7 +1588,7 @@ public class MatchController implements Runnable {
             }
 
             //if a permanent effect is relative to production type, check whether the Action target is CompositeProductionPlace or SingleProductionPlace and modify the Action
-            if(permanentEffectAction.getTarget() == server.model.effect.ActionType.production) {
+            else if(permanentEffectAction.getTarget() == server.model.effect.ActionType.production) {
 
                 if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace || action.getActionTarget() == BoardSectorType.SingleProductionPlace) {
                     action.increaseBonus(permanentEffectAction.getForceBonus());
@@ -1587,7 +1597,7 @@ public class MatchController implements Runnable {
 
             //if a permanent effect is relative to cardtype, check the DvptCardType type and modify the Action
 
-            if(permanentEffectAction.getTarget() == ActionType.card){
+            else if(permanentEffectAction.getTarget() == ActionType.card){
 
                 if(permanentEffectAction.getType() == getTowerType(action.getActionTarget()))
                     action.increaseBonus(permanentEffectAction.getForceBonus());
@@ -1596,7 +1606,7 @@ public class MatchController implements Runnable {
             }
 
             //if the effect is the preacher penality forbid the Action if the placement index is > 1
-            if(card.getPermanentEffect().isPenality()){
+            else if(card.getPermanentEffect().isPenality()){
                 if (action.getPlacementIndex()>1) {
                     throw new PreacherEffectException("Preacher's permanent effect forbid it");
                 }
@@ -1642,14 +1652,14 @@ public class MatchController implements Runnable {
         if(boardSectorType == BoardSectorType.BuildingTower)
             return DvptCardType.building;
 
-        if(boardSectorType == BoardSectorType.CharacterTower)
+        else if(boardSectorType == BoardSectorType.CharacterTower)
             return DvptCardType.character;
 
-        if(boardSectorType == BoardSectorType.TerritoryTower)
+        else if(boardSectorType == BoardSectorType.TerritoryTower)
             return DvptCardType.territory;
 
-
-        return DvptCardType.venture;
+        else
+            return DvptCardType.venture;
     }
 
     public DvptCardType getTowerType(ImmediateBoardSectorType boardSectorType){
@@ -1657,14 +1667,15 @@ public class MatchController implements Runnable {
         if(boardSectorType == ImmediateBoardSectorType.BuildingTower)
             return DvptCardType.building;
 
-        if(boardSectorType == ImmediateBoardSectorType.CharacterTower)
+        else if(boardSectorType == ImmediateBoardSectorType.CharacterTower)
             return DvptCardType.character;
 
-        if(boardSectorType == ImmediateBoardSectorType.TerritoryTower)
+        else if(boardSectorType == ImmediateBoardSectorType.TerritoryTower)
             return DvptCardType.territory;
 
 
-        return DvptCardType.venture;
+        else
+            return DvptCardType.venture;
     }
 
     public BoardController getBoardController() {
