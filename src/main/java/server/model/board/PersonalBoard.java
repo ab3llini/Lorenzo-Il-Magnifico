@@ -1,7 +1,11 @@
 package server.model.board;
 
 import exception.SixCardsLimitReachedException;
+import logger.AnsiColors;
+import server.model.GameSingleton;
 import server.model.card.developement.*;
+import server.utility.BoardConfigParser;
+import server.utility.UnicodeChars;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -113,6 +117,166 @@ public class PersonalBoard implements Serializable {
                 addVentureCard(((VentureDvptCard) card));
         }
 
+    }
+
+    @Override
+    public String toString(){
+        String pBoard = new String();
+        pBoard += ("________________________________________________\n");
+
+        pBoard += ("|                                              |   \n");
+
+        pBoard += ("| " + AnsiColors.ANSI_YELLOW + "BUILDING CARDS" + "                           " + AnsiColors.ANSI_RESET);
+        pBoard += "    |   "+ AnsiColors.ANSI_PURPLE + "VENTURE CARDS" + AnsiColors.ANSI_RESET + "\n";
+
+        pBoard += ("|          _______________________________     |   ");
+
+        for(VentureDvptCard card : ventureCards)
+            pBoard += ("_____");
+
+        pBoard += "\n";
+
+        pBoard += ("|          |    |    |    |    |    |    |     |   ");
+
+        for(VentureDvptCard card : ventureCards)
+            pBoard += ("|    ");
+
+        if(!ventureCards.isEmpty())
+            pBoard += "|";
+
+        pBoard += "\n";
+
+        pBoard += ("|          |    |    |    |    |    |    |     |   ");
+
+        for(VentureDvptCard card : ventureCards)
+            pBoard += ("|    ");
+
+        if(!ventureCards.isEmpty())
+            pBoard += "|";
+
+        pBoard += "\n";
+
+        pBoard += ("|          ");
+
+        for(int i=0; i<6; i++) {
+            pBoard += "| ";
+
+            if (i< buildingCards.size())
+                pBoard += Board.printCardId(getBuildingCards().get(i));
+
+            else
+                pBoard += "  ";
+
+            pBoard += " ";
+        }
+
+        pBoard += "|     |   ";
+
+        for(VentureDvptCard card : ventureCards)
+            pBoard += ("| " + Board.printCardId(card)+ " ");
+
+        if(!ventureCards.isEmpty())
+            pBoard += "|";
+        pBoard += "\n";
+
+        pBoard += ("|          |    |    |    |    |    |    |     |   ");
+
+        for(VentureDvptCard card : ventureCards)
+            pBoard += ("|    ");
+
+        if(!ventureCards.isEmpty())
+            pBoard += "|";
+
+        pBoard += "\n";
+
+        pBoard += ("|          |____|____|____|____|____|____|     |   ");
+
+        for(VentureDvptCard card : ventureCards)
+            pBoard += ("|____");
+
+        if(!ventureCards.isEmpty())
+            pBoard += "|";
+        pBoard += "\n";
+
+        pBoard += ("|                                              |   \n");
+
+        pBoard += ("| " + AnsiColors.ANSI_GREEN + "TERRITORY CARDS" + "                          " + AnsiColors.ANSI_RESET);
+        pBoard += "    |   "+ AnsiColors.ANSI_BLUE + "CHARACTER CARDS" + AnsiColors.ANSI_RESET + "\n";
+
+        pBoard += ("|                     " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(3) + "  " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(4) + " " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(5) + " " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(6)+ "      |\n" );
+
+        pBoard += ("|          _______________________________     |   ");
+
+        for(CharacterDvptCard card : characterCards)
+            pBoard += ("_____");
+
+        pBoard += "\n";
+
+        pBoard += ("|          |    |    |    |    |    |    |     |   ");
+
+        for(CharacterDvptCard card : characterCards)
+            pBoard += ("|    ");
+
+        if(!characterCards.isEmpty())
+            pBoard += "|";
+
+        pBoard += "\n";
+
+        pBoard += ("|          |    |    |    |    |    |    |     |   ");
+
+        for(CharacterDvptCard card : characterCards)
+            pBoard += ("|    ");
+
+        if(!characterCards.isEmpty())
+            pBoard += "|";
+
+        pBoard += "\n";
+
+        pBoard += ("|          ");
+
+        for(int i=0; i<6; i++) {
+            pBoard += "| ";
+
+            if (i< territoryCards.size())
+                pBoard += Board.printCardId(getTerritoryCards().get(i));
+
+            else
+                pBoard += "  ";
+
+            pBoard += " ";
+        }
+
+        pBoard += "|     |   ";
+
+        for(CharacterDvptCard card : characterCards)
+            pBoard += ("| " + Board.printCardId(card)+ " ");
+
+        if(!characterCards.isEmpty())
+            pBoard += "|";
+
+        pBoard += "\n";
+
+        pBoard += ("|          |    |    |    |    |    |    |     |   ");
+
+        for(CharacterDvptCard card : characterCards)
+            pBoard += ("|    ");
+
+        if(!characterCards.isEmpty())
+            pBoard += "|";
+        pBoard += "\n";
+
+        pBoard += ("|          |____|____|____|____|____|____|     |   ");
+
+        for(CharacterDvptCard card : characterCards)
+            pBoard += ("|____");
+
+        if(!characterCards.isEmpty())
+            pBoard += "|";
+
+        pBoard += "\n";
+        pBoard += ("|______________________________________________|   \n");
+
+        return pBoard;
     }
 
     public BonusTile getBonusTile() {

@@ -639,7 +639,7 @@ public class Board implements Serializable {
     /** This method prints a particular family member**/
 
 
-    public String printCardId(DvptCard card) {
+    public static String printCardId(DvptCard card) {
         String id = new String();
         if (card == null)
             id += "  ";
