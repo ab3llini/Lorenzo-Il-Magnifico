@@ -486,6 +486,11 @@ public class BoardController {
 
     }
 
+    public void cleanCouncilPalace(){
+
+        this.board.getCouncilPalace().setPlaces(new ArrayList<>());
+    }
+
 
 }
 

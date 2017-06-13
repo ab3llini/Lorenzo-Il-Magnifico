@@ -790,7 +790,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         while (!this.isIntegerInRange(id, 1, GameSingleton.getInstance().getDvptCards().size()));
 
 
-        System.out.println(GameSingleton.getInstance().getSpecificDvptCard(Integer.parseInt(id)));
+        System.out.println(GameSingleton.getInstance().getSpecificDvptCard(Integer.parseInt(id)-1));
 
     }
 

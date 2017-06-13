@@ -93,6 +93,8 @@ public abstract class DvptCard implements Serializable {
 
         card += "Immediate Effect "+UnicodeChars.Immediate+" : "+"\n"+this.getImmediateEffect().toString();
 
+        card += "Permanent Effect "+UnicodeChars.Permanent+" : "+"\n"+this.getPermanentEffect().toString();
+
         return card;
     }
 }

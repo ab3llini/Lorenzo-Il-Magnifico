@@ -198,12 +198,16 @@ public class MatchController implements Runnable {
                 //Update the towers for the current combination of round / turn / period
                 this.boardController.updateTowersForTurn(this.match.getCurrentTurn(), this.match.getCurrentPeriod().toInt());
 
+                //Clean the council palace
+                
+
                 //Free family members for each player
                 for (Player player:this.getMatch().getPlayers()) {
 
                     player.freeFamilyMembers();
 
                 }
+
 
                 //If the match has just started send the model before any move is performed
                 if (this.match.getCurrentRound() == 1 && this.match.getCurrentPeriod() == Period.first) {

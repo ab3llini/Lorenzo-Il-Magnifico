@@ -41,4 +41,9 @@ public class CouncilPalace extends CompositeActionPlace implements Serializable 
         return playersOrder;
     }
 
+    public void clean(){
+
+        this.places.removeAll(places);
+    }
+
 }

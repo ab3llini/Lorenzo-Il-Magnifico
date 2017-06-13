@@ -42,7 +42,7 @@ public class DvptCardParser {
 
             //initialize immediateEffect to default value in order to avoid null pointers
             ImmediateEffect immediateEffect = new ImmediateEffect(new EffectSurplus(new ArrayList<>(),new ArrayList<>(),0),new EffectAction(ActionType.unknown,null,0,new ArrayList<>()));
-            PermanentEffect permanentEffect = new PermanentEffect(0,0,new EffectSurplus(new ArrayList<>(),new ArrayList<>(),0),null,null,new EffectPermanentAction(ActionType.unknown,null,0,new ArrayList<>()),false);
+            PermanentEffect permanentEffect = new PermanentEffect(ActionType.unknown,0,0,new EffectSurplus(new ArrayList<>(),new ArrayList<>(),0),null,null,new EffectPermanentAction(ActionType.unknown,null,0,new ArrayList<>()),false);
 
             //extract one single card
             JsonObject card = cardsSet.getAsJsonObject(cardId);
@@ -179,6 +179,7 @@ public class DvptCardParser {
 
     private static PermanentEffect getPermanentEffect(JsonObject effect){
 
+        ActionType actionType = ActionType.unknown;
         Integer minForce=0;
         Integer vpoints= 0;
         EffectSurplus surplus=new EffectSurplus(new ArrayList<Resource>(), new ArrayList<Point>(), 0 );
@@ -198,6 +199,10 @@ public class DvptCardParser {
 
             if (effectKey.equals("vpoints")) {
                 vpoints = permanent.get("vpoints").getAsInt();
+            }
+
+            if (effectKey.equals("actionType")) {
+                actionType = ActionType.valueOf(permanent.get("actionType").getAsString());
             }
 
             if (effectKey.equals("minForce")) {
@@ -228,7 +233,7 @@ public class DvptCardParser {
 
 
 
-        return new PermanentEffect(minForce,vpoints,surplus,conversion,multiplier,action,penality);
+        return new PermanentEffect(actionType,minForce,vpoints,surplus,conversion,multiplier,action,penality);
     }
 
     public static ArrayList<Resource> getResourceCost(JsonObject costo){
