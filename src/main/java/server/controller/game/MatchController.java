@@ -401,8 +401,6 @@ public class MatchController implements Runnable {
                         //Handler the player action
                         String status = this.handlePlayerAction(this.currentPlayer, action);
 
-                        //TODO: Send the model and std action confirmation before RETURNING or ASKING FOR AN IMMEDIATE ACTION
-
                         //Update the model
                         this.sendUpdatedModel();
 
@@ -1112,12 +1110,6 @@ public class MatchController implements Runnable {
                 //Foreach council privilege available, ask to chose
                 while (choice == null || selections.contains(choice.getSelection())) {
 
-                    if (choice != null && selections.contains(choice.getSelection())) {
-
-                        this.remotePlayerMap.get(player).notifyActionRefused("Each privilege must be different");
-
-                    }
-
                     //1 - Ask
                     this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCouncilPrivilege, this.currentPlayer, "Select a council privilege");
 
@@ -1126,8 +1118,16 @@ public class MatchController implements Runnable {
 
                         choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                        this.notifyAllActionPerformed(player, choice, "Performed an immediate action");
+                        if (selections.contains(choice.getSelection())) {
 
+                            this.remotePlayerMap.get(player).notifyActionRefused("Each privilege must be different");
+
+                        }
+                        else {
+
+                            this.notifyAllActionPerformed(player, choice, player.getUsername() + " performed an immediate action");
+
+                        }
 
                     } catch (NoActionPerformedException e) {
 

@@ -105,7 +105,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
     private CLI() {
 
         //Init blocking queue for user input
-        this.inputQueue = new ArrayBlockingQueue<String>(10);
+        this.inputQueue = new ArrayBlockingQueue<String>(1);
 
         //Init blocking queue for server data
         this.notificationQueue = new ArrayBlockingQueue<Notification>(10);
@@ -373,6 +373,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
+    /**
+     * Handles the round
+     * @throws InterruptedException
+     */
     private void interactWithMatchController() throws InterruptedException {
 
         this.localMatchController = new LocalMatchController(this.client.getUsername());
@@ -398,8 +402,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                 }
                 while (actionPerformed != StandardActionType.TerminateRound);
 
-                Cmd.notify("You terminated your round");
-
             }
             catch (NoActionPerformedException e) {
 
@@ -411,7 +413,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    private void draftLeaderCards() {
+    /**
+     * Takes care of handling the leader card draft at the beginning of the match
+     * @throws InterruptedException
+     */
+    private void draftLeaderCards() throws InterruptedException {
 
         this.waitOnMutex(this.draftMutex);
 
@@ -423,49 +429,37 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             }
 
-            Cmd.askFor("Please select the leader card you want");
+            ArrayCommand<LeaderCard> leaderCommand = new ArrayCommand<>(this.localMatchController.getDraftable().getCards());
 
-            int i = 1;
+            String choice = "";
 
-            for (LeaderCard c : this.localMatchController.getDraftable().getCards()) {
+            Cmd.askFor("Which leader card would you like?");
 
-                System.out.println(AnsiColors.ANSI_GREEN + "[" + i + "]" + AnsiColors.ANSI_RESET);
-
-                System.out.println(c);
-
-                i++;
-
-            }
-
-            int selection = 0;
+            leaderCommand.printChoiches();
 
             try {
 
-                String choice = this.waitForActionSelection();
+                choice = this.waitForActionSelection();
 
-                while (!this.isIntegerInRange(choice, 1, this.localMatchController.getDraftable().getCards().size())) {
 
-                    Cmd.forbidden("'"+choice + "' is not a valid choice, try again.");
+                while (!leaderCommand.isValid(choice)) {
+
+                    Cmd.askFor("Which leader card would you like?");
+
+                    leaderCommand.printChoiches();
 
                     choice = this.waitForActionSelection();
 
                 }
 
-                selection = Integer.parseInt(choice);
-
-            } catch (InterruptedException e) {
-
-                Logger.log(Level.SEVERE, "MatchController", "Interrupted", e);
-
-
             } catch (NoActionPerformedException e) {
 
-                Logger.log(Level.SEVERE, "MatchController", "No action performed", e);
-
+                e.printStackTrace();
 
             }
 
-            this.client.performAction(new ShuffleLeaderCardStandardAction(selection - 1, this.localMatchController.getDraftable(), this.client.getUsername()));
+
+            this.client.performAction(new ShuffleLeaderCardStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftable(), this.client.getUsername()));
 
             if (this.localMatchController.getDraftable().getCards().size() == 1) {
 
@@ -496,9 +490,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Try to do an action before the timeout goes out
         String choice = this.waitForActionSelection();
 
-        while (!actionSelection.isValid(choice) || !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+        boolean valid = actionSelection.isValid(choice);
 
-            if (!this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+        while (!valid || !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+
+            if (valid && !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
                 Cmd.error("The action '" + actionSelection.getEnumEntryFromChoice(choice) + "' can't be performed again!");
 
@@ -508,6 +504,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             Cmd.askFor("Which action would you like to perform ?");
 
             choice = this.waitForActionSelection();
+
+            valid = actionSelection.isValid(choice);
 
         }
 
@@ -578,6 +576,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                 //Perform the immediate action
                 this.performImmediateAction(this.immediateActionQueue.take());
 
+                //After the immediate action was performed we need to wait for the confirmation of the standard action
+                this.waitOnMutex(this.connectionMutex);
+
             }
 
         }
@@ -594,9 +595,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      * @param type the immediate action type
      */
     private void performImmediateAction(ImmediateActionType type) throws NoActionPerformedException, InterruptedException {
-
-
-        this.localMatchController.setLastPendingImmediateAction(type);
 
         do {
 
@@ -646,7 +644,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
         while (this.localMatchController.getLastPendingImmediateAction() != null);
-
 
 
     }
@@ -833,6 +830,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         if (stream == this.keyboard && this.keyboardEnabled) {
 
+            this.inputQueue.clear();
+
             this.inputQueue.add(value);
 
             if (this.ctx == CliContext.Match) {
@@ -892,13 +891,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         this.localMatchController.setMatch(model);
 
-        System.out.print(this.localMatchController.getMatch().getBoard());
-
-        this.localMatchController.printLocalPlayer();
-
     }
 
     public void onTurnEnabled(Client sender, Player player, String message) {
+
+        //Print the board every time the turn changes
+        System.out.println(this.localMatchController.getMatch().getBoard());
+
+        for (Player p : this.localMatchController.getMatch().getPlayers()) {
+
+            System.out.println(p);
+
+        }
+
 
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
@@ -1005,8 +1010,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                 //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
-            Cmd.success("Action performed successfully");
-
             synchronized (this.connectionMutex) {
 
                 //Confirm last action
@@ -1014,10 +1017,20 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                     this.localMatchController.confirmLastPendingAction();
 
+                    if (action instanceof RollDicesAction) {
+
+                        System.out.println(this.localMatchController.getMatch().getBoard());
+
+                    }
+
+                    Cmd.success("Action performed successfully");
+
                 }
                 else {
 
                     this.localMatchController.confirmLastPendingImmediateAction();
+
+                    Cmd.success("Immediate action performed successfully");
 
                 }
 
@@ -1029,7 +1042,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
         else {
 
-            Cmd.success(message);
+            Cmd.notify(message);
 
         }
 
@@ -1094,7 +1107,5 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         (new CLI()).play();
 
     }
-
-
 
 }

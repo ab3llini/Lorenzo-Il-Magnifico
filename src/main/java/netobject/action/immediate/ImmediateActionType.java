@@ -16,7 +16,7 @@ public enum ImmediateActionType implements CliPrintable {
     ActivateHarvest("Activate the harvest area", ImmediateActionTypeImpl.Placement),
     ActivateProduction("Activate the production area", ImmediateActionTypeImpl.Placement),
     SelectCost("Select a cost", ImmediateActionTypeImpl.Choice),
-    SelectCouncilPrivilege("Select the council privilege", ImmediateActionTypeImpl.Choice),
+    SelectCouncilPrivilege("Select a council privilege", ImmediateActionTypeImpl.Choice),
     SelectConversion("Select a conversion", ImmediateActionTypeImpl.Choice);
 
     private final String name;

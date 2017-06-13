@@ -56,7 +56,7 @@ public abstract class Command {
 
             Map.Entry pair = (Map.Entry) it.next();
 
-            System.out.println(AnsiColors.ANSI_GREEN + UnicodeChars.Arrow + "\t(" + pair.getValue() + ")\t" + pair.getKey()  + AnsiColors.ANSI_RESET);
+            System.out.println(AnsiColors.ANSI_GREEN + UnicodeChars.Arrow + "\t(" + pair.getValue() + ")\t" + AnsiColors.ANSI_RESET + pair.getKey());
 
         }
 
