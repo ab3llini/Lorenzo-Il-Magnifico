@@ -236,8 +236,8 @@ public class PersonalBoard implements Serializable {
 
         for(int i=0; i<6; i++) {
             pBoard += "| ";
-
             if (i< territoryCards.size())
+
                 pBoard += Board.printCardId(getTerritoryCards().get(i));
 
             else
