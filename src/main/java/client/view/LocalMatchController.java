@@ -138,19 +138,6 @@ public class LocalMatchController {
 
     }
 
-    public void printLocalPlayer() {
-
-        try {
-
-            System.out.println(this.match.getPlayerFromUsername(this.playerUsername));
-
-        } catch (NoSuchPlayerException e) {
-
-            e.printStackTrace();
-
-        }
-
-    }
 
     public void setDraftable(Deck<LeaderCard> draftable) {
         this.draftable = draftable;
