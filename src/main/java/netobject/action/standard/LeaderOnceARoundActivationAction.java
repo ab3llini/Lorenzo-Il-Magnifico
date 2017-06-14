@@ -25,6 +25,10 @@ public class LeaderOnceARoundActivationAction extends Action {
         return leaderCardIndex;
     }
 
+    public int getChoice() {
+        return choice;
+    }
+
     public StandardActionType getStandardActionType() {
         return standardActionType;
     }

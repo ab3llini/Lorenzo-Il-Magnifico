@@ -742,16 +742,23 @@ public class Board implements Serializable {
     }
 
     public String printSingleResource (Resource resource){
+
         String board = new String();
+
         if (resource.getType() == ResourceType.Coins)
             board += resource.getAmount() + "" + UnicodeChars.Coins + " ";
+
         if (resource.getType() == ResourceType.Servants)
             board += resource.getAmount() + "" + UnicodeChars.Servants + " ";
+
         if (resource.getType() == ResourceType.Wood)
             board += resource.getAmount() + "" + UnicodeChars.Wood + " ";
+
         if (resource.getType() == ResourceType.Stones)
             board += resource.getAmount() + "" + UnicodeChars.Stones + " ";
+
         return board;
+
     }
 
     public String printMilitaryCost (MilitaryCost militaryCost) {
@@ -766,7 +773,7 @@ public class Board implements Serializable {
         return board;
     }
 
-    public String printSurplus(EffectSurplus effectSurplus) {
+    public static String printSurplus(EffectSurplus effectSurplus) {
         String bonus = new String();
 
         if (effectSurplus.getResources() != null) {

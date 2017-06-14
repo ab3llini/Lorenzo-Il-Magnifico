@@ -4,6 +4,10 @@ import exception.SixCardsLimitReachedException;
 import logger.AnsiColors;
 import server.model.GameSingleton;
 import server.model.card.developement.*;
+import server.model.effect.EffectConversion;
+import server.model.effect.EffectSurplus;
+import server.model.valuable.MultipliedType;
+import server.model.valuable.ResultType;
 import server.utility.BoardConfigParser;
 import server.utility.UnicodeChars;
 
@@ -134,6 +138,7 @@ public class PersonalBoard implements Serializable {
         for(VentureDvptCard card : ventureCards)
             pBoard += ("_____");
 
+        pBoard += " ";
         pBoard += "\n";
 
         pBoard += ("|          |    |    |    |    |    |    |     |   ");
@@ -143,7 +148,8 @@ public class PersonalBoard implements Serializable {
 
         if(!ventureCards.isEmpty())
             pBoard += "|";
-
+        if(buildingCards.size() > 0)
+            pBoard += "   " + buildingCards.get(0).getId() + ". " + buildingCards.get(0).getName() + "    MIN FORCE: " + buildingCards.get(5).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(0));
         pBoard += "\n";
 
         pBoard += ("|          |    |    |    |    |    |    |     |   ");
@@ -153,7 +159,8 @@ public class PersonalBoard implements Serializable {
 
         if(!ventureCards.isEmpty())
             pBoard += "|";
-
+        if(buildingCards.size() > 1)
+            pBoard += "   " +  buildingCards.get(1).getId() + ". " + buildingCards.get(1).getName() + "    MIN FORCE: " + buildingCards.get(5).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(1));
         pBoard += "\n";
 
         pBoard += ("|          ");
@@ -177,6 +184,8 @@ public class PersonalBoard implements Serializable {
 
         if(!ventureCards.isEmpty())
             pBoard += "|";
+        if(buildingCards.size() > 2)
+            pBoard += "   " + buildingCards.get(2).getId() +  ". " + buildingCards.get(2).getName() + "    MIN FORCE: " + buildingCards.get(2).getPermanentEffect().getMinForce() +"    " + printProductionEffect(buildingCards.get(2));
         pBoard += "\n";
 
         pBoard += ("|          |    |    |    |    |    |    |     |   ");
@@ -186,7 +195,8 @@ public class PersonalBoard implements Serializable {
 
         if(!ventureCards.isEmpty())
             pBoard += "|";
-
+        if(buildingCards.size() > 3)
+            pBoard += "   " + buildingCards.get(3).getId() + ". " + buildingCards.get(3).getName() + "    MIN FORCE: " + buildingCards.get(3).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(3));
         pBoard += "\n";
 
         pBoard += ("|          |____|____|____|____|____|____|     |   ");
@@ -196,11 +206,24 @@ public class PersonalBoard implements Serializable {
 
         if(!ventureCards.isEmpty())
             pBoard += "|";
+        if(buildingCards.size() > 4)
+            pBoard +=  "   " + buildingCards.get(4).getId() + ". " + buildingCards.get(4).getName() + "    MIN FORCE: " + buildingCards.get(4).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(4));
+        pBoard += "\n";
+
+        pBoard += ("|                                                  ");
+
+        for(VentureDvptCard card : ventureCards)
+            pBoard += ("     ");
+
+        if(!ventureCards.isEmpty())
+            pBoard += " ";
+        if(buildingCards.size() > 5)
+            pBoard +=  "   " + buildingCards.get(5).getId() + ". " + buildingCards.get(5).getName() + "    MIN FORCE: " + buildingCards.get(5).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(4));
         pBoard += "\n";
 
         pBoard += ("|                                              |   \n");
 
-        pBoard += ("| " + AnsiColors.ANSI_GREEN + "TERRITORY CARDS" + "                          " + AnsiColors.ANSI_RESET);
+        pBoard += ("| " + AnsiColors.ANSI_GREEN + "TERRITORY CARDS " + "                        " + AnsiColors.ANSI_RESET);
         pBoard += "    |   "+ AnsiColors.ANSI_BLUE + "CHARACTER CARDS" + AnsiColors.ANSI_RESET + "\n";
 
         pBoard += ("|                     " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(3) + "  " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(4) + " " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(5) + " " + UnicodeChars.MilitaryPoints + " " + BoardConfigParser.getMinimumMilitaryPoints(6)+ "      |\n" );
@@ -219,7 +242,8 @@ public class PersonalBoard implements Serializable {
 
         if(!characterCards.isEmpty())
             pBoard += "|";
-
+        if(territoryCards.size() > 0)
+            pBoard += "   " +  territoryCards.get(0).getId() + ". " + territoryCards.get(0).getName() + "    MIN FORCE: " + territoryCards.get(0).getPermanentEffect().getMinForce() + "    " + printHarvestEffect(territoryCards.get(0));
         pBoard += "\n";
 
         pBoard += ("|          |    |    |    |    |    |    |     |   ");
@@ -229,6 +253,8 @@ public class PersonalBoard implements Serializable {
 
         if(!characterCards.isEmpty())
             pBoard += "|";
+        if(territoryCards.size() > 1)
+            pBoard += "   " +  territoryCards.get(1).getId() + ". " + territoryCards.get(1).getName() + "    MIN FORCE: " + territoryCards.get(1).getPermanentEffect().getMinForce() + "    " + printHarvestEffect(territoryCards.get(1));
 
         pBoard += "\n";
 
@@ -253,6 +279,8 @@ public class PersonalBoard implements Serializable {
 
         if(!characterCards.isEmpty())
             pBoard += "|";
+        if(territoryCards.size() > 2)
+            pBoard += "   " +  territoryCards.get(2).getId() + ". " + territoryCards.get(2).getName() + "    MIN FORCE: " + territoryCards.get(2).getPermanentEffect().getMinForce() + "    " + printHarvestEffect(territoryCards.get(2));
 
         pBoard += "\n";
 
@@ -263,6 +291,9 @@ public class PersonalBoard implements Serializable {
 
         if(!characterCards.isEmpty())
             pBoard += "|";
+        if(territoryCards.size() > 3)
+            pBoard += "   " +  territoryCards.get(3).getId() + ". " + territoryCards.get(3).getName() + "    MIN FORCE: " + territoryCards.get(3).getPermanentEffect().getMinForce() + "    " + printHarvestEffect(territoryCards.get(3));
+
         pBoard += "\n";
 
         pBoard += ("|          |____|____|____|____|____|____|     |   ");
@@ -272,7 +303,19 @@ public class PersonalBoard implements Serializable {
 
         if(!characterCards.isEmpty())
             pBoard += "|";
+        if(territoryCards.size() > 4)
+            pBoard += "   " +  territoryCards.get(4).getId() + ". " + territoryCards.get(4).getName() + "    MIN FORCE: " + territoryCards.get(4).getPermanentEffect().getMinForce() + "    " + printHarvestEffect(territoryCards.get(4));
 
+        pBoard += "\n";
+        pBoard += ("|                                                  ");
+
+        for(CharacterDvptCard card : characterCards)
+            pBoard += ("     ");
+
+        if(!characterCards.isEmpty())
+            pBoard += " ";
+        if(territoryCards.size() > 5)
+            pBoard +=  "   " + territoryCards.get(5).getId() + ". " + territoryCards.get(5).getName() + "    MIN FORCE: " + territoryCards.get(5).getPermanentEffect().getMinForce() + "    " + printHarvestEffect(territoryCards.get(5));
         pBoard += "\n";
         pBoard += ("|______________________________________________|   \n");
 
@@ -282,7 +325,67 @@ public class PersonalBoard implements Serializable {
     public BonusTile getBonusTile() {
         return bonusTile;}
 
-    public void setBonusTile(BonusTile bonusTile) {
+    public String printProductionEffect (BuildingDvptCard card){
+
+        String dvpt_type = new String();
+        String pBoard = new String();
+
+
+        if(!card.getPermanentEffect().getSurplus().getResources().isEmpty() || !card.getPermanentEffect().getSurplus().getPoints().isEmpty() || card.getPermanentEffect().getSurplus().getCouncil() != 0)
+
+            pBoard += " SURPLUS: " + Board.printSurplus(card.getPermanentEffect().getSurplus());
+
+        if(card.getPermanentEffect().getMultiplier() != null) {
+
+            if(card.getPermanentEffect().getMultiplier().getWhat() == MultipliedType.territory)
+                dvpt_type = "territory cards";
+
+            if(card.getPermanentEffect().getMultiplier().getWhat() == MultipliedType.building)
+                dvpt_type = "building cards";
+
+            if(card.getPermanentEffect().getMultiplier().getWhat() == MultipliedType.character)
+                dvpt_type = "character cards";
+
+            if(card.getPermanentEffect().getMultiplier().getWhat() == MultipliedType.venture)
+                dvpt_type = "venture cards";
+
+            if (card.getPermanentEffect().getMultiplier().getResult() == ResultType.coins)
+                pBoard += UnicodeChars.Coins + " " + (int)card.getPermanentEffect().getMultiplier().getCoefficient() + " X " + dvpt_type;
+
+            if (card.getPermanentEffect().getMultiplier().getResult() == ResultType.victory)
+                pBoard += UnicodeChars.VictoryPoints + " " + (int)card.getPermanentEffect().getMultiplier().getCoefficient() + " X " + dvpt_type;
+
+        }
+
+        if(card.getPermanentEffect().getConversion() != null) {
+
+            for(EffectConversion conversion: card.getPermanentEffect().getConversion()){
+
+                pBoard += "FROM:" + Board.printSurplus(conversion.getFrom());
+                pBoard += "TO:" + Board.printSurplus(conversion.getTo());
+                pBoard += " ";
+
+            }
+
+        }
+
+        return pBoard;
+    }
+
+    public String printHarvestEffect (TerritoryDvptCard card){
+
+        String pBoard = new String();
+
+        if(card.getPermanentEffect().getSurplus() != null){
+            pBoard += " SURPLUS: " + Board.printSurplus(card.getPermanentEffect().getSurplus());
+        }
+
+        return pBoard;
+
+    }
+
+
+        public void setBonusTile(BonusTile bonusTile) {
         this.bonusTile = bonusTile;
     }
 }

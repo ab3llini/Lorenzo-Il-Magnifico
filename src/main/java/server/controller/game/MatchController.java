@@ -1287,11 +1287,15 @@ public class MatchController implements Runnable {
                 }
 
                 if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect()) {
-                    try {
-                        applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production));
-                    } catch (NoActionPerformedException e) {
-                        e.printStackTrace();
-                    }
+                    if(action.getChoice() == 0)
+                        player.setFamilyMemberForce(ColorType.Black, 6);
+                    if(action.getChoice() == 1)
+                        player.setFamilyMemberForce(ColorType.White, 6);
+                    if(action.getChoice() == 2)
+                        player.setFamilyMemberForce(ColorType.Orange, 6);
+                    if(action.getChoice() == 3)
+                        player.setFamilyMemberForce(ColorType.Nautral, 6);
+
                 }
             }
 
