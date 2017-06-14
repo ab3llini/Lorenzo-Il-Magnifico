@@ -42,13 +42,16 @@ public class SocketClient extends Client implements Runnable {
     //The port of the host
     private int port;
 
-    ObjectOutputStream socketOut;
+    private ObjectInputStream in;
+
+    private ObjectOutputStream out;
 
     public SocketClient(String host, int port) {
 
         //Assign host & port
         this.host = host;
         this.port = port;
+
 
     }
 
@@ -60,19 +63,35 @@ public class SocketClient extends Client implements Runnable {
 
             this.socket = new Socket(this.host, this.port);
 
-            new Thread(this).start();
-
-            Logger.log(Level.FINE, "SocketClient::connect", "Connected.");
-
-            return true;
 
         } catch (IOException e) {
 
             Logger.log(Level.SEVERE, "SocketClient::connect", "Unable to connect.", e);
 
+            return false;
+
         }
 
-        return false;
+        try {
+
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+
+        } catch (IOException e) {
+
+            Logger.log(Level.SEVERE, this.toString(), "Unable to get socket streams", e);
+
+            return false;
+
+        }
+
+
+
+        new Thread(this).start();
+
+        Logger.log(Level.FINE, "SocketClient::connect", "Connected.");
+
+        return true;
 
     }
 
@@ -84,21 +103,13 @@ public class SocketClient extends Client implements Runnable {
 
     public void run() {
 
-        try {
-            this.socketOut = new ObjectOutputStream(this.socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         while (!this.socket.isClosed() && this.socket.isConnected()) {
 
             try {
 
-
-                ObjectInputStream socketIn = new ObjectInputStream(this.socket.getInputStream());
-
                 //Try to read the object
-                Object obj = socketIn.readObject();
+                Object obj = in.readObject();
 
                 //Notify that an object was received
                 this.parse((NetObject) obj);
@@ -115,8 +126,6 @@ public class SocketClient extends Client implements Runnable {
             catch (IOException e) {
 
                 Logger.log(Level.WARNING, "SocketClient::run", "Broken pipe while listening", e);
-
-                this.notifyDisconnection();
 
                 break;
 
@@ -237,9 +246,9 @@ public class SocketClient extends Client implements Runnable {
 
         try {
 
-            socketOut.flush();
+            out.writeObject(object);
 
-            socketOut.writeObject(object);
+            out.flush();
 
             return true;
 

@@ -12,6 +12,7 @@ import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
 import server.controller.network.ClientHandler;
 import server.model.board.Player;
+import server.utility.UnicodeChars;
 import singleton.GameConfig;
 
 import java.util.*;
@@ -60,15 +61,12 @@ public class Lobby {
         //Create the handlers map
         this.handlers = new ArrayList<ClientHandler>();
 
-        //Add the first player
-        this.handlers.add(firstHandler);
-
         //Assign the lobby name
         this.name = firstHandler.getUsername();
 
-        Logger.log(Level.FINE, this.toString(), firstHandler.getUsername() + " created the lobby.");
+        this.join(firstHandler);
 
-        this.welcomeClient(firstHandler);
+        Logger.log(Level.FINE, this.toString(), firstHandler.getUsername() + " created the lobby.");
 
     }
 
@@ -146,6 +144,8 @@ public class Lobby {
 
         this.notifyAllExcept(handler, new LobbyNotification(LobbyNotificationType.ClientJoin, "Client " + handler.getUsername() + " has joined!"));
 
+        this.showConnectedClients();
+
 
         //Check whether or not to start the timeout
         if (this.handlers.size() == MINIMUM_PLAYERS) {
@@ -180,6 +180,12 @@ public class Lobby {
 
         }
 
+        else if (this.handlers.size() > MINIMUM_PLAYERS && this.handlers.size() < MAXIMUM_PLAYERS) {
+
+            this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will soon.." ));
+
+        }
+
         else if (this.handlers.size() == MAXIMUM_PLAYERS) {
 
             //When the fourth player joins, start the match and clear the timeout
@@ -202,18 +208,8 @@ public class Lobby {
      */
     public synchronized void joinAfterDisconnection(ClientHandler handler) {
 
-        //Get the player in the model
-        Player belongingPlayer;
 
         try {
-
-            Player target = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
-
-            //Disable the player
-            target.setDisabled(false);
-
-            //Re add the client to the map in the match controller
-            this.matchController.getRemotePlayerMap().put(target, handler);
 
             //Re add the client to the handlers list
             this.handlers.add(handler);
@@ -221,6 +217,10 @@ public class Lobby {
             Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
 
             handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
+
+            //Inform the match controller after sending the game resume notification
+            this.matchController.addPlayer(handler);
+
 
         } catch (NoSuchPlayerException e) {
 
@@ -260,13 +260,8 @@ public class Lobby {
 
             try {
 
-                Player target = this.matchController.getMatch().getPlayerFromUsername(handler.getUsername());
-
-                //Permanently disable the player
-                target.setDisabled(false);
-
-                //Remove the reference even into the match controller
-                this.matchController.getRemotePlayerMap().remove(target);
+                //Inform the match controller
+                this.matchController.removePlayer(handler);
 
             } catch (NoSuchPlayerException e) {
 
@@ -280,6 +275,8 @@ public class Lobby {
             Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " left");
 
             this.notifyAllExcept(handler, new LobbyNotification(LobbyNotificationType.ClientLeave, "Client " + handler.getUsername() + " has left the lobby."));
+
+            this.showConnectedClients();
 
             if (this.handlers.size() < MINIMUM_PLAYERS) {
 
@@ -359,7 +356,6 @@ public class Lobby {
 
             this.matchControllerRunner.interrupt();
 
-
         }
 
     }
@@ -367,8 +363,37 @@ public class Lobby {
     private void welcomeClient(ClientHandler handler) {
 
         handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername() + ", welcome to " + this.toString()));
+        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Action timeout set to " + GameConfig.getInstance().getPlayerTimeout() + "s"));
 
-        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Rules:\nAction timeout = " + GameConfig.getInstance().getPlayerTimeout() + "s"));
+    }
+
+    private void showConnectedClients() {
+
+        StringBuilder b = new StringBuilder();
+
+        b.append("Players waiting in the lobby: ");
+
+        for (ClientHandler h : this.handlers) {
+
+            if (h != this.handlers.get(this.handlers.size() - 1)) {
+
+                b.append(UnicodeChars.Man);
+                b.append(" ");
+                b.append(h.getUsername());
+                b.append(", ");
+
+            }
+            else {
+
+                b.append(UnicodeChars.Man);
+                b.append(" ");
+                b.append(h.getUsername());
+
+            }
+
+        }
+
+        this.notifyAll(new LobbyNotification(LobbyNotificationType.LobbyInfo, b.toString()));
 
     }
 

@@ -33,6 +33,10 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
     //The socket of the handler
     private Socket socket;
 
+    private ObjectInputStream in;
+
+    private ObjectOutputStream out;
+
     //A state variable to assure performance
     private boolean running = true;
 
@@ -47,6 +51,17 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         //Assign the socket
         this.socket = socket;
+
+        try {
+
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+
+        } catch (IOException e) {
+
+            Logger.log(Level.SEVERE, this.toString(), "Unable to get socket streams", e);
+
+        }
 
     }
 
@@ -63,15 +78,11 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         }
 
-        ObjectOutputStream socketOut;
-
         try {
 
-            socketOut = new ObjectOutputStream(this.socket.getOutputStream());
+            out.writeObject(object);
 
-            socketOut.flush();
-
-            socketOut.writeObject(object);
+            out.flush();
 
             return true;
 
@@ -95,29 +106,12 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
     public void run() {
 
 
-        ObjectInputStream socketIn = null;
-
-        try {
-
-            socketIn = new ObjectInputStream(this.socket.getInputStream());
-
-        } catch (IOException e) {
-
-            Logger.log(Level.SEVERE, this.toString(), "Unable to get input stream, client probably disconnected.");
-
-            //Notify observers so that they can remove the handler
-            this.notifyDisconnection();
-
-            return;
-
-        }
-
         while (this.running && !this.socket.isClosed() && this.socket.isConnected()) {
 
             try {
 
                 //Try to read the error
-                Object obj = socketIn.readObject();
+                Object obj = in.readObject();
 
                 //Notify that an object was received
                 this.notifyObjectReceived((NetObject) obj);

@@ -8,6 +8,8 @@ import netobject.action.immediate.ImmediateActionType;
 import netobject.action.immediate.ImmediateChoiceAction;
 import netobject.action.immediate.ImmediatePlacementAction;
 import netobject.action.standard.*;
+import netobject.notification.MatchNotification;
+import netobject.notification.MatchNotificationType;
 import server.controller.network.ClientHandler;
 import server.model.*;
 import server.model.board.*;
@@ -78,6 +80,8 @@ public class MatchController implements Runnable {
      * Constants
      */
     private static final int ACTION_TIMEOUT =  GameConfig.getInstance().getPlayerTimeout();
+
+    private boolean drafting = false;
 
 
     /**
@@ -243,12 +247,78 @@ public class MatchController implements Runnable {
     }
 
     /**
+     * Removes a player while playing
+     * @param handler the handler of the player that have left
+     */
+    public void removePlayer(ClientHandler handler) throws NoSuchPlayerException {
+
+        //Find the player
+        Player belonging = this.match.getPlayerFromUsername(handler.getUsername());
+
+        //Disable the player
+        belonging.setDisabled(true);
+
+        //The first thing to do is check if the player has the current turn
+        //If so we need to insert a poisonous action to stop his handling
+        if (belonging == this.currentPlayer || drafting) {
+
+            //Inset an empty action to trigger the exception that will disable the player
+            this.actions.add(new Action());
+
+        }
+
+        //Then we can remove the map reference
+        this.remotePlayerMap.remove(belonging);
+
+        this.notifyAll("Player " + belonging.getUsername() + " left the match");
+
+        Logger.log(Level.FINEST, this.toString(), "Player " + belonging.getUsername() + " left the match");
+
+
+    }
+
+    /**
+     * Re adds a player that had left before
+     * @param handler the handler of that player
+     * @throws NoSuchPlayerException if the player does not exists (Should never occur)
+     */
+    public void addPlayer(ClientHandler handler) throws NoSuchPlayerException {
+
+        //Find the player
+        Player belonging = this.match.getPlayerFromUsername(handler.getUsername());
+
+        //Re enable the player
+        belonging.setDisabled(false);
+
+        //Re add the map entry
+        this.remotePlayerMap.put(belonging, handler);
+
+        //Send a model update to him
+        handler.notifyModelUpdate(this.match);
+
+        this.notifyAll("Player " + belonging.getUsername() + " reconnected");
+
+        //If the players are playing
+        if (this.currentPlayer != null) {
+
+            handler.notifyTurnEnabled(this.currentPlayer,"It is " + this.currentPlayer.getUsername() + "'s turn!");
+
+        }
+        Logger.log(Level.FINEST, this.toString(), "Player " + belonging.getUsername() + " reconnected");
+
+
+    }
+
+
+    /**
      * Handle the leader card draft
      * Creates a number of draftable decks equal to the number of players
      * It then sends every deck to the player and wait for any player to chose
      * When all the players have selected one card, the draft takes places and the decks received from the nearby player are sent.
      */
     private void handleLeaderCardDraft() {
+
+        drafting = true;
 
         final int NUMBER_OF_CARDS_PER_DECK = 4;
 
@@ -276,7 +346,7 @@ public class MatchController implements Runnable {
             //Tell the user the deck from which he can select a card
             this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftableDeck, "Please select a leader card and draft");
 
-            Logger.log(Level.FINEST, "Match controller", "Sending draftable deck to " + p.getUsername());
+            Logger.log(Level.FINEST, this.toString(), "Sending draftable deck to " + p.getUsername());
 
             i++;
 
@@ -288,15 +358,23 @@ public class MatchController implements Runnable {
             //Four times we need to wait until each player performs his draft
             for (int j = 0; j < this.match.getPlayers().size(); j ++) {
 
+                if (this.match.getPlayers().get(j).isDisabled()) {
+                    continue;
+                }
+
                 //Get the shuffle action
                 ShuffleLeaderCardStandardAction shuffleAction = null;
                 try {
 
-                    shuffleAction = (ShuffleLeaderCardStandardAction)this.actions.take();
+                    shuffleAction = (ShuffleLeaderCardStandardAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
                 } catch (InterruptedException e) {
 
-                    Logger.log(Level.WARNING, "Match controller", "Thread stopped while waiting on action queue", e);
+                    Logger.log(Level.WARNING, this.toString(), "Thread stopped while waiting on action queue", e);
+
+                } catch (NoActionPerformedException e) {
+
+                    continue;
 
                 }
 
@@ -316,11 +394,11 @@ public class MatchController implements Runnable {
 
                 } catch (NoSuchPlayerException e) {
 
-                    Logger.log(Level.FINEST, "Match controller", "Can't find player!", e);
+                    Logger.log(Level.FINEST, this.toString(), "Can't find player!", e);
 
                 }
 
-                Logger.log(Level.FINEST, "Match controller", "Leader draft, step " + (i + 1) + ", " + shuffleAction.getSender() + " selected '" + selected.getName() + "'");
+                Logger.log(Level.FINEST, this.toString(), "Leader draft, step " + (i + 1) + ", " + shuffleAction.getSender() + " selected '" + selected.getName() + "'");
 
             }
 
@@ -353,11 +431,17 @@ public class MatchController implements Runnable {
             //Send again the drafted decks
             for (Player p : this.match.getPlayers()) {
 
-                this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftingMap.get(p.getUsername()), "Please select a leader card and draft");
+                if (!p.isDisabled()) {
+
+                    this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftingMap.get(p.getUsername()), "Please select a leader card and draft " + draftingMap.get(p.getUsername()).getCards().size());
+
+                }
 
             }
 
         }
+
+        drafting = false;
 
     }
 
@@ -425,16 +509,7 @@ public class MatchController implements Runnable {
 
             } catch (NoActionPerformedException e) {
 
-                Logger.log(Level.WARNING, this.toString(), "The action timeout for player " + this.currentPlayer.getUsername() + " expired", e);
-
-                //Tell the players that the timeout has expired expired for the active player
-                this.notifyAllActionTimeoutExpired(this.currentPlayer);
-
-                //Disable the player
-                this.currentPlayer.setDisabled(true);
-
-                //Tell the players that the active one can't make any more actions
-                this.notifyAllTurnDisabled(this.currentPlayer);
+                this.handleActionTimeoutExpiration(e);
 
                 //Break the loop
                 break;
@@ -442,12 +517,22 @@ public class MatchController implements Runnable {
 
             } catch (InterruptedException e) {
 
-                Logger.log(Level.WARNING, "Match controller", "Thread stopped while waiting on action queue", e);
+                Logger.log(Level.WARNING, this.toString(), "Thread stopped while waiting on action queue", e);
 
             }
 
         }
         while (!this.currentPlayer.isDisabled());
+
+    }
+
+    private void handleActionTimeoutExpiration(NoActionPerformedException e) {
+
+        //Tell the players that the timeout has expired expired for the active player
+        this.notifyAllActionTimeoutExpired(this.currentPlayer);
+
+        //Tell the players that the active one can't make any more actions
+        this.notifyAllTurnDisabled(this.currentPlayer);
 
     }
 
@@ -563,7 +648,19 @@ public class MatchController implements Runnable {
 
         for (Player p : this.match.getPlayers()) {
 
-            this.remotePlayerMap.get(p).notifyModelUpdate(this.match);
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyModelUpdate(this.match);
+            }
+        }
+
+    }
+
+    private void notifyAll(String message) {
+
+        for (Player p : this.match.getPlayers()) {
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notify(new MatchNotification(MatchNotificationType.Message, message));
+            }
 
         }
 
@@ -572,8 +669,9 @@ public class MatchController implements Runnable {
     private void notifyAllTurnEnabled(Player current) {
 
         for (Player p : this.match.getPlayers()) {
-
-            this.remotePlayerMap.get(p).notifyTurnEnabled(current, "It is " + current.getUsername() + "'s turn");
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyTurnEnabled(current, "It is " + current.getUsername() + "'s turn");
+            }
 
         }
 
@@ -583,7 +681,9 @@ public class MatchController implements Runnable {
 
         for (Player p : this.match.getPlayers()) {
 
-            this.remotePlayerMap.get(p).notifyTurnDisabled(current,  current.getUsername() + " terminated his turn.");
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyTurnDisabled(current, current.getUsername() + " terminated his turn.");
+            }
 
         }
 
@@ -593,7 +693,9 @@ public class MatchController implements Runnable {
 
         for (Player p : this.match.getPlayers()) {
 
-            this.remotePlayerMap.get(p).notifyActionTimeoutExpired(current, current.getUsername() + "'s timeout to take his move expired. He was disabled.");
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyActionTimeoutExpired(current, current.getUsername() + "'s timeout to take his move expired. He was disabled.");
+            }
 
         }
 
@@ -602,8 +704,9 @@ public class MatchController implements Runnable {
     private void notifyAllActionPerformed(Player current, Action action, String message) {
 
         for (Player p : this.match.getPlayers()) {
-
-            this.remotePlayerMap.get(p).notifyActionPerformed(current, action, message);
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyActionPerformed(current, action, message);
+            }
 
         }
 
@@ -612,8 +715,9 @@ public class MatchController implements Runnable {
     private void notifyAllImmediateActionAvailable(ImmediateActionType immediateActionType, Player current, String message) {
 
         for (Player p : this.match.getPlayers()) {
-
-            this.remotePlayerMap.get(p).notifyImmediateActionAvailable(immediateActionType, current, message);
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyImmediateActionAvailable(immediateActionType, current, message);
+            }
 
         }
 
@@ -1168,22 +1272,6 @@ public class MatchController implements Runnable {
 
     }
 
-    /**
-     * Utility method that checks if a builtin-type array contains an element
-     * @param a the array
-     * @param v the value
-     * @return true of false
-     */
-    private boolean contains(int[] a, int v) {
-
-        for (int x : a) {
-            if (x == v)
-                return true;
-        }
-
-        return false;
-
-    }
 
     /**
      * this method starts the harvest chain.

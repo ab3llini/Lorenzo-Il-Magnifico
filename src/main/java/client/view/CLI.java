@@ -7,6 +7,7 @@ package client.view;
 
 import client.controller.network.Client;
 import client.controller.network.ClientObserver;
+import client.controller.network.NetUtil;
 import client.controller.network.RMI.RMIClient;
 import client.controller.network.Socket.SocketClient;
 import client.view.cmd.*;
@@ -132,6 +133,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Launch the keyboard listener and wait for events
         this.keyboard.start();
 
+        //Init the local match controller
+        this.localMatchController = new LocalMatchController();
+
         //Log only important messages
         Logger.setMinLevel(Level.WARNING);
 
@@ -179,10 +183,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Read the IP
         hostIP = this.inputQueue.take();
 
-        //Check it
-        while (hostIP.equals("")) {
+        while (!NetUtil.isIPv4(hostIP) && !hostIP.equals("localhost")) {
 
-            Cmd.askFor("Invalid IP address");
+            Cmd.error("'" + hostIP + "' is not a valid IPv4 address");
+
+            Cmd.askFor("Please enter the IP address of the host");
 
             hostIP = this.inputQueue.take();
 
@@ -275,6 +280,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
 
+        this.interactWithLobby();
+
     }
 
     /**
@@ -288,48 +295,49 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         String username, password;
 
-        //Request the IP
-        Cmd.askFor("Please enter your username");
+        boolean firstAttempt = true;
 
-        username = this.inputQueue.take();
+        do {
 
-        //Request the IP
-        Cmd.askFor("Please enter your password");
+            if (!firstAttempt) {
+                Cmd.forbidden("Wrong username o password");
+            }
+            else {
+                firstAttempt = false;
+            }
+            //Request the IP
+            Cmd.askFor("Please enter your username");
 
-        password = this.inputQueue.take();
+            username = this.inputQueue.take();
 
-        //Perform login request
-        this.client.login(new LoginRequest(username, password));
+            //Request the IP
+            Cmd.askFor("Please enter your password");
 
-        //On RMI clients the login method, after has returned, has already called the onLobbyNotification.
-        //We need to wait only for socket logins
-        if (this.client instanceof SocketClient) {
+            password = this.inputQueue.take();
 
-            //Suspend and wait for a response
-            this.keyboardEnabled = false;
+            //Perform login request
+            this.client.login(new LoginRequest(username, password));
 
-            //Wait for the server response
-            this.waitOnMutex(this.connectionMutex);
+            //On RMI clients the login method, after has returned, has already called the onLobbyNotification.
+            //We need to wait only for socket logins
+            if (this.client instanceof SocketClient) {
 
-            this.keyboardEnabled = true;
+                //Suspend and wait for a response
+                this.keyboardEnabled = false;
 
-        }
+                //Wait for the server response
+                this.waitOnMutex(this.connectionMutex);
 
+                this.keyboardEnabled = true;
 
-        if (this.client.hasAuthenticated()) {
-
-            Cmd.success("Login successful, welcome back " + client.getUsername());
-
-            this.interactWithLobby();
-
-        }
-        else {
-
-            Cmd.forbidden("Wrong username o password");
-
-            this.authenticate();
+            }
 
         }
+        while (!this.client.hasAuthenticated());
+
+        this.localMatchController.setPlayerUsername(this.client.getUsername());
+
+        Cmd.success("Login successful, welcome back " + client.getUsername());
 
     }
 
@@ -355,21 +363,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         LobbyNotification o = (LobbyNotification)this.notificationQueue.take();
 
         //Keep posting notifications until the match starts
-        do {
+        while (o.getLobbyNotificationType() != LobbyNotificationType.MatchStart && o.getLobbyNotificationType() != LobbyNotificationType.ResumeGame) {
 
             Cmd.notify(o.getMessage());
 
             o = (LobbyNotification)this.notificationQueue.take();
 
-
         }
-        while (o.getLobbyNotificationType() != LobbyNotificationType.MatchStart);
 
         Cmd.notify(o.getMessage());
 
         this.keyboardEnabled = true;
 
-        this.interactWithMatchController();
+        this.interactWithMatchController(o.getLobbyNotificationType());
 
     }
 
@@ -377,13 +383,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      * Handles the round
      * @throws InterruptedException
      */
-    private void interactWithMatchController() throws InterruptedException {
-
-        this.localMatchController = new LocalMatchController(this.client.getUsername());
+    private void interactWithMatchController(LobbyNotificationType status) throws InterruptedException {
 
         this.ctx = CliContext.Match;
 
-        this.draftLeaderCards();
+        if (status != LobbyNotificationType.ResumeGame) {
+            this.draftLeaderCards();
+        }
 
         while(!this.localMatchController.matchHasEnded()) {
 
@@ -421,9 +427,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         this.waitOnMutex(this.draftMutex);
 
-        while (this.localMatchController.getDraftable().getCards().size() > 0) {
+        int drafRound = 0;
 
-            if (this.localMatchController.getDraftable().getCards().size() == 4) {
+        while (drafRound < 4) {
+
+            if (drafRound == 0) {
 
                 Cmd.notify("Leader cards draft started");
 
@@ -471,6 +479,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                 this.waitOnMutex(this.draftMutex);
 
             }
+
+            drafRound++;
         }
 
 
@@ -1053,6 +1063,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
     public void onLeaderCardDraftRequest(Client sender, Deck<LeaderCard> cards, String message) {
 
         this.localMatchController.setDraftable(cards);
+
+        Cmd.notify(message);
 
         //Wake up the thread that is waiting on the d
         synchronized (this.draftMutex) {

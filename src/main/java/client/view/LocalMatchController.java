@@ -10,6 +10,7 @@ import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.StandardActionType;
 import server.model.Match;
 import server.model.board.Dice;
+import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
 
@@ -36,10 +37,7 @@ public class LocalMatchController {
     //actions performed by a player on this round
     HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;
 
-    LocalMatchController(String playerUsername) {
-
-        this.playerUsername = playerUsername;
-
+    LocalMatchController() {
         this.actionsPerformedOnThisRound = new HashMap<StandardActionType, Boolean>();
 
         for (StandardActionType action : StandardActionType.values()) {
@@ -48,6 +46,11 @@ public class LocalMatchController {
 
         }
 
+    }
+
+
+    public void setPlayerUsername(String playerUsername) {
+        this.playerUsername = playerUsername;
     }
 
     /**
@@ -81,9 +84,34 @@ public class LocalMatchController {
 
     }
 
+    /**
+     * You can roll the dices just if you are the first of that turn or if you are the first non disabled player
+     * @return
+     */
     public boolean canRollDices() {
 
-        return  (this.match.getCurrentTurn() == 1 && this.match.getRoundOrder().get(0).getUsername().equals(this.playerUsername));
+        if  (this.match.getCurrentRound() == 1) {
+
+            Player firstNotDisabled = null;
+
+            for (Player p : this.match.getRoundOrder()) {
+
+                if (!p.isDisabled()) {
+
+                    firstNotDisabled = p;
+
+                }
+            }
+
+            if (firstNotDisabled.getUsername().equals(this.playerUsername)) {
+
+                return true;
+
+            }
+
+        }
+
+        return false;
 
     }
 
