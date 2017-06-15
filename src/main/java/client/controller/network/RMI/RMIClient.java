@@ -66,6 +66,7 @@ public class RMIClient extends Client implements RMIClientInterface {
     }
 
     public boolean heartbeat() throws RemoteException {
+
         return true;
     }
 

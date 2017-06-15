@@ -54,8 +54,10 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         try {
 
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+
+            in = new ObjectInputStream(socket.getInputStream());
+
 
         } catch (IOException e) {
 
@@ -82,7 +84,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
             out.writeObject(object);
 
-            out.flush();
+            out.reset();
 
             return true;
 

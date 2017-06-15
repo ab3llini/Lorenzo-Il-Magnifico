@@ -354,6 +354,8 @@ public class Lobby {
 
         if (this.matchControllerRunner != null && this.matchControllerRunner.isAlive()) {
 
+            Logger.log(Level.WARNING, this.toString(), "Waiting for kernel to terminate our threads..");
+
             this.matchControllerRunner.interrupt();
 
         }

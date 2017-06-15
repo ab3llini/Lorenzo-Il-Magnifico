@@ -449,7 +449,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                 choice = this.waitForActionSelection();
 
-
                 while (!leaderCommand.isValid(choice)) {
 
                     Cmd.askFor("Which leader card would you like?");

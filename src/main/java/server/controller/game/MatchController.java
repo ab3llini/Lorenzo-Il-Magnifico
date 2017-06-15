@@ -260,7 +260,7 @@ public class MatchController implements Runnable {
 
         //The first thing to do is check if the player has the current turn
         //If so we need to insert a poisonous action to stop his handling
-        if (belonging == this.currentPlayer || drafting) {
+        if (belonging.getUsername().equals(this.currentPlayer.getUsername()) || drafting) {
 
             //Inset an empty action to trigger the exception that will disable the player
             this.actions.add(new Action());
@@ -433,8 +433,11 @@ public class MatchController implements Runnable {
 
                 if (!p.isDisabled()) {
 
-                    this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftingMap.get(p.getUsername()), "Please select a leader card and draft " + draftingMap.get(p.getUsername()).getCards().size());
+                    Deck<LeaderCard> draftable = draftingMap.get(p.getUsername());
 
+                    System.out.println("I am sending a draftable deck of size " + draftable.getCards().size() + " to " + p.getUsername());
+
+                    this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftable, "Please select a leader card and draft");
                 }
 
             }
@@ -508,6 +511,7 @@ public class MatchController implements Runnable {
 
 
             } catch (NoActionPerformedException e) {
+
 
                 this.handleActionTimeoutExpiration(e);
 
