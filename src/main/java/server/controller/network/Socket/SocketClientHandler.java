@@ -250,6 +250,8 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     public void notifyBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) {
 
+        this.sendObject(new MatchNotification(MatchNotificationType.BonusTileDraft, tiles, message));
+
     }
 
 }

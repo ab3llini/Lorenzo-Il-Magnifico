@@ -48,21 +48,19 @@ public class BonusTile implements Serializable {
     @Override
     public String toString() {
 
-        String tile="";
+        String tile = "BONUS TILE N°"+this.id+"\n";
 
-        tile += "BONUS TILE N°"+this.id+"\n";
+        tile += "\tHARVEST "+ UnicodeChars.Harvest+"\n";
 
-        tile += "-->HARVEST "+ UnicodeChars.Harvest+"\n";
+        tile += "\t\tMinforce: "+this.harvestMinForce+"\n";
 
-        tile += "   Minforce: "+this.harvestMinForce+"\n";
+        tile += "\t\tSurplus: "+this.getHarvestSurplus().toString()+"\n";
 
-        tile += "   Surplus: "+this.getHarvestSurplus().toString()+"\n";
+        tile += "\tPRODUCTION "+ UnicodeChars.Production+"\n";
 
-        tile += "-->PRODUCTION "+ UnicodeChars.Production+"\n";
+        tile += "\t\tMinforce: "+this.productionMinForce+"\n";
 
-        tile += "   Minforce: "+this.productionMinForce+"\n";
-
-        tile += "   Surplus: "+this.getProductionSurplus().toString()+"\n";
+        tile += "\t\tSurplus: "+this.getProductionSurplus().toString()+"\n";
 
         return tile;
     }

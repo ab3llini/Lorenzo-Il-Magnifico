@@ -163,36 +163,23 @@ public class ParsersTest {
 
         ArrayList<BonusTile> bonusTiles = new ArrayList<>();
 
-        try {
+        bonusTiles = BonusTilesParser.parse();
 
-            bonusTiles = BonusTilesParser.parse();
+        assertEquals(5, bonusTiles.size());
 
-            assertEquals(5, bonusTiles.size());
+        int i=1;
 
-            int i=1;
+        for (BonusTile card: bonusTiles) {
 
-            for (BonusTile card: bonusTiles) {
+            assertEquals(i,(int)card.getId());
 
-                assertEquals(i,(int)card.getId());
+            i++;
 
-                i++;
+            assert (card.getHarvestMinForce() >= 0);
 
-                assert (card.getHarvestMinForce() >= 0);
-
-                assert (card.getProductionMinForce() >= 0);
-
-            }
-
-        } catch (URISyntaxException e1) {
-
-            assertEquals(0, bonusTiles.size());
-
-        } catch (IOException e2) {
-
-            assertEquals(0, bonusTiles.size());
+            assert (card.getProductionMinForce() >= 0);
 
         }
-
 
     }
     

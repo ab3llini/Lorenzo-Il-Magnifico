@@ -21,6 +21,7 @@ import server.model.effect.*;
 import server.model.effect.ActionType;
 import server.model.valuable.*;
 import server.utility.BoardConfigParser;
+import server.utility.BonusTilesParser;
 import singleton.GameConfig;
 
 import java.util.*;
@@ -81,7 +82,7 @@ public class MatchController implements Runnable {
      */
     private static final int ACTION_TIMEOUT =  GameConfig.getInstance().getPlayerTimeout();
 
-    private boolean drafting = false;
+    private boolean drafting = true;
 
 
     /**
@@ -184,10 +185,14 @@ public class MatchController implements Runnable {
      */
     public void run() {
 
-        //TODO: Draft the bonus tiles
-
         //Draft the leader cards first
         this.handleLeaderCardDraft();
+
+        //Draft the bonus tiles
+        this.handleBonusTileDrat();
+
+        //Update the local flag
+        this.drafting = false;
 
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);
@@ -202,8 +207,7 @@ public class MatchController implements Runnable {
                 //Update the towers for the current combination of round / turn / period
                 this.boardController.updateTowersForTurn(this.match.getCurrentTurn(), this.match.getCurrentPeriod().toInt());
 
-                //Clean the council palace
-                
+                //TODO: Clean the council palace
 
                 //Free family members for each player
                 for (Player player:this.getMatch().getPlayers()) {
@@ -317,8 +321,6 @@ public class MatchController implements Runnable {
      * When all the players have selected one card, the draft takes places and the decks received from the nearby player are sent.
      */
     private void handleLeaderCardDraft() {
-
-        drafting = true;
 
         final int NUMBER_OF_CARDS_PER_DECK = 4;
 
@@ -444,7 +446,65 @@ public class MatchController implements Runnable {
 
         }
 
-        drafting = false;
+    }
+
+
+    /**
+     * Handles the draft of the bonus tiles
+     */
+    private void handleBonusTileDrat() {
+
+        //Get the bonus tile array directly from the parser
+        ArrayList<BonusTile> bonusTileSet = BonusTilesParser.parse();
+
+        this.notifyAll("The bonus tiles are being drafted, please wait for your turn.");
+
+        //Send a request to each player beginning from the last one
+        for (int i = this.match.getPlayers().size() - 1; i >= 0; i--) {
+
+            //Send a request to each player and wait for a response
+            this.remotePlayerMap.get(this.match.getPlayers().get(i)).notifyBonusTileDraftRequest(bonusTileSet, "Please select a bonus tile.");
+
+            ShuffleBinusTileStandardAction shuffleAction;
+
+            try {
+
+                //Wait for the player to take his action
+                shuffleAction = (ShuffleBinusTileStandardAction)this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                BonusTile selected = bonusTileSet.get(shuffleAction.getSelection());
+
+                //Assign the selected tile
+                this.match.getPlayers().get(i).getPersonalBoard().setBonusTile(selected);
+
+                //Once we get the selection, remove the proper tile from the set
+                bonusTileSet.remove(shuffleAction.getSelection());
+
+                this.notifyAllActionPerformed(this.match.getPlayerFromUsername(shuffleAction.getSender()), shuffleAction, shuffleAction.getSender() + " selected his tile: #" + selected.getId());
+
+
+            }
+            catch (NoActionPerformedException e) {
+
+                //If we don't get any selection from the player, then select the first tile available in the set
+                this.match.getPlayers().get(i).getPersonalBoard().setBonusTile(bonusTileSet.get(0));
+
+                //Then remove it
+                bonusTileSet.remove(0);
+
+            }
+            catch (InterruptedException e) {
+
+                Logger.log(Level.WARNING, this.toString(), "Thread stopped while waiting on action queue", e);
+
+            }
+            catch (NoSuchPlayerException e) {
+
+                Logger.log(Level.FINEST, this.toString(), "Can't find player!", e);
+
+            }
+
+        }
 
     }
 

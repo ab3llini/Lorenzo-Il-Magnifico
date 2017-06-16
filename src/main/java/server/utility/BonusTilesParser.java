@@ -25,7 +25,7 @@ public class BonusTilesParser {
      * @return
      */
 
-    public static ArrayList<BonusTile> parse() throws IOException, URISyntaxException {
+    public static ArrayList<BonusTile> parse() {
 
         //two EffectSurplus object to save harvest and production bonus. Null only at the moment because all bonus tiles contains the keys harvest,production
         EffectSurplus productionSurplus = null;
@@ -38,7 +38,18 @@ public class BonusTilesParser {
         ArrayList<BonusTile> allBonusTiles = new ArrayList<BonusTile>();
 
         //get a JsonObject from the file stored in resource that contains all the bonusTiles in json
-        JsonObject bonusTilesSet = Loader.getJsonObjectFromFile("json/bonusTiles.json");
+        JsonObject bonusTilesSet = null;
+        try {
+
+            bonusTilesSet = Loader.getJsonObjectFromFile("json/bonusTiles.json");
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+
+            e.printStackTrace();
+        }
 
         //extract one by one all the card from cardsSet and create a bonus tiles object from every single bunus tile in json file
         for (String bonusTilesId : Json.getObjectKeys(bonusTilesSet)) {

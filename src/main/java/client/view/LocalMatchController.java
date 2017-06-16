@@ -5,15 +5,16 @@ package client.view;
  * @since   03/06/17.
  */
 
-import exception.NoSuchPlayerException;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.StandardActionType;
 import server.model.Match;
+import server.model.board.BonusTile;
 import server.model.board.Dice;
 import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -26,7 +27,9 @@ public class LocalMatchController {
 
     private String playerUsername;
 
-    private Deck<LeaderCard> draftable;
+    private Deck<LeaderCard> draftableLeaderCards;
+
+    private ArrayList<BonusTile> draftableBonusTiles;
 
     private boolean matchEnded = false;
 
@@ -35,9 +38,10 @@ public class LocalMatchController {
     private ImmediateActionType lastPendingImmediateAction;
 
     //actions performed by a player on this round
-    HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;
+    private HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;
 
     LocalMatchController() {
+
         this.actionsPerformedOnThisRound = new HashMap<StandardActionType, Boolean>();
 
         for (StandardActionType action : StandardActionType.values()) {
@@ -167,12 +171,12 @@ public class LocalMatchController {
     }
 
 
-    public void setDraftable(Deck<LeaderCard> draftable) {
-        this.draftable = draftable;
+    public void setDraftableLeaderCards(Deck<LeaderCard> draftableLeaderCards) {
+        this.draftableLeaderCards = draftableLeaderCards;
     }
 
-    public Deck<LeaderCard> getDraftable() {
-        return draftable;
+    public Deck<LeaderCard> getDraftableLeaderCards() {
+        return draftableLeaderCards;
     }
 
     public Match getMatch() {
@@ -193,5 +197,13 @@ public class LocalMatchController {
 
     public ImmediateActionType getLastPendingImmediateAction() {
         return lastPendingImmediateAction;
+    }
+
+    public void setDraftableBonusTiles(ArrayList<BonusTile> draftableBonusTiles) {
+        this.draftableBonusTiles = draftableBonusTiles;
+    }
+
+    public ArrayList<BonusTile> getDraftableBonusTiles() {
+        return draftableBonusTiles;
     }
 }

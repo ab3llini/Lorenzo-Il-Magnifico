@@ -220,6 +220,11 @@ public class SocketClient extends Client implements Runnable {
                     this.notifyLeaderCardDraftRequest(matchNot.getDeck(), matchNot.getMessage());
 
                 }
+                else if (matchNot.getMatchNotificationType() == MatchNotificationType.BonusTileDraft) {
+
+                    this.notifyBonusTileDraftRequest(matchNot.getTiles(), matchNot.getMessage());
+
+                }
                 else {
 
                     this.notify(matchNot);
@@ -248,7 +253,7 @@ public class SocketClient extends Client implements Runnable {
 
             out.writeObject(object);
 
-            out.flush();
+            out.reset();
 
             return true;
 

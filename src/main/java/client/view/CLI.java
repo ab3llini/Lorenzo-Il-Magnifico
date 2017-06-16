@@ -15,7 +15,6 @@ import client.view.utility.AsyncInputStream;
 import client.view.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
 import exception.NoSuchPlayerException;
-import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
@@ -35,7 +34,6 @@ import server.model.GameSingleton;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.ColorType;
-import server.model.board.CouncilPrivilege;
 import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
@@ -81,7 +79,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     private final Object roundMutex;
 
-    private final Object draftMutex;
+    private final Object leaderDraftMutex;
+
+    private final Object tilesDraftMutex;
 
     private final Object selectionMutex;
 
@@ -122,7 +122,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         this.selectionMutex = new Object();
 
-        this.draftMutex = new Object();
+        this.leaderDraftMutex = new Object();
+
+        this.tilesDraftMutex = new Object();
+
 
         //Initialization procedure
         this.keyboard = new AsyncInputStream(System.in);
@@ -388,7 +391,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         this.ctx = CliContext.Match;
 
         if (status != LobbyNotificationType.ResumeGame) {
+
             this.draftLeaderCards();
+
+            this.draftBonusTiles();
+
         }
 
         while(!this.localMatchController.matchHasEnded()) {
@@ -425,7 +432,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      */
     private void draftLeaderCards() throws InterruptedException {
 
-        this.waitOnMutex(this.draftMutex);
+        this.waitOnMutex(this.leaderDraftMutex);
 
         int drafRound = 0;
 
@@ -437,50 +444,100 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             }
 
-            ArrayCommand<LeaderCard> leaderCommand = new ArrayCommand<>(this.localMatchController.getDraftable().getCards());
+            ArrayCommand<LeaderCard> leaderCardSelection = new ArrayCommand<>(this.localMatchController.getDraftableLeaderCards().getCards());
 
             String choice = "";
 
             Cmd.askFor("Which leader card would you like?");
 
-            leaderCommand.printChoiches();
+            leaderCardSelection.printChoiches();
 
             try {
 
-                choice = this.waitForActionSelection();
+                choice = this.waitForCommandSelection();
 
-                while (!leaderCommand.isValid(choice)) {
+                while (!leaderCardSelection.isValid(choice)) {
 
                     Cmd.askFor("Which leader card would you like?");
 
-                    leaderCommand.printChoiches();
+                    leaderCardSelection.printChoiches();
 
-                    choice = this.waitForActionSelection();
+                    choice = this.waitForCommandSelection();
 
                 }
 
             } catch (NoActionPerformedException e) {
 
-                e.printStackTrace();
+                Cmd.notify("The timeout to take your action has expired.");
+
+                //TODO: Skip further selections cause the player is now disabled
+
+                return;
 
             }
 
 
-            this.client.performAction(new ShuffleLeaderCardStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftable(), this.client.getUsername()));
+            this.client.performAction(new ShuffleLeaderCardStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableLeaderCards(), this.client.getUsername()));
 
-            if (this.localMatchController.getDraftable().getCards().size() == 1) {
+            if (this.localMatchController.getDraftableLeaderCards().getCards().size() == 1) {
 
-                this.localMatchController.setDraftable(new Deck<>());
+                this.localMatchController.setDraftableLeaderCards(new Deck<>());
 
             }
             else {
 
-                this.waitOnMutex(this.draftMutex);
+                this.waitOnMutex(this.leaderDraftMutex);
 
             }
 
             drafRound++;
         }
+
+
+    }
+
+    /**
+     * Interacts with the user asking him which bonus tile he would like
+     * It might even throw an exception if on the server side the timeout for the action expires
+     * @throws InterruptedException
+     */
+    private void draftBonusTiles() throws InterruptedException {
+
+        this.waitOnMutex(this.tilesDraftMutex);
+
+        ArrayCommand<BonusTile> bonusTileSelection = new ArrayCommand<>(this.localMatchController.getDraftableBonusTiles());
+
+        String choice = "";
+
+        Cmd.askFor("Which bonus tile would you like?");
+
+        bonusTileSelection.printChoiches();
+
+        try {
+
+            choice = this.waitForCommandSelection();
+
+            while (!bonusTileSelection.isValid(choice)) {
+
+                Cmd.askFor("Which bonus tile would you like?");
+
+                bonusTileSelection.printChoiches();
+
+                choice = this.waitForCommandSelection();
+
+            }
+
+        } catch (NoActionPerformedException e) {
+
+            Cmd.notify("The timeout to take your action has expired.");
+
+            //TODO: Skip further selections cause the player is now disabled
+
+            return;
+
+        }
+
+        this.client.performAction(new ShuffleBinusTileStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableBonusTiles(), this.client.getUsername()));
 
 
     }
@@ -497,7 +554,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         actionSelection.printChoiches();
 
         //Try to do an action before the timeout goes out
-        String choice = this.waitForActionSelection();
+        String choice = this.waitForCommandSelection();
 
         boolean valid = actionSelection.isValid(choice);
 
@@ -512,7 +569,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             //Ask the user which action he wants to perform printing the choices
             Cmd.askFor("Which action would you like to perform ?");
 
-            choice = this.waitForActionSelection();
+            choice = this.waitForCommandSelection();
 
             valid = actionSelection.isValid(choice);
 
@@ -525,7 +582,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             //Ask the user which action he wants to perform printing the choices
             Cmd.askFor("Which action would you like to perform ?");
 
-            choice = this.waitForActionSelection();
+            choice = this.waitForCommandSelection();
 
             while (!actionSelection.isValid(choice) || !actionSelection.choiceMatch(choice, StandardActionType.RollDice)) {
 
@@ -534,7 +591,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                 //Ask the user which action he wants to perform printing the choices
                 Cmd.askFor("Which action would you like to perform ?");
 
-                choice = this.waitForActionSelection();
+                choice = this.waitForCommandSelection();
 
             }
 
@@ -623,7 +680,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                         privilegeSelection.printChoiches();
 
-                        choice = this.waitForActionSelection();
+                        choice = this.waitForCommandSelection();
 
                         while (!privilegeSelection.isValid(choice)) {
 
@@ -631,7 +688,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                             privilegeSelection.printChoiches();
 
-                            choice = this.waitForActionSelection();
+                            choice = this.waitForCommandSelection();
 
                         }
 
@@ -683,7 +740,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         do {
 
-            choice = this.waitForActionSelection();
+            choice = this.waitForCommandSelection();
 
         }
         while (!sectorSelection.isValid(choice));
@@ -717,7 +774,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         do {
 
-            choice = this.waitForActionSelection();
+            choice = this.waitForCommandSelection();
 
         }
         while (!colorSelection.isValid(choice));
@@ -758,7 +815,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             do {
 
-                choice = this.waitForActionSelection();
+                choice = this.waitForCommandSelection();
 
             }
             while (!costSelection.isValid(choice));
@@ -787,7 +844,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      */
     private void showDvptCardDetail() throws InterruptedException {
 
-        String id = "";
+        String id;
 
         Cmd.askFor("Enter the card ID of which you would like to see more details");
 
@@ -809,7 +866,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
      * @throws NoActionPerformedException if the timeout expired for taking the move
      * @throws InterruptedException wait exception
      */
-    private String waitForActionSelection() throws InterruptedException, NoActionPerformedException {
+    private String waitForCommandSelection() throws InterruptedException, NoActionPerformedException {
 
         //Suspend the thread on a mutex and wait for the user to enter a command choice or for the timeout to expire
         this.waitOnMutex(this.selectionMutex);
@@ -1061,20 +1118,33 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     public void onLeaderCardDraftRequest(Client sender, Deck<LeaderCard> cards, String message) {
 
-        this.localMatchController.setDraftable(cards);
+        this.localMatchController.setDraftableLeaderCards(cards);
 
         Cmd.notify(message);
 
         //Wake up the thread that is waiting on the d
-        synchronized (this.draftMutex) {
+        synchronized (this.leaderDraftMutex) {
 
-            this.draftMutex.notify();
+            this.leaderDraftMutex.notify();
 
         }
 
     }
 
     public void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message) {
+
+        //Assign the tiles just received
+        this.localMatchController.setDraftableBonusTiles(tiles);
+
+        //Notify the user
+        Cmd.notify(message);
+
+        //Wake up the thread
+        synchronized (this.tilesDraftMutex) {
+
+            this.tilesDraftMutex.notify();
+
+        }
 
     }
 

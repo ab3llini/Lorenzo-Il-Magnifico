@@ -1,11 +1,14 @@
 package netobject.notification;
 
+import client.view.cmd.ArrayCommand;
 import netobject.action.Action;
-import netobject.action.ActionType;
 import netobject.action.immediate.ImmediateActionType;
+import server.model.board.BonusTile;
 import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
+
+import java.util.ArrayList;
 
 public class MatchNotification extends Notification {
 
@@ -15,6 +18,7 @@ public class MatchNotification extends Notification {
     private Action action;
     private final String message;
     private Deck<LeaderCard> deck;
+    private ArrayList<BonusTile> tiles;
 
     public MatchNotification(MatchNotificationType matchNotificationType, ImmediateActionType actionType, Player player, String message) {
 
@@ -45,6 +49,14 @@ public class MatchNotification extends Notification {
         super(NotificationType.Match);
         this.matchNotificationType = matchNotificationType;
         this.deck = deck;
+        this.message = message;
+    }
+
+    public MatchNotification(MatchNotificationType matchNotificationType, ArrayList<BonusTile> tiles, String message) {
+
+        super(NotificationType.Match);
+        this.matchNotificationType = matchNotificationType;
+        this.tiles = tiles;
         this.message = message;
     }
 
@@ -82,4 +94,7 @@ public class MatchNotification extends Notification {
         return deck;
     }
 
+    public ArrayList<BonusTile> getTiles() {
+        return tiles;
+    }
 }
