@@ -1820,11 +1820,9 @@ public class MatchController implements Runnable {
         else
         {
 
-            ImmediateChoiceAction choice = null;
-
             this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideBanOption, this.currentPlayer, "Would you like to get banned and keep the faith points or not ?");
 
-            choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
+            ImmediateChoiceAction choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
             if(choice.getSelection() == 1){
                 //the player has enough faith points but doesn't want to use them to avoid excommunication

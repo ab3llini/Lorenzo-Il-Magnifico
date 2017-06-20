@@ -175,6 +175,12 @@ public class LocalMatchController {
         this.draftableLeaderCards = draftableLeaderCards;
     }
 
+    public boolean canSelectBanOption() {
+
+        return  (this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4);
+
+    }
+
     public Deck<LeaderCard> getDraftableLeaderCards() {
         return draftableLeaderCards;
     }
