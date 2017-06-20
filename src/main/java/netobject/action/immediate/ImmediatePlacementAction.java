@@ -13,24 +13,34 @@ import java.util.ArrayList;
  */
 public class ImmediatePlacementAction extends Action {
 
-
     private final ImmediateBoardSectorType actionTarget; //sector of the board which is target of the Action
 
-    private final Integer placementIndex; //slot index of the board sector
+    private Integer placementIndex; //slot index of the board sector
 
-    private final SelectionType costOptionType;
+    private SelectionType costOptionType;
 
     private int additionalServants;
 
     private ArrayList<Discount> discounts;
 
-    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, SelectionType costOptionType, String sender) {
+    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, int additionalServants, SelectionType costOptionType, String sender) {
 
         super(ActionType.Immediate, sender);
 
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
+        this.additionalServants = additionalServants;
         this.costOptionType = costOptionType;
+        this.discounts = new ArrayList<>();
+
+    }
+
+    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, int additionalServants, String sender) {
+
+        super(ActionType.Immediate, sender);
+
+        this.actionTarget = actionTarget;
+        this.additionalServants = additionalServants;
         this.discounts = new ArrayList<>();
 
     }

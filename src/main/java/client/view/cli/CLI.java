@@ -17,18 +17,16 @@ import exception.NoActionPerformedException;
 import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
-import netobject.action.Action;
-import netobject.action.ActionType;
-import netobject.action.SelectionType;
+import netobject.action.*;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.immediate.ImmediateActionTypeImpl;
 import netobject.action.immediate.ImmediateChoiceAction;
+import netobject.action.immediate.ImmediatePlacementAction;
 import netobject.action.standard.*;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
 import netobject.notification.MatchNotification;
 import netobject.notification.Notification;
-import netobject.action.BoardSectorType;
 import netobject.request.auth.LoginRequest;
 import server.model.GameSingleton;
 import server.model.Match;
@@ -624,7 +622,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
             this.terminateRound();
 
-            return actionSelection.getEnumEntryFromChoice(choice);
+            //If the user is terminating his round on the end of a period we must check if he can select hoe to get banned
+            if (!this.localMatchController.canSelectBanOption()) {
+
+                return actionSelection.getEnumEntryFromChoice(choice);
+
+            }
 
         }
 
@@ -664,6 +667,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         do {
 
+            String choice;
+
             if (type.getImpl() == ImmediateActionTypeImpl.Choice) {
 
                 ImmediateChoiceAction immediateChoiceAction = null;
@@ -673,8 +678,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                     case SelectCouncilPrivilege:
 
                         ArrayCommand<EffectSurplus> privilegeSelection = new ArrayCommand<>(BoardConfigParser.getCouncilPrivilegeOptions());
-
-                        String choice;
 
                         Cmd.askFor("Which council privilege would you like?");
 
@@ -692,7 +695,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                         }
 
-                        immediateChoiceAction = new ImmediateChoiceAction(type, Integer.parseInt(choice) - 1, this.client.getUsername());
+                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
 
                         break;
 
@@ -700,6 +703,25 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                 //Send the immediate choice
                 this.client.performAction(immediateChoiceAction);
+
+            }
+
+            else if (type.getImpl() == ImmediateActionTypeImpl.Placement) {
+
+                ImmediatePlacementAction immediatePlacementAction = null;
+
+                switch (type) {
+
+                    case ActivateHarvest:
+
+                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Harvest, this.askForServants(), this.client.getUsername());
+
+                        break;
+
+                }
+
+                //Send the immediate placement
+                this.client.performAction(immediatePlacementAction);
 
 
             }
@@ -782,28 +804,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         memberColor = colorSelection.getEnumEntryFromChoice(choice);
 
-        Cmd.askFor("Enter the amount of additional servants");
-
-        choice = this.inputQueue.take();
-
-        try {
-
-            while (!this.isIntegerInRange(choice, 0, this.localMatchController.getMatch().getPlayerFromUsername(this.client.getUsername()).getServants())) {
-
-                Cmd.forbidden("Invalid input or not enough servants, try again");
-
-                choice = this.inputQueue.take();
-
-
-            }
-
-        } catch (NoSuchPlayerException e) {
-
-            e.printStackTrace();
-
-        }
-
-        additionalServants = Integer.parseInt(choice);
+        additionalServants = this.askForServants();
 
         if (sectorType.canChoseIndex() && sectorType != BoardSectorType.Market) {
 
@@ -884,6 +885,33 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             return this.inputQueue.take();
 
         }
+
+    }
+
+    public int askForServants() throws InterruptedException {
+
+        Cmd.askFor("Enter the amount of additional servants");
+
+        String choice = this.inputQueue.take();
+
+        try {
+
+            while (!this.isIntegerInRange(choice, 0, this.localMatchController.getMatch().getPlayerFromUsername(this.client.getUsername()).getServants())) {
+
+                Cmd.forbidden("Invalid input or not enough servants, try again");
+
+                choice = this.inputQueue.take();
+
+
+            }
+
+        } catch (NoSuchPlayerException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return Integer.parseInt(choice);
 
     }
 

@@ -10,15 +10,13 @@ import netobject.action.SelectionType;
  */
 public class ImmediateChoiceAction extends Action {
 
-    private final ImmediateActionType immediateActionType;
 
     private final int selection;
 
-    public ImmediateChoiceAction(ImmediateActionType immediateActionType, int selection, String sender) {
+    public ImmediateChoiceAction(int selection, String sender) {
 
         super(ActionType.Immediate, sender);
 
-        this.immediateActionType = immediateActionType;
         this.selection = selection;
     }
 
