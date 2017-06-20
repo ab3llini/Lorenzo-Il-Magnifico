@@ -37,6 +37,7 @@ public class LocalMatchController {
     private StandardActionType lastPendingStandardAction;
 
     private ImmediateActionType lastPendingImmediateAction;
+    
 
     //actions performed by a player on this round
     private HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;

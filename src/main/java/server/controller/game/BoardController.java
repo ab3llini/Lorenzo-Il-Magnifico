@@ -507,6 +507,15 @@ public class BoardController {
         this.board.getProductionArea().clean();
     }
 
+    public void cleanDices(){
+
+        for (Dice dice:this.board.getDices()) {
+
+            dice.setValue(0);
+
+        }
+    }
+
 
 }
 

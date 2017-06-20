@@ -205,7 +205,7 @@ public class MatchController implements Runnable {
             if (this.match.getCurrentRound() == 1) {
 
                 //Update the towers for the current combination of round / turn / period
-                this.boardController.updateTowersForTurn(this.match.getCurrentTurn(), this.match.getCurrentPeriod().toInt());
+                this.boardController.updateTowersForTurn(this.match.getCurrentPeriod().toInt(), this.match.getCurrentTurn());
 
                 //clean the council palace place
                 this.boardController.cleanCouncilPalace();
@@ -219,6 +219,10 @@ public class MatchController implements Runnable {
                 //clean the production area
                 this.boardController.cleanProductionArea();
 
+                if(this.match.getCurrentTurn() == 1){
+                    this.boardController.cleanDices();
+                }
+
                 //Free family members for each player
                 for (Player player:this.getMatch().getPlayers()) {
 
@@ -226,13 +230,7 @@ public class MatchController implements Runnable {
 
                 }
 
-
-                //If the match has just started send the model before any move is performed
-                if (this.match.getCurrentRound() == 1 && this.match.getCurrentPeriod() == Period.first) {
-
-                    this.sendUpdatedModel();
-
-                }
+                this.sendUpdatedModel();
 
             }
 
