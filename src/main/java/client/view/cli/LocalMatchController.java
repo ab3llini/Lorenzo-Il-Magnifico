@@ -5,6 +5,7 @@ package client.view.cli;
  * @since   03/06/17.
  */
 
+import exception.NoSuchPlayerException;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.StandardActionType;
 import server.model.Match;
@@ -177,7 +178,24 @@ public class LocalMatchController {
 
     public boolean canSelectBanOption() {
 
-        return  (this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4);
+        if  (this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4) {
+
+            try {
+
+                if (this.match.getPlayerFromUsername(this.playerUsername).getFaithPoints() >= this.match.getBoard().getCathedral().getMinFaith(this.match.getCurrentPeriod())){
+
+                    return true;
+
+                }
+            } catch (NoSuchPlayerException e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        return false;
 
     }
 

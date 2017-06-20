@@ -537,6 +537,13 @@ public class MatchController implements Runnable {
 
                     Logger.log(Level.FINEST, this.toString(), "The player " + this.currentPlayer.getUsername() + " terminated his round");
 
+                    //If its time to choose whether or not to get banned ask the player before his round finishes
+                    if (this.match.getCurrentRound() == 4 && this.match.getCurrentTurn() == 2) {
+
+                        this.handleVaticanReport(this.currentPlayer);
+
+                    }
+
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
 
@@ -554,7 +561,6 @@ public class MatchController implements Runnable {
 
                         //Update the model
                         this.sendUpdatedModel();
-
 
                         //If we get here without exceptions we can notify of the succeeded action
                         this.notifyAllActionPerformed(this.currentPlayer, action, status);
@@ -952,10 +958,9 @@ public class MatchController implements Runnable {
                 }
             }
 
+            placementAction = (ImmediatePlacementAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
-
-                doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+            doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
 
 
 
@@ -1811,12 +1816,18 @@ public class MatchController implements Runnable {
 
         //if the player has not enough faith points he receive the excommunication
         if(player.getFaithPoints() < minPeriodFaith){
-            player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));}
+
+            player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
+
+            this.notifyAll(player.getUsername() + " has been banned!");
+
+        }
+
 
         else
         {
 
-            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideBanOption, this.currentPlayer, "Would you like to get banned and keep the faith points or not ?");
+            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideBanOption, player, "Would you like to get banned and keep the faith points or not ?");
 
             ImmediateChoiceAction choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
