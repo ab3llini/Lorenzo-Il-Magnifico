@@ -7,16 +7,16 @@ import java.io.Serializable;
  */
 public enum ColorType implements Serializable {
 
-    White("White", "1"),
-    Orange("Orange", "2"),
-    Black("Black", "3"),
-    Nautral("Neutral", "4");
+    White("White", 1),
+    Orange("Orange", 2),
+    Black("Black", 3),
+    Nautral("Neutral", 4);
 
 
     private final String name;
-    private final String value;
+    private final int value;
 
-    ColorType(String name, String value) {
+    ColorType(String name, int value) {
 
         this.name = name;
         this.value = value;
@@ -27,20 +27,8 @@ public enum ColorType implements Serializable {
         return name;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public ColorType toEnum() {
-
-        for (ColorType t : ColorType.values()) {
-
-            if (this.getName() == t.getName())
-
-                return t;
-
-        }
-
-        return null;
-    }
 }

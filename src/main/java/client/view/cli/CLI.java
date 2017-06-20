@@ -14,6 +14,7 @@ import client.view.cli.cmd.*;
 import client.view.cli.utility.AsyncInputStream;
 import client.view.cli.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
+import exception.NoSuchCommandException;
 import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
@@ -615,7 +616,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
         else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
 
-            Cmd.notify("EnumCommand not available yet.");
+            this.activateLeaderCard();
 
         }
         else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
@@ -654,6 +655,34 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         //After the action was performed, return the choice made so that if the user wants to terminate the round we can know it
         return actionSelection.getEnumEntryFromChoice(choice);
+
+    }
+
+    private void activateLeaderCard() throws NoActionPerformedException, InterruptedException {
+
+        Cmd.askFor("Which leader card would you like to activate?");
+
+        String choice = "";
+
+        ArrayCommand<LeaderCard> leaderCardSelection = new ArrayCommand<>(this.localMatchController.getLocalPlayer().getLeaderCards());
+
+        leaderCardSelection.printChoiches();
+
+        choice = this.waitForCommandSelection();
+
+        while (!leaderCardSelection.isValid(choice)) {
+
+            Cmd.askFor("Which leader card would you like to activate?");
+
+            leaderCardSelection.printChoiches();
+
+            choice = this.waitForCommandSelection();
+
+        }
+
+        int selection = Integer.parseInt(choice) - 1;
+
+        this.client.performAction(new LeaderCardActivationAction(this.localMatchController.getLocalPlayer().getLeaderCards().get(selection).getId(), this.client.getUsername()));
 
     }
 
@@ -698,6 +727,31 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                         immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
 
                         break;
+
+                    case SelectFamilyMember:
+
+                        EnumCommand<ColorType> colorSelection = new EnumCommand<>(ColorType.class);
+
+                        Cmd.askFor("Which family member do you want to use force = 6?");
+
+                        colorSelection.printChoiches();
+
+                        choice = this.waitForCommandSelection();
+
+                        while (!colorSelection.isValid(choice)) {
+
+                            Cmd.askFor("Which council privilege would you like?");
+
+                            colorSelection.printChoiches();
+
+                            choice = this.waitForCommandSelection();
+
+                        }
+
+                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice), this.client.getUsername());
+
+                        break;
+
 
                 }
 

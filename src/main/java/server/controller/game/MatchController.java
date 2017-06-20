@@ -1451,6 +1451,7 @@ public class MatchController implements Runnable {
     public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws NotEnoughLeaderRequirementsException, LeaderCardAlreadyActiveTurnException, InterruptedException, NoActionPerformedException {
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
+
             if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()))
                 throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
@@ -1497,18 +1498,29 @@ public class MatchController implements Runnable {
                                 player.setFamilyMemberForce(ColorType.Black, 6);
                             }
 
-                            if (choice.getSelection() == 2) {
+                            else if (choice.getSelection() == 2) {
                                 //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
                                 player.setFamilyMemberForce(ColorType.White, 6);
                             }
 
-                            if (choice.getSelection() == 3) {
+                            else if (choice.getSelection() == 3) {
                                 player.setFamilyMemberForce(ColorType.Orange, 6);
                             }
 
-                            if (choice.getSelection() == 4) {
-                                player.setFamilyMemberForce(ColorType.Nautral, 6);
+                            else if (choice.getSelection() == 4) {
+
+                                player.setFamilyMemberForce(ColorType.Orange, 6);
+
                             }
+
+                            else {
+
+                                Logger.log(Level.SEVERE, this.toString(), "Received a choice out of bounds");
+
+                            }
+
+                            this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
+
 
                         }
                         match.getTurnActiveLeaderCard().add(leaderCard);

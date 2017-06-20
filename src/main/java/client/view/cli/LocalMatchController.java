@@ -199,6 +199,18 @@ public class LocalMatchController {
 
     }
 
+    public Player getLocalPlayer() {
+
+        try {
+            return this.match.getPlayerFromUsername(this.playerUsername);
+        } catch (NoSuchPlayerException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
     public Deck<LeaderCard> getDraftableLeaderCards() {
         return draftableLeaderCards;
     }

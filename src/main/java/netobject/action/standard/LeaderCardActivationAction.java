@@ -13,10 +13,10 @@ public class LeaderCardActivationAction extends Action {
 
     private final int leaderCardIndex; //index of the leader card which is gonna to be activated
 
-    public LeaderCardActivationAction(StandardActionType standardActionType, int leaderCardIndex, String sender) {
+    public LeaderCardActivationAction(int leaderCardIndex, String sender) {
 
         super(ActionType.Standard, sender);
-        this.standardActionType = standardActionType;
+        this.standardActionType = StandardActionType.LeaderCardActivation;
         this.leaderCardIndex = leaderCardIndex;
 
     }
