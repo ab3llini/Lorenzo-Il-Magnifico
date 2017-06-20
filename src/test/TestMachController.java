@@ -67,7 +67,7 @@ public class TestMachController {
     }
 
     @Test
-    public void applyImmediateEffectTest() throws IOException, URISyntaxException, ActionException, NoActionPerformedException{
+    public void applyImmediateEffectTest() throws IOException, URISyntaxException, ActionException, NoActionPerformedException, InterruptedException {
 
         ArrayList<DvptCard> mazzo = DvptCardParser.parse();
 
@@ -223,7 +223,7 @@ public class TestMachController {
     }
 
     @Test
-    public void placeFamilyMemberTest() throws IOException, URISyntaxException, NoActionPerformedException {
+    public void placeFamilyMemberTest() throws IOException, URISyntaxException, NoActionPerformedException, InterruptedException {
 
         ArrayList<DvptCard> mazzo = DvptCardParser.parse();
         ArrayList<BonusTile> tiles = BonusTilesParser.parse();

@@ -672,7 +672,7 @@ public class MatchController implements Runnable {
      * @throws SixCardsLimitReachedException Exception raised when the player cannot take another card of that type
      * @throws PlayerAlreadyOccupiedTowerException Exception raised when the player tries to put another player on a tower that has already been used by him
      */
-    private String handlePlayerAction(Player player, Action action) throws ActionException, NoActionPerformedException {
+    private String handlePlayerAction(Player player, Action action) throws ActionException, NoActionPerformedException, InterruptedException {
 
         String message = "";
 
@@ -885,55 +885,81 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughPointsException
      */
-    public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException {
+    public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException, InterruptedException {
         //TODO
         StandardPlacementAction action;
+
         if(card != null) {
             ImmediateEffect immediateEffect = card.getImmediateEffect();
 
+            ActionType actionType = ActionType.unknown;
 
+            ImmediatePlacementAction placementAction = null;
+
+            //apply effect surplus of the immediate effect
             applyEffectSurplus(player, immediateEffect.getSurplus());
-
-
-            if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest)
-                applyHarvestChain(player, immediateEffect.getEffectAction().getForce());
-
-            if (immediateEffect.getEffectAction().getTarget() == ActionType.production)
-                applyProductionChain(player, immediateEffect.getEffectAction().getForce());
-
-            if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
-                if (immediateEffect.getEffectAction().getTarget() == null) {
-                    //può fare qualsiasi azione di posizionamento sulla torre
-                }
-                if (immediateEffect.getEffectAction().getType() == DvptCardType.territory)
-                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    //mi salvo la forza che utilizzo poi per lanciare il metodo do immediate effect action
-                    ;
-
-                if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
-                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    ;
-
-                    //Richiede l'interazione..
-                    this.notifyAllTurnEnabled(this.currentPlayer);
-
-
-                }
-
-                if (immediateEffect.getEffectAction().getType() == DvptCardType.building)
-                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    ;
-
-                if (immediateEffect.getEffectAction().getType() == DvptCardType.venture)
-                    //manda al client quale azione può essere fatta -----> BoardSectorType + Force + Discount
-                    ;
-            }
 
             //multiplier immediate effect is always in the first slot of points array
             if (immediateEffect.getSurplus().getPoints().size() > 0) {
                 if (immediateEffect.getSurplus().getPoints().get(0).getMultiplier() != null)
                     applyMultiplier(player, immediateEffect.getSurplus().getPoints().get(0).getMultiplier());
             }
+
+            if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest){
+
+                this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
+
+
+
+            }
+
+             else if (immediateEffect.getEffectAction().getTarget() == ActionType.production){
+
+                this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
+
+            }
+
+             else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
+
+                if (immediateEffect.getEffectAction().getTarget() == null) {
+
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type");
+
+                }
+
+                else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory){
+
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card");
+
+                }
+
+                else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
+
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card");
+
+                }
+
+                else if (immediateEffect.getEffectAction().getType() == DvptCardType.building){
+
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card");
+
+                }
+
+                else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture){
+
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card");
+
+                }
+            }
+
+
+                placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+
+
+
+
         }
     }
 
@@ -943,7 +969,7 @@ public class MatchController implements Runnable {
      * @param player
      * @throws NotStrongEnoughException
      */
-    public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException, NoActionPerformedException {
+    public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException, NoActionPerformedException, InterruptedException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
         boolean noMarket = false;
@@ -1191,7 +1217,7 @@ public class MatchController implements Runnable {
      * @param player
      * @throws ActionException
      */
-    public void doImmediateAction(ImmediatePlacementAction action, Integer force, Player player) throws ActionException, NoActionPerformedException {
+    public void doImmediateAction(ImmediatePlacementAction action, Integer force, Player player) throws ActionException, NoActionPerformedException, InterruptedException {
 
         //if boardSectorType is a tower sector we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
@@ -1232,7 +1258,7 @@ public class MatchController implements Runnable {
         //if boardSectorType is harvest the harvestChain (activation of all the permanent effect of building cards that has production type) started
         else if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
 
-            //we have to subtract a force malus from activation force
+
             applyProductionChain(player,action.getAdditionalServants());
 
         }
@@ -1240,7 +1266,7 @@ public class MatchController implements Runnable {
         //if boardSectorType is harvest the productionChain (activation of all the permanent effect of territory cards that has harvest type) started
         else if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
 
-            //we have to subtract a force malus from activation force
+
             applyHarvestChain(player,action.getAdditionalServants());
 
         }
