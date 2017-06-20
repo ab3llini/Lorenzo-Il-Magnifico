@@ -397,7 +397,7 @@ public class MatchController implements Runnable {
                 //Add the selected card to the leader cards of the player
                 try {
 
-                    this.match.getPlayerFromUsername(shuffleAction.getSender()).addLeaderCard(selected);
+                    this.match.getPlayerFromUsername(shuffleAction.getSender()).addLeaderCard(GameSingleton.getInstance().getSpecificLeaderCard(selected.getId()));
 
                     this.notifyAllActionPerformed(this.match.getPlayerFromUsername(shuffleAction.getSender()), shuffleAction, shuffleAction.getSender() + " drafted his leader cards, he selected '" + selected.getName() + "'");
 

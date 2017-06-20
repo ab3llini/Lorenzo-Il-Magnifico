@@ -969,6 +969,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
+    public void printBoardAndPlayers() {
+
+        //Print the board every time the turn changes
+        System.out.println(this.localMatchController.getMatch().getBoard());
+
+        for (Player p : this.localMatchController.getMatch().getPlayers()) {
+
+            System.out.println(p);
+
+        }
+
+    }
+
     /**
      * Interface implementation for AsyncInputStreamObserver
      * @param stream the stream that raised the event
@@ -1043,15 +1056,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     public void onTurnEnabled(Client sender, Player player, String message) {
 
-        //Print the board every time the turn changes
-        System.out.println(this.localMatchController.getMatch().getBoard());
-
-        for (Player p : this.localMatchController.getMatch().getPlayers()) {
-
-            System.out.println(p);
-
-        }
-
+        this.printBoardAndPlayers();
 
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
@@ -1167,7 +1172,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                     if (this.localMatchController.getMatch() != null) {
 
-                        System.out.println(this.localMatchController.getMatch().getBoard());
+                        this.printBoardAndPlayers();
 
                     }
 

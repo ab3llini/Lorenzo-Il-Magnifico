@@ -28,8 +28,7 @@ public class Player implements Serializable {
     private HashMap<PointType, Integer> points;
     private ArrayList<FamilyMember> familyMembers;
     private ArrayList<BanCard> banCards;
-    private ArrayList<LeaderCard> leaderCards;
-    private HashMap<LeaderCard, Boolean>  activeLeaderCards;
+    private HashMap<LeaderCard, Boolean> leaderCards;
 
 
 
@@ -75,9 +74,7 @@ public class Player implements Serializable {
 
         this.banCards = new ArrayList<BanCard>();
 
-        this.leaderCards = new ArrayList<LeaderCard>();
-
-        this.activeLeaderCards = new HashMap<LeaderCard, Boolean>();
+        this.leaderCards = new HashMap<LeaderCard, Boolean>();
 
     }
 
@@ -161,7 +158,17 @@ public class Player implements Serializable {
 
     }
     public HashMap<LeaderCard,Boolean> getActiveLeaderCardsAsHashMap() {
-        return this.activeLeaderCards;
+        return this.leaderCards;
+    }
+
+    public ArrayList<LeaderCard> getLeaderCards() {
+
+        ArrayList<LeaderCard> result = new ArrayList<>();
+
+        result.addAll(this.leaderCards.keySet());
+
+        return result;
+
     }
 
     public Integer getMilitaryPoints() {
@@ -188,15 +195,15 @@ public class Player implements Serializable {
     }
 
     public void setActiveLeaderCards(HashMap<LeaderCard, Boolean> activeLeaderCards) {
-        this.activeLeaderCards = activeLeaderCards;
+        this.leaderCards = activeLeaderCards;
     }
 
 
     public ArrayList<LeaderCard> getActiveLeaderCards() {
         ArrayList<LeaderCard> activeLeaderCardsArray = new ArrayList<LeaderCard>();
         for(int i=0; i<20; i++){
-            if( activeLeaderCards.containsKey(GameSingleton.getInstance().getLeaderCards().get(i))) {
-                if (activeLeaderCards.get(GameSingleton.getInstance().getLeaderCards().get(i)) == true)
+            if( leaderCards.containsKey(GameSingleton.getInstance().getLeaderCards().get(i))) {
+                if (leaderCards.get(GameSingleton.getInstance().getLeaderCards().get(i)) == true)
                     activeLeaderCardsArray.add(GameSingleton.getInstance().getLeaderCards().get(i));
             }
         }
@@ -231,16 +238,17 @@ public class Player implements Serializable {
         return banCards;
     }
 
-    public ArrayList<LeaderCard> getLeaderCards() {
-        return leaderCards;
-    }
-
     public boolean addBanCard(BanCard card) {
         return this.banCards.add(card);
     }
 
-    public boolean addLeaderCard(LeaderCard card) {
-        return this.leaderCards.add(card);
+    public void addLeaderCard(LeaderCard card) {
+
+        if (this.leaderCards != null) {
+
+            this.leaderCards.put(card, false);
+
+        }
     }
 
     public void setFamilyMembers(ArrayList<FamilyMember> familyMembers) {

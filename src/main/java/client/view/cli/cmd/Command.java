@@ -56,7 +56,9 @@ public abstract class Command {
 
             Map.Entry pair = (Map.Entry) it.next();
 
-            System.out.println(AnsiColors.ANSI_GREEN + UnicodeChars.Arrow + "\t(" + pair.getValue() + ")\t" + AnsiColors.ANSI_RESET + pair.getKey());
+            String space = (Integer.parseInt((String) pair.getValue()) > 9) ? "  " : "   ";
+
+            System.out.println(AnsiColors.ANSI_GREEN + UnicodeChars.Arrow + "\t(" + pair.getValue() + ")" + space + AnsiColors.ANSI_RESET + pair.getKey());
 
         }
 
