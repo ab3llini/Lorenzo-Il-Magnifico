@@ -693,8 +693,9 @@ public class MatchController implements Runnable {
 
         if(action instanceof LeaderCardActivationAction){
 
-            message = "activated a leader card";
+            activateLeaderCard((LeaderCardActivationAction) action, player);
 
+            message = "activated the leader card" + GameSingleton.getInstance().getSpecificLeaderCard(((LeaderCardActivationAction) action).getLeaderCardIndex());
 
         }
 
@@ -1447,48 +1448,78 @@ public class MatchController implements Runnable {
 
     /**this method actives a leader effect, activable once a round**/
 
-    public void activateOnceARoundLeaderCard (LeaderOnceARoundActivationAction action, Player player) {
+    public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws NotEnoughLeaderRequirementsException, LeaderCardAlreadyActiveTurnException, InterruptedException, NoActionPerformedException {
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
+            if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()))
+                throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
-            if (leaderCard.getLeaderEffect().getOnceARound() != null) {
+            else {
 
-                for (Resource resource : leaderCard.getLeaderEffect().getOnceARound().getResources())
-                    player.addGenericResource(resource.getType(), resource.getAmount());
+                player.getActiveLeaderCardsAsHashMap().replace(leaderCard, true);
 
-                for (Point point : leaderCard.getLeaderEffect().getOnceARound().getPoints())
-                    player.addGenericPoint(point.getType(), point.getAmount());
+                if (leaderCard.getLeaderEffect().getOnceARound() != null) {
 
-                if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.harvest)) {
-                    try {
-                        applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest));
-                    } catch (NoActionPerformedException e) {
-                        e.printStackTrace();
+                    if(match.getTurnActiveLeaderCard().contains(leaderCard))
+                        throw new LeaderCardAlreadyActiveTurnException("You have already activated the effect of this Leader card in this turn");
+
+                    if(!match.getTurnActiveLeaderCard().contains(leaderCard)) {
+                        for (Resource resource : leaderCard.getLeaderEffect().getOnceARound().getResources())
+                            player.addGenericResource(resource.getType(), resource.getAmount());
+
+                        for (Point point : leaderCard.getLeaderEffect().getOnceARound().getPoints())
+                            player.addGenericPoint(point.getType(), point.getAmount());
+
+                        if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.harvest)) {
+                            try {
+                                applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest));
+                            } catch (NoActionPerformedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.production)) {
+                            try {
+                                applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production));
+                            } catch (NoActionPerformedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect()) {
+
+                            this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectFamilyMember, this.currentPlayer, "Which family member do you want to set force 6?");
+
+                            ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                            if (choice.getSelection() == 1) {
+                                //the player has enough faith points but doesn't want to use them to avoid excommunication
+                                player.setFamilyMemberForce(ColorType.Black, 6);
+                            }
+
+                            if (choice.getSelection() == 2) {
+                                //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
+                                player.setFamilyMemberForce(ColorType.White, 6);
+                            }
+
+                            if (choice.getSelection() == 3) {
+                                player.setFamilyMemberForce(ColorType.Orange, 6);
+                            }
+
+                            if (choice.getSelection() == 4) {
+                                player.setFamilyMemberForce(ColorType.Nautral, 6);
+                            }
+
+                        }
+                        match.getTurnActiveLeaderCard().add(leaderCard);
+
                     }
-                }
-
-                if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.production)) {
-                    try {
-                        applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production));
-                    } catch (NoActionPerformedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect()) {
-                    if(action.getChoice() == 0)
-                        player.setFamilyMemberForce(ColorType.Black, 6);
-                    if(action.getChoice() == 1)
-                        player.setFamilyMemberForce(ColorType.White, 6);
-                    if(action.getChoice() == 2)
-                        player.setFamilyMemberForce(ColorType.Orange, 6);
-                    if(action.getChoice() == 3)
-                        player.setFamilyMemberForce(ColorType.Nautral, 6);
 
                 }
+
             }
 
-        }
+    }
 
     /** this method applies the Production Chain
      * this character chain consists in the activation of all the building card permanent effect**/

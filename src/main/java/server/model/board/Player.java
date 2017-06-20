@@ -160,6 +160,9 @@ public class Player implements Serializable {
             return getStones();
 
     }
+    public HashMap<LeaderCard,Boolean> getActiveLeaderCardsAsHashMap() {
+        return this.activeLeaderCards;
+    }
 
     public Integer getMilitaryPoints() {
         return this.points.get(PointType.Military);
@@ -187,6 +190,7 @@ public class Player implements Serializable {
     public void setActiveLeaderCards(HashMap<LeaderCard, Boolean> activeLeaderCards) {
         this.activeLeaderCards = activeLeaderCards;
     }
+
 
     public ArrayList<LeaderCard> getActiveLeaderCards() {
         ArrayList<LeaderCard> activeLeaderCardsArray = new ArrayList<LeaderCard>();

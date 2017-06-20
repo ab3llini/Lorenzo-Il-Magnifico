@@ -6,6 +6,8 @@ import netobject.NetObjectType;
 import server.model.board.Board;
 import server.model.board.Period;
 import server.model.board.Player;
+import server.model.card.leader.LeaderCard;
+
 import java.util.*;
 
 
@@ -25,6 +27,7 @@ public class Match extends NetObject {
     private Period currentPeriod;
     private int currentTurn;
     private int currentRound;
+    private ArrayList<LeaderCard> turnActiveLeaderCard;
 
 
     /**
@@ -47,6 +50,7 @@ public class Match extends NetObject {
         this.currentPeriod = Period.undefined;
         this.currentTurn = 0;
         this.currentRound = 0;
+        this.turnActiveLeaderCard = new ArrayList<LeaderCard>();
 
     }
 
@@ -112,6 +116,14 @@ public class Match extends NetObject {
             this.currentPeriod = Period.third;
 
         }
+    }
+
+    public ArrayList<LeaderCard> getTurnActiveLeaderCard() {
+        return turnActiveLeaderCard;
+    }
+
+    public void setTurnActiveLeaderCard(ArrayList<LeaderCard> turnActiveLeaderCard) {
+        this.turnActiveLeaderCard = turnActiveLeaderCard;
     }
 
     public void setCurrentTurn(int currentTurn) {
