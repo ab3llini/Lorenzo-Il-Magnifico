@@ -105,6 +105,8 @@ public class LocalMatchController {
 
                     firstNotDisabled = p;
 
+                    break ;
+
                 }
             }
 
