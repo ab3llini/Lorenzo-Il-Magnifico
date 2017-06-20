@@ -199,6 +199,27 @@ public class MatchController implements Runnable {
 
         while (roundIterator.hasNext()) {
 
+            if (this.match.getCurrentRound() == 4) {
+
+                //Look at council palace order to calculate new order of precedence
+                changePlayerOrder();
+
+                String newOrder = "";
+
+                int i=1;
+
+                for (Player player : this.match.getRoundOrder()) {
+
+                    newOrder += i+"° "+player.getUsername()+"\n";
+
+                    i++;
+
+                }
+
+                notifyAll("the player order has changed" + "\n" +newOrder );
+            }
+
+
             //Obtain the next round
             Queue<Player> currentRound = roundIterator.next();
 
@@ -318,6 +339,29 @@ public class MatchController implements Runnable {
         }
         Logger.log(Level.FINEST, this.toString(), "Player " + belonging.getUsername() + " reconnected");
 
+
+    }
+
+    public void changePlayerOrder(){
+
+        ArrayList <Player> oldPlayerOrder = this.match.getRoundOrder();
+
+        ArrayList <Player> newPlayerOrder = new ArrayList<>();
+
+        for (Player player : this.match.getBoard().getCouncilPalace().getCouncilPalaceOrder()) {
+
+            newPlayerOrder.add(player);
+
+        }
+
+        for (Player player : oldPlayerOrder) {
+
+            if(!newPlayerOrder.contains(player))
+
+                newPlayerOrder.add(player);
+        }
+
+        this.match.setRoundOrder(newPlayerOrder);
 
     }
 
