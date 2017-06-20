@@ -905,57 +905,61 @@ public class MatchController implements Runnable {
                     applyMultiplier(player, immediateEffect.getSurplus().getPoints().get(0).getMultiplier());
             }
 
-            if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest){
+           if(immediateEffect.getEffectAction().getTarget() != ActionType.unknown){
 
-                this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
+               if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest){
 
-
-
-            }
-
-             else if (immediateEffect.getEffectAction().getTarget() == ActionType.production){
-
-                this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
-
-            }
-
-             else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
-
-                if (immediateEffect.getEffectAction().getTarget() == null) {
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type");
-
-                }
-
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory){
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card");
-
-                }
-
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card");
-
-                }
-
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.building){
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card");
-
-                }
-
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture){
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card");
-
-                }
-            }
+                   this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
 
 
-                placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+               }
+
+               else if (immediateEffect.getEffectAction().getTarget() == ActionType.production){
+
+                   this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
+
+               }
+
+               else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
+
+                   if (immediateEffect.getEffectAction().getTarget() == null) {
+
+                       this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type");
+
+                   }
+
+                   else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory){
+
+                       this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card");
+
+                   }
+
+                   else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
+
+                       this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card");
+
+                   }
+
+                   else if (immediateEffect.getEffectAction().getType() == DvptCardType.building){
+
+                       this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card");
+
+                   }
+
+                   else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture){
+
+                       this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card");
+
+                   }
+               }
+
+
+               placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
+               doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+
+           }
 
 
 
