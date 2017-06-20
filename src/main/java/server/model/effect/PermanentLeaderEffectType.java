@@ -11,11 +11,11 @@ public enum PermanentLeaderEffectType implements Serializable {
     lorenzoEffect("Copy the ability of another Leader Card already played by another player. Once you decide the ability to copy, it can’t be changed"),
     lucreziaEffect("Your colored Family Members have a bonus of +2 on their value"),
     ariostoEffect("You can place your Family Members in occupied action spaces"),
-    moroEffect("Your uncoloured Family Member has a bonus of +3 on its value"),
+    sigismondoEffect("Your uncoloured Family Member has a bonus of +3 on its value"),
     borgiaEffect("Your colored Family Members have a bonus of +2 on their value"),
     picoEffect("When you take Development Cards, you get a discount of 3 coins"),
     ritaEffect("Each time you receive rosources as an immediate effect from Development Cards (not from an action space), you receive the resources twice"),
-    sigismondoEffect("Your coloured Family Member has a value of 5, regardless of their related dice"),
+    moroEffect("Your coloured Family Member has a value of 5, regardless of their related dice"),
     sistoEffect("You gain 5 additional victory points when you support the church in a vatican report phase");
 
     String description;

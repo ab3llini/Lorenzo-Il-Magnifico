@@ -1460,12 +1460,15 @@ public class MatchController implements Runnable {
 
     /**this method actives a leader effect, activable once a round**/
 
-    public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws NotEnoughLeaderRequirementsException, LeaderCardAlreadyActiveTurnException, InterruptedException, NoActionPerformedException {
+    public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws NotEnoughLeaderRequirementsException, LeaderCardAlreadyActiveTurnException, InterruptedException, NoActionPerformedException, LeaderCardAlreadyActiveException {
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
-            if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()))
-                throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
+          //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getActiveLeaderCards().contains(leaderCard))
+        //     throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
+
+            if (player.getActiveLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
+                throw new LeaderCardAlreadyActiveException("You have already activated this card!");
 
             else {
 
