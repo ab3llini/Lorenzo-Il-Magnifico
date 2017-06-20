@@ -33,5 +33,11 @@ public class SingleActionPlace extends ActionPlace implements Serializable {
     public void setFamilyMember(FamilyMember familyMember) {
         this.familyMember = familyMember;
     }
+
+    public void clean(){
+
+        this.familyMember = null;
+        this.occupied = false;
+    }
     
 }

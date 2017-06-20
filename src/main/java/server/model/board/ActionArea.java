@@ -33,4 +33,11 @@ public class ActionArea implements Serializable {
         return mainPlace;
     }
 
+    public void clean(){
+
+        this.mainPlace.clean();
+
+        this.secondaryPlace.clean();
+    }
+
 }

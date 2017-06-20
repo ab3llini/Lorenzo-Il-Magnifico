@@ -488,7 +488,23 @@ public class BoardController {
 
     public void cleanCouncilPalace(){
 
-        this.board.getCouncilPalace().setPlaces(new ArrayList<>());
+        this.board.getCouncilPalace().clean();
+
+    }
+
+    public void cleanMarket(){
+
+        this.board.getMarket().clean();
+    }
+
+    public void cleanHarvestArea() {
+
+        this.board.getHarvestArea().clean();
+    }
+
+    public void cleanProductionArea() {
+
+        this.board.getProductionArea().clean();
     }
 
 

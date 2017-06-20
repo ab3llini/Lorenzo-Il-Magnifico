@@ -207,7 +207,17 @@ public class MatchController implements Runnable {
                 //Update the towers for the current combination of round / turn / period
                 this.boardController.updateTowersForTurn(this.match.getCurrentTurn(), this.match.getCurrentPeriod().toInt());
 
-                //TODO: Clean the council palace
+                //clean the council palace place
+                this.boardController.cleanCouncilPalace();
+
+                //clean the market place
+                this.boardController.cleanMarket();
+
+                //clean the harvest area
+                this.boardController.cleanHarvestArea();
+
+                //clean the production area
+                this.boardController.cleanProductionArea();
 
                 //Free family members for each player
                 for (Player player:this.getMatch().getPlayers()) {
@@ -966,6 +976,8 @@ public class MatchController implements Runnable {
                 placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
                 doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+
+                this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
 
             }
 
@@ -1882,6 +1894,9 @@ public class MatchController implements Runnable {
             if(choice.getSelection() == 1){
                 //the player has enough faith points but doesn't want to use them to avoid excommunication
                 player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
+
+                this.notifyAll(player.getUsername() + " has been banned.");
+
             }
             else {
                 //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
@@ -1892,6 +1907,9 @@ public class MatchController implements Runnable {
             }
             //the player cannot choose how many faith points to use
             player.setFaithPoints(0);
+
+            this.notifyAll(player.getUsername() + " has not been banned.");
+
         }
     }
 

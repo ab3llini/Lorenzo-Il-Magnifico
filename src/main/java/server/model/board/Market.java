@@ -24,4 +24,13 @@ public class Market implements Serializable {
         this.getMarketPlaces().get(placementIndex).setFamilyMember(familyMember);
 
     }
+
+    public void clean() {
+
+        for (SingleActionPlace place: marketPlaces) {
+
+            place.clean();
+
+        }
+    }
 }

@@ -29,4 +29,10 @@ public class CompositeActionPlace extends ActionPlace implements Serializable {
     public void placeFamilyMember(FamilyMember familyMember){
         this.places.add(familyMember);
     }
+
+    public void clean(){
+
+        this.places.removeAll(places);
+
+    }
 }
