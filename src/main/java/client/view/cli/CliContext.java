@@ -1,4 +1,4 @@
-package client.view;/*
+package client.view.cli;/*
  * Created by albob on 23/05/2017.
  */
 

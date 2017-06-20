@@ -1,4 +1,4 @@
-package client;
+package client.view;
 
 import javafx.stage.Stage;
 

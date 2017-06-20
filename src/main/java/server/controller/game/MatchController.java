@@ -1778,7 +1778,7 @@ public class MatchController implements Runnable {
 
     }
 
-    public void handleVaticanReport(Player player){
+    public void handleVaticanReport(Player player) throws InterruptedException, NoActionPerformedException {
 
         //get minimum number of faith points for current period
         Integer minPeriodFaith = this.match.getBoard().getCathedral().getMinFaith(this.match.getCurrentPeriod());
@@ -1789,9 +1789,14 @@ public class MatchController implements Runnable {
 
         else
         {
-            //TODO player interation
 
-            if(true){
+            ImmediateChoiceAction choice = null;
+
+            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideBanOption, this.currentPlayer, "Would you like to get banned and keep the faith points or not ?");
+
+            choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
+
+            if(choice.getSelection() == 1){
                 //the player has enough faith points but doesn't want to use them to avoid excommunication
                 player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
             }

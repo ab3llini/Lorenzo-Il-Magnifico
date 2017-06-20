@@ -1,6 +1,6 @@
 package netobject.action.immediate;
 
-import client.view.cmd.CliPrintable;
+import client.view.cli.cmd.CliPrintable;
 
 /*
  * @author  ab3llini
@@ -17,7 +17,8 @@ public enum ImmediateActionType implements CliPrintable {
     ActivateProduction("Activate the production area", ImmediateActionTypeImpl.Placement),
     SelectCost("Select a cost", ImmediateActionTypeImpl.Choice),
     SelectCouncilPrivilege("Select a council privilege", ImmediateActionTypeImpl.Choice),
-    SelectConversion("Select a conversion", ImmediateActionTypeImpl.Choice);
+    SelectConversion("Select a conversion", ImmediateActionTypeImpl.Choice),
+    DecideBanOption("Select an option", ImmediateActionTypeImpl.Choice);
 
     private final String name;
 

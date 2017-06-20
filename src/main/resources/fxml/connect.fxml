@@ -1,35 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.ConnectionController">
    <children>
-      <Label layoutX="20.0" layoutY="418.0" text="Host" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="20.0" />
-      <TextField fx:id="hostTextField" layoutX="73.0" layoutY="418.0" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" promptText="x.y.z.w" text="127.0.0.1" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="20.0" />
-      <Label layoutX="18.0" layoutY="26.0" text="Lorenzo il Magnifico" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="97.0" text="Username" textAlignment="CENTER" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="100.0" />
-      <TextField fx:id="usernameTextField" alignment="CENTER" layoutX="27.0" layoutY="124.0" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" promptText="Insert a username" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="130.0" />
-      <RadioButton fx:id="rmiRadioButton" layoutX="20.0" layoutY="356.0" mnemonicParsing="false" selected="true" text="RMI" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="20.0">
-         <toggleGroup>
-            <ToggleGroup fx:id="connectionType" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton fx:id="socketRadioButton" layoutX="20.0" layoutY="330.0" mnemonicParsing="false" text="Socket" toggleGroup="$connectionType" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="20.0" />
-      <Button fx:id="connectButton" layoutX="226.0" layoutY="248.0" mnemonicParsing="false" onAction="#connect" text="Login" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="250.0" />
-      <Separator layoutX="18.0" layoutY="387.0" prefWidth="200.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="18.0" layoutY="171.0" text="Password" textAlignment="CENTER" AnchorPane.topAnchor="170.0" />
-      <PasswordField fx:id="passwordTextField" alignment="CENTER" layoutX="15.0" layoutY="196.0" promptText="Insert a password" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="200.0" />
+      <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+          <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <AnchorPane prefHeight="50.0" style="-fx-background-color: #3F51B5;">
+               <children>
+                  <Label alignment="CENTER" layoutX="133.0" layoutY="17.0" text="Lorenzo il magnifico" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="100.0" style="-fx-background-color: #3F51B5;" GridPane.rowIndex="2">
+               <children>
+                  <Label layoutX="17.0" layoutY="12.0" text="Connection method:" textFill="WHITE" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <RadioButton layoutX="212.0" layoutY="21.0" mnemonicParsing="false" text="Socket" textFill="WHITE" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="20.0">
+                     <font>
+                        <Font size="8.0" />
+                     </font>
+                  </RadioButton>
+                  <RadioButton layoutX="256.0" layoutY="21.0" mnemonicParsing="false" text="RMI" textFill="WHITE" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                     <font>
+                        <Font size="8.0" />
+                     </font>
+                  </RadioButton>
+               </children>
+            </AnchorPane>
+            <TabPane styleClass="tab" stylesheets="@../css/connect.css" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+              <tabs>
+                <Tab text="Login">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <GridPane layoutX="22.0" layoutY="33.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                       <children>
+                                          <PasswordField promptText="password" styleClass="form-input" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                          <TextField layoutX="50.0" layoutY="44.0" promptText="username" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                <Tab text="Register" />
+              </tabs>
+            </TabPane>
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

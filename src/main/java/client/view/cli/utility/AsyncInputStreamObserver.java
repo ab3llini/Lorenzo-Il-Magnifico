@@ -1,4 +1,4 @@
-package client.view.utility;
+package client.view.cli.utility;
 
 /*
  * @author  ab3llini

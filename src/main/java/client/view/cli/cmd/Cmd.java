@@ -1,4 +1,4 @@
-package client.view.cmd;
+package client.view.cli.cmd;
 
 import logger.AnsiColors;
 import server.utility.UnicodeChars;

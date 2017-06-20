@@ -1,4 +1,4 @@
-package client;
+package client.view;
 
 /*
  * @author  ab3llini
@@ -17,20 +17,23 @@ public class Main extends Application {
     @Override
 
 
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
 
         System.out.println();
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/connect.fxml"));
+
         primaryStage.setTitle("Connect");
+
         primaryStage.setScene(new Scene(root, 300, 500));
+
         primaryStage.show();
+
     }
 
 
     public static void main(String[] args) {
         launch(args);
     }
-
 
 }

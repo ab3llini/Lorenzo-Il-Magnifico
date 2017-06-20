@@ -1,4 +1,4 @@
-package client.view.cmd;
+package client.view.cli.cmd;
 
 /*
  * Created by albob on 23/05/2017.
@@ -6,14 +6,8 @@ package client.view.cmd;
 
 
 import exception.NoSuchCommandException;
-import logger.AnsiColors;
 import logger.Level;
 import logger.Logger;
-import server.utility.UnicodeChars;
-
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * This class provides a nice abstraction when creating CLI commands.

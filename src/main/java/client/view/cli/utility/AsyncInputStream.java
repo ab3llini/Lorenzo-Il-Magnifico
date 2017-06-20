@@ -1,4 +1,4 @@
-package client.view.utility;
+package client.view.cli.utility;
 
 /*
  * @author  ab3llini
@@ -6,11 +6,8 @@ package client.view.utility;
  */
 
 
-import logger.Level;
-import logger.Logger;
 import server.controller.network.Observable;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;

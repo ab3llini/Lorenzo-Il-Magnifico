@@ -1,6 +1,5 @@
 package netobject.notification;
 
-import client.view.cmd.ArrayCommand;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import server.model.board.BonusTile;

@@ -5,7 +5,7 @@ package client.controller;
  * @since   14/05/17.
  */
 
-import client.NavigationController;
+import client.view.NavigationController;
 import client.controller.network.RMI.RMIClient;
 
 import javafx.fxml.FXML;

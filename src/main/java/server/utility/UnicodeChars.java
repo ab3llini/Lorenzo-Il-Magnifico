@@ -1,6 +1,6 @@
 package server.utility;
 
-import client.view.cmd.CliPrintable;
+import client.view.cli.cmd.CliPrintable;
 
 /**
  * Created by LBARCELLA on 05/06/2017.

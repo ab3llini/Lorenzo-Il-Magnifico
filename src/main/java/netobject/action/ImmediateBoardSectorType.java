@@ -1,6 +1,6 @@
 package netobject.action;
 
-import client.view.cmd.CliPrintable;
+import client.view.cli.cmd.CliPrintable;
 
 /**
  * Created by LBARCELLA on 04/06/2017.

@@ -1,4 +1,4 @@
-package client.view;
+package client.view.cli;
 
 /*
  * @author  ab3llini
@@ -10,9 +10,9 @@ import client.controller.network.ClientObserver;
 import client.controller.network.NetUtil;
 import client.controller.network.RMI.RMIClient;
 import client.controller.network.Socket.SocketClient;
-import client.view.cmd.*;
-import client.view.utility.AsyncInputStream;
-import client.view.utility.AsyncInputStreamObserver;
+import client.view.cli.cmd.*;
+import client.view.cli.utility.AsyncInputStream;
+import client.view.cli.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
 import exception.NoSuchPlayerException;
 import logger.Level;

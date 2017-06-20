@@ -1,7 +1,6 @@
 package server.model.board;
 
-import client.view.cmd.CliPrintable;
-import server.model.GameSingleton;
+import client.view.cli.cmd.CliPrintable;
 import server.model.effect.EffectSurplus;
 import server.utility.BoardConfigParser;
 
