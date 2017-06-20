@@ -951,7 +951,10 @@ public class MatchController implements Runnable {
 
         if(card != null) {
             ImmediateEffect immediateEffect = card.getImmediateEffect();
-
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ritaEffect)){
+                for(Resource resource: immediateEffect.getSurplus().getResources())
+                    resource.setAmount(resource.getAmount()*2);
+            }
             ActionType actionType = ActionType.unknown;
 
             ImmediatePlacementAction placementAction = null;
@@ -1039,7 +1042,7 @@ public class MatchController implements Runnable {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
         boolean noMarket = false;
-
+        action.setBonus(0);
         //some players' ban card can reduce family member's force
         noMarket = applyDiceMalusBanCard(action, player, familyMember, noMarket);
 
@@ -1047,7 +1050,7 @@ public class MatchController implements Runnable {
         action = actionCharacterFilter(action,player);
 
         action = applyLeaderCardEffect(player, action);
-
+        familyMember.setForce(familyMember.getForce()+action.getBonus());
         //if boardSectorType is CouncilPalace we place the family member in the council palace
         //once positioned the council palace give to the player an effectSurplus
         if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
@@ -1146,10 +1149,6 @@ public class MatchController implements Runnable {
 
             EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
 
-            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ritaEffect)){
-                for(Resource resource: effectSurplus.getResources())
-                    resource.setAmount(resource.getAmount()*2);
-                }
                 applyEffectSurplus(player, effectSurplus);
 
             //add to the personal board of the player the development card set in the tower slot
@@ -1209,16 +1208,16 @@ public class MatchController implements Runnable {
                 }
 
                 if(player.isPermanentLeaderActive(PermanentLeaderEffectType.sigismondoEffect) && action.getColorType() == ColorType.Nautral) {
-                    action.increaseBonus(3);
+                    action.setBonus(3);
                 }
 
                 if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect)) {
-                    action.increaseBonus(2);
+                    action.setBonus(2);
                 }
 
                 if(player.isPermanentLeaderActive(PermanentLeaderEffectType.moroEffect) && action.getColorType() != ColorType.Nautral) {
                     try {
-                        action.increaseBonus(5-player.getFamilyMember(action.getColorType()).getForce());
+                        action.setBonus(5-player.getFamilyMember(action.getColorType()).getForce());
                     } catch (FamilyMemberAlreadyInUseException e) {
                         e.printStackTrace();
                     }
@@ -1544,19 +1543,17 @@ public class MatchController implements Runnable {
                             }
                         }
 
-                        if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect()) {
+                        if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect() != null) {
 
                             this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectFamilyMember, this.currentPlayer, "Which family member do you want to set force 6?");
 
                             ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
                             if (choice.getSelection() == 1) {
-                                //the player has enough faith points but doesn't want to use them to avoid excommunication
                                 player.setFamilyMemberForce(ColorType.Black, 6);
                             }
 
                             else if (choice.getSelection() == 2) {
-                                //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
                                 player.setFamilyMemberForce(ColorType.White, 6);
                             }
 
@@ -1566,7 +1563,7 @@ public class MatchController implements Runnable {
 
                             else if (choice.getSelection() == 4) {
 
-                                player.setFamilyMemberForce(ColorType.Orange, 6);
+                                player.setFamilyMemberForce(ColorType.Nautral, 6);
 
                             }
 
