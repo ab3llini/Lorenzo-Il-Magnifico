@@ -537,6 +537,13 @@ public class MatchController implements Runnable {
 
                     Logger.log(Level.FINEST, this.toString(), "The player " + this.currentPlayer.getUsername() + " terminated his round");
 
+                    //If its time to choose whether or not to get banned ask the player before his round finishes
+                    if (this.match.getCurrentRound() == 4 && this.match.getCurrentTurn() == 2) {
+
+                        this.handleVaticanReport(this.currentPlayer);
+
+                    }
+
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
 
@@ -905,57 +912,61 @@ public class MatchController implements Runnable {
                     applyMultiplier(player, immediateEffect.getSurplus().getPoints().get(0).getMultiplier());
             }
 
-            if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest){
+            if(immediateEffect.getEffectAction().getTarget() != ActionType.unknown){
 
-                this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
+                if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest){
+
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
 
 
-
-            }
-
-             else if (immediateEffect.getEffectAction().getTarget() == ActionType.production){
-
-                this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
-
-            }
-
-             else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
-
-                if (immediateEffect.getEffectAction().getTarget() == null) {
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type");
 
                 }
 
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory){
+                else if (immediateEffect.getEffectAction().getTarget() == ActionType.production){
 
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card");
-
-                }
-
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card");
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
 
                 }
 
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.building){
+                else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
 
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card");
+                    if (immediateEffect.getEffectAction().getTarget() == null) {
 
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type");
+
+                    }
+
+                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory){
+
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card");
+
+                    }
+
+                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
+
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card");
+
+                    }
+
+                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.building){
+
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card");
+
+                    }
+
+                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture){
+
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card");
+
+                    }
                 }
-
-                else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture){
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card");
-
-                }
-            }
 
 
                 placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
                 doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+
+            }
 
 
 
@@ -1811,7 +1822,12 @@ public class MatchController implements Runnable {
 
         //if the player has not enough faith points he receive the excommunication
         if(player.getFaithPoints() < minPeriodFaith){
-            player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));}
+
+            player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
+
+            this.notifyAll(player.getUsername() + " has been banned.");
+
+        }
 
         else
         {

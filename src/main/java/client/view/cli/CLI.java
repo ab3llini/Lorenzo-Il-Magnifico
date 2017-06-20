@@ -1111,7 +1111,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                     this.localMatchController.confirmLastPendingAction();
 
-                    System.out.println(this.localMatchController.getMatch().getBoard());
+                    if (this.localMatchController.getMatch() != null) {
+
+                        System.out.println(this.localMatchController.getMatch().getBoard());
+
+                    }
 
 
                     Cmd.success("Action performed successfully");
