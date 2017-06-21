@@ -1040,7 +1040,10 @@ public class MatchController implements Runnable {
      */
     public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException, NoActionPerformedException, InterruptedException {
 
+        Integer leaderBonus = 0;
+
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
+
 
         //apply character permanent effect
         ActionBonus bonus = actionCharacterFilter(player,action);
@@ -1050,9 +1053,16 @@ public class MatchController implements Runnable {
         noMarket = applyDiceMalusBanCard(action, player, familyMember, noMarket);
 
 
-        action = applyLeaderCardEffect(player, action);
+        leaderBonus = applyLeaderCardEffect(player, action, leaderBonus);
 
-        familyMember.setForce(familyMember.getForce()+action.getBonus());
+        if(player.isPermanentLeaderActive(PermanentLeaderEffectType.picoEffect)){
+            ArrayList <Resource> coinDiscount = new ArrayList<Resource>();
+            coinDiscount.add(new Resource(ResourceType.Coins, 3));
+            Discount discount = new Discount(coinDiscount);
+            action.getDiscounts().add(discount);
+        }
+
+        familyMember.setForce(familyMember.getForce()+leaderBonus);
 
         //if boardSectorType is CouncilPalace we place the family member in the council palace
         //once positioned the council palace give to the player an effectSurplus
@@ -1172,7 +1182,7 @@ public class MatchController implements Runnable {
         familyMember.setBusy(true);
     }
 
-    public StandardPlacementAction applyLeaderCardEffect(Player player, StandardPlacementAction action){
+    public Integer applyLeaderCardEffect(Player player, StandardPlacementAction action, Integer bonus){
 
             for(LeaderCard leaderCard : player.getActiveLeaderCards()){
 
@@ -1211,30 +1221,23 @@ public class MatchController implements Runnable {
                 }
 
                 if(player.isPermanentLeaderActive(PermanentLeaderEffectType.sigismondoEffect) && action.getColorType() == ColorType.Nautral) {
-                    action.setBonus(3);
+                    bonus = 3;
                 }
 
                 if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect)) {
-                    action.setBonus(2);
+                    bonus = 2;
                 }
 
                 if(player.isPermanentLeaderActive(PermanentLeaderEffectType.moroEffect) && action.getColorType() != ColorType.Nautral) {
                     try {
-                        action.setBonus(5-player.getFamilyMember(action.getColorType()).getForce());
+                        bonus = 5-player.getFamilyMember(action.getColorType()).getForce();
                     } catch (FamilyMemberAlreadyInUseException e) {
                         e.printStackTrace();
                     }
                 }
-
-                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.picoEffect)){
-                    ArrayList <Resource> coinDiscount = new ArrayList<Resource>();
-                    coinDiscount.add(new Resource(ResourceType.Coins, 3));
-                    Discount discount = new Discount(coinDiscount);
-                    action.getDiscounts().add(discount);
-                }
             }
 
-            return action;
+            return bonus;
 
     }
 
