@@ -66,7 +66,7 @@ public class StandardPlacementAction extends Action {
 
     public void increaseBonus(int bonus) {
 
-        this.bonus += bonus;
+        this.additionalServants += bonus;
 
     }
 

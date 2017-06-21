@@ -1041,20 +1041,23 @@ public class MatchController implements Runnable {
     public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException, NoActionPerformedException, InterruptedException {
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
+
+        //apply character permanent effect
+        ActionBonus bonus = actionCharacterFilter(player,action);
+
         boolean noMarket = false;
-        action.setBonus(0);
         //some players' ban card can reduce family member's force
         noMarket = applyDiceMalusBanCard(action, player, familyMember, noMarket);
 
-        //apply character cards permanent effect
-        action = actionCharacterFilter(action,player);
 
         action = applyLeaderCardEffect(player, action);
+
         familyMember.setForce(familyMember.getForce()+action.getBonus());
+
         //if boardSectorType is CouncilPalace we place the family member in the council palace
         //once positioned the council palace give to the player an effectSurplus
         if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
-            EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants(),this.match.getPlayers().size());
+            EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants()+bonus.getForceBonus(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
 
         }
@@ -1066,7 +1069,7 @@ public class MatchController implements Runnable {
             if(noMarket)
                 throw new NoMarketException("You can't place any family member in market because of the Special BanCard NoMarketMalus");
             else{
-            EffectSurplus surplus = boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants(),this.match.getPlayers().size());
+            EffectSurplus surplus = boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants() + bonus.getForceBonus(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);}
 
         }
@@ -1076,9 +1079,9 @@ public class MatchController implements Runnable {
         //the harvestChain (activation of all the permanent effect of territory cards that has harvest type) is also started
         else if(action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
 
-            EffectSurplus surplus = boardController.placeOnSingleHarvestPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
+            EffectSurplus surplus = boardController.placeOnSingleHarvestPlace(familyMember,action.getAdditionalServants() + bonus.getForceBonus(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
-            applyHarvestChain(player,familyMember.getForce() + action.getAdditionalServants());
+            applyHarvestChain(player,familyMember.getForce() + action.getAdditionalServants() + bonus.getForceBonus());
 
         }
 
@@ -1087,11 +1090,11 @@ public class MatchController implements Runnable {
         //the harvestChain (activation of all the permanent effect of territory cards that has harvest type) is also started with a malus on the activation force
         else if(action.getActionTarget() == BoardSectorType.CompositeHarvestPlace) {
 
-            EffectSurplus surplus = boardController.placeOnCompositeHarvestPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
+            EffectSurplus surplus = boardController.placeOnCompositeHarvestPlace(familyMember,action.getAdditionalServants() + bonus.getForceBonus(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
 
             //we have to subtract force malus from activation force
-            applyHarvestChain(player,familyMember.getForce() + action.getAdditionalServants() - this.match.getBoard().getHarvestArea().getSecondaryPlace().getForceMalus());
+            applyHarvestChain(player,familyMember.getForce() + bonus.getForceBonus() + action.getAdditionalServants() - this.match.getBoard().getHarvestArea().getSecondaryPlace().getForceMalus());
 
         }
 
@@ -1100,9 +1103,9 @@ public class MatchController implements Runnable {
         //the productionChain (activation of all the permanent effect of building cards that has production type) is also started
         if(action.getActionTarget() == BoardSectorType.SingleProductionPlace) {
 
-            EffectSurplus surplus = boardController.placeOnSingleProductionPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
+            EffectSurplus surplus = boardController.placeOnSingleProductionPlace(familyMember,action.getAdditionalServants() + bonus.getForceBonus(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
-            applyProductionChain(player,familyMember.getForce() + action.getAdditionalServants());
+            applyProductionChain(player,familyMember.getForce() + bonus.getForceBonus() + action.getAdditionalServants());
 
         }
 
@@ -1111,11 +1114,11 @@ public class MatchController implements Runnable {
         //the productionChain (activation of all the permanent effect of building cards that has production type) is also started with a malus on the activation force
         else if(action.getActionTarget() == BoardSectorType.CompositeProductionPlace) {
 
-            EffectSurplus surplus = boardController.placeOnCompositeProductionPlace(familyMember,action.getAdditionalServants(),this.match.getPlayers().size());
+            EffectSurplus surplus = boardController.placeOnCompositeProductionPlace(familyMember,action.getAdditionalServants() + bonus.getForceBonus(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
 
             //we have to subtract a force malus from activation force
-            applyProductionChain(player,familyMember.getForce() + action.getAdditionalServants() - this.match.getBoard().getProductionArea().getSecondaryPlace().getForceMalus());
+            applyProductionChain(player,familyMember.getForce()+ bonus.getForceBonus() + action.getAdditionalServants() - this.match.getBoard().getProductionArea().getSecondaryPlace().getForceMalus());
 
         }
 
@@ -1145,11 +1148,11 @@ public class MatchController implements Runnable {
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts(), action.getCostOptionType());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), bonus.getDiscounts(), action.getCostOptionType());
 
-            EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
+            EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants() + bonus.getForceBonus(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
 
-                applyEffectSurplus(player, effectSurplus);
+            applyEffectSurplus(player, effectSurplus);
 
             //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
@@ -1283,6 +1286,8 @@ public class MatchController implements Runnable {
      * @throws ActionException
      */
     public void doImmediateAction(ImmediatePlacementAction action, Integer force, Player player) throws ActionException, NoActionPerformedException, InterruptedException {
+
+        //TODO character permanent effect -------> ImmediatePlacementAction && Standard Placement Action has to extend PlacementAction in order to use only one single character filter
 
         //if boardSectorType is a tower sector we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
@@ -1866,7 +1871,9 @@ public class MatchController implements Runnable {
      * @param player
      * @return
      */
-    public StandardPlacementAction actionCharacterFilter(StandardPlacementAction action, Player player) throws PreacherEffectException {
+    public ActionBonus actionCharacterFilter(Player player, StandardPlacementAction action) throws PreacherEffectException {
+
+        ActionBonus bonus = new ActionBonus();
 
         //scroll through the character cards of a player looking for permanent effect Action
         for (CharacterDvptCard card: player.getPersonalBoard().getCharacterCards()) {
@@ -1874,18 +1881,18 @@ public class MatchController implements Runnable {
             EffectPermanentAction permanentEffectAction = card.getPermanentEffect().getAction();
 
             //if a permanent effect is relative to harvest type, check whether the Action target is CompositeHarvestPlace or SingleHarvestPlace and modify the Action
-            if(permanentEffectAction.getTarget() == server.model.effect.ActionType.harvest) {
+            if(permanentEffectAction.getTarget() == ActionType.harvest) {
 
                 if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace || action.getActionTarget() == BoardSectorType.SingleHarvestPlace) {
-                    action.increaseBonus(permanentEffectAction.getForceBonus());
+                    bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
                 }
             }
 
             //if a permanent effect is relative to production type, check whether the Action target is CompositeProductionPlace or SingleProductionPlace and modify the Action
-            else if(permanentEffectAction.getTarget() == server.model.effect.ActionType.production) {
+            else if(permanentEffectAction.getTarget() == ActionType.production) {
 
                 if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace || action.getActionTarget() == BoardSectorType.SingleProductionPlace) {
-                    action.increaseBonus(permanentEffectAction.getForceBonus());
+                    bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
                 }
             }
 
@@ -1894,9 +1901,9 @@ public class MatchController implements Runnable {
             else if(permanentEffectAction.getTarget() == ActionType.card){
 
                 if(permanentEffectAction.getType() == getTowerType(action.getActionTarget()))
-                    action.increaseBonus(permanentEffectAction.getForceBonus());
+                    bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
 
-                action.setDiscounts(permanentEffectAction.getDiscounts());
+                bonus.setDiscounts(permanentEffectAction.getDiscounts());
             }
 
             //if the effect is the preacher penality forbid the Action if the placement index is > 1
@@ -1908,7 +1915,7 @@ public class MatchController implements Runnable {
 
         }
 
-        return  action;
+        return  bonus;
 
     }
 
