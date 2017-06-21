@@ -18,8 +18,6 @@ public class StandardPlacementAction extends Action {
 
     private final Integer placementIndex; //slot index of the board sector
 
-    private Integer bonus;
-
     private final ColorType colorType;
 
     private Integer additionalServants;
@@ -36,7 +34,6 @@ public class StandardPlacementAction extends Action {
         this.colorType = colorType;
         this.additionalServants = additionalServants;
         this.costOptionType = costOptionType;
-        this.bonus = 0;
         this.discounts = new ArrayList<>();
     }
 
@@ -68,14 +65,6 @@ public class StandardPlacementAction extends Action {
 
         this.additionalServants += bonus;
 
-    }
-
-    public Integer getBonus() {
-        return bonus;
-    }
-
-    public void setBonus(Integer bonus) {
-        this.bonus = bonus;
     }
 
     public void setDiscounts(ArrayList<Discount> discounts) {
