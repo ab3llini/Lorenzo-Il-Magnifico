@@ -28,7 +28,7 @@ public class StandardPlacementAction extends Action {
 
     private ArrayList<Discount> discounts;
 
-    public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType, Integer bonus, String sender) {
+    public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType, String sender) {
 
         super(ActionType.Standard, sender);
         this.actionTarget = actionTarget;
@@ -36,7 +36,7 @@ public class StandardPlacementAction extends Action {
         this.colorType = colorType;
         this.additionalServants = additionalServants;
         this.costOptionType = costOptionType;
-        this.bonus = bonus;
+        this.bonus = 0;
         this.discounts = new ArrayList<>();
     }
 
@@ -66,7 +66,7 @@ public class StandardPlacementAction extends Action {
 
     public void increaseBonus(int bonus) {
 
-        this.additionalServants += bonus;
+        this.bonus += bonus;
 
     }
 

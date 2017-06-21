@@ -879,7 +879,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
         }
 
-        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption, 0, this.client.getUsername());
+        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption,this.client.getUsername());
 
         this.client.performAction(standardPlacementAction);
 
