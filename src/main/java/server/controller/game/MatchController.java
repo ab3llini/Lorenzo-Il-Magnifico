@@ -185,6 +185,7 @@ public class MatchController implements Runnable {
      */
     public void run() {
 
+
         //Draft the leader cards first
         this.handleLeaderCardDraft();
 
@@ -243,7 +244,7 @@ public class MatchController implements Runnable {
                 if(this.match.getCurrentTurn() == 1){
                     this.boardController.cleanDices();
                 }
-
+                this.getMatch().getTurnActiveLeaderCard().clear();
                 //Free family members for each player
                 for (Player player:this.getMatch().getPlayers()) {
 
@@ -569,7 +570,6 @@ public class MatchController implements Runnable {
 
         //Update the current player
         this.currentPlayer = player;
-
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
 
@@ -1174,9 +1174,7 @@ public class MatchController implements Runnable {
         //set the familiar busy
         familyMember.setBusy(true);
     }
-
     public ActionBonus applyLeaderCardEffect(Player player, StandardPlacementAction action, ActionBonus bonus){
-
             for(LeaderCard leaderCard : player.getActiveLeaderCards()){
 
                 if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ariostoEffect)) {
@@ -1510,7 +1508,6 @@ public class MatchController implements Runnable {
     /**this method actives a leader effect, activable once a round**/
 
     public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws NotEnoughLeaderRequirementsException, LeaderCardAlreadyActiveTurnException, InterruptedException, NoActionPerformedException, LeaderCardAlreadyActiveException {
-
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
           //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getActiveLeaderCards().contains(leaderCard))
@@ -1550,23 +1547,22 @@ public class MatchController implements Runnable {
                                 e.printStackTrace();
                             }
                         }
+                        if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect() == true) {
 
-                        if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect() != null) {
-
-                            this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectFamilyMember, this.currentPlayer, "Which family member do you want to set force 6?");
+                            this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectFamilyMember, this.currentPlayer, "");
 
                             ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
                             if (choice.getSelection() == 1) {
-                                player.setFamilyMemberForce(ColorType.Black, 6);
-                            }
-
-                            else if (choice.getSelection() == 2) {
                                 player.setFamilyMemberForce(ColorType.White, 6);
                             }
 
-                            else if (choice.getSelection() == 3) {
+                            else if (choice.getSelection() == 2) {
                                 player.setFamilyMemberForce(ColorType.Orange, 6);
+                            }
+
+                            else if (choice.getSelection() == 3) {
+                                player.setFamilyMemberForce(ColorType.Black, 6);
                             }
 
                             else if (choice.getSelection() == 4) {
