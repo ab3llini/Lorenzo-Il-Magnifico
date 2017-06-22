@@ -25,6 +25,8 @@ public class RoundIterator implements Iterator<Queue<Player>> {
     private static final int TURNS = 2;
     private static final int ROUNDS = 4;
 
+    private static final int MINIMUM_PLAYERS = 2;
+
     private static final int FIRST_ROUND = 1;
     private static final int LAST_ROUND = 4;
 
@@ -38,10 +40,11 @@ public class RoundIterator implements Iterator<Queue<Player>> {
 
     public boolean hasNext() {
 
-        if (this.match.getCurrentPeriod().toInt() == PERIODS && this.match.getCurrentTurn() == TURNS && this.match.getCurrentRound() == ROUNDS)
-            return false;
-        else
-            return (this.match.getCurrentPeriod().toInt() <= PERIODS && this.match.getCurrentTurn() <= TURNS && this.match.getCurrentRound() <= ROUNDS);
+        boolean a = this.match.getCurrentPeriod().toInt() == PERIODS && this.match.getCurrentTurn() == TURNS && this.match.getCurrentRound() == ROUNDS;
+
+        boolean b = this.match.getPlayers().size() >= MINIMUM_PLAYERS;
+
+        return (!a && b);
 
     }
 

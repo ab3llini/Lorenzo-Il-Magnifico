@@ -651,9 +651,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                 System.out.println("Found an immediate action to perform");
 
-
                 //Perform the immediate action
-                this.performImmediateAction(this.immediateActionQueue.take());
+                this.performImmediateAction(this.immediateActionQueue.remove());
 
                 System.out.println("Immediate action performed, waiting for confirmation of previous standard action that generated this immediate one");
 
@@ -980,7 +979,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
     }
 
-    public int askForServants() throws InterruptedException {
+    private int askForServants() throws InterruptedException {
 
         Cmd.askFor("Enter the amount of additional servants");
 

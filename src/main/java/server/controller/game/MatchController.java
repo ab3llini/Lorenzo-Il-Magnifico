@@ -217,7 +217,8 @@ public class MatchController implements Runnable {
 
                 }
 
-                notifyAll("the player order has changed" + "\n" +newOrder );
+                this.notifyAll("The player order has changed" + "\n" +newOrder );
+
             }
 
 
