@@ -1,7 +1,6 @@
 package client.controller.network.RMI;
 
 import client.controller.network.Client;
-import exception.ConnectionFailedException;
 import exception.NotRegisteredException;
 import exception.authentication.AuthenticationException;
 import exception.authentication.NotConnectedException;
@@ -19,12 +18,9 @@ import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
 
-import java.rmi.AccessException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
@@ -121,50 +117,33 @@ public class RMIClient extends Client implements RMIClientInterface {
         this.notifyBonusTileDraftRequest(tiles, message);
     }
 
-    public boolean connect() {
-        try {
+    public void connect() throws Exception {
 
-            //Locate the rmi registry
-            this.registry = LocateRegistry.getRegistry(host, port);
 
-            //Get the stub
-            this.serverRef = (RMIServerInterface) registry.lookup(remoteName);
+        //Locate the rmi registry
+        this.registry = LocateRegistry.getRegistry(host, port);
 
-            //Get the IP to use when exporting the client interface
-            String hookableIP = this.serverRef.getBoundableIP();
+        //Get the stub
+        this.serverRef = (RMIServerInterface) registry.lookup(remoteName);
 
-            //Tell the rmi registry to bound on the provided IP
-            System.setProperty("java.rmi.server.hostname", hookableIP);
+        //Get the IP to use when exporting the client interface
+        String hookableIP = this.serverRef.getBoundableIP();
 
-            //Export the object
-            UnicastRemoteObject.exportObject(this, 0);
+        //Tell the rmi registry to bound on the provided IP
+        System.setProperty("java.rmi.server.hostname", hookableIP);
 
-            Logger.log(Level.FINEST, "RMIClient::connect", "Exported on " + hookableIP);
+        //Export the object
+        UnicastRemoteObject.exportObject(this, 0);
 
-            //Connect
-            this.token = this.serverRef.connect(this);
+        Logger.log(Level.FINEST, "RMIClient::connect", "Exported on " + hookableIP);
 
-            this.connected = true;
+        //Connect
+        this.token = this.serverRef.connect(this);
 
-            Logger.log(Level.FINE, "RMIClient::connect", "Connected with token " + token);
+        this.connected = true;
 
-            return true;
+        Logger.log(Level.FINE, "RMIClient::connect", "Connected with token " + token);
 
-        } catch (AccessException e) {
-            e.printStackTrace();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (ServerNotActiveException e) {
-            e.printStackTrace();
-        } catch (ConnectionFailedException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-        Logger.log(Level.FINE, "RMIClient::connect", "Unable to connect.");
-
-        return false;
     }
 
     public void login(LoginRequest authentication) {

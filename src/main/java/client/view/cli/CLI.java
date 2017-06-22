@@ -9,12 +9,12 @@ import client.controller.network.Client;
 import client.controller.network.ClientObserver;
 import client.controller.network.NetUtil;
 import client.controller.network.RMI.RMIClient;
+import client.controller.network.RemotePlayerObserver;
 import client.controller.network.Socket.SocketClient;
 import client.view.cli.cmd.*;
-import client.view.cli.utility.AsyncInputStream;
-import client.view.cli.utility.AsyncInputStreamObserver;
+import client.utility.AsyncInputStream;
+import client.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
-import exception.NoSuchCommandException;
 import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
@@ -47,7 +47,7 @@ import java.util.concurrent.BlockingQueue;
 /**
  * The command line interface for the game :/
  */
-public class CLI implements AsyncInputStreamObserver, ClientObserver {
+public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlayerObserver {
 
     /**
      * The client handler that will be dynamically bounded and used
@@ -231,7 +231,17 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         }
 
         //Connect the client
-        this.client.connect();
+        try {
+
+            this.client.connect();
+
+        } catch (Exception e) {
+
+            Logger.log(Level.SEVERE, this.toString(), "Unable to connect to the server", e);
+
+            System.exit(0);
+
+        }
 
         //Register us as observer
         this.client.addObserver(this);

@@ -12,16 +12,12 @@ import netobject.response.Response;
 import netobject.response.ResponseType;
 import netobject.response.auth.LoginResponse;
 import server.model.Match;
-import server.model.board.BonusTile;
-import server.model.card.Deck;
-import server.model.card.leader.LeaderCard;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /*
  * @author  ab3llini
@@ -56,7 +52,7 @@ public class SocketClient extends Client implements Runnable {
     }
 
     //Interface implementation
-    public boolean connect() {
+    public void connect() throws Exception {
 
         //Create the tcp socket
         try {
@@ -68,7 +64,7 @@ public class SocketClient extends Client implements Runnable {
 
             Logger.log(Level.SEVERE, "SocketClient::connect", "Unable to connect.", e);
 
-            return false;
+            throw e;
 
         }
 
@@ -81,17 +77,13 @@ public class SocketClient extends Client implements Runnable {
 
             Logger.log(Level.SEVERE, this.toString(), "Unable to get socket streams", e);
 
-            return false;
+            throw e;
 
         }
-
-
 
         new Thread(this).start();
 
         Logger.log(Level.FINE, "SocketClient::connect", "Connected.");
-
-        return true;
 
     }
 

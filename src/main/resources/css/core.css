@@ -1,0 +1,70 @@
+* {
+    -fx-main-color: #03A9F4;
+    -fx-secondary-color: #263238;
+}
+
+
+.theme-pane {
+
+    -fx-background-color: -fx-main-color;
+
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+
+    -fx-background-color: -fx-main-color;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-shape: "M300,290 L310,168 L410,168 L421,290 L300,290 z";
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.tab-pane .tab-header-area {
+    -fx-padding: 0 0 -2 5;
+}
+
+
+.tab-pane
+{
+    -fx-tab-min-width:100px;
+    -fx-background-color: -fx-secondary-color;
+}
+
+
+.tab-pane .tab
+{
+    -fx-background-color:-fx-secondary-color;
+    -fx-opacity: 0.8;
+    -fx-text-fill: white;
+
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: -fx-secondary-color;
+    -fx-opacity: 1;
+}
+
+.tab .tab-label {
+    -fx-alignment: center;
+    -fx-text-fill:-fx-main-color;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}

@@ -39,7 +39,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
      * Method that should be implemented to connect to the remote server
      * @return true upon success, false otherwise.
      */
-    public abstract boolean connect();
+    public abstract void connect() throws Exception;
 
     /**
      * Method to attempt a login.

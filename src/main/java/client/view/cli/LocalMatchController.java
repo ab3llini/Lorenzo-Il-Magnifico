@@ -42,7 +42,7 @@ public class LocalMatchController {
     //actions performed by a player on this round
     private HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;
 
-    LocalMatchController() {
+    public LocalMatchController() {
 
         this.actionsPerformedOnThisRound = new HashMap<StandardActionType, Boolean>();
 
