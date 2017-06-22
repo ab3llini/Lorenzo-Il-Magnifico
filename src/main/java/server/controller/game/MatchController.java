@@ -1146,6 +1146,15 @@ public class MatchController implements Runnable {
             if (this.match.getBoard().getPlayersInTower(towerType).contains(player))
                 throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
 
+            //check if the tower slot is already in use
+            if(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).isOccupied()){
+                throw new PlaceOccupiedException("This place is already occupied");}
+
+            //check if the player has enough force to set on the tower slot
+            if(!(familyMember.getForce() + action.getAdditionalServants() + bonus.getForceBonus() >= this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getEntryForce())) {
+                throw new NotStrongEnoughException("Not strong enough to do this action");
+            }
+
             //if the tower is already occupied the player has to pay 3 coins
             if (this.match.getBoard().getPlayersInTower(towerType).size() > 0 && !player.isPermanentLeaderActive(PermanentLeaderEffectType.filippoEffect))
                 player.subtractCoins(3);

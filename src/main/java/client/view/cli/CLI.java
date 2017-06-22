@@ -728,6 +728,28 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                         break;
 
+                    case DecideBanOption:
+
+                        Cmd.askFor("Say yes or no");
+
+                        choice = this.waitForCommandSelection();
+
+                        while (!(choice.equals("yes") && choice.equals("no"))) {
+
+                            Cmd.askFor("Say yes or no");
+
+                            choice = this.waitForCommandSelection();
+
+                        }
+
+                        if(choice.equals("yes"))
+                            immediateChoiceAction = new ImmediateChoiceAction(1, this.client.getUsername());
+
+                        else
+                            immediateChoiceAction = new ImmediateChoiceAction(0, this.client.getUsername());
+
+                        break;
+
                     case SelectFamilyMember:
 
                         EnumCommand<ColorType> colorSelection = new EnumCommand<>(ColorType.class);
