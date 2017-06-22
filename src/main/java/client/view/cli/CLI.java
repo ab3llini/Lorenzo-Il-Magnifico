@@ -402,6 +402,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
             //Wait until is the player turn
             this.waitOnMutex(this.roundMutex);
 
+
             try {
 
                 StandardActionType actionPerformed;
@@ -638,16 +639,30 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
         //Wait for a response just if the action requires server interaction
         if (!actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
 
+            System.out.println("Action performed, waiting for the server to confirm this action or propose an immediate one");
+
             this.waitOnMutex(this.connectionMutex);
+
+            System.out.println("The server woke up the thread, analysing response");
+
 
             //Perform eventual immediate actions (An immediate action may trigger another one and so on)
             while (!this.immediateActionQueue.isEmpty() && this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
+                System.out.println("Found an immediate action to perform");
+
+
                 //Perform the immediate action
                 this.performImmediateAction(this.immediateActionQueue.take());
 
+                System.out.println("Immediate action performed, waiting for confirmation of previous standard action that generated this immediate one");
+
+
                 //After the immediate action was performed we need to wait for the confirmation of the standard action
                 this.waitOnMutex(this.connectionMutex);
+
+                System.out.println("All done correctly");
+
 
             }
 
@@ -734,7 +749,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
 
                         choice = this.waitForCommandSelection();
 
-                        while (!(choice.equals("yes") && choice.equals("no"))) {
+                        while (!(choice.equals("yes") || choice.equals("no"))) {
 
                             Cmd.askFor("Say yes or no");
 
@@ -773,6 +788,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver {
                         immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice), this.client.getUsername());
 
                         break;
+
 
 
                 }

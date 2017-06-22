@@ -1929,6 +1929,7 @@ public class MatchController implements Runnable {
 
     public void handleVaticanReport(Player player) throws InterruptedException, NoActionPerformedException {
 
+
         //get minimum number of faith points for current period
         Integer minPeriodFaith = this.match.getBoard().getCathedral().getMinFaith(this.match.getCurrentPeriod());
 
@@ -1940,7 +1941,6 @@ public class MatchController implements Runnable {
             this.notifyAll(player.getUsername() + " has been banned.");
 
         }
-
         else
         {
 
@@ -1952,22 +1952,26 @@ public class MatchController implements Runnable {
                 //the player has enough faith points but doesn't want to use them to avoid excommunication
                 player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
 
-                this.notifyAll(player.getUsername() + " has been banned.");
+                this.notifyAllActionPerformed(this.currentPlayer, choice, this.currentPlayer.getUsername() + " has been banned");
 
             }
             else {
+
                 //the player use his faith points to avoid excommunication and receive a number of victory points depending on his faith points
                 player.addVictoryPoints(BoardConfigParser.getVictoryBonusFromFaith(player.getFaithPoints()));
                 if (player.isPermanentLeaderActive(PermanentLeaderEffectType.sistoEffect)) {
                     player.addVictoryPoints(5);
                 }
-            }
-            //the player cannot choose how many faith points to use
-            player.setFaithPoints(0);
 
-            this.notifyAll(player.getUsername() + " has not been banned.");
+                //the player cannot choose how many faith points to use
+                player.setFaithPoints(0);
+
+                this.notifyAllActionPerformed(this.currentPlayer, choice, this.currentPlayer.getUsername() + " has not been banned");
+
+            }
 
         }
+
     }
 
     public DvptCardType getTowerType(BoardSectorType boardSectorType){

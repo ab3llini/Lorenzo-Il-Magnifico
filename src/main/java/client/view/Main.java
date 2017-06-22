@@ -21,7 +21,11 @@ public class Main extends Application {
 
         System.out.println();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/connect.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/connect.fxml"));
+
+        Parent root = loader.load();
+
+        ((ConnectionController)loader.getController()).setStage(primaryStage);
 
         primaryStage.setTitle("Connect");
 
