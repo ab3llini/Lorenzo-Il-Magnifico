@@ -38,6 +38,9 @@ public class Match extends NetObject {
 
         super(NetObjectType.Model);
 
+        //Assign random colors
+
+
         //Assign the players to the model reference
         this.players = players;
 
