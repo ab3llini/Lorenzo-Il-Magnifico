@@ -787,7 +787,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         while (!colorSelection.isValid(choice)) {
 
-                            Cmd.askFor("Which council privilege would you like?");
+                            Cmd.askFor("Which family member do you want to use force = 6?");
 
                             colorSelection.printChoiches();
 
@@ -796,6 +796,39 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                         }
 
                         immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice), this.client.getUsername());
+
+                        break;
+
+                    case SelectActiveLeaderCard:
+
+                        ArrayList<LeaderCard> container = new ArrayList<>();
+
+                        for(Player player : this.localMatchController.getMatch().getPlayers()) {
+                            if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
+                                container.addAll(player.getActiveLeaderCards());
+                        }
+
+                        ArrayCommand<LeaderCard> leaderSelection = new ArrayCommand<>(container);
+
+                        Cmd.askFor(type.toString());
+
+                        leaderSelection.printChoiches();
+
+                        choice = this.waitForCommandSelection();
+
+                        while (!leaderSelection.isValid(choice)) {
+
+                            Cmd.askFor(type.toString());
+
+                            leaderSelection.printChoiches();
+
+                            choice = this.waitForCommandSelection();
+
+                        }
+
+                        int selected = container.get(Integer.parseInt(choice) - 1).getId();
+
+                        immediateChoiceAction = new ImmediateChoiceAction(selected, this.client.getUsername());
 
                         break;
 

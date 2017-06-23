@@ -13,6 +13,8 @@ import server.utility.UnicodeChars;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static server.model.card.developement.DvptCardType.*;
 
@@ -29,6 +31,7 @@ public class Player implements Serializable {
     private ArrayList<FamilyMember> familyMembers;
     private ArrayList<BanCard> banCards;
     private HashMap<LeaderCard, Boolean> leaderCards;
+    private ArrayList<LeaderCard> turnActiveLeaderCard;
 
 
 
@@ -76,6 +79,8 @@ public class Player implements Serializable {
 
         this.leaderCards = new HashMap<LeaderCard, Boolean>();
 
+        this.turnActiveLeaderCard = new ArrayList<LeaderCard>();
+
     }
 
     public void setFamilyMemberForce(ColorType color, int force) {
@@ -104,6 +109,14 @@ public class Player implements Serializable {
 
     public String getUsername() {
         return this.username;
+    }
+
+    public ArrayList<LeaderCard> getTurnActiveLeaderCard() {
+        return turnActiveLeaderCard;
+    }
+
+    public void setTurnActiveLeaderCard(ArrayList<LeaderCard> turnActiveLeaderCard) {
+        this.turnActiveLeaderCard = turnActiveLeaderCard;
     }
 
     public Integer getCoins() {
@@ -201,11 +214,12 @@ public class Player implements Serializable {
 
     public ArrayList<LeaderCard> getActiveLeaderCards() {
         ArrayList<LeaderCard> activeLeaderCardsArray = new ArrayList<LeaderCard>();
-        for(int i=0; i<20; i++){
-            if( leaderCards.containsKey(GameSingleton.getInstance().getLeaderCards().get(i))) {
-                if (leaderCards.get(GameSingleton.getInstance().getLeaderCards().get(i)) == true)
-                    activeLeaderCardsArray.add(GameSingleton.getInstance().getLeaderCards().get(i));
-            }
+        Iterator i = leaderCards.entrySet().iterator();
+        while(i.hasNext()){
+            Map.Entry pair = (Map.Entry)i.next();
+            int id = ((LeaderCard)(pair.getKey())).getId();
+            if (((Boolean)pair.getValue()) == true)
+                    activeLeaderCardsArray.add(GameSingleton.getInstance().getSpecificLeaderCard(id));
         }
         return activeLeaderCardsArray;
     }

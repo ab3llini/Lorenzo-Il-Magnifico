@@ -17,6 +17,7 @@ import server.model.card.Deck;
 import server.model.card.ban.*;
 import server.model.card.developement.*;
 import server.model.card.leader.LeaderCard;
+import server.model.card.leader.LeaderEffect;
 import server.model.effect.*;
 import server.model.effect.ActionType;
 import server.model.valuable.*;
@@ -246,7 +247,9 @@ public class MatchController implements Runnable {
 
                 this.boardController.cleanDices();
 
-                this.getMatch().getTurnActiveLeaderCard().clear();
+                for(Player player : this.getMatch().getPlayers()){
+                    player.getTurnActiveLeaderCard().clear();
+                }
 
                 //Free family members for each player
                 for (Player player:this.getMatch().getPlayers()) {
@@ -1227,7 +1230,7 @@ public class MatchController implements Runnable {
                     bonus.setForceBonus(bonus.getForceBonus()+3);
                 }
 
-                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect)) {
+                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect) && action.getColorType() != ColorType.Nautral) {
                     bonus.setForceBonus(bonus.getForceBonus()+2);
                 }
 
@@ -1520,9 +1523,11 @@ public class MatchController implements Runnable {
     /**this method actives a leader effect, activable once a round**/
 
     public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws NotEnoughLeaderRequirementsException, LeaderCardAlreadyActiveTurnException, InterruptedException, NoActionPerformedException, LeaderCardAlreadyActiveException {
+
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
-          //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getActiveLeaderCards().contains(leaderCard))
+
+        //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getActiveLeaderCards().contains(leaderCard))
         //     throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
             if (player.getActiveLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
@@ -1534,31 +1539,46 @@ public class MatchController implements Runnable {
 
                 if (leaderCard.getLeaderEffect().getOnceARound() != null) {
 
-                    if(match.getTurnActiveLeaderCard().contains(leaderCard))
+                    if(player.getTurnActiveLeaderCard().contains(leaderCard))
                         throw new LeaderCardAlreadyActiveTurnException("You have already activated the effect of this Leader card in this turn");
 
-                    if(!match.getTurnActiveLeaderCard().contains(leaderCard)) {
-                        for (Resource resource : leaderCard.getLeaderEffect().getOnceARound().getResources())
-                            player.addGenericResource(resource.getType(), resource.getAmount());
+                    if(!player.getTurnActiveLeaderCard().contains(leaderCard)) {
 
-                        for (Point point : leaderCard.getLeaderEffect().getOnceARound().getPoints())
-                            player.addGenericPoint(point.getType(), point.getAmount());
+                        EffectSurplus surplus = new EffectSurplus(leaderCard.getLeaderEffect().getOnceARound().getResources(),leaderCard.getLeaderEffect().getOnceARound().getPoints(),leaderCard.getLeaderEffect().getOnceARound().getCouncil());
+                        applyEffectSurplus(player, surplus);
+
+                        ImmediatePlacementAction placementAction;
 
                         if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.harvest)) {
+
+                            this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
+
+                            placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
                             try {
-                                applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest));
-                            } catch (NoActionPerformedException e) {
+                                doImmediateAction(placementAction, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest), player);
+                            } catch (ActionException e) {
                                 e.printStackTrace();
                             }
+
+                            this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
                         }
 
                         if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.production)) {
+
+                            this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
+
+                            placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
                             try {
-                                applyHarvestChain(player, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production));
-                            } catch (NoActionPerformedException e) {
+                                doImmediateAction(placementAction, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production), player);
+                            } catch (ActionException e) {
                                 e.printStackTrace();
                             }
+
+                            this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
                         }
+
                         if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect() == true) {
 
                             this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectFamilyMember, this.currentPlayer, "");
@@ -1567,38 +1587,46 @@ public class MatchController implements Runnable {
 
                             if (choice.getSelection() == 1) {
                                 player.setFamilyMemberForce(ColorType.White, 6);
-                            }
-
-                            else if (choice.getSelection() == 2) {
+                            } else if (choice.getSelection() == 2) {
                                 player.setFamilyMemberForce(ColorType.Orange, 6);
-                            }
-
-                            else if (choice.getSelection() == 3) {
+                            } else if (choice.getSelection() == 3) {
                                 player.setFamilyMemberForce(ColorType.Black, 6);
-                            }
-
-                            else if (choice.getSelection() == 4) {
+                            } else if (choice.getSelection() == 4) {
 
                                 player.setFamilyMemberForce(ColorType.Nautral, 6);
 
-                            }
-
-                            else {
+                            } else {
 
                                 Logger.log(Level.SEVERE, this.toString(), "Received a choice out of bounds");
 
                             }
 
-                            this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
+                            this.notifyAllActionPerformed(this.currentPlayer, choice, player.getUsername() + " performed an immediate action");
 
 
                         }
-                        match.getTurnActiveLeaderCard().add(leaderCard);
+
+                            player.getTurnActiveLeaderCard().add(leaderCard);
 
                     }
 
                 }
 
+                if (leaderCard.getLeaderEffect().getPermanentEffect() == PermanentLeaderEffectType.lorenzoEffect) {
+
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectActiveLeaderCard, this.currentPlayer, "You can select a leader card to copy");
+
+                    ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                    LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
+
+
+                    if(GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection()).getLeaderEffect().getPermanentEffect() != null)
+                        player.getActiveLeaderCardsAsHashMap().put(leader, false);
+
+                    this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
+
+                }
             }
 
     }

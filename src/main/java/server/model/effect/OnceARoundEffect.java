@@ -44,6 +44,10 @@ public class OnceARoundEffect implements Serializable {
         return action;
     }
 
+    public Integer getCouncil() {
+        return council;
+    }
+
     @Override
     public String toString() {
 
