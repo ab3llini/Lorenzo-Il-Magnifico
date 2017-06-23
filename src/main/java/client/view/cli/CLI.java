@@ -146,6 +146,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Pauses the main thread until a onLobbyNotification is performed on the provided mutex object
+     *
      * @param mutex the object on which the lock is acquired
      */
     private void waitOnMutex(Object mutex) {
@@ -216,13 +217,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             this.client = new SocketClient(hostIP, GameConfig.getInstance().getSocketPort());
 
-        }
-        else if (clientCmd.choiceMatch(connection, ClientType.RMI)) {
+        } else if (clientCmd.choiceMatch(connection, ClientType.RMI)) {
 
             this.client = new RMIClient(hostIP, GameConfig.getInstance().getRmiPort(), "server");
 
-        }
-        else {
+        } else {
 
             Logger.log(Level.SEVERE, "Bootstrap", "Bad selection");
 
@@ -252,6 +251,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Authenticates the user
+     *
      * @throws InterruptedException blockingQueue take
      */
     private void authenticate() throws InterruptedException {
@@ -280,15 +280,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             this.login();
 
-        }
-        else if (authCmd.choiceMatch(choice, AuthType.Registration)) {
+        } else if (authCmd.choiceMatch(choice, AuthType.Registration)) {
 
             this.register();
 
-        }
-        else {
+        } else {
 
-            Logger.log(Level.SEVERE, "Authentication", "Bad selection");;
+            Logger.log(Level.SEVERE, "Authentication", "Bad selection");
+            ;
 
         }
 
@@ -298,6 +297,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Logs in the user
+     *
      * @throws InterruptedException blockingQueue take
      */
     private void login() throws InterruptedException {
@@ -313,8 +313,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             if (!firstAttempt) {
                 Cmd.forbidden("Wrong username o password");
-            }
-            else {
+            } else {
                 firstAttempt = false;
             }
             //Request the IP
@@ -362,6 +361,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Notify the user about the events that happen while waiting for the match to start
+     *
      * @throws InterruptedException blockingQueue take
      */
     private void interactWithLobby() throws InterruptedException {
@@ -372,14 +372,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         //Assuming that before the match start the client will receive just Lobby notifications
         //Read the first notification
-        LobbyNotification o = (LobbyNotification)this.notificationQueue.take();
+        LobbyNotification o = (LobbyNotification) this.notificationQueue.take();
 
         //Keep posting notifications until the match starts
         while (o.getLobbyNotificationType() != LobbyNotificationType.MatchStart && o.getLobbyNotificationType() != LobbyNotificationType.ResumeGame) {
 
             Cmd.notify(o.getMessage());
 
-            o = (LobbyNotification)this.notificationQueue.take();
+            o = (LobbyNotification) this.notificationQueue.take();
 
         }
 
@@ -393,6 +393,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Handles the round
+     *
      * @throws InterruptedException
      */
     private void interactWithMatchController(LobbyNotificationType status) throws InterruptedException {
@@ -407,7 +408,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         }
 
-        while(!this.localMatchController.matchHasEnded()) {
+        while (!this.localMatchController.matchHasEnded()) {
 
             //Wait until is the player turn
             this.waitOnMutex(this.roundMutex);
@@ -425,8 +426,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                 }
                 while (actionPerformed != StandardActionType.TerminateRound);
 
-            }
-            catch (NoActionPerformedException e) {
+            } catch (NoActionPerformedException e) {
 
                 Cmd.notify("The timeout for your action expired.");
 
@@ -438,6 +438,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Takes care of handling the leader card draft at the beginning of the match
+     *
      * @throws InterruptedException
      */
     private void draftLeaderCards() throws InterruptedException {
@@ -493,8 +494,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                 this.localMatchController.setDraftableLeaderCards(new Deck<>());
 
-            }
-            else {
+            } else {
 
                 this.waitOnMutex(this.leaderDraftMutex);
 
@@ -509,6 +509,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
     /**
      * Interacts with the user asking him which bonus tile he would like
      * It might even throw an exception if on the server side the timeout for the action expires
+     *
      * @throws InterruptedException
      */
     private void draftBonusTiles() throws InterruptedException {
@@ -613,24 +614,20 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             this.placeFamilyMember();
 
-        }
-        else if (actionSelection.choiceMatch(choice, StandardActionType.RollDice)) {
+        } else if (actionSelection.choiceMatch(choice, StandardActionType.RollDice)) {
 
             this.client.performAction(new RollDicesAction(this.client.getUsername()));
 
 
-        }
-        else if (actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
+        } else if (actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
 
             this.showDvptCardDetail();
 
-        }
-        else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
+        } else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
 
             this.activateLeaderCard();
 
-        }
-        else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
+        } else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
 
             this.terminateRound();
 
@@ -714,6 +711,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
      * Attempts to perform the immediate action.
      * Upon success, the last pending immediate action gets cleared and the method return
      * Otherwise the loop continues
+     *
      * @param type the immediate action type
      */
     private void performImmediateAction(ImmediateActionType type) throws NoActionPerformedException, InterruptedException {
@@ -766,7 +764,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         }
 
-                        if(choice.equals("yes"))
+                        if (choice.equals("yes"))
 
                             immediateChoiceAction = new ImmediateChoiceAction(1, this.client.getUsername());
 
@@ -832,16 +830,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         break;
 
-
-
                 }
 
                 //Send the immediate choice
                 this.client.performAction(immediateChoiceAction);
 
-            }
-
-            else if (type.getImpl() == ImmediateActionTypeImpl.Placement) {
+            } else if (type.getImpl() == ImmediateActionTypeImpl.Placement) {
 
                 ImmediatePlacementAction immediatePlacementAction = null;
 
@@ -858,6 +852,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                         immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Production, this.askForServants(), this.client.getUsername());
 
                         break;
+
+                    case TakeBuildingCard:
+
+                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.BuildingTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
 
                 }
 
@@ -879,7 +877,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Creates an actions to place a family member and sends it to the server
-     * @throws InterruptedException if the thread gets interrupted
+     *
+     * @throws InterruptedException       if the thread gets interrupted
      * @throws NoActionPerformedException if the action timeout expires
      */
     private void placeFamilyMember() throws InterruptedException, NoActionPerformedException {
@@ -966,7 +965,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         }
 
-        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption,this.client.getUsername());
+        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption, this.client.getUsername());
 
         this.client.performAction(standardPlacementAction);
 
@@ -982,6 +981,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     /**
      * Asks the user for a development card ID and prints the card details
+     *
      * @throws InterruptedException
      */
     private void showDvptCardDetail() throws InterruptedException {
@@ -998,15 +998,16 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         while (!this.isIntegerInRange(id, 1, GameSingleton.getInstance().getDvptCards().size()));
 
 
-        System.out.println(GameSingleton.getInstance().getSpecificDvptCard(Integer.parseInt(id)-1));
+        System.out.println(GameSingleton.getInstance().getSpecificDvptCard(Integer.parseInt(id) - 1));
 
     }
 
     /**
      * Waits until the user select something
+     *
      * @return The selection
      * @throws NoActionPerformedException if the timeout expired for taking the move
-     * @throws InterruptedException wait exception
+     * @throws InterruptedException       wait exception
      */
     private String waitForCommandSelection() throws InterruptedException, NoActionPerformedException {
 
@@ -1019,8 +1020,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             //The mutex was notified but the queue was empty. The timeout must have expired
             throw new NoActionPerformedException("The user did not performed any move within the timeout provided");
 
-        }
-        else {
+        } else {
 
             //The user performed an action, handle it
             return this.inputQueue.take();
@@ -1055,6 +1055,49 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         return Integer.parseInt(choice);
 
     }
+
+    private int askForPlacementIndex() throws InterruptedException {
+
+        Cmd.askFor("Enter the index of the tower with the card you want to take");
+
+        String choice = this.inputQueue.take();
+
+        while (!this.isIntegerInRange(choice, 0, 4)) {
+
+            Cmd.forbidden("Invalid input, try again");
+
+            choice = this.inputQueue.take();
+        }
+
+        return Integer.parseInt(choice)-1;
+
+    }
+
+    private SelectionType askForCostOption() throws InterruptedException, NoActionPerformedException {
+
+        SelectionType costOption;
+
+        Cmd.askFor("Enter the cost option");
+
+        EnumCommand<SelectionType> costSelection = new EnumCommand<SelectionType>(SelectionType.class);
+
+        costSelection.printChoiches();
+
+        String choice;
+
+        do {
+
+            choice = this.waitForCommandSelection();
+
+        }
+        while (!costSelection.isValid(choice));
+
+        costOption = costSelection.getEnumEntryFromChoice(choice);
+
+        return costOption;
+
+    }
+
 
     public void printBoardAndPlayers() {
 
