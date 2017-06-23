@@ -5,6 +5,7 @@ package server.model.card.developement;/*
 import java.io.Serializable;
 
 public enum DvptCardType implements Serializable {
+
     territory,
     character,
     building,

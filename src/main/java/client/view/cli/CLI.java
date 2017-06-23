@@ -35,6 +35,8 @@ import server.model.board.BonusTile;
 import server.model.board.ColorType;
 import server.model.board.Player;
 import server.model.card.Deck;
+import server.model.card.developement.DvptCard;
+import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
 import server.model.effect.EffectSurplus;
 import server.utility.BoardConfigParser;
@@ -857,6 +859,31 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.BuildingTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
 
+                        break;
+
+                    case TakeCharacterCard:
+
+                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.CharacterTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                        break;
+
+                    case TakeVentureCard:
+
+                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.VentureTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                        break;
+
+                    case TakeTerritoryCard:
+
+                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.TerritoryTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                        break;
+
+                    case TakeAnyCard:
+
+                        immediatePlacementAction = new ImmediatePlacementAction(this.askForTypeOption(), this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                        break;
                 }
 
                 //Send the immediate placement
@@ -1095,6 +1122,41 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         costOption = costSelection.getEnumEntryFromChoice(choice);
 
         return costOption;
+
+    }
+
+    private ImmediateBoardSectorType askForTypeOption() throws InterruptedException, NoActionPerformedException {
+
+        DvptCardType typeOption;
+
+        Cmd.askFor("Select card type");
+
+        EnumCommand<DvptCardType> typeSelection = new EnumCommand<>(DvptCardType.class);
+
+        typeSelection.printChoiches();
+
+        String choice;
+
+        do {
+
+            choice = this.waitForCommandSelection();
+
+        }
+        while (!typeSelection.isValid(choice));
+
+        typeOption = typeSelection.getEnumEntryFromChoice(choice);
+
+        if(typeOption == DvptCardType.building)
+            return ImmediateBoardSectorType.BuildingTower;
+
+        if(typeOption == DvptCardType.venture)
+            return ImmediateBoardSectorType.VentureTower;
+
+        if(typeOption == DvptCardType.character)
+            return ImmediateBoardSectorType.CharacterTower;
+
+        else
+            return ImmediateBoardSectorType.TerritoryTower;
 
     }
 
