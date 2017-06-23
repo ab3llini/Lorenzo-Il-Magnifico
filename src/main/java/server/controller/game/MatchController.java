@@ -242,10 +242,12 @@ public class MatchController implements Runnable {
                 //clean the production area
                 this.boardController.cleanProductionArea();
 
-                if(this.match.getCurrentTurn() == 1){
-                    this.boardController.cleanDices();
-                }
+                //we have to pull dices another time
+
+                this.boardController.cleanDices();
+
                 this.getMatch().getTurnActiveLeaderCard().clear();
+
                 //Free family members for each player
                 for (Player player:this.getMatch().getPlayers()) {
 
@@ -973,7 +975,7 @@ public class MatchController implements Runnable {
 
                 if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest){
 
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action with force: " + immediateEffect.getEffectAction().getForce());
 
 
 
@@ -981,7 +983,7 @@ public class MatchController implements Runnable {
 
                 else if (immediateEffect.getEffectAction().getTarget() == ActionType.production){
 
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action with force: " + immediateEffect.getEffectAction().getForce());
 
                 }
 
@@ -1322,7 +1324,7 @@ public class MatchController implements Runnable {
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
             applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts(), action.getCostOptionType());
 
-            EffectSurplus effectSurplus = boardController.immediatePlacementOnTower(force+action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
+            EffectSurplus effectSurplus = boardController.immediatePlacementOnTower(force + action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
 
             //add to the personal board of the player the building card set in the tower slot
@@ -1340,15 +1342,15 @@ public class MatchController implements Runnable {
         else if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
 
 
-            applyProductionChain(player,action.getAdditionalServants());
+            applyProductionChain(player,action.getAdditionalServants() + force);
 
         }
 
         //if boardSectorType is harvest the productionChain (activation of all the permanent effect of territory cards that has harvest type) started
-        else if(action.getActionTarget() == ImmediateBoardSectorType.Production) {
+        else if(action.getActionTarget() == ImmediateBoardSectorType.Harvest) {
 
 
-            applyHarvestChain(player,action.getAdditionalServants());
+            applyHarvestChain(player,action.getAdditionalServants() + force);
 
         }
 
@@ -1949,7 +1951,7 @@ public class MatchController implements Runnable {
 
             ImmediateChoiceAction choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
-            if(choice.getSelection() == 1){
+            if(choice.getSelection() == 0){
                 //the player has enough faith points but doesn't want to use them to avoid excommunication
                 player.addBanCard(this.match.getBoard().getCathedral().getBanCard(this.match.getCurrentPeriod()));
 

@@ -767,6 +767,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                         }
 
                         if(choice.equals("yes"))
+
                             immediateChoiceAction = new ImmediateChoiceAction(1, this.client.getUsername());
 
                         else
@@ -816,6 +817,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                     case ActivateHarvest:
 
                         immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Harvest, this.askForServants(), this.client.getUsername());
+
+                        break;
+
+                    case ActivateProduction:
+
+                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Production, this.askForServants(), this.client.getUsername());
 
                         break;
 
