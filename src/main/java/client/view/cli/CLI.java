@@ -623,53 +623,105 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         }
 
+        System.out.println("Checking if the action requires server response..");
+
 
         boolean requiresServerConfirmation = !actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail);
 
         if (requiresServerConfirmation) {
 
+            System.out.println("Server response required.. setting last pending action to " + actionSelection.getEnumEntryFromChoice(choice));
+
             //Before setting the move as done, wait for server confirmation or refusal
             this.localMatchController.setLastPendingStandardAction(actionSelection.getEnumEntryFromChoice(choice));
+
+            System.out.println("Waiting for token from server (standard action confirmation or immediate action request)");
 
             //Wait until a token comes
             Object token = this.serverTokenQueue.take();
 
+            System.out.println("Got token, checking what to do");
+
             boolean isActionConfirmation = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
+
+            System.out.println("The check upon whether this is the standard action confirmation returned : " + isActionConfirmation);
+
+            System.out.println("if true, we leave the method and give the user the ability to make another standard action, otherwise we received an immediate action");
+
+            System.out.println("The token contains : " + token.toString());
 
             //Wait for the token that confirms the standard action.
             //In the meanwhile some immediate action requests may arrive
             while (!isActionConfirmation) {
 
+                System.out.println("If we got here it means that the server put an immediate action in the queue that MUST have n elements, with n > 0, n = " + this.immediateActionQueue.size());
+
+                System.out.println("If n = 0 we are going in a DEADLOCK status, we need to figure out who generated the token");
+
+                System.out.println("The only token that I was expecting was to get informed that I have an immediate action to perform... anything else should not be notified in this time span");
+
+
                 //While inside this loop we perform immediate actions.
                 ImmediateActionType immediate = this.immediateActionQueue.take();
+
+                System.out.println("Got the immediate action... We are going to perform : " + immediate+ ". The method should return normally, no tokens are required from server. This is all in local. If we stop here the DEADLOCK is in the performImmediateAction method");
 
                 //Perform the immediate action
                 this.performImmediateAction(immediate);
 
+                System.out.println("Immediate action performed, we are going to wait for a token from the server that confirms/refuses the immediate action");
+
                 //After the immediate action was performed we need to wait for the confirmation of the standard action
-                this.serverTokenQueue.take();System.out.println("Taking token for confirmation/refusal of immediate action , toal = " + this.serverTokenQueue.size());
+                this.serverTokenQueue.take();
+
+                System.out.println("Got a response from the server, we are now checking if the immediate action was refused or not");
 
                 while (this.localMatchController.getLastPendingImmediateAction() != null) {
+
+                    System.out.println("The action was, apparently, refused since it appears in the localmatchcontroller as PENDING");
+
+                    System.out.println("Let's perform it again.. entering performImmediateAction method..");
 
                     //Re execute the last action while
                     this.performImmediateAction(immediate);
 
+                    System.out.println("Action re-performed again.... we are going to wait for a token from the server that confirms/refuses the immediate action ");
+
                     //After the immediate action was performed we need to wait for the confirmation of the standard action
-                    this.serverTokenQueue.take();System.out.println("Taking token for confirmation/refusal of immediate action , toal = " + this.serverTokenQueue.size());
+                    this.serverTokenQueue.take();
+
+                    System.out.println("Got a response from the server, we are now checking if the immediate action was refused or not");
 
                 }
 
+                System.out.println("The immediate action was accepted !!!");
+
+
+                System.out.println("We are now going to wait for the original standard action confirmation or for another immediate action");
 
                 //Wait until we receive either a confirmation or a refusal for the current standard action or a new immediate one
                 token = this.serverTokenQueue.take();
 
+                System.out.println("We received a toke, lets check if it is the confirmation of the standard or another immediate action..");
+
                 //Recheck the condition
                 isActionConfirmation = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
+
+                System.out.println("isActionConfirmation = " + isActionConfirmation);
+
+                System.out.println("if = false, it is another immediate action, otherwise we will leave the while loop since it is the standard action confirmation");
 
 
             }
 
-            System.out.println("Standard action completed, leaving method");
+            System.out.println("We exited the wile loop that waits for immediate actions...Standard action completed, leaving method");
+
+        }
+
+        else {
+
+            System.out.println("No server response required");
+
 
         }
 
@@ -1279,6 +1331,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
+
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
@@ -1286,6 +1339,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             //Add the action to the queue
             this.immediateActionQueue.add(actionType);
+
+            System.out.println("IMMEDIATE ACTION AVAILABLE, TYPE = : " + actionType+  "ADDING TOKEN");
+
 
             //Wake up the thread
             this.addTokenToQueue(this.serverTokenQueue);
@@ -1342,6 +1398,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     public void onActionRefused(Client sender, String message) {
 
+        System.out.println("ACTION REFUSED! ADDING TOKEN");
+
         Cmd.forbidden("Action refused for reason: " + message);
 
         this.addTokenToQueue(this.serverTokenQueue);
@@ -1349,7 +1407,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
     }
 
     public void onActionPerformed(Client sender, Player player, Action action, String message) {
-
                 //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
@@ -1376,6 +1433,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                 Cmd.success("Immediate action performed successfully");
 
             }
+
+            System.out.println("ACTION PERFORMED, TYPE = : " + action.getActionType() +  "ADDING TOKEN");
+
 
             this.addTokenToQueue(this.serverTokenQueue, action);
 
