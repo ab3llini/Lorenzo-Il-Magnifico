@@ -179,7 +179,8 @@ public class LocalMatchController {
         this.draftableLeaderCards = draftableLeaderCards;
     }
 
-    public boolean canSelectBanOption() {
+    public boolean
+    canSelectBanOption() {
 
         if  (this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4) {
 

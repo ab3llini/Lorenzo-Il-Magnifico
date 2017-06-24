@@ -164,8 +164,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         //Set the context
         this.ctx = CliContext.Bootstrap;
 
-        String hostIP;
-        String connection;
+        String hostIP = "localhost";
+        String connection = "2";
 
         EnumCommand<ClientType> clientCmd = new EnumCommand<ClientType>(ClientType.class);
 
@@ -173,7 +173,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         Cmd.askFor("Please enter the IP address of the host");
 
         //Read the IP
-        hostIP = this.inputQueue.take();
+        //hostIP = this.inputQueue.take();
+
 
         while (!NetUtil.isIPv4(hostIP) && !hostIP.equals("localhost")) {
 
@@ -192,7 +193,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         clientCmd.printChoiches();
 
         //Read the selection
-        connection = this.inputQueue.take();
+        //connection = this.inputQueue.take();
 
         //Check it
         while (!clientCmd.isValid(connection)) {
@@ -256,7 +257,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         //Print the available choices
         authCmd.printChoiches();
 
-        String choice = this.inputQueue.take();
+        //String choice = this.inputQueue.take();
+        String choice = "1";
 
         //Check it
         while (!authCmd.isValid(choice)) {
@@ -294,7 +296,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         //Switch context
         this.ctx = CliContext.Login;
 
-        String username, password;
+        String username;
+        String password = "unix";
 
         boolean firstAttempt = true;
 
@@ -313,19 +316,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             //Request the IP
             Cmd.askFor("Please enter your password");
 
-            password = this.inputQueue.take();
+            //password = this.inputQueue.take();
 
             //Perform login request
             this.client.login(new LoginRequest(username, password));
 
-            //On RMI clients the login method, after has returned, has already called the onLobbyNotification.
-            //We need to wait only for socket logins
-            if (this.client instanceof SocketClient) {
+            //Wait for the server response
+            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
-                //Wait for the server response
-                this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
-
-            }
 
         }
         while (!this.client.hasAuthenticated());
@@ -384,14 +382,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         this.ctx = CliContext.Match;
 
-        if (status != LobbyNotificationType.ResumeGame) {
+       /* if (status != LobbyNotificationType.ResumeGame) {
 
             this.draftLeaderCards();
 
             this.draftBonusTiles();
 
         }
-
+*/
         while (!this.localMatchController.matchHasEnded()) {
 
             //Wait for the next token
@@ -618,6 +616,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             if (!this.localMatchController.canSelectBanOption()) {
 
                 return actionSelection.getEnumEntryFromChoice(choice);
+
+            }
+            else {
+
+                System.out.println("Handling vatican report!");
 
             }
 
@@ -1209,6 +1212,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     public void printBoardAndPlayers() {
 
+        if (this.localMatchController.getMatch() == null) return;
+
         //Print the board every time the turn changes
         System.out.println(this.localMatchController.getMatch().getBoard());
 
@@ -1303,6 +1308,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
     }
 
     public void onModelUpdate(Client sender, Match model) {
+
+        System.out.println("MODEL UPDATE !!!! :  ROUND = " + model.getCurrentRound() + " -- TURN = " + model.getCurrentTurn() + " -- PERIOD = " + model.getCurrentPeriod());
 
         this.localMatchController.setMatch(model);
 

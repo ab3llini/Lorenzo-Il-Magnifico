@@ -188,10 +188,10 @@ public class MatchController implements Runnable {
 
 
         //Draft the leader cards first
-        this.handleLeaderCardDraft();
+        //this.handleLeaderCardDraft();
 
         //Draft the bonus tiles
-        this.handleBonusTileDrat();
+        //this.handleBonusTileDrat();
 
         //Update the local flag
         this.drafting = false;
@@ -278,9 +278,6 @@ public class MatchController implements Runnable {
                 this.handlePlayerRound(p);
 
             }
-
-            //After each round finishes we must send the updated model to each player, always
-            this.sendUpdatedModel();
 
         }
 
@@ -800,6 +797,7 @@ public class MatchController implements Runnable {
 
         for (Player p : this.match.getPlayers()) {
             if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyModelUpdate(this.match);
                 this.remotePlayerMap.get(p).notifyTurnEnabled(current, "It is " + current.getUsername() + "'s turn");
             }
 

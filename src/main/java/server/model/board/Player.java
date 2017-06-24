@@ -62,7 +62,7 @@ public class Player implements Serializable {
 
         points.put(PointType.Military, 0);
         points.put(PointType.Victory, 0);
-        points.put(PointType.Faith, 0);
+        points.put(PointType.Faith, 5);
 
         //create the arrayList with all the player's familyMembers
 
