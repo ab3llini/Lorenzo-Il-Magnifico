@@ -992,7 +992,7 @@ public class MatchController implements Runnable {
 
                 else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
 
-                    if (immediateEffect.getEffectAction().getTarget() == null) {
+                    if (immediateEffect.getEffectAction().getType() == null) {
 
                         this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type");
 
