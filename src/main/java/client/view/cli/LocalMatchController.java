@@ -140,7 +140,7 @@ public class LocalMatchController {
 
     }
 
-    public boolean canPerformAction(StandardActionType action) {
+    public synchronized boolean canPerformAction(StandardActionType action) {
 
         return !this.actionsPerformedOnThisRound.get(action);
 
@@ -162,20 +162,20 @@ public class LocalMatchController {
 
     }
 
-    public void setLastPendingStandardAction(StandardActionType action) {
+    public synchronized void setLastPendingStandardAction(StandardActionType action) {
 
         this.lastPendingStandardAction = action;
 
     }
 
-    public void confirmLastPendingAction() {
+    public synchronized void confirmLastPendingAction() {
 
         this.setActionPerformed(this.lastPendingStandardAction, true);
 
     }
 
 
-    public void setDraftableLeaderCards(Deck<LeaderCard> draftableLeaderCards) {
+    public synchronized void  setDraftableLeaderCards(Deck<LeaderCard> draftableLeaderCards) {
         this.draftableLeaderCards = draftableLeaderCards;
     }
 
@@ -202,7 +202,7 @@ public class LocalMatchController {
 
     }
 
-    public Player getLocalPlayer() {
+    public synchronized Player getLocalPlayer() {
 
         try {
             return this.match.getPlayerFromUsername(this.playerUsername);
@@ -214,7 +214,7 @@ public class LocalMatchController {
 
     }
 
-    public Deck<LeaderCard> getDraftableLeaderCards() {
+    public synchronized Deck<LeaderCard> getDraftableLeaderCards() {
         return draftableLeaderCards;
     }
 

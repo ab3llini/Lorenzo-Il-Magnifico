@@ -76,7 +76,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
     /**
      * This mutex is used to wait until a connection-driven event occurs
      */
-    private final Object connectionMutex;
+    private final BlockingQueue<Object> serverTokenQueue;
 
     private final Object roundMutex;
 
@@ -100,6 +100,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     private LocalMatchController localMatchController;
 
+    private Thread CLIThread;
+
     /**
      * The command line interface constructor
      * Initializes the required objects and proceeds with a play phase
@@ -116,7 +118,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         this.immediateActionQueue = new ArrayBlockingQueue<ImmediateActionType>(1);
 
         //Init the mutex
-        this.connectionMutex = new Object();
+        this.serverTokenQueue = new ArrayBlockingQueue<Object>(1);
 
         //Init the mutex
         this.roundMutex = new Object();
@@ -127,6 +129,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         this.tilesDraftMutex = new Object();
 
+        this.CLIThread = Thread.currentThread();
 
         //Initialization procedure
         this.keyboard = new AsyncInputStream(System.in);
@@ -335,13 +338,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             //We need to wait only for socket logins
             if (this.client instanceof SocketClient) {
 
-                //Suspend and wait for a response
-                this.keyboardEnabled = false;
-
                 //Wait for the server response
-                this.waitOnMutex(this.connectionMutex);
-
-                this.keyboardEnabled = true;
+                this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
             }
 
@@ -412,8 +410,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         while (!this.localMatchController.matchHasEnded()) {
 
-            //Wait until is the player turn
-            this.waitOnMutex(this.roundMutex);
+            //Wait for the next token
+            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
 
             try {
@@ -445,7 +443,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
      */
     private void draftLeaderCards() throws InterruptedException {
 
-        this.waitOnMutex(this.leaderDraftMutex);
+        this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
         int drafRound = 0;
 
@@ -492,15 +490,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             this.client.performAction(new ShuffleLeaderCardStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableLeaderCards(), this.client.getUsername()));
 
-            if (this.localMatchController.getDraftableLeaderCards().getCards().size() == 1) {
+            //Wait for the action confirmation
+            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
-                this.localMatchController.setDraftableLeaderCards(new Deck<>());
-
-            } else {
-
-                this.waitOnMutex(this.leaderDraftMutex);
-
-            }
+            //Wait for the next draft request
+            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
             drafRound++;
         }
@@ -516,7 +510,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
      */
     private void draftBonusTiles() throws InterruptedException {
 
-        this.waitOnMutex(this.tilesDraftMutex);
+        //Wait for the next token
+        this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
         ArrayCommand<BonusTile> bonusTileSelection = new ArrayCommand<>(this.localMatchController.getDraftableBonusTiles());
 
@@ -552,6 +547,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         this.client.performAction(new ShuffleBinusTileStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableBonusTiles(), this.client.getUsername()));
 
+        //Wait for the action confirmation
+        this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
     }
 
@@ -650,7 +647,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             System.out.println("Action performed, waiting for the server to confirm this action or propose an immediate one");
 
-            this.waitOnMutex(this.connectionMutex);
+            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
             System.out.println("The server woke up the thread, analysing response");
 
@@ -665,14 +662,16 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                 System.out.println("Immediate action performed, waiting for confirmation of previous standard action that generated this immediate one");
 
-
                 //After the immediate action was performed we need to wait for the confirmation of the standard action
-                this.waitOnMutex(this.connectionMutex);
+                this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
                 System.out.println("All done correctly");
 
 
             }
+
+            System.out.println("Immediate action queue empty or can't perform action... queue size : " + this.immediateActionQueue.size());
+
 
         }
 
@@ -893,7 +892,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             }
 
             //Wait for the server to respond
-            this.waitOnMutex(this.connectionMutex);
+            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
 
 
         }
@@ -1056,6 +1055,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     }
 
+
     private int askForServants() throws InterruptedException {
 
         Cmd.askFor("Enter the amount of additional servants");
@@ -1174,6 +1174,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     }
 
+    private void addTokenToQueue(BlockingQueue<Object> queue) {
+
+        if (queue.remainingCapacity() > 0) {
+
+            queue.add(new Object());
+
+            System.out.println("Adding token to connection queue.. total = " + queue.size());
+
+
+        }
+
+    }
+
     /**
      * Interface implementation for AsyncInputStreamObserver
      * @param stream the stream that raised the event
@@ -1208,23 +1221,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     public void onLoginFailed(Client client, String reason) {
 
-        synchronized (this.connectionMutex) {
-
-            //Resume the CLI thread
-            connectionMutex.notify();
-
-        }
+        this.addTokenToQueue(this.serverTokenQueue);
 
     }
 
     public void onLoginSuccess(Client client) {
 
-        synchronized (this.connectionMutex) {
-
-            //Resume the CLI thread
-            connectionMutex.notify();
-
-        }
+        this.addTokenToQueue(this.serverTokenQueue);
 
     }
 
@@ -1255,12 +1258,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             Cmd.notify("It is your turn!");
 
-            synchronized (this.roundMutex) {
+            this.addTokenToQueue(this.serverTokenQueue);
 
-                //Enable the move
-                roundMutex.notify();
-
-            }
 
         }
         else {
@@ -1282,11 +1281,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             this.immediateActionQueue.add(actionType);
 
             //Wake up the thread
-            synchronized (this.connectionMutex) {
-
-                this.connectionMutex.notify();
-
-            }
+            this.addTokenToQueue(this.serverTokenQueue);
 
         }
         else {
@@ -1342,11 +1337,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         Cmd.forbidden("Action refused for reason: " + message);
 
-        synchronized (this.connectionMutex) {
-
-            this.connectionMutex.notify();
-
-        }
+        this.addTokenToQueue(this.serverTokenQueue);
 
     }
 
@@ -1355,35 +1346,33 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                 //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
-            synchronized (this.connectionMutex) {
 
-                //Confirm last action
-                if (action.getActionType() == ActionType.Standard) {
+            //Confirm last action
+            if (action.getActionType() == ActionType.Standard) {
 
-                    this.localMatchController.confirmLastPendingAction();
+                this.localMatchController.confirmLastPendingAction();
 
-                    if (this.localMatchController.getMatch() != null) {
+                if (this.localMatchController.getMatch() != null) {
 
-                        this.printBoardAndPlayers();
-
-                    }
-
-
-                    Cmd.success("Action performed successfully");
-
-                }
-                else {
-
-                    this.localMatchController.confirmLastPendingImmediateAction();
-
-                    Cmd.success("Immediate action performed successfully");
+                    this.printBoardAndPlayers();
 
                 }
 
-                //Enable the move
-                connectionMutex.notify();
+
+                Cmd.success("Action performed successfully");
 
             }
+            else {
+
+                this.localMatchController.confirmLastPendingImmediateAction();
+
+                Cmd.success("Immediate action performed successfully");
+
+            }
+
+            this.addTokenToQueue(this.serverTokenQueue);
+
+
 
         }
         else {
@@ -1400,14 +1389,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         this.localMatchController.setDraftableLeaderCards(cards);
 
-        Cmd.notify(message);
+        if (cards.getCards().size() > 0)
+            Cmd.notify(message);
 
-        //Wake up the thread that is waiting on the d
-        synchronized (this.leaderDraftMutex) {
-
-            this.leaderDraftMutex.notify();
-
-        }
+        this.addTokenToQueue(this.serverTokenQueue);
 
     }
 
@@ -1419,12 +1404,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         //Notify the user
         Cmd.notify(message);
 
-        //Wake up the thread
-        synchronized (this.tilesDraftMutex) {
-
-            this.tilesDraftMutex.notify();
-
-        }
+        this.addTokenToQueue(this.serverTokenQueue);
 
     }
 
