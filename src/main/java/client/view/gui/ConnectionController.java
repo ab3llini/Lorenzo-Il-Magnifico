@@ -205,7 +205,7 @@ public class ConnectionController extends NavigationController implements Client
     }
 
     @Override
-    public void onActionRefused(Client sender, String message) {
+    public void onActionRefused(Client sender,Action action, String message) {
 
     }
 

@@ -68,6 +68,12 @@ public class MatchNotification extends Notification {
         this.message = message;
     }
 
+    public MatchNotification(MatchNotificationType matchNotificationType, Action action, String message) {
+        super(NotificationType.Match);
+        this.matchNotificationType = matchNotificationType;
+        this.action = action;
+        this.message = message;    }
+
 
     public MatchNotificationType getMatchNotificationType() {
         return matchNotificationType;

@@ -642,9 +642,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             System.out.println("Got token, checking what to do");
 
-            boolean isActionConfirmation = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
+            boolean isActionConfirmationOrRefusal = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
 
-            System.out.println("The check upon whether this is the standard action confirmation returned : " + isActionConfirmation);
+            System.out.println("The check upon whether this is the standard action confirmation returned : " + isActionConfirmationOrRefusal);
 
             System.out.println("if true, we leave the method and give the user the ability to make another standard action, otherwise we received an immediate action");
 
@@ -652,7 +652,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             //Wait for the token that confirms the standard action.
             //In the meanwhile some immediate action requests may arrive
-            while (!isActionConfirmation) {
+            while (!isActionConfirmationOrRefusal) {
 
                 System.out.println("If we got here it means that the server put an immediate action in the queue that MUST have n elements, with n > 0, n = " + this.immediateActionQueue.size());
 
@@ -705,9 +705,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                 System.out.println("We received a toke, lets check if it is the confirmation of the standard or another immediate action..");
 
                 //Recheck the condition
-                isActionConfirmation = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
+                isActionConfirmationOrRefusal = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
 
-                System.out.println("isActionConfirmation = " + isActionConfirmation);
+                System.out.println("isActionConfirmation = " + isActionConfirmationOrRefusal);
 
                 System.out.println("if = false, it is another immediate action, otherwise we will leave the while loop since it is the standard action confirmation");
 
@@ -1396,13 +1396,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     }
 
-    public void onActionRefused(Client sender, String message) {
+    public void onActionRefused(Client sender,  Action action, String message) {
 
         System.out.println("ACTION REFUSED! ADDING TOKEN");
 
         Cmd.forbidden("Action refused for reason: " + message);
 
-        this.addTokenToQueue(this.serverTokenQueue);
+        this.addTokenToQueue(this.serverTokenQueue, action);
 
     }
 

@@ -95,8 +95,8 @@ public class RMIClient extends Client implements RMIClientInterface {
         this.notifyActionTimeoutExpired(player, message);
     }
 
-    public void onActionRefused(String message) {
-        this.notifyActionRefused(message);
+    public void onActionRefused(Action action, String message) {
+        this.notifyActionRefused(action, message);
     }
 
     public void onImmediateActionAvailable(ImmediateActionType actionType, Player player, String message) throws RemoteException {

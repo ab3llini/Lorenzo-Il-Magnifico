@@ -628,7 +628,7 @@ public class MatchController implements Runnable {
                     catch (ActionException reason) {
 
                         //Inform the player that he can't take that action
-                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(GameMessage.InvalidAction.getLiteral() + " Reason: " + reason.getMessage());
+                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(action, GameMessage.InvalidAction.getLiteral() + " Reason: " + reason.getMessage());
 
                     }
 
@@ -1404,7 +1404,7 @@ public class MatchController implements Runnable {
 
                         if (selections.contains(choice.getSelection())) {
 
-                            this.remotePlayerMap.get(player).notifyActionRefused("Each privilege must be different");
+                            this.remotePlayerMap.get(player).notifyActionRefused(choice, "Each privilege must be different");
 
                         }
                         else {

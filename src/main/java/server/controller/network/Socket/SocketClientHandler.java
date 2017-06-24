@@ -224,9 +224,9 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     }
 
-    public void notifyActionRefused(String message) {
+    public void notifyActionRefused(Action action, String message) {
 
-        this.sendObject(new MatchNotification(MatchNotificationType.ActionRefused, message));
+        this.sendObject(new MatchNotification(MatchNotificationType.ActionRefused, action, message));
 
     }
 

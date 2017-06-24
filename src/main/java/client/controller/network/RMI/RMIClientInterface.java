@@ -48,7 +48,7 @@ public interface RMIClientInterface extends Remote {
 
     void onActionTimeoutExpired(Player player, String message) throws RemoteException;
 
-    void onActionRefused(String message) throws RemoteException;
+    void onActionRefused(Action action, String message) throws RemoteException;
 
     void onImmediateActionAvailable(ImmediateActionType actionType, Player player, String message) throws RemoteException;
 

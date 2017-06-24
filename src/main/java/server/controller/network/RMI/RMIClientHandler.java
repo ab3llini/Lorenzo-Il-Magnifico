@@ -221,10 +221,10 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
-    public void notifyActionRefused(String message) {
+    public void notifyActionRefused(Action action,String message) {
 
         try {
-            this.clientRef.onActionRefused(message);
+            this.clientRef.onActionRefused(action, message);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

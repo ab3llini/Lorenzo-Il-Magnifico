@@ -31,7 +31,7 @@ public interface RemotePlayerObserver {
 
     void onTimeoutExpired(Client sender, Player player, String message);
 
-    void onActionRefused(Client sender, String message);
+    void onActionRefused(Client sender, Action action, String message);
 
     void onActionPerformed(Client sender, Player player, Action action, String message);
 

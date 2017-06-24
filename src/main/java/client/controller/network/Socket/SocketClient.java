@@ -199,7 +199,7 @@ public class SocketClient extends Client implements Runnable {
                 }
                 else if (matchNot.getMatchNotificationType() == MatchNotificationType.ActionRefused) {
 
-                    this.notifyActionRefused(matchNot.getMessage());
+                    this.notifyActionRefused(matchNot.getAction(), matchNot.getMessage());
 
                 }
                 else if (matchNot.getMatchNotificationType() == MatchNotificationType.ActionPerformed) {
@@ -265,5 +265,4 @@ public class SocketClient extends Client implements Runnable {
         this.sendObject(action);
 
     }
-
 }

@@ -32,7 +32,7 @@ public interface RemotePlayer {
 
     void notifyActionTimeoutExpired(Player player, String message);
 
-    void notifyActionRefused(String message);
+    void notifyActionRefused(Action action, String message);
 
     void notifyImmediateActionAvailable(ImmediateActionType immediateActionType, Player player, String message);
 

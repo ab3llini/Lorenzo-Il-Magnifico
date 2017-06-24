@@ -160,11 +160,11 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     }
 
-    public void notifyActionRefused(String message) {
+    public void notifyActionRefused(Action action, String message) {
 
         for (ClientObserver o : this.observers) {
 
-            o.onActionRefused(this, message);
+            o.onActionRefused(this,action, message);
 
         }
 
