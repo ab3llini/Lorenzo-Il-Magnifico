@@ -78,12 +78,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
      */
     private final BlockingQueue<Object> serverTokenQueue;
 
-    private final Object roundMutex;
-
-    private final Object leaderDraftMutex;
-
-    private final Object tilesDraftMutex;
-
     private final Object selectionMutex;
 
     /**
@@ -100,7 +94,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     private LocalMatchController localMatchController;
 
-    private Thread CLIThread;
 
     /**
      * The command line interface constructor
@@ -120,16 +113,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         //Init the mutex
         this.serverTokenQueue = new ArrayBlockingQueue<Object>(1);
 
-        //Init the mutex
-        this.roundMutex = new Object();
-
         this.selectionMutex = new Object();
-
-        this.leaderDraftMutex = new Object();
-
-        this.tilesDraftMutex = new Object();
-
-        this.CLIThread = Thread.currentThread();
 
         //Initialization procedure
         this.keyboard = new AsyncInputStream(System.in);
@@ -639,41 +623,56 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         }
 
-        //Before setting the move as done, wait for server confirmation or refusal
-        this.localMatchController.setLastPendingStandardAction(actionSelection.getEnumEntryFromChoice(choice));
 
-        //Wait for a response just if the action requires server interaction
-        if (!actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
+        boolean requiresServerConfirmation = !actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail);
 
-            System.out.println("Action performed, waiting for the server to confirm this action or propose an immediate one");
+        if (requiresServerConfirmation) {
 
-            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+            //Before setting the move as done, wait for server confirmation or refusal
+            this.localMatchController.setLastPendingStandardAction(actionSelection.getEnumEntryFromChoice(choice));
 
-            System.out.println("The server woke up the thread, analysing response");
+            //Wait until a token comes
+            Object token = this.serverTokenQueue.take();
 
+            boolean isActionConfirmation = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
 
-            //Perform eventual immediate actions (An immediate action may trigger another one and so on)
-            while (!this.immediateActionQueue.isEmpty() && this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+            //Wait for the token that confirms the standard action.
+            //In the meanwhile some immediate action requests may arrive
+            while (!isActionConfirmation) {
 
-                System.out.println("Found an immediate action to perform");
+                //While inside this loop we perform immediate actions.
+                ImmediateActionType immediate = this.immediateActionQueue.take();
 
                 //Perform the immediate action
-                this.performImmediateAction(this.immediateActionQueue.remove());
-
-                System.out.println("Immediate action performed, waiting for confirmation of previous standard action that generated this immediate one");
+                this.performImmediateAction(immediate);
 
                 //After the immediate action was performed we need to wait for the confirmation of the standard action
-                this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+                this.serverTokenQueue.take();System.out.println("Taking token for confirmation/refusal of immediate action , toal = " + this.serverTokenQueue.size());
 
-                System.out.println("All done correctly");
+                while (this.localMatchController.getLastPendingImmediateAction() != null) {
+
+                    //Re execute the last action while
+                    this.performImmediateAction(immediate);
+
+                    //After the immediate action was performed we need to wait for the confirmation of the standard action
+                    this.serverTokenQueue.take();System.out.println("Taking token for confirmation/refusal of immediate action , toal = " + this.serverTokenQueue.size());
+
+                }
+
+
+                //Wait until we receive either a confirmation or a refusal for the current standard action or a new immediate one
+                token = this.serverTokenQueue.take();
+
+                //Recheck the condition
+                isActionConfirmation = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
 
 
             }
 
-            System.out.println("Immediate action queue empty or can't perform action... queue size : " + this.immediateActionQueue.size());
-
+            System.out.println("Standard action completed, leaving method");
 
         }
+
 
         //After the action was performed, return the choice made so that if the user wants to terminate the round we can know it
         return actionSelection.getEnumEntryFromChoice(choice);
@@ -891,13 +890,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             }
 
-            //Wait for the server to respond
-            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
-
-
         }
         while (this.localMatchController.getLastPendingImmediateAction() != null);
-
 
     }
 
@@ -1187,6 +1181,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     }
 
+    private void addTokenToQueue(BlockingQueue<Object> queue, Object o) {
+
+        if (queue.remainingCapacity() > 0) {
+
+            queue.add(o);
+
+            System.out.println("Adding token to connection queue.. total = " + queue.size());
+
+
+        }
+
+    }
+
     /**
      * Interface implementation for AsyncInputStreamObserver
      * @param stream the stream that raised the event
@@ -1370,7 +1377,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             }
 
-            this.addTokenToQueue(this.serverTokenQueue);
+            this.addTokenToQueue(this.serverTokenQueue, action);
 
 
 
