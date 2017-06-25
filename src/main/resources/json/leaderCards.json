@@ -1,5 +1,6 @@
 {
 
+
   "1" : {
     "name":"Francesco Sforza",
     "requirement" : {
@@ -43,33 +44,33 @@
 
 
   "4" : {
-	"name":"Federico da Montefeltro",
+    "name":"Federico da Montefeltro",
     "requirement" : {
-        "cards":{
-		  "territory": 5
-		}
-	},
+      "cards":{
+        "territory": 5
+      }
+    },
     "effects" : {
-		"onceARound":{
-			"sixEffect":true
-		}
+      "onceARound":{
+        "sixEffect":true
+      }
     }
   },
 
-  
+
   "5" : {
-	"name":"Girolamo Savonarola",
+    "name":"Girolamo Savonarola",
     "requirement" : {
-        "resources" : {
-          "coins" : 18
-        }
-	},
+      "resources" : {
+        "coins" : 18
+      }
+    },
     "effects" : {
-		"onceARound":{
-			"points": {
-				"faith": 1
-			}
-		}
+      "onceARound":{
+        "points": {
+          "faith": 1
+        }
+      }
     }
   },
 
@@ -168,7 +169,6 @@
       "permanents":"picoEffect"
     }
   },
-
   "12" : {
     "name":"Sisto IV",
     "requirement" : {

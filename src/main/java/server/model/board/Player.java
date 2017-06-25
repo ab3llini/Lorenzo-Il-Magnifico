@@ -1,6 +1,7 @@
 package server.model.board;
 
 import exception.*;
+import logger.AnsiColors;
 import server.model.GameSingleton;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.Cost;
@@ -32,7 +33,7 @@ public class Player implements Serializable {
     private ArrayList<BanCard> banCards;
     private HashMap<LeaderCard, Boolean> leaderCards;
     private ArrayList<LeaderCard> turnActiveLeaderCard;
-
+    private PlayerColor color;
 
 
     //Very important attribute both for match controller & lobby, do not edit unless 100% certain of what you are doing.
@@ -117,6 +118,14 @@ public class Player implements Serializable {
 
     public void setTurnActiveLeaderCard(ArrayList<LeaderCard> turnActiveLeaderCard) {
         this.turnActiveLeaderCard = turnActiveLeaderCard;
+    }
+
+    public PlayerColor getColor() {
+        return color;
+    }
+
+    public void setColor(PlayerColor color) {
+        this.color = color;
     }
 
     public Integer getCoins() {
@@ -1013,6 +1022,32 @@ public class Player implements Serializable {
     public String toString() {
 
         String playerString = "\n";
+
+        if(color == PlayerColor.Red)
+            playerString += (AnsiColors.ANSI_RED );
+
+        if(color == PlayerColor.Blue)
+            playerString += (AnsiColors.ANSI_BLUE );
+
+        if(color == PlayerColor.Black)
+            playerString += (AnsiColors.ANSI_BLACK );
+
+        if(color == PlayerColor.Purple)
+            playerString += (AnsiColors.ANSI_PURPLE );
+
+        if(color == PlayerColor.Cyan)
+            playerString += (AnsiColors.ANSI_CYAN );
+
+        if(color == PlayerColor.Green)
+            playerString += (AnsiColors.ANSI_GREEN);
+
+        if(color == PlayerColor.Yellow)
+            playerString += (AnsiColors.ANSI_YELLOW );
+
+        if(color == PlayerColor.White)
+            playerString += (AnsiColors.ANSI_WHITE );
+
+        playerString += (AnsiColors.ANSI_RESET );
 
         playerString += UnicodeChars.Man+" "+this.username.toUpperCase()+"\n";
 

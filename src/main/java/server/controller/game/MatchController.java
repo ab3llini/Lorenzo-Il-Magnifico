@@ -188,10 +188,10 @@ public class MatchController implements Runnable {
 
 
         //Draft the leader cards first
-        //this.handleLeaderCardDraft();
+        this.handleLeaderCardDraft();
 
         //Draft the bonus tiles
-        //this.handleBonusTileDrat();
+        this.handleBonusTileDrat();
 
         //Update the local flag
         this.drafting = false;
@@ -1627,9 +1627,7 @@ public class MatchController implements Runnable {
 
                     LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
 
-
-                    if(GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection()).getLeaderEffect().getPermanentEffect() != null)
-                        player.getActiveLeaderCardsAsHashMap().put(leader, false);
+                    player.getActiveLeaderCardsAsHashMap().put(leader, true);
 
                     this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
 
@@ -1641,7 +1639,7 @@ public class MatchController implements Runnable {
     /** this method applies the Production Chain
      * this character chain consists in the activation of all the building card permanent effect**/
 
-    public void applyProductionChain (Player player, Integer force) throws ActionException, NoActionPerformedException {
+    public void applyProductionChain (Player player, Integer force) throws ActionException, NoActionPerformedException, InterruptedException {
 
 
         //some ban cards can reduce player's power to activate production chain
@@ -1667,7 +1665,7 @@ public class MatchController implements Runnable {
      *
      * */
 
-    public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws ActionException, NoActionPerformedException {
+    public void applyBuildingPermanentEffect (DvptCard card, Player player, Integer choice) throws ActionException, NoActionPerformedException, InterruptedException {
 
         if(card.getPermanentEffect().getSurplus() != null)
 
@@ -1675,7 +1673,7 @@ public class MatchController implements Runnable {
 
         if(card.getPermanentEffect().getConversion() != null )
 
-            applyConversion(player, card.getPermanentEffect().getConversion() , choice);
+            applyConversion(player, card.getPermanentEffect().getConversion());
 
         if(card.getPermanentEffect().getMultiplier() != null)
 
@@ -1687,32 +1685,48 @@ public class MatchController implements Runnable {
      *
      * @param player
      * @param conversionList the list of conversion contained in the card effect
-     * @param choice the choice of different conversion which can be made by the player
      * @throws NotEnoughResourcesException
      * @throws NotEnoughPointsException
      */
 
 
-    public void applyConversion (Player player, ArrayList<EffectConversion> conversionList, Integer choice) throws ActionException, NoActionPerformedException {
+    public void applyConversion (Player player, ArrayList<EffectConversion> conversionList) throws ActionException, NoActionPerformedException, InterruptedException {
 
-        if(!conversionList.get(choice).getFrom().getResources().isEmpty()) {
+        int choose = 0;
 
-            for(Resource from: conversionList.get(choice).getFrom().getResources())
+        if(conversionList.size()>1) {
 
-                player.subtractGenericResource(from.getType(), from.getAmount());
+            this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectConversion, this.currentPlayer, "Which conversion do you want to apply?");
+
+            ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
+            if (choice.getSelection() == 1) {
+
+                choose = 1;
+
+            }
+
+            this.notifyAllActionPerformed(this.currentPlayer, choice, this.currentPlayer.getUsername() + " has selected discount");
 
         }
 
-        if(!conversionList.get(choice).getFrom().getPoints().isEmpty()) {
+        if (!conversionList.get(choose).getFrom().getResources().isEmpty()) {
 
-            for(Point from: conversionList.get(choice).getFrom().getPoints())
+                for (Resource from : conversionList.get(choose).getFrom().getResources())
 
-                player.subtractGenericPoint(from.getType(), from.getAmount());
+                    player.subtractGenericResource(from.getType(), from.getAmount());
 
-        }
+            }
 
-        applyEffectSurplus(player, conversionList.get(choice).getTo());
+            if (!conversionList.get(choose).getFrom().getPoints().isEmpty()) {
 
+                for (Point from : conversionList.get(choose).getFrom().getPoints())
+
+                    player.subtractGenericPoint(from.getType(), from.getAmount());
+
+            }
+
+        applyEffectSurplus(player, conversionList.get(choose).getTo());
 
     }
 

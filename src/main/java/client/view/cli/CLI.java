@@ -382,14 +382,14 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         this.ctx = CliContext.Match;
 
-       /* if (status != LobbyNotificationType.ResumeGame) {
+        if (status != LobbyNotificationType.ResumeGame) {
 
             this.draftLeaderCards();
 
             this.draftBonusTiles();
 
         }
-*/
+
         while (!this.localMatchController.matchHasEnded()) {
 
             //Wait for the next token
@@ -890,6 +890,34 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
                         immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice), this.client.getUsername());
 
                         break;
+
+                    case SelectConversion:
+
+                        ArrayList<String> conversionOptions = new ArrayList<>();
+
+                        conversionOptions.add("First conversion");
+                        conversionOptions.add("Second conversion");
+
+                        ArrayCommand<String> conversionOptionsCommand = new ArrayCommand<>(conversionOptions);
+
+                        Cmd.askFor("Make your choice");
+
+                        conversionOptionsCommand.printChoiches();
+
+                        choice = this.waitForCommandSelection();
+
+                        while (!conversionOptionsCommand.isValid(choice)) {
+
+                            Cmd.askFor("Make your choice");
+
+                            choice = this.waitForCommandSelection();
+
+                        }
+
+                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
+
+                        break;
+
 
                     case SelectActiveLeaderCard:
 

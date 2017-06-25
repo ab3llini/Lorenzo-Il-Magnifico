@@ -668,24 +668,46 @@ public class Board implements Serializable {
 
         else {
 
+            if(familyMember.getPlayer().getColor() == PlayerColor.Red)
+                board += (AnsiColors.ANSI_RED );
+
+            if(familyMember.getPlayer().getColor() == PlayerColor.Blue)
+                board += (AnsiColors.ANSI_BLUE);
+
+            if(familyMember.getPlayer().getColor() == PlayerColor.Black)
+                board += (AnsiColors.ANSI_BLACK );
+
+            if(familyMember.getPlayer().getColor() == PlayerColor.Purple)
+                board += (AnsiColors.ANSI_PURPLE );
+
+            if(familyMember.getPlayer().getColor() == PlayerColor.Cyan)
+                board += (AnsiColors.ANSI_CYAN );
+
+            if(familyMember.getPlayer().getColor() == PlayerColor.Green)
+                board += (AnsiColors.ANSI_GREEN );
+
+            if(familyMember.getPlayer().getColor() == PlayerColor.Yellow)
+                board += (AnsiColors.ANSI_YELLOW );
+
+            if(familyMember.getPlayer().getColor() == PlayerColor.White)
+                board += (AnsiColors.ANSI_WHITE);
+
             if (familyMember.getColor() == ColorType.Orange) {
-                board += (AnsiColors.ANSI_RED + "OF");
-                board += (AnsiColors.ANSI_RESET);
+                board += ("OF");
             }
 
             if (familyMember.getColor() == ColorType.Black) {
-                board += (AnsiColors.ANSI_BLACK + "BF");
-                board += (AnsiColors.ANSI_RESET);
+                board += ("BF");
             }
 
             if (familyMember.getColor() == ColorType.White) {
-                board += (AnsiColors.ANSI_WHITE + "WF");
-                board += (AnsiColors.ANSI_RESET);
+                board += ("WF");
             }
 
             if (familyMember.getColor() == ColorType.Nautral) {
                 board += ("UF");
             }
+            board += (AnsiColors.ANSI_RESET);
 
         }
         return board;
