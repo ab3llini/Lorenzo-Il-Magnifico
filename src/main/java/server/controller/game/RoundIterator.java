@@ -42,7 +42,7 @@ public class RoundIterator implements Iterator<Queue<Player>> {
 
         boolean a = this.match.getCurrentPeriod().toInt() == PERIODS && this.match.getCurrentTurn() == TURNS && this.match.getCurrentRound() == ROUNDS;
 
-        boolean b = this.match.getPlayers().size() >= MINIMUM_PLAYERS;
+        boolean b = this.match.getPlayers().size() > this.match.getDisabledPlayers().size();
 
         return (!a && b);
 

@@ -166,7 +166,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         this.ctx = CliContext.Bootstrap;
 
         String hostIP = "localhost";
-        String connection = "2";
+        String connection = "1";
 
         EnumCommand<ClientType> clientCmd = new EnumCommand<ClientType>(ClientType.class);
 

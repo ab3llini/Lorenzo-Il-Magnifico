@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Represents the game engine.
  */
 
-public class GameEngine implements ServerObserver {
+public class GameEngine implements ServerObserver, LobbyObserver {
 
     //Socket server listening for clients to connect
     private SocketServer socketServer;
@@ -113,6 +113,8 @@ public class GameEngine implements ServerObserver {
         Lobby newLobby = new Lobby(handler);
 
         this.lobbies.add(newLobby);
+
+        newLobby.addObserver(this);
 
         return newLobby;
 
@@ -223,4 +225,11 @@ public class GameEngine implements ServerObserver {
         new GameEngine();
     }
 
+    public void onDestroyRequest(Lobby lobby) {
+
+        this.lobbies.remove(lobby);
+
+        lobby.destroy();
+
+    }
 }

@@ -10,11 +10,11 @@ import logger.Level;
 import logger.Logger;
 import netobject.notification.LobbyNotification;
 import netobject.notification.LobbyNotificationType;
-import server.controller.network.ClientHandler;
+import server.controller.network.*;
 import server.model.board.Player;
 import server.utility.UnicodeChars;
 import singleton.GameConfig;
-
+import server.controller.network.Observable;
 import java.util.*;
 
 /**
@@ -22,7 +22,7 @@ import java.util.*;
  */
 
 
-public class Lobby {
+public class Lobby implements MatchControllerObserver, Observable<LobbyObserver> {
 
     //This array list holds the clients in the lobby
     private ArrayList<ClientHandler> handlers;
@@ -31,7 +31,7 @@ public class Lobby {
     private MatchController matchController;
 
     //Match controller runner thread
-    private Thread matchControllerRunner;
+    private Thread matchControllerDaemon;
 
     //Timer to start the match
     private Timer timeout;
@@ -44,6 +44,11 @@ public class Lobby {
 
     //Status variable that tells if the timeout has started
     private boolean timeoutDidStart = false;
+
+    /**
+     * The observers
+     */
+    ArrayList<LobbyObserver> observers;
 
     //Constants
     private static final int MAXIMUM_PLAYERS = 4;
@@ -60,6 +65,8 @@ public class Lobby {
 
         //Create the handlers map
         this.handlers = new ArrayList<ClientHandler>();
+
+        this.observers = new ArrayList<>();
 
         //Assign the lobby name
         this.name = firstHandler.getUsername();
@@ -341,9 +348,13 @@ public class Lobby {
 
         this.matchController = new MatchController(this.handlers, this);
 
-        this.matchControllerRunner = new Thread(matchController);
+        this.matchControllerDaemon = new Thread(matchController);
 
-        this.matchControllerRunner.start();
+        this.matchController.setDeamon(this.matchControllerDaemon);
+
+        this.matchController.addObserver(this);
+
+        this.matchControllerDaemon.start();
 
     }
 
@@ -352,13 +363,14 @@ public class Lobby {
      */
     public void destroy() {
 
-        if (this.matchControllerRunner != null && this.matchControllerRunner.isAlive()) {
+        Logger.log(Level.FINEST, this.toString(), "Destroying match controller..");
 
-            Logger.log(Level.WARNING, this.toString(), "Waiting for kernel to terminate our threads..");
+        this.matchController.destroy();
 
-            this.matchControllerRunner.interrupt();
+        Logger.log(Level.FINEST, this.toString(), "Disconnecting handlers - > NEEDS IMPLEMENTATION");
 
-        }
+
+        Logger.log(Level.FINEST, this.toString(), "Waiting to be garbage collected..");
 
     }
 
@@ -444,5 +456,23 @@ public class Lobby {
 
     public boolean hasStarted() {
         return this.matchDidStart;
+    }
+
+    public void onMatchEnded() {
+        for (LobbyObserver o : this.observers) {
+
+            //TODO: Save the match in the database
+
+            o.onDestroyRequest(this);
+
+        }
+    }
+
+    public boolean addObserver(LobbyObserver o) {
+        return this.observers.add(o);
+    }
+
+    public boolean removeObserver(LobbyObserver o) {
+        return this.observers.remove(o);
     }
 }

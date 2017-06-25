@@ -68,6 +68,22 @@ public class Match extends NetObject {
         return players;
     }
 
+    public ArrayList<Player> getDisabledPlayers() {
+
+        ArrayList<Player> ans = new ArrayList<>();
+
+        for (Player p : this.players) {
+
+            if (p.isDisabled())
+
+                ans.add(p);
+
+        }
+
+        return ans;
+
+    }
+
     public ArrayList<Player> getRoundOrder() {
         return roundOrder;
     }

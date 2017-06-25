@@ -17,14 +17,13 @@ import server.model.card.Deck;
 import server.model.card.ban.*;
 import server.model.card.developement.*;
 import server.model.card.leader.LeaderCard;
-import server.model.card.leader.LeaderEffect;
 import server.model.effect.*;
 import server.model.effect.ActionType;
 import server.model.valuable.*;
 import server.utility.BoardConfigParser;
 import server.utility.BonusTilesParser;
 import singleton.GameConfig;
-
+import server.controller.network.Observable;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -41,7 +40,7 @@ import static server.utility.BoardConfigParser.getVictoryBonusFromRanking;
  * The controller of the match.
  * Will handle the model instance reacting to game events.
  */
-public class MatchController implements Runnable {
+public class MatchController implements Runnable, Observable<MatchControllerObserver> {
 
     /**
      * Hold a reference to the lobby
@@ -79,6 +78,16 @@ public class MatchController implements Runnable {
     private Timer currentPlayerTimeout;
 
     /**
+     * The thread on which the controller is running
+     */
+    private Thread deamon;
+
+    /**
+     * The observers
+     */
+    ArrayList<MatchControllerObserver> observers;
+
+    /**
      * Constants
      */
     private static final int ACTION_TIMEOUT =  GameConfig.getInstance().getPlayerTimeout();
@@ -100,6 +109,9 @@ public class MatchController implements Runnable {
          * Initialize the map
          */
         this.remotePlayerMap = new LinkedHashMap<Player, RemotePlayer>();
+
+        //Init observer
+        this.observers = new ArrayList<>();
 
         /*
          * Create a temporary list of players that will be passed to the Match
@@ -277,6 +289,14 @@ public class MatchController implements Runnable {
                 this.handlePlayerRound(p);
 
             }
+
+        }
+
+        Logger.log(Level.FINEST, this.toString(), "Match ended.");
+
+        for (MatchControllerObserver o : this.observers) {
+
+            o.onMatchEnded();
 
         }
 
@@ -633,6 +653,7 @@ public class MatchController implements Runnable {
 
             } catch (NoActionPerformedException e) {
 
+                Logger.log(Level.FINEST, this.toString(), "Action timeout expired for player " + this.currentPlayer.getUsername());
 
                 this.handleActionTimeoutExpiration(e);
 
@@ -659,6 +680,9 @@ public class MatchController implements Runnable {
         //Tell the players that the active one can't make any more actions
         this.notifyAllTurnDisabled(this.currentPlayer);
 
+        //Disable the player
+        this.currentPlayer.setDisabled(true);
+
     }
 
     /**
@@ -680,8 +704,6 @@ public class MatchController implements Runnable {
 
                 //By the time this method gets fired the player should has already taken his action.
                 //If not, we set the player as disabled and continue
-                MatchController.this.currentPlayer.setDisabled(true);
-
                 //To wake up the thread, inject a poisonous action
                 MatchController.this.actions.add(new Action());
 
@@ -2075,10 +2097,35 @@ public class MatchController implements Runnable {
         }
     }
 
+    public void setDeamon(Thread deamon) {
+        this.deamon = deamon;
+    }
+
+    public void destroy() {
+
+        this.currentPlayerTimeout.cancel();
+
+        if (this.deamon.isAlive())
+            this.deamon.interrupt();
+
+        Logger.log(Level.FINEST, this.toString(), "Daemon stopped");
+
+    }
+
     @Override
     public String toString() {
 
         return this.lobby + " match controller";
 
+    }
+
+    @Override
+    public boolean addObserver(MatchControllerObserver o) {
+        return this.observers.add(o);
+}
+
+    @Override
+    public boolean removeObserver(MatchControllerObserver o) {
+        return this.observers.remove(o);
     }
 }
