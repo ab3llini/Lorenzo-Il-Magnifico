@@ -6,6 +6,7 @@ import netobject.NetObjectType;
 import server.model.board.Board;
 import server.model.board.Period;
 import server.model.board.Player;
+import server.model.board.PlayerColor;
 import server.model.card.leader.LeaderCard;
 
 import java.util.*;
@@ -37,8 +38,6 @@ public class Match extends NetObject {
 
         super(NetObjectType.Model);
 
-        //Assign random colors
-
 
         //Assign the players to the model reference
         this.players = players;
@@ -52,6 +51,9 @@ public class Match extends NetObject {
         this.currentPeriod = Period.undefined;
         this.currentTurn = 0;
         this.currentRound = 0;
+
+        //Assign a random color to the player
+        generateRandomColor();
     }
 
     public Board getBoard() {
@@ -129,5 +131,14 @@ public class Match extends NetObject {
 
     public void setRoundOrder(ArrayList<Player> roundOrder) {
         this.roundOrder = roundOrder;
+    }
+
+    public void generateRandomColor(){
+        ArrayList<Integer> colorIndex = new ArrayList<Integer>();
+        for(int i=0; i<8; i++)
+            colorIndex.add(i);
+        Collections.shuffle(colorIndex);
+        for(int i=0; i<players.size(); i++)
+            players.get(i).setColor(PlayerColor.toEnum(colorIndex.get(i)));
     }
 }
