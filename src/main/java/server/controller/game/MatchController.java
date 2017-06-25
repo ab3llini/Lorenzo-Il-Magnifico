@@ -203,6 +203,9 @@ public class MatchController implements Runnable {
 
             if (this.match.getCurrentRound() == 4) {
 
+                //we have to pull dices another time
+                this.boardController.cleanDices();
+
                 //Look at council palace order to calculate new order of precedence
                 changePlayerOrder();
 
@@ -242,10 +245,6 @@ public class MatchController implements Runnable {
 
                 //clean the production area
                 this.boardController.cleanProductionArea();
-
-                //we have to pull dices another time
-
-                this.boardController.cleanDices();
 
                 for(Player player : this.getMatch().getPlayers()){
                     player.getTurnActiveLeaderCard().clear();
@@ -866,7 +865,7 @@ public class MatchController implements Runnable {
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Discount> discount,SelectionType costOptionType) throws ActionException {
+    public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Discount> discount,SelectionType costOptionType) throws ActionException, NoActionPerformedException, InterruptedException {
 
         //territory cards doesn't have cost
         if(card != null){
@@ -913,15 +912,27 @@ public class MatchController implements Runnable {
      * @param discount
      * @return
      */
-    public Cost applyDiscount(Cost costo, ArrayList<Discount> discount){
+    public Cost applyDiscount(Cost costo, ArrayList<Discount> discount) throws InterruptedException, NoActionPerformedException {
 
         int choose = 0;
 
         if(discount.size() == 0)
             return costo;
 
-        if(discount.size()>1){
-            System.out.println("chiedo all'utente cosa vuole tra: "+discount.get(0).getDiscount().get(0).getType()+" "+discount.get(1).getDiscount().get(0).getType());
+        if(discount.size()>1) {
+
+            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideDiscountOption, this.currentPlayer, "Which discount do you want ?");
+
+            ImmediateChoiceAction choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
+
+            if(choice.getSelection() == 1){
+
+                choose = 1;
+
+            }
+
+            this.notifyAllActionPerformed(this.currentPlayer, choice, this.currentPlayer.getUsername() + " has selected discount");
+
         }
 
         for (Resource resource:costo.getResources()) {
@@ -961,7 +972,7 @@ public class MatchController implements Runnable {
             }
             ActionType actionType = ActionType.unknown;
 
-            ImmediatePlacementAction placementAction = null;
+            ImmediatePlacementAction placementAction;
 
             //apply effect surplus of the immediate effect
             applyEffectSurplus(player, immediateEffect.getSurplus());
@@ -1043,8 +1054,6 @@ public class MatchController implements Runnable {
      * @throws NotStrongEnoughException
      */
     public void placeFamilyMember(StandardPlacementAction action, Player player) throws ActionException, NoActionPerformedException, InterruptedException {
-
-        Integer leaderBonus = 0;
 
         FamilyMember familyMember = player.getFamilyMember(action.getColorType());
 

@@ -162,6 +162,10 @@ public class TestMachController {
                 assertEquals(5,(int)player1.getWood());
                 assertEquals(5,(int)player1.getMilitaryPoints());
 
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (NoActionPerformedException e) {
+                e.printStackTrace();
             }
         }
     }

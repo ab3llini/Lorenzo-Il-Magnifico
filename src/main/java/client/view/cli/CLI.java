@@ -807,24 +807,55 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                     case DecideBanOption:
 
-                        Cmd.askFor("Say yes or no");
+                        ArrayList<String> selection = new ArrayList<>();
+
+                        selection.add("Yes");
+                        selection.add("No");
+
+                        ArrayCommand<String> selectionCommand = new ArrayCommand<>(selection);
+
+                        Cmd.askFor("Make your choice");
+
+                        selectionCommand.printChoiches();
 
                         choice = this.waitForCommandSelection();
 
-                        while (!(choice.equals("yes") || choice.equals("no"))) {
+                        while (!selectionCommand.isValid(choice)) {
 
-                            Cmd.askFor("Say yes or no");
+                            Cmd.askFor("Make your choice");
 
                             choice = this.waitForCommandSelection();
 
                         }
 
-                        if (choice.equals("yes"))
+                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
 
-                            immediateChoiceAction = new ImmediateChoiceAction(1, this.client.getUsername());
+                        break;
 
-                        else
-                            immediateChoiceAction = new ImmediateChoiceAction(0, this.client.getUsername());
+                    case DecideDiscountOption:
+
+                        ArrayList<String> options = new ArrayList<>();
+
+                        options.add("First discount");
+                        options.add("Second discount");
+
+                        ArrayCommand<String> optionsCommand = new ArrayCommand<>(options);
+
+                        Cmd.askFor("Make your choice");
+
+                        optionsCommand.printChoiches();
+
+                        choice = this.waitForCommandSelection();
+
+                        while (!optionsCommand.isValid(choice)) {
+
+                            Cmd.askFor("Make your choice");
+
+                            choice = this.waitForCommandSelection();
+
+                        }
+
+                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
 
                         break;
 

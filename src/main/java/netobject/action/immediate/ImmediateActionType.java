@@ -19,6 +19,7 @@ public enum ImmediateActionType implements CliPrintable {
     SelectCouncilPrivilege("Select a council privilege", ImmediateActionTypeImpl.Choice),
     SelectConversion("Select a conversion", ImmediateActionTypeImpl.Choice),
     DecideBanOption("Select an option", ImmediateActionTypeImpl.Choice),
+    DecideDiscountOption("Select an option", ImmediateActionTypeImpl.Choice),
     SelectFamilyMember("Select a family member",ImmediateActionTypeImpl.Choice),
     SelectActiveLeaderCard("Which leader do you want to copy?", ImmediateActionTypeImpl.Choice);
 
