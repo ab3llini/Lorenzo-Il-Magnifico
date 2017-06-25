@@ -644,7 +644,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             this.showDvptCardDetail();
 
-        } else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
+        }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) {
+
+            this.showPersonalBoard();
+
+        }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
 
             this.activateLeaderCard();
 
