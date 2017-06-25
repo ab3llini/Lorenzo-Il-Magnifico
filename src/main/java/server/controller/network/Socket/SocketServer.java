@@ -15,6 +15,7 @@ import netobject.request.Request;
 import netobject.request.RequestType;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
+import netobject.request.auth.RegisterRequest;
 import netobject.response.auth.LoginResponse;
 import server.controller.game.GameEngine;
 import server.controller.network.Server;
@@ -87,6 +88,11 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                     handler.sendObject(new LoginResponse(false, loginRequest.getUsername(), e.getMessage()));
                 }
 
+            }
+
+            else if(req.getRequestType() == RequestType.Registration) {
+
+                RegisterRequest registerRequest = (RegisterRequest) req;
             }
 
         }

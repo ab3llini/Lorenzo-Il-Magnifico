@@ -96,6 +96,8 @@ public class SocketClient extends Client implements Runnable {
 
     public void registration(RegisterRequest authentication){
 
+        this.sendObject(authentication);
+
     }
 
     public void run() {

@@ -505,6 +505,8 @@ public class TestMachController {
             assertEquals(10,(int)player1.getVictoryPoints());
             assertEquals(10,(int)player1.getFaithPoints());
 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
             player1.getPersonalBoard().getBuildingCards().remove(0);

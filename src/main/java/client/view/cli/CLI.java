@@ -443,6 +443,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                 Cmd.notify("The timeout for your action expired.");
 
+            } catch (NoSuchPlayerException e) {
+                e.printStackTrace();
             }
 
         }
@@ -565,7 +567,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     }
 
-    private StandardActionType makeStandardAction() throws InterruptedException, NoActionPerformedException {
+    private StandardActionType makeStandardAction() throws InterruptedException, NoActionPerformedException, NoSuchPlayerException {
 
 
         //Ask the user which action he wants to perform printing the choices
@@ -638,12 +640,17 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             this.client.performAction(new RollDicesAction(this.client.getUsername()));
 
-
         } else if (actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail)) {
 
             this.showDvptCardDetail();
 
-        } else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
+        }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) {
+
+            this.showPersonalBoard();
+
+        }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
 
             this.activateLeaderCard();
 
@@ -668,7 +675,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         System.out.println("Checking if the action requires server response..");
 
 
-        boolean requiresServerConfirmation = !actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail);
+        boolean requiresServerConfirmation = !(actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail) || actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) ;
 
         if (requiresServerConfirmation) {
 
@@ -1172,6 +1179,17 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
 
         System.out.println(GameSingleton.getInstance().getSpecificDvptCard(Integer.parseInt(id) - 1));
+
+    }
+
+    /**
+     * Show personal board of the player
+     *
+     * @throws InterruptedException
+     */
+    private void showPersonalBoard() throws NoSuchPlayerException {
+
+        System.out.println(this.localMatchController.getMatch().getPlayerFromUsername(this.client.getUsername()).getPersonalBoard().toString());
 
     }
 

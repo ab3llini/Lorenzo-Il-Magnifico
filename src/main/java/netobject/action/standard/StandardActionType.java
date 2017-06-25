@@ -9,6 +9,7 @@ import client.view.cli.cmd.CliPrintable;
 public enum StandardActionType implements CliPrintable {
 
     FamilyMemberPlacement("Place a family member"),
+    ShowPersonalBoard("Show personal board"),
     LeaderCardActivation("Activate a leader card"),
     ShowDvptCardDetail("Show development card details"),
     RollDice("Roll the dices"),
