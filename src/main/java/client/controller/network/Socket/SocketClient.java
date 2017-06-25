@@ -8,6 +8,7 @@ import netobject.action.Action;
 import netobject.notification.*;
 import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
+import netobject.request.auth.RegisterRequest;
 import netobject.response.Response;
 import netobject.response.ResponseType;
 import netobject.response.auth.LoginResponse;
@@ -90,6 +91,10 @@ public class SocketClient extends Client implements Runnable {
     public void login(LoginRequest authentication) {
 
         this.sendObject(authentication);
+
+    }
+
+    public void registration(RegisterRequest authentication){
 
     }
 
