@@ -17,6 +17,7 @@ import server.model.card.leader.LeaderCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Handles the player logic.
@@ -36,8 +37,7 @@ public class LocalMatchController {
 
     private StandardActionType lastPendingStandardAction;
 
-    private ImmediateActionType lastPendingImmediateAction;
-    
+    private Stack<ImmediateActionType> pendingImmediateActions;
 
     //actions performed by a player on this round
     private HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;
@@ -45,6 +45,8 @@ public class LocalMatchController {
     public LocalMatchController() {
 
         this.actionsPerformedOnThisRound = new HashMap<StandardActionType, Boolean>();
+
+        this.pendingImmediateActions = new Stack<>();
 
         for (StandardActionType action : StandardActionType.values()) {
 
@@ -216,11 +218,11 @@ public class LocalMatchController {
     }
 
     public void confirmLastPendingImmediateAction() {
-        this.lastPendingImmediateAction = null;
+        this.pendingImmediateActions.pop();
     }
 
     public void setLastPendingImmediateAction(ImmediateActionType lastPendingImmediateAction) {
-        this.lastPendingImmediateAction = lastPendingImmediateAction;
+        this.pendingImmediateActions.push(lastPendingImmediateAction);
     }
 
     public StandardActionType getLastPendingStandardAction() {
@@ -228,7 +230,14 @@ public class LocalMatchController {
     }
 
     public ImmediateActionType getLastPendingImmediateAction() {
-        return lastPendingImmediateAction;
+        if (this.pendingImmediateActions.size() > 0) {
+            return this.pendingImmediateActions.peek();
+        }
+        else return null;
+    }
+
+    public Stack<ImmediateActionType> getPendingImmediateActions() {
+        return pendingImmediateActions;
     }
 
     public void setDraftableBonusTiles(ArrayList<BonusTile> draftableBonusTiles) {

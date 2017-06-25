@@ -644,13 +644,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
             this.showDvptCardDetail();
 
-        }
-        else if (actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) {
-
-            this.showPersonalBoard();
-
-        }
-        else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
+        } else if (actionSelection.choiceMatch(choice, StandardActionType.LeaderCardActivation)) {
 
             this.activateLeaderCard();
 
@@ -703,55 +697,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             //In the meanwhile some immediate action requests may arrive
             while (!isActionConfirmationOrRefusal) {
 
-                System.out.println("If we got here it means that the server put an immediate action in the queue that MUST have n elements, with n > 0, n = " + this.immediateActionQueue.size());
-
-                System.out.println("If n = 0 we are going in a DEADLOCK status, we need to figure out who generated the token");
-
-                System.out.println("The only token that I was expecting was to get informed that I have an immediate action to perform... anything else should not be notified in this time span");
-
-
-                //While inside this loop we perform immediate actions.
-                ImmediateActionType immediate = this.immediateActionQueue.take();
-
-                System.out.println("Got the immediate action... We are going to perform : " + immediate+ ". The method should return normally, no tokens are required from server. This is all in local. If we stop here the DEADLOCK is in the performImmediateAction method");
-
-                //Perform the immediate action
-                this.performImmediateAction(immediate);
-
-                System.out.println("Immediate action performed, we are going to wait for a token from the server that confirms/refuses the immediate action");
-
-                //After the immediate action was performed we need to wait for the confirmation of the standard action
-                this.serverTokenQueue.take();
-
-                System.out.println("Got a response from the server, we are now checking if the immediate action was refused or not");
-
-                while (this.localMatchController.getLastPendingImmediateAction() != null) {
-
-                    System.out.println("The action was, apparently, refused since it appears in the localmatchcontroller as PENDING");
-
-                    System.out.println("Let's perform it again.. entering performImmediateAction method..");
-
-                    //Re execute the last action while
-                    this.performImmediateAction(immediate);
-
-                    System.out.println("Action re-performed again.... we are going to wait for a token from the server that confirms/refuses the immediate action ");
-
-                    //After the immediate action was performed we need to wait for the confirmation of the standard action
-                    this.serverTokenQueue.take();
-
-                    System.out.println("Got a response from the server, we are now checking if the immediate action was refused or not");
-
-                }
-
-                System.out.println("The immediate action was accepted !!!");
-
-
-                System.out.println("We are now going to wait for the original standard action confirmation or for another immediate action");
+                this.handleRecursiveImmediateAction();
 
                 //Wait until we receive either a confirmation or a refusal for the current standard action or a new immediate one
                 token = this.serverTokenQueue.take();
 
-                System.out.println("We received a toke, lets check if it is the confirmation of the standard or another immediate action..");
+                System.out.println("We received a token, lets check if it is the confirmation of the standard or another immediate action..");
 
                 //Recheck the condition
                 isActionConfirmationOrRefusal = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
@@ -777,6 +728,40 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         //After the action was performed, return the choice made so that if the user wants to terminate the round we can know it
         return actionSelection.getEnumEntryFromChoice(choice);
+
+    }
+
+
+    private void handleRecursiveImmediateAction() throws InterruptedException, NoActionPerformedException {
+
+        //Take the immediate action to do
+        ImmediateActionType action = this.immediateActionQueue.take();
+
+        do {
+
+            //Set this immediate action as the last one pending
+            this.localMatchController.setLastPendingImmediateAction(action);
+
+            //Perform the immediate action
+            this.performImmediateAction(action);
+
+            //Wait for a token : immediate action confirmation/refusal or new immediate action available
+            this.serverTokenQueue.take();
+
+            //This action may need to trigger more than one sub immediate actions
+            while (this.immediateActionQueue.size() > 0) {
+
+                //A new immediate action request has come
+                this.handleRecursiveImmediateAction();
+
+                //Wait for a token : immediate action confirmation/refusal or new immediate action available
+                this.serverTokenQueue.take();
+
+            }
+
+        }
+        while (this.localMatchController.getLastPendingImmediateAction() == action);
+
 
     }
 
@@ -817,19 +802,25 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
      */
     private void performImmediateAction(ImmediateActionType type) throws NoActionPerformedException, InterruptedException {
 
-        do {
+        String choice;
 
-            String choice;
+        if (type.getImpl() == ImmediateActionTypeImpl.Choice) {
 
-            if (type.getImpl() == ImmediateActionTypeImpl.Choice) {
+            ImmediateChoiceAction immediateChoiceAction = null;
 
-                ImmediateChoiceAction immediateChoiceAction = null;
+            switch (type) {
 
-                switch (type) {
+                case SelectCouncilPrivilege:
 
-                    case SelectCouncilPrivilege:
+                    ArrayCommand<EffectSurplus> privilegeSelection = new ArrayCommand<>(BoardConfigParser.getCouncilPrivilegeOptions());
 
-                        ArrayCommand<EffectSurplus> privilegeSelection = new ArrayCommand<>(BoardConfigParser.getCouncilPrivilegeOptions());
+                    Cmd.askFor("Which council privilege would you like?");
+
+                    privilegeSelection.printChoiches();
+
+                    choice = this.waitForCommandSelection();
+
+                    while (!privilegeSelection.isValid(choice)) {
 
                         Cmd.askFor("Which council privilege would you like?");
 
@@ -837,77 +828,77 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         choice = this.waitForCommandSelection();
 
-                        while (!privilegeSelection.isValid(choice)) {
+                    }
 
-                            Cmd.askFor("Which council privilege would you like?");
+                    immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
 
-                            privilegeSelection.printChoiches();
+                    break;
 
-                            choice = this.waitForCommandSelection();
+                case DecideBanOption:
 
-                        }
+                    ArrayList<String> selection = new ArrayList<>();
 
-                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
+                    selection.add("Yes");
+                    selection.add("No");
 
-                        break;
+                    ArrayCommand<String> selectionCommand = new ArrayCommand<>(selection);
 
-                    case DecideBanOption:
+                    Cmd.askFor("Make your choice");
 
-                        ArrayList<String> selection = new ArrayList<>();
+                    selectionCommand.printChoiches();
 
-                        selection.add("Yes");
-                        selection.add("No");
+                    choice = this.waitForCommandSelection();
 
-                        ArrayCommand<String> selectionCommand = new ArrayCommand<>(selection);
-
-                        Cmd.askFor("Make your choice");
-
-                        selectionCommand.printChoiches();
-
-                        choice = this.waitForCommandSelection();
-
-                        while (!selectionCommand.isValid(choice)) {
-
-                            Cmd.askFor("Make your choice");
-
-                            choice = this.waitForCommandSelection();
-
-                        }
-
-                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
-
-                        break;
-
-                    case DecideDiscountOption:
-
-                        ArrayList<String> options = new ArrayList<>();
-
-                        options.add("First discount");
-                        options.add("Second discount");
-
-                        ArrayCommand<String> optionsCommand = new ArrayCommand<>(options);
+                    while (!selectionCommand.isValid(choice)) {
 
                         Cmd.askFor("Make your choice");
 
-                        optionsCommand.printChoiches();
+                        choice = this.waitForCommandSelection();
+
+                    }
+
+                    immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
+
+                    break;
+
+                case DecideDiscountOption:
+
+                    ArrayList<String> options = new ArrayList<>();
+
+                    options.add("First discount");
+                    options.add("Second discount");
+
+                    ArrayCommand<String> optionsCommand = new ArrayCommand<>(options);
+
+                    Cmd.askFor("Make your choice");
+
+                    optionsCommand.printChoiches();
+
+                    choice = this.waitForCommandSelection();
+
+                    while (!optionsCommand.isValid(choice)) {
+
+                        Cmd.askFor("Make your choice");
 
                         choice = this.waitForCommandSelection();
 
-                        while (!optionsCommand.isValid(choice)) {
+                    }
 
-                            Cmd.askFor("Make your choice");
+                    immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
 
-                            choice = this.waitForCommandSelection();
+                    break;
 
-                        }
+                case SelectFamilyMember:
 
-                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
+                    EnumCommand<ColorType> colorSelection = new EnumCommand<>(ColorType.class);
 
-                        break;
+                    Cmd.askFor("Which family member do you want to use force = 6?");
 
-                    case SelectFamilyMember:
+                    colorSelection.printChoiches();
 
-                        EnumCommand<ColorType> colorSelection = new EnumCommand<>(ColorType.class);
+                    choice = this.waitForCommandSelection();
+
+                    while (!colorSelection.isValid(choice)) {
 
                         Cmd.askFor("Which family member do you want to use force = 6?");
 
@@ -915,19 +906,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         choice = this.waitForCommandSelection();
 
-                        while (!colorSelection.isValid(choice)) {
+                    }
 
-                            Cmd.askFor("Which family member do you want to use force = 6?");
+                    immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice), this.client.getUsername());
 
-                            colorSelection.printChoiches();
-
-                            choice = this.waitForCommandSelection();
-
-                        }
-
-                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice), this.client.getUsername());
-
-                        break;
+                    break;
 
                     case SelectConversion:
 
@@ -959,14 +942,22 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                     case SelectActiveLeaderCard:
 
-                        ArrayList<LeaderCard> container = new ArrayList<>();
+                    ArrayList<LeaderCard> container = new ArrayList<>();
 
-                        for(Player player : this.localMatchController.getMatch().getPlayers()) {
-                            if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
-                                container.addAll(player.getActiveLeaderCards());
-                        }
+                    for(Player player : this.localMatchController.getMatch().getPlayers()) {
+                        if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
+                            container.addAll(player.getActiveLeaderCards());
+                    }
 
-                        ArrayCommand<LeaderCard> leaderSelection = new ArrayCommand<>(container);
+                    ArrayCommand<LeaderCard> leaderSelection = new ArrayCommand<>(container);
+
+                    Cmd.askFor(type.toString());
+
+                    leaderSelection.printChoiches();
+
+                    choice = this.waitForCommandSelection();
+
+                    while (!leaderSelection.isValid(choice)) {
 
                         Cmd.askFor(type.toString());
 
@@ -974,84 +965,73 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         choice = this.waitForCommandSelection();
 
-                        while (!leaderSelection.isValid(choice)) {
+                    }
 
-                            Cmd.askFor(type.toString());
+                    int selected = container.get(Integer.parseInt(choice) - 1).getId();
 
-                            leaderSelection.printChoiches();
+                    immediateChoiceAction = new ImmediateChoiceAction(selected, this.client.getUsername());
 
-                            choice = this.waitForCommandSelection();
-
-                        }
-
-                        int selected = container.get(Integer.parseInt(choice) - 1).getId();
-
-                        immediateChoiceAction = new ImmediateChoiceAction(selected, this.client.getUsername());
-
-                        break;
-
-                }
-
-                //Send the immediate choice
-                this.client.performAction(immediateChoiceAction);
-
-            } else if (type.getImpl() == ImmediateActionTypeImpl.Placement) {
-
-                ImmediatePlacementAction immediatePlacementAction = null;
-
-                switch (type) {
-
-                    case ActivateHarvest:
-
-                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Harvest, this.askForServants(), this.client.getUsername());
-
-                        break;
-
-                    case ActivateProduction:
-
-                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Production, this.askForServants(), this.client.getUsername());
-
-                        break;
-
-                    case TakeBuildingCard:
-
-                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.BuildingTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
-
-                        break;
-
-                    case TakeCharacterCard:
-
-                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.CharacterTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
-
-                        break;
-
-                    case TakeVentureCard:
-
-                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.VentureTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
-
-                        break;
-
-                    case TakeTerritoryCard:
-
-                        immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.TerritoryTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
-
-                        break;
-
-                    case TakeAnyCard:
-
-                        immediatePlacementAction = new ImmediatePlacementAction(this.askForTypeOption(), this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
-
-                        break;
-                }
-
-                //Send the immediate placement
-                this.client.performAction(immediatePlacementAction);
-
+                    break;
 
             }
 
+            //Send the immediate choice
+            this.client.performAction(immediateChoiceAction);
+
+        } else if (type.getImpl() == ImmediateActionTypeImpl.Placement) {
+
+            ImmediatePlacementAction immediatePlacementAction = null;
+
+            switch (type) {
+
+                case ActivateHarvest:
+
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Harvest, this.askForServants(), this.client.getUsername());
+
+                    break;
+
+                case ActivateProduction:
+
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.Production, this.askForServants(), this.client.getUsername());
+
+                    break;
+
+                case TakeBuildingCard:
+
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.BuildingTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                    break;
+
+                case TakeCharacterCard:
+
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.CharacterTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                    break;
+
+                case TakeVentureCard:
+
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.VentureTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                    break;
+
+                case TakeTerritoryCard:
+
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.TerritoryTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                    break;
+
+                case TakeAnyCard:
+
+                    immediatePlacementAction = new ImmediatePlacementAction(this.askForTypeOption(), this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+
+                    break;
+            }
+
+            //Send the immediate placement
+            this.client.performAction(immediatePlacementAction);
+
+
         }
-        while (this.localMatchController.getLastPendingImmediateAction() != null);
 
     }
 
@@ -1545,7 +1525,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                 }
 
-
                 Cmd.success("Action performed successfully");
 
             }
@@ -1570,8 +1549,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
             Cmd.notify(message);
 
         }
-
-        this.localMatchController.confirmLastPendingImmediateAction();
 
     }
 
