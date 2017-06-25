@@ -130,14 +130,6 @@ public class LocalMatchController {
 
         this.match = match;
 
-        //Check if the user can roll the dices
-        if (!this.canRollDices()) {
-
-            this.setActionPerformed(StandardActionType.RollDice, true);
-
-        }
-
-
     }
 
     public synchronized boolean canPerformAction(StandardActionType action) {
@@ -154,7 +146,7 @@ public class LocalMatchController {
         return this.matchEnded;
     }
 
-    private void setActionPerformed(StandardActionType action, Boolean value) {
+    protected void setActionPerformed(StandardActionType action, Boolean value) {
 
         this.actionsPerformedOnThisRound.put(action, value);
 

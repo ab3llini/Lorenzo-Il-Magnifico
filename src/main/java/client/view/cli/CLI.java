@@ -536,6 +536,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     private StandardActionType makeStandardAction() throws InterruptedException, NoActionPerformedException {
 
+
         //Ask the user which action he wants to perform printing the choices
         Cmd.askFor("Which action would you like to perform ?");
 
@@ -549,6 +550,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         String choice = this.waitForCommandSelection();
 
         boolean valid = actionSelection.isValid(choice);
+
+        //Check if the user can roll the dices
+        if(!this.localMatchController.diceAreRolled()){
+
+            this.localMatchController.setActionPerformed(StandardActionType.RollDice, false);
+
+        }
 
         while (!valid || !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
