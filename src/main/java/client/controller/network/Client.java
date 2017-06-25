@@ -6,6 +6,7 @@ import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
 import netobject.request.auth.LoginRequest;
+import netobject.request.auth.RegisterRequest;
 import server.controller.game.RemotePlayer;
 import server.controller.network.Observable;
 import server.model.Match;
@@ -48,6 +49,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
      */
     public abstract void login(LoginRequest authentication);
 
+    public abstract void registration(RegisterRequest authentication);
 
     public String getUsername() {
         return username;

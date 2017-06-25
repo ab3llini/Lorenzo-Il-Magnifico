@@ -29,6 +29,7 @@ import netobject.notification.LobbyNotificationType;
 import netobject.notification.MatchNotification;
 import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
+import netobject.request.auth.RegisterRequest;
 import server.model.GameSingleton;
 import server.model.Match;
 import server.model.board.BonusTile;
@@ -257,8 +258,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         //Print the available choices
         authCmd.printChoiches();
 
-        //String choice = this.inputQueue.take();
-        String choice = "1";
+        String choice = this.inputQueue.take();
 
         //Check it
         while (!authCmd.isValid(choice)) {
@@ -334,10 +334,41 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
     }
 
-    private void register() {
+    private void register() throws InterruptedException {
 
         //Switch context
         this.ctx = CliContext.Registration;
+
+        String username;
+        String password;
+        String confirmPassword;
+        boolean twoIdentical = false;
+
+
+        //Request the IP
+        Cmd.askFor("Please enter your username");
+
+        username = this.inputQueue.take();
+
+        do {
+            //Request the IP
+            Cmd.askFor("Please enter your password");
+
+            password = this.inputQueue.take();
+
+            //Request the IP
+            Cmd.askFor("Please re - enter your password");
+
+            confirmPassword = this.inputQueue.take();
+
+            if(password.equals(confirmPassword))
+                twoIdentical = true;
+        }
+        while (!twoIdentical);
+
+        //Perform login request
+        this.client.registration(new RegisterRequest(username, password));
+
 
     }
 

@@ -11,6 +11,7 @@ import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
 import netobject.request.auth.LoginRequest;
+import netobject.request.auth.RegisterRequest;
 import server.controller.network.RMI.RMIServerInterface;
 import server.model.Match;
 import server.model.board.BonusTile;
@@ -174,6 +175,10 @@ public class RMIClient extends Client implements RMIClientInterface {
 
 
         }
+
+    }
+
+    public void registration(RegisterRequest authentication){
 
     }
 
