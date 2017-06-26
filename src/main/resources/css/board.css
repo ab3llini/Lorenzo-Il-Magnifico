@@ -1,5 +1,22 @@
+
+* {
+    -fx-notification-bg: rgba(38, 50, 56, 0.91);
+}
+
+
 .board-dvpt-card {
     
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0 , 0, 0);
+
+}
+
+.notification-text-field {
+
+    -fx-font-size: 13;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-text-fill: white;
+    -fx-background-color: -fx-notification-bg;
+    -fx-border-radius: 5;
 
 }

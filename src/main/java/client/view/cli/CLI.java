@@ -50,7 +50,7 @@ import java.util.concurrent.BlockingQueue;
 /**
  * The command line interface for the game :/
  */
-public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlayerObserver {
+public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePlayerObserver {
 
     /**
      * The client handler that will be dynamically bounded and used
@@ -234,7 +234,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
         }
 
         //Register us as observer
-        this.client.addObserver(this);
+        this.client.addClientObserver(this);
+        this.client.addRemotePlayerObserver(this);
+
 
         this.authenticate();
 

@@ -6,7 +6,7 @@ import netobject.notification.LobbyNotification;
  * @author  ab3llini
  * @since   23/05/17.
  */
-public interface ClientObserver extends RemotePlayerObserver {
+public interface ClientObserver {
 
     void onDisconnection(Client client);
 

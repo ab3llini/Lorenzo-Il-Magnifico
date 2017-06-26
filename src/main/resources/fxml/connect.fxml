@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -86,7 +87,7 @@
                                     </AnchorPane>
                                     <AnchorPane GridPane.rowIndex="2">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#loginAction" styleClass="form-button" text="Login" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                          <JFXButton layoutY="124.0" onAction="#loginAction" styleClass="form-button" text="Login" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>

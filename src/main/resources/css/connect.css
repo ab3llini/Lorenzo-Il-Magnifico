@@ -39,15 +39,9 @@
 
 .form-button {
 
-    -fx-background-color: #263238;
-    -fx-border-color: -fx-main-color;
-    -fx-border-radius: 10;
-    -fx-min-height: 30;
-    -fx-max-height: 30;
-    -fx-pref-height: 30;
-    -fx-text-fill: -fx-main-color;
+    -fx-background-color: -fx-main-color;
+    -fx-text-fill: white;
     -fx-font-size: 14;
     -fx-text-alignment: center;
-    -fx-padding: 0 10 0 10;
 
 }

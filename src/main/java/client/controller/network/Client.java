@@ -1,6 +1,7 @@
 package client.controller.network;
 
 import client.controller.LocalPlayer;
+import client.view.cli.CLI;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
@@ -25,10 +26,13 @@ import java.util.ArrayList;
 /**
  * The class describes a generic client and provides some basic functionality
  */
-public abstract class Client implements Observable<ClientObserver>, RemotePlayer, LocalPlayer {
+public abstract class Client implements RemotePlayer, LocalPlayer {
 
     //The list of observers
-    protected ArrayList<ClientObserver> observers = new ArrayList<ClientObserver>();
+    protected ArrayList<ClientObserver> clientObservers = new ArrayList<>();
+
+    protected ArrayList<RemotePlayerObserver> remotePlayerObservers = new ArrayList<>();
+
 
     protected String username;
 
@@ -68,7 +72,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
      */
     protected void notifyDisconnection() {
 
-        for (ClientObserver o : this.observers) {
+        for (ClientObserver o : this.clientObservers) {
 
             o.onDisconnection(this);
 
@@ -78,7 +82,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     protected void notifyLoginFailed(String reason) {
 
-        for (ClientObserver o : this.observers) {
+        for (ClientObserver o : this.clientObservers) {
 
             o.onLoginFailed(this, reason);
 
@@ -88,7 +92,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     protected void notifyLoginSucceeded() {
 
-        for (ClientObserver o : this.observers) {
+        for (ClientObserver o : this.clientObservers) {
 
             o.onLoginSuccess(this);
 
@@ -98,7 +102,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     protected void notifyLobbyNotificationReceived(LobbyNotification not) {
 
-        for (ClientObserver o : this.observers) {
+        for (ClientObserver o : this.clientObservers) {
 
             o.onLobbyNotification(this, not);
 
@@ -106,15 +110,27 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     }
 
-    public boolean addObserver(ClientObserver o) {
+    public boolean addClientObserver(ClientObserver o) {
 
-        return o != null && this.observers.add(o);
+        return o != null && this.clientObservers.add(o);
 
     }
 
-    public boolean removeObserver(ClientObserver o) {
+    public boolean addRemotePlayerObserver(RemotePlayerObserver o) {
 
-        return o != null && this.observers.remove(o);
+        return o != null && this.remotePlayerObservers.add(o);
+
+    }
+
+    public boolean removeClientObserver(Observer o) {
+
+        return o != null && this.remotePlayerObservers.remove(o);
+
+    }
+
+    public boolean removeRemotePlayerObserver(Observer o) {
+
+        return o != null && this.remotePlayerObservers.remove(o);
 
     }
 
@@ -124,7 +140,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyModelUpdate(Match model) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onModelUpdate(this, model);
 
@@ -134,7 +150,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyTurnEnabled(Player player, String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onTurnEnabled(this, player, message);
 
@@ -144,7 +160,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyTurnDisabled(Player player, String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onTurnDisabled(this, player, message);
 
@@ -154,7 +170,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyActionTimeoutExpired(Player player, String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onTimeoutExpired(this, player, message);
 
@@ -164,7 +180,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyActionRefused(Action action, String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onActionRefused(this,action, message);
 
@@ -174,7 +190,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyImmediateActionAvailable(ImmediateActionType immediateActionType, Player player, String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onImmediateActionAvailable(this, immediateActionType, player, message);
 
@@ -184,7 +200,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyActionPerformed(Player player, Action action, String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onActionPerformed(this, player, action, message);
 
@@ -194,7 +210,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyLeaderCardDraftRequest(Deck<LeaderCard> deck,  String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onLeaderCardDraftRequest(this, deck, message);
 
@@ -204,7 +220,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notifyBonusTileDraftRequest(ArrayList<BonusTile> tiles,  String message) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onBonusTileDraftRequest(this, tiles, message);
 
@@ -214,7 +230,7 @@ public abstract class Client implements Observable<ClientObserver>, RemotePlayer
 
     public void notify(MatchNotification notification) {
 
-        for (ClientObserver o : this.observers) {
+        for (RemotePlayerObserver o : this.remotePlayerObservers) {
 
             o.onNotification(this, notification);
 

@@ -124,7 +124,7 @@ public class ConnectionController extends NavigationController implements Client
 
             this.client = client;
 
-            this.client.addObserver(this);
+            this.client.addClientObserver(this);
 
             return client;
 
@@ -174,55 +174,6 @@ public class ConnectionController extends NavigationController implements Client
 
     }
 
-    @Override
-    public void onNotification(Client sender, MatchNotification notification) {
-
-    }
-
-    @Override
-    public void onModelUpdate(Client sender, Match model) {
-
-    }
-
-    @Override
-    public void onTurnEnabled(Client sender, Player player, String message) {
-
-    }
-
-    @Override
-    public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
-
-    }
-
-    @Override
-    public void onTurnDisabled(Client sender, Player player, String message) {
-
-    }
-
-    @Override
-    public void onTimeoutExpired(Client sender, Player player, String message) {
-
-    }
-
-    @Override
-    public void onActionRefused(Client sender,Action action, String message) {
-
-    }
-
-    @Override
-    public void onActionPerformed(Client sender, Player player, Action action, String message) {
-
-    }
-
-    @Override
-    public void onLeaderCardDraftRequest(Client sender, Deck<LeaderCard> cards, String message) {
-
-    }
-
-    @Override
-    public void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message) {
-
-    }
 }
 
 
