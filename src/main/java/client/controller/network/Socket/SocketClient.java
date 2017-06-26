@@ -124,9 +124,32 @@ public class SocketClient extends Client implements Runnable {
             }
             catch (IOException e) {
 
-                Logger.log(Level.WARNING, "SocketClient::run", "Broken pipe while listening", e);
+                Logger.log(Level.WARNING, "SocketClient::run", "Broken pipe while listening.. Attempting to reset connection", e);
 
-                break;
+                try {
+                    this.in.reset();
+                } catch (IOException e1) {
+
+                    try {
+                        this.socket.close();
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
+                    }
+
+                    //Notify observers so that they can remove the handler
+                    this.notifyDisconnection();
+                }
+
+                if (this.socket.isClosed() || !this.socket.isConnected()) {
+
+                    //Notify observers so that they can remove the handler
+                    this.notifyDisconnection();
+
+                    break;
+
+                }
+
+
 
             }
             catch (ClassNotFoundException e) {
@@ -251,6 +274,8 @@ public class SocketClient extends Client implements Runnable {
         try {
 
             out.writeObject(object);
+
+            out.flush();
 
             out.reset();
 

@@ -126,9 +126,9 @@ public class GameEngine implements ServerObserver, LobbyObserver {
 
         try {
 
-            if (lobby.leave(handler) == 0) {
+            if (lobby.leave(handler) == 0 && !lobby.hasStarted()) {
 
-                //If after the leaving there are no more players in the lobby, it gets destroyed.
+                //If after the leaving there are no more players in the lobby and the match has not started yet, it gets destroyed.
                 lobby.destroy();
 
                 this.lobbies.remove(lobby);

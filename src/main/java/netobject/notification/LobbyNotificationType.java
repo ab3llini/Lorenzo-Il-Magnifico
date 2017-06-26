@@ -12,6 +12,8 @@ public enum LobbyNotificationType {
     TimeoutStopped,
     ClientLeave,
     MatchStart,
-    ResumeGame
+    ResumeGame,
+    ResumeLeaderCardDraft,
+    ResumeBonusTileDraft
 
 }

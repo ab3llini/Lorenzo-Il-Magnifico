@@ -80,9 +80,13 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
         }
 
+
+
         try {
 
             out.writeObject(object);
+
+            out.flush();
 
             out.reset();
 

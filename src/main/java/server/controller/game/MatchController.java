@@ -80,7 +80,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     /**
      * The thread on which the controller is running
      */
-    private Thread deamon;
+    private Thread daemon;
+
+    /**
+     * The context in which the match controller is
+     */
+    private MatchControllerContext context;
 
     /**
      * The observers
@@ -91,9 +96,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * Constants
      */
     private static final int ACTION_TIMEOUT =  GameConfig.getInstance().getPlayerTimeout();
-
-    private boolean drafting = true;
-
 
     /**
      * This is the match controller constructor.
@@ -200,13 +202,17 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
 
         //Draft the leader cards first
+        this.context = MatchControllerContext.LeaderCardDraft;
         this.handleLeaderCardDraft();
 
         //Draft the bonus tiles
+        //Draft the leader cards first
+        this.context = MatchControllerContext.BonusTileDraft;
         this.handleBonusTileDrat();
 
-        //Update the local flag
-        this.drafting = false;
+        //We are now going to play
+        //Draft the leader cards first
+        this.context = MatchControllerContext.Playing;
 
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);
@@ -316,7 +322,15 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         //The first thing to do is check if the player has the current turn
         //If so we need to insert a poisonous action to stop his handling
-        if (belonging.getUsername().equals(this.currentPlayer.getUsername()) || drafting) {
+        //Of course the current player should be set (aka not drafting)
+        if (this.context != MatchControllerContext.Playing) {
+
+            //We are still drafting either the leader cards or the tiles
+            //Inset an empty action to avoid a deadlock in the draft system
+            this.actions.add(new Action());
+
+        }
+        else if (belonging.getUsername().equals(this.currentPlayer.getUsername())) {
 
             //Inset an empty action to trigger the exception that will disable the player
             this.actions.add(new Action());
@@ -397,7 +411,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     private void handleLeaderCardDraft() {
 
+        //TODO: Fix a bug : when a user stop the process at the beginning of the draft without selecting anything something goes wrong with the tiles.
+
         final int NUMBER_OF_CARDS_PER_DECK = 4;
+
+        //The amount of players that can draft when we begin the process, this number may decrease if a player disconnects while drafting
+        ArrayList<Player> enabledToDraft = this.match.getActivePlayers();
 
         //Create a deck with all the 20 leader cards and shuffle it
         Deck<LeaderCard> deck = new Deck<>(GameSingleton.getInstance().getLeaderCards()).shuffle();
@@ -408,7 +427,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         int i = 0;
 
         //Create n sub decks, where n is the number of players
-        for (Player p : this.match.getPlayers()) {
+        for (Player p : enabledToDraft) {
 
             Deck<LeaderCard> draftableDeck = new Deck<>();
 
@@ -432,12 +451,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         for (i = 0; i < NUMBER_OF_CARDS_PER_DECK; i++) {
 
-            //Four times we need to wait until each player performs his draft
-            for (int j = 0; j < this.match.getPlayers().size(); j ++) {
+            //The amount of players that drafted
+            int j = 0;
 
-                if (this.match.getPlayers().get(j).isDisabled()) {
-                    continue;
-                }
+            //Four times we need to wait until each active player performs his draft
+            while (j < enabledToDraft.size()) {
 
                 //Get the shuffle action
                 ShuffleLeaderCardStandardAction shuffleAction = null;
@@ -445,11 +463,17 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                     shuffleAction = (ShuffleLeaderCardStandardAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
+                    //Increment j to go on and get the action from a different player
+                    j++;
+
                 } catch (InterruptedException e) {
 
                     Logger.log(Level.WARNING, this.toString(), "Thread stopped while waiting on action queue", e);
 
                 } catch (NoActionPerformedException e) {
+
+                    //Detect who did not perform the move  (disconnected or timeout expired) and update enabledToDraft array
+                    this.filterOutPlayers(enabledToDraft, this.match.getDisabledPlayers());
 
                     continue;
 
@@ -506,7 +530,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             }
 
             //Send again the drafted decks
-            for (Player p : this.match.getPlayers()) {
+            for (Player p : enabledToDraft) {
 
                 if (!p.isDisabled()) {
 
@@ -529,16 +553,30 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     private void handleBonusTileDrat() {
 
+        final int DEFAULT_BONUS_TILE = 0;
+
         //Get the bonus tile array directly from the parser
         ArrayList<BonusTile> bonusTileSet = BonusTilesParser.parse();
 
         this.notifyAll("The bonus tiles are being drafted, please wait for your turn.");
 
         //Send a request to each player beginning from the last one
-        for (int i = this.match.getPlayers().size() - 1; i >= 0; i--) {
+        for (int i = this.match.getActivePlayers().size() - 1; i >= 0; i--) {
+
+            Player curr = this.match.getPlayers().get(i);
+
+            //If the player is disabled he can't make any move
+            if (curr.isDisabled()) {
+
+                //If we don't get any selection from the player, then select the first tile available in the set
+                curr.getPersonalBoard().setBonusTile(bonusTileSet.get(DEFAULT_BONUS_TILE));
+
+                continue;
+
+            }
 
             //Send a request to each player and wait for a response
-            this.remotePlayerMap.get(this.match.getPlayers().get(i)).notifyBonusTileDraftRequest(bonusTileSet, "Please select a bonus tile.");
+            this.remotePlayerMap.get(curr).notifyBonusTileDraftRequest(bonusTileSet, "Please select a bonus tile.");
 
             ShuffleBinusTileStandardAction shuffleAction;
 
@@ -562,7 +600,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             catch (NoActionPerformedException e) {
 
                 //If we don't get any selection from the player, then select the first tile available in the set
-                this.match.getPlayers().get(i).getPersonalBoard().setBonusTile(bonusTileSet.get(0));
+                curr.getPersonalBoard().setBonusTile(bonusTileSet.get(DEFAULT_BONUS_TILE));
 
                 //Then remove it
                 bonusTileSet.remove(0);
@@ -570,7 +608,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             }
             catch (InterruptedException e) {
 
-                Logger.log(Level.WARNING, this.toString(), "Thread stopped while waiting on action queue", e);
+                Logger.log(Level.WARNING, this.toString(), "Thread stopped while waiting on action queue for tiles", e);
 
             }
             catch (NoSuchPlayerException e) {
@@ -617,6 +655,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                         this.handleVaticanReport(this.currentPlayer);
 
                     }
+
+                    //If we get here without exceptions we can notify of the succeeded action
+                    this.notifyAllActionPerformed(this.currentPlayer, action, this.currentPlayer.getUsername() + " wants to terminate his turn");
 
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
@@ -2109,19 +2150,49 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         }
     }
 
-    public void setDeamon(Thread deamon) {
-        this.deamon = deamon;
+    public void setDaemon(Thread daemon) {
+        this.daemon = daemon;
     }
 
     public void destroy() {
 
         this.currentPlayerTimeout.cancel();
 
-        if (this.deamon.isAlive())
-            this.deamon.interrupt();
+        if (this.daemon.isAlive())
+            this.daemon.interrupt();
 
         Logger.log(Level.FINEST, this.toString(), "Daemon stopped");
 
+    }
+
+    /**
+     * Username-based removal
+     * n^2 complexity.. pretty slow but useful
+     * @param src wjere to look to remove the players
+     * @param removables the players that will be removed
+     * @return the filtered array
+     */
+    private void filterOutPlayers(ArrayList<Player> src, ArrayList<Player> removables) {
+
+        for (Player p1 : removables) {
+
+            for (Player p2 : src) {
+
+                if (p1.getUsername().equals(p2.getUsername())) {
+
+                    src.remove(p2);
+
+                    break;
+                }
+
+            }
+
+        }
+
+    }
+
+    public MatchControllerContext getContext() {
+        return context;
     }
 
     @Override

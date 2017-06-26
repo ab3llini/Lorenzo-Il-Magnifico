@@ -260,8 +260,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
         //Print the available choices
         authCmd.printChoiches();
 
-        String choice = this.inputQueue.take();
-
+        //String choice = this.inputQueue.take();
+        String choice = "1";
         //Check it
         while (!authCmd.isValid(choice)) {
 
@@ -390,7 +390,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
         LobbyNotification o = (LobbyNotification) this.notificationQueue.take();
 
         //Keep posting notifications until the match starts
-        while (o.getLobbyNotificationType() != LobbyNotificationType.MatchStart && o.getLobbyNotificationType() != LobbyNotificationType.ResumeGame) {
+        while (
+                o.getLobbyNotificationType() != LobbyNotificationType.MatchStart &&
+                        o.getLobbyNotificationType() != LobbyNotificationType.ResumeGame &&
+                        o.getLobbyNotificationType() != LobbyNotificationType.ResumeLeaderCardDraft &&
+                        o.getLobbyNotificationType() != LobbyNotificationType.ResumeBonusTileDraft
+                ) {
 
             Cmd.notify(o.getMessage());
 
@@ -415,11 +420,24 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
         this.ctx = CliContext.Match;
 
-        if (status != LobbyNotificationType.ResumeGame) {
+        switch (status) {
 
-            this.draftLeaderCards();
-
-            this.draftBonusTiles();
+            //Resume the game, draft already done before..
+            case ResumeGame:
+                break;
+            //Give the user the possibility do draft
+            case ResumeLeaderCardDraft:
+                this.draftLeaderCards();
+                break;
+            //Give the user the possibility do draft
+            case ResumeBonusTileDraft:
+                this.draftBonusTiles();
+                break;
+            //Normal bootstrap procedure
+            case MatchStart:
+            default:
+                this.draftLeaderCards();
+                this.draftBonusTiles();
 
         }
 

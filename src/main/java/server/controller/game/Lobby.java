@@ -223,7 +223,17 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
             Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
 
-            handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
+            switch (this.matchController.getContext()) {
+
+                case LeaderCardDraft:
+                case BonusTileDraft:
+                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeBonusTileDraft, "Welcome back to game " + handler.getUsername() + ", you will be able to draft the bonus tiles soon"));
+                    break;
+                case Playing:
+                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
+                    break;
+
+            }
 
             //Inform the match controller after sending the game resume notification
             this.matchController.addPlayer(handler);
@@ -350,7 +360,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         this.matchControllerDaemon = new Thread(matchController);
 
-        this.matchController.setDeamon(this.matchControllerDaemon);
+        this.matchController.setDaemon(this.matchControllerDaemon);
 
         this.matchController.addObserver(this);
 
