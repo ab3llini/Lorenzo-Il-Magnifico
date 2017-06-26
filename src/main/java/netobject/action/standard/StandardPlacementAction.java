@@ -22,18 +22,16 @@ public class StandardPlacementAction extends Action {
 
     private Integer additionalServants;
 
-    private final SelectionType costOptionType;
 
     private ArrayList<Discount> discounts;
 
-    public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, SelectionType costOptionType, String sender) {
+    public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, String sender) {
 
         super(ActionType.Standard, sender);
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
         this.colorType = colorType;
         this.additionalServants = additionalServants;
-        this.costOptionType = costOptionType;
         this.discounts = new ArrayList<>();
     }
 
@@ -49,9 +47,6 @@ public class StandardPlacementAction extends Action {
             return colorType;
     }
 
-    public SelectionType getCostOptionType() {
-            return costOptionType;
-    }
 
     public int getAdditionalServants() {
             return additionalServants;

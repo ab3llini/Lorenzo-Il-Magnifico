@@ -945,6 +945,33 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
                         break;
 
+                    case SelectCost:
+
+                        ArrayList<String> costOptions = new ArrayList<>();
+
+                        costOptions.add("First cost");
+                        costOptions.add("Second cost");
+
+                        ArrayCommand<String> costOptionsCommand = new ArrayCommand<>(costOptions);
+
+                        Cmd.askFor("Make your choice");
+
+                        costOptionsCommand.printChoiches();
+
+                        choice = this.waitForCommandSelection();
+
+                        while (!costOptionsCommand.isValid(choice)) {
+
+                            Cmd.askFor("Make your choice");
+
+                            choice = this.waitForCommandSelection();
+
+                        }
+
+                        immediateChoiceAction = new ImmediateChoiceAction(Integer.parseInt(choice) - 1, this.client.getUsername());
+
+                        break;
+
 
                     case SelectActiveLeaderCard:
 
@@ -1112,26 +1139,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, RemotePlay
 
         additionalServants = this.askForServants();
 
-        if (sectorType.canChoseIndex() && sectorType != BoardSectorType.Market) {
 
-            Cmd.askFor("Enter the cost option");
 
-            EnumCommand<SelectionType> costSelection = new EnumCommand<SelectionType>(SelectionType.class);
-
-            costSelection.printChoiches();
-
-            do {
-
-                choice = this.waitForCommandSelection();
-
-            }
-            while (!costSelection.isValid(choice));
-
-            costOption = costSelection.getEnumEntryFromChoice(choice);
-
-        }
-
-        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, costOption, this.client.getUsername());
+        standardPlacementAction = new StandardPlacementAction(sectorType, index, memberColor, additionalServants, this.client.getUsername());
 
         this.client.performAction(standardPlacementAction);
 

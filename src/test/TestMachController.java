@@ -121,7 +121,7 @@ public class TestMachController {
                 ArrayList<Discount> discounts = new ArrayList<>();
                 discounts.add(new Discount(discount));
                 discounts.add(new Discount(test));
-                mc.applyDvptCardCost(player1,card,discounts,SelectionType.First);
+                mc.applyDvptCardCost(player1,card,discounts);
                 Cost cost = card.getCost().get(0);
 
                 int coinsMalus = 0;
@@ -269,7 +269,7 @@ public class TestMachController {
         mc.getMatch().getBoard().setDvptCardOnCharacterTower(mazzettoCharacter);
         mc.getMatch().getBoard().setDvptCardOnVentureTower(mazzettoVenture);
 
-        StandardPlacementAction standardPlacementAction1 = new StandardPlacementAction(BoardSectorType.TerritoryTower,3, ColorType.Black,1,SelectionType.First, "");
+        StandardPlacementAction standardPlacementAction1 = new StandardPlacementAction(BoardSectorType.TerritoryTower,3, ColorType.Black,1, "");
         try {
             mc.placeFamilyMember(standardPlacementAction1,player1);
             assertEquals(12,(int)player1.getStones());
@@ -288,7 +288,7 @@ public class TestMachController {
             assertEquals(10,(int)player1.getFaithPoints());
         }
 
-        StandardPlacementAction standardPlacementAction2 = new StandardPlacementAction(BoardSectorType.BuildingTower,3, ColorType.Orange,1,SelectionType.First, "");
+        StandardPlacementAction standardPlacementAction2 = new StandardPlacementAction(BoardSectorType.BuildingTower,3, ColorType.Orange,1, "");
         try {
             DvptCard cartaPresa = mc.getMatch().getBoard().getBuildingTower().get(3).getDvptCard();
             mc.placeFamilyMember(standardPlacementAction2,player1);

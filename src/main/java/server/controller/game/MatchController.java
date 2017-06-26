@@ -887,24 +887,36 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * @throws NotEnoughResourcesException
      * @throws NotEnoughMilitaryPointsException
      */
-    public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Discount> discount,SelectionType costOptionType) throws ActionException, NoActionPerformedException, InterruptedException {
+    public void applyDvptCardCost(Player player, DvptCard card,ArrayList<Discount> discount) throws ActionException, NoActionPerformedException, InterruptedException {
 
         //territory cards doesn't have cost
         if(card != null){
         if(card.getType() == DvptCardType.territory)
             return;
 
-        int i=0;
+            //some cards could have a double cost
+            int choose=0;
 
-        //some cards could have a double cost
-        if(card.getCost().size()>1){
-            if(costOptionType == SelectionType.Second)
-                i=1;
-        }
+            if(card.getCost().size()>1) {
+
+                this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCost, this.currentPlayer, "Which cost do you want to apply?");
+
+                ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                if (choice.getSelection() == 1) {
+
+                    choose = 1;
+
+                }
+
+                this.notifyAllActionPerformed(this.currentPlayer, choice, this.currentPlayer.getUsername() + " has selected discount");
+
+            }
+
 
         //get the choosen one cost
         //clone the cost in order to modify a temporary variable
-        Cost costo = new Cost(card.getCost().get(i));
+        Cost costo = new Cost(card.getCost().get(choose));
 
         //apply discount
             costo = applyDiscount(costo,discount);
@@ -1195,7 +1207,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), bonus.getDiscounts(), action.getCostOptionType());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), bonus.getDiscounts());
 
             EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants() + bonus.getForceBonus(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
 
@@ -1354,7 +1366,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts(), action.getCostOptionType());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts());
 
             EffectSurplus effectSurplus = boardController.immediatePlacementOnTower(force + action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
@@ -1728,7 +1740,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
-            this.notifyAllActionPerformed(this.currentPlayer, choice, this.currentPlayer.getUsername() + " has selected discount");
+            this.notifyAllActionPerformed(this.currentPlayer, choice, this.currentPlayer.getUsername() + " has selected conversion");
 
         }
 
