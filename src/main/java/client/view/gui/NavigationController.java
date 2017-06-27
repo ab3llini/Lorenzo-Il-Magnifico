@@ -1,5 +1,6 @@
 package client.view.gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,7 +35,16 @@ public abstract class NavigationController {
 
     }
 
-    protected void navigateTo(View view) {
+    protected void showAsynchAlert(Alert.AlertType type, String title, String header, String content) {
+
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                NavigationController.this.showAlert(type,title,header,content);
+            }});
+
+    }
+
+    protected NavigationController navigateTo(View view) {
 
         try {
 
@@ -43,11 +53,15 @@ public abstract class NavigationController {
             this.stage.setTitle(view.getTitle());
             this.stage.setScene(new Scene(root, view.getW(), view.getH()));
 
+            return loader.getController();
+
         } catch (IOException e) {
 
             this.showAlert(Alert.AlertType.ERROR, "Exception raised", "Unable to navigate to view", e.getMessage());
 
         }
+
+        return null;
 
     }
 

@@ -48,9 +48,9 @@ public class Match extends NetObject {
         //Initialize the board
         this.board = new Board();
 
-        this.currentPeriod = Period.second;
-        this.currentTurn = 2;
-        this.currentRound = 3;
+        this.currentPeriod = Period.undefined;
+        this.currentTurn = 0;
+        this.currentRound = 0;
 
         //Assign a random color to the player
         generateRandomColor();

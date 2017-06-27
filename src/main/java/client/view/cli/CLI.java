@@ -426,7 +426,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
             case ResumeGame:
                 break;
             //Give the user the possibility do draft
-            case ResumeLeaderCardDraft:
+            /*case ResumeLeaderCardDraft:
                 this.draftLeaderCards();
                 break;
             //Give the user the possibility do draft
@@ -434,10 +434,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
                 this.draftBonusTiles();
                 break;
             //Normal bootstrap procedure
+            */
             case MatchStart:
             default:
-                this.draftLeaderCards();
-                this.draftBonusTiles();
+                //this.draftLeaderCards();
+                //this.draftBonusTiles();
 
         }
 

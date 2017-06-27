@@ -1,10 +1,12 @@
 package client.view.gui;
 
+import exception.NoSuchPlayerException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
@@ -13,12 +15,13 @@ import client.controller.network.ClientObserver;
 import client.controller.network.RemotePlayerObserver;
 import client.view.cli.LocalMatchController;
 import javafx.scene.input.MouseEvent;
+import logger.Level;
+import logger.Logger;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
 import server.model.Match;
-import server.model.board.Board;
 import server.model.board.BonusTile;
 import server.model.board.Player;
 import server.model.board.TowerSlot;
@@ -63,21 +66,6 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     private Label servantsValueTextField;
 
-    @FXML
-    public void initialize() {
-
-    }
-
-    @FXML
-    void onDvptCardClick(MouseEvent event) {
-
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
-                GUIController.this.showAlert(Alert.AlertType.ERROR, "Click", "Click on card", "You clicked on a card");
-            }
-        });
-
-    }
 
     //The reference to the local match controller
     private LocalMatchController localMatchController;
@@ -88,25 +76,83 @@ public class GUIController extends NavigationController implements ClientObserve
     //The local client instance
     private Client client;
 
+
     public GUIController() {
 
         this.localMatchController = new LocalMatchController();
 
     }
 
-    private void loadDvptCards() {
+    private void prepareDvptCardGrid() {
 
 
 
     }
+    private Node updatedDvptCardGrid(Match model) {
 
-    private Node upodatedDvptCardGrid(Board board) {
+        int col = 0, row = 0;
+
         for (Node node : this.dvptCardGrid.getChildren()) {
 
+            System.out.println(node + " c = " + col + " r = " + row);
 
+            if (row > 3) {
+
+                row = 0;
+                col++;
+
+            }
+
+            ArrayList<TowerSlot> tower = null;
+            DvptCardType type;
+            ImageView imgView = (ImageView)node;
+
+            switch (col) {
+
+                case 0:
+                    type = DvptCardType.territory;
+                    tower = this.localMatchController.getMatch().getBoard().getTerritoryTower();
+                    break;
+                case 1:
+                    type = DvptCardType.character;
+                    tower = this.localMatchController.getMatch().getBoard().getCharacterTower();
+                    break;
+                case 2:
+                    type = DvptCardType.building;
+                    tower = this.localMatchController.getMatch().getBoard().getBuildingTower();
+                    break;
+                case 3:
+                    type = DvptCardType.venture;
+                    tower = this.localMatchController.getMatch().getBoard().getVentureTower();
+                    break;
+
+            }
+
+            imgView.setImage(new Image("assets/cards/dvpt/devcards_f_en_c_" + tower.get(3-row).getDvptCard().getId() + ".png"));
+
+            row++;
 
         }
+
+
         return null;
+    }
+
+    private void updateSidebar(Match model) {
+
+        try {
+            this.woodValueTextField.setText(model.getPlayerFromUsername(this.client.getUsername()).getWood().toString());
+            this.stonesValueTextField.setText(model.getPlayerFromUsername(this.client.getUsername()).getStones().toString());
+            this.coinsValueTextField.setText(model.getPlayerFromUsername(this.client.getUsername()).getCoins().toString());
+            this.servantsValueTextField.setText(model.getPlayerFromUsername(this.client.getUsername()).getServants().toString());
+            this.victoryValueTextField.setText(model.getPlayerFromUsername(this.client.getUsername()).getVictoryPoints().toString());
+            this.faithValueTextField.setText(model.getPlayerFromUsername(this.client.getUsername()).getFaithPoints().toString());
+            this.militaryValueTextField.setText(model.getPlayerFromUsername(this.client.getUsername()).getMilitaryPoints().toString());
+
+        } catch (NoSuchPlayerException e) {
+            Logger.log(Level.SEVERE, this.toString(), "Player not found", e);
+        }
+
     }
 
     private ArrayList<DvptCard> getDvptCardsFromTower(ArrayList<TowerSlot> tower) {
@@ -126,10 +172,25 @@ public class GUIController extends NavigationController implements ClientObserve
     public void setClient(Client client) {
 
         this.client = client;
-
+        this.client.addClientObserver(this);
+        this.client.addRemotePlayerObserver(this);
         this.localMatchController.setPlayerUsername(this.client.getUsername());
 
     }
+
+    @FXML
+    public void initialize() {
+
+    }
+
+    @FXML
+    void onDvptCardClick(MouseEvent event) {
+
+        this.showAsynchAlert(Alert.AlertType.ERROR, "Click", "Click on card", "You clicked on a card");
+
+    }
+
+
 
 
     @Override
@@ -160,10 +221,28 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onModelUpdate(Client sender, Match model) {
 
+        Logger.log(Level.FINE, this.toString(), "Model received");
+
+        this.localMatchController.setMatch(model);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                GUIController.this.updatedDvptCardGrid(model);
+                GUIController.this.updateSidebar(model);
+
+            }
+        });
+
+
+
     }
 
     @Override
     public void onTurnEnabled(Client sender, Player player, String message) {
+
+        Logger.log(Level.FINE, this.toString(), "Turn enabled!");
 
     }
 
@@ -200,5 +279,10 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message) {
 
+    }
+
+    @Override
+    public String toString() {
+        return "GUI Controller for " + this.client.getUsername();
     }
 }

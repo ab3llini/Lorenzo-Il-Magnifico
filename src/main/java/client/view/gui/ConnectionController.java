@@ -161,7 +161,7 @@ public class ConnectionController extends NavigationController implements Client
             @Override public void run() {
                 ConnectionController.this.showAlert(Alert.AlertType.CONFIRMATION, "Authentication", "Login succeeded", "Welcome back " + ConnectionController.this.client.getUsername());
 
-                ConnectionController.this.navigateTo(View.Gui);
+                ((GUIController)ConnectionController.this.navigateTo(View.Gui)).setClient(client);
 
             }
         });

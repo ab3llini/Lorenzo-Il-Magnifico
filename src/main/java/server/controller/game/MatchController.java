@@ -201,7 +201,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     public void run() {
 
 
-        //Draft the leader cards first
+        /*Draft the leader cards first
         this.context = MatchControllerContext.LeaderCardDraft;
         this.handleLeaderCardDraft();
 
@@ -210,7 +210,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         this.context = MatchControllerContext.BonusTileDraft;
         this.handleBonusTileDrat();
 
-        //We are now going to play
+        *///We are now going to play
         //Draft the leader cards first
         this.context = MatchControllerContext.Playing;
 
