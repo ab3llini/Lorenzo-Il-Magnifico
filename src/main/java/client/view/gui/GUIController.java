@@ -1,7 +1,9 @@
 package client.view.gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -16,6 +18,7 @@ import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
 import server.model.Match;
+import server.model.board.Board;
 import server.model.board.BonusTile;
 import server.model.board.Player;
 import server.model.board.TowerSlot;
@@ -68,7 +71,11 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     void onDvptCardClick(MouseEvent event) {
 
-
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                GUIController.this.showAlert(Alert.AlertType.ERROR, "Click", "Click on card", "You clicked on a card");
+            }
+        });
 
     }
 
@@ -93,11 +100,11 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
-    private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
-        for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                return node;
-            }
+    private Node upodatedDvptCardGrid(Board board) {
+        for (Node node : this.dvptCardGrid.getChildren()) {
+
+
+
         }
         return null;
     }

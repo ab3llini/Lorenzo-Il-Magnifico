@@ -373,9 +373,13 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
      */
     public void destroy() {
 
-        Logger.log(Level.FINEST, this.toString(), "Destroying match controller..");
+        if (this.matchController != null) {
 
-        this.matchController.destroy();
+            Logger.log(Level.FINEST, this.toString(), "Destroying match controller..");
+
+            this.matchController.destroy();
+
+        }
 
         Logger.log(Level.FINEST, this.toString(), "Disconnecting handlers - > NEEDS IMPLEMENTATION");
 
