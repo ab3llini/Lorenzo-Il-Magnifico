@@ -12,11 +12,17 @@
 
 .notification-text-field {
 
-    -fx-font-size: 13;
+    -fx-font-size: 10;
     -fx-text-alignment: center;
     -fx-alignment: center;
     -fx-text-fill: white;
     -fx-background-color: -fx-notification-bg;
     -fx-border-radius: 5;
+
+}
+
+.sidebar-label {
+
+    -fx-text-fill: white;
 
 }
