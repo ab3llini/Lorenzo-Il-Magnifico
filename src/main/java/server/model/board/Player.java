@@ -50,8 +50,6 @@ public class Player implements Serializable {
 
         //put all kind of resource in the hashMap
 
-        System.out.println(AnsiColors.ANSI_RED + " HARDCODED PLAYER RESOURCES - REMOVE IT WHEN FINISHED" + AnsiColors.ANSI_RESET);
-
 
         resources.put(ResourceType.Coins, 0);
         resources.put(ResourceType.Servants, 0);

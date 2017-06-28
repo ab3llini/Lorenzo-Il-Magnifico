@@ -36,7 +36,6 @@ import server.model.board.BonusTile;
 import server.model.board.ColorType;
 import server.model.board.Player;
 import server.model.card.Deck;
-import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
 import server.model.effect.EffectSurplus;
@@ -445,8 +444,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
         while (!this.localMatchController.matchHasEnded()) {
 
             //Wait for the next token
-            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
-
+            this.serverTokenQueue.take();System.out.println("Taking token to start round, toal = " + this.serverTokenQueue.size());
 
             try {
 
@@ -612,9 +610,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
         }
 
-        while (!valid || !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+        while (!valid || !this.localMatchController.canPerformStandardAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
-            if (valid && !this.localMatchController.canPerformAction(actionSelection.getEnumEntryFromChoice(choice))) {
+            if (valid && !this.localMatchController.canPerformStandardAction(actionSelection.getEnumEntryFromChoice(choice))) {
 
                 Cmd.error("The action '" + actionSelection.getEnumEntryFromChoice(choice) + "' can't be performed again!");
 
@@ -678,18 +676,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
         } else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
 
             this.terminateRound();
-
-            //If the user is terminating his round on the end of a period we must check if he can select hoe to get banned
-            if (!this.localMatchController.canSelectBanOption()) {
-
-                return actionSelection.getEnumEntryFromChoice(choice);
-
-            }
-            else {
-
-                System.out.println("Handling vatican report!");
-
-            }
 
         }
 
@@ -1554,7 +1540,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
             //Confirm last action
             if (action.getActionType() == ActionType.Standard) {
 
-                this.localMatchController.confirmLastPendingAction();
+                this.localMatchController.confirmLastStandardPendingAction();
 
                 if (this.localMatchController.getMatch() != null) {
 

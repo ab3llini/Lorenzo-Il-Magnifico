@@ -141,7 +141,7 @@ public class LocalMatchController {
 
     }
 
-    public synchronized boolean canPerformAction(StandardActionType action) {
+    public synchronized boolean canPerformStandardAction(StandardActionType action) {
 
         return !this.actionsPerformedOnThisRound.get(action);
 
@@ -165,11 +165,15 @@ public class LocalMatchController {
 
     public synchronized void setLastPendingStandardAction(StandardActionType action) {
 
+        if (action == StandardActionType.TerminateRound) return;
+
         this.lastPendingStandardAction = action;
 
     }
 
-    public synchronized void confirmLastPendingAction() {
+    public synchronized void confirmLastStandardPendingAction() {
+
+        if (this.lastPendingStandardAction == null) return;
 
         this.setActionPerformed(this.lastPendingStandardAction, true);
 
@@ -229,6 +233,7 @@ public class LocalMatchController {
     }
 
     public void setLastPendingImmediateAction(ImmediateActionType lastPendingImmediateAction) {
+
         this.pendingImmediateActions.push(lastPendingImmediateAction);
     }
 
