@@ -2,6 +2,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import server.model.board.Board;
 import server.model.board.Period;
+import server.model.board.Player;
 import server.model.board.TowerSlot;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
@@ -19,12 +20,14 @@ import java.util.ArrayList;
  */
 public class TestBoard {
 
-    Board board = new Board();
+    ArrayList<Player> players;
+
+    Board board = new Board(players);
 
     @Test
     public void initBoardTest(){
 
-        Board board = new Board();
+        Board board = new Board(players);
     }
 
     @Test

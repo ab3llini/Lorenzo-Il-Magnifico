@@ -12,6 +12,7 @@ import server.utility.BoardConfigParser;
 import server.utility.UnicodeChars;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static server.model.board.Period.*;
@@ -30,8 +31,9 @@ public class Board implements Serializable {
     private ActionArea productionArea;
     private ActionArea harvestArea;
     private Market market;
+    ArrayList<Player> players;
 
-    public Board() {
+    public Board(ArrayList<Player> players) {
 
         //create the board configured from file
         this.territoryTower = BoardConfigParser.getTower(DvptCardType.territory);
@@ -43,6 +45,7 @@ public class Board implements Serializable {
         this.productionArea = BoardConfigParser.getProductionActionArea();
         this.harvestArea = BoardConfigParser.getHarvestActionArea();
         this.market = BoardConfigParser.getMarket();
+        this.players = players;
 
         //create the three dices
         this.dices = new ArrayList<Dice>();
@@ -79,7 +82,8 @@ public class Board implements Serializable {
         }
 
         if (towerType == DvptCardType.territory) {
-            return this.territoryTower;}
+            return this.territoryTower;
+        }
 
 
         return this.ventureTower;
@@ -211,32 +215,33 @@ public class Board implements Serializable {
 
     /**
      * this method receive a towerType color and return an arrayList of all the players that have a family member in this tower
+     *
      * @param towerType
      * @return
      */
-    public ArrayList<Player> getPlayersInTower(DvptCardType towerType){
+    public ArrayList<Player> getPlayersInTower(DvptCardType towerType) {
 
         ArrayList<Player> players = new ArrayList<Player>();
 
-        if(towerType == DvptCardType.character){
+        if (towerType == DvptCardType.character) {
             players = getCharacterTowerPlayers();
         }
 
-        if(towerType == DvptCardType.venture){
+        if (towerType == DvptCardType.venture) {
             players = getVentureTowerPlayers();
         }
 
-        if(towerType == DvptCardType.building){
+        if (towerType == DvptCardType.building) {
             players = getBuildingTowerPlayers();
         }
 
-        if(towerType == DvptCardType.territory)
+        if (towerType == DvptCardType.territory)
             players = getTerritoryTowerPlayers();
 
         return players;
     }
 
-    public ArrayList<Player> getCharacterTowerPlayers(){
+    public ArrayList<Player> getCharacterTowerPlayers() {
 
         ArrayList<Player> players = new ArrayList<Player>();
 
@@ -251,7 +256,7 @@ public class Board implements Serializable {
         return players;
     }
 
-    public ArrayList<Player> getVentureTowerPlayers(){
+    public ArrayList<Player> getVentureTowerPlayers() {
 
         ArrayList<Player> players = new ArrayList<Player>();
 
@@ -266,7 +271,7 @@ public class Board implements Serializable {
         return players;
     }
 
-    public ArrayList<Player> getTerritoryTowerPlayers(){
+    public ArrayList<Player> getTerritoryTowerPlayers() {
 
         ArrayList<Player> players = new ArrayList<Player>();
 
@@ -281,7 +286,7 @@ public class Board implements Serializable {
         return players;
     }
 
-    public ArrayList<Player> getBuildingTowerPlayers(){
+    public ArrayList<Player> getBuildingTowerPlayers() {
 
         ArrayList<Player> players = new ArrayList<Player>();
 
@@ -299,9 +304,9 @@ public class Board implements Serializable {
      */
     public void cleanTowers() {
 
-        for(DvptCardType type : DvptCardType.values()){
+        for (DvptCardType type : DvptCardType.values()) {
 
-            for (TowerSlot towerslot: getTower(type)) {
+            for (TowerSlot towerslot : getTower(type)) {
 
                 towerslot.setFamilyMember(null);
                 towerslot.setOccupied(false);
@@ -311,7 +316,9 @@ public class Board implements Serializable {
 
     }
 
-    /** This method prints the entire board in all its component in that moment**/
+    /**
+     * This method prints the entire board in all its component in that moment
+     **/
 
     @Override
     public String toString() {
@@ -338,18 +345,16 @@ public class Board implements Serializable {
 
         board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
 
-        if (getTerritoryTower().get(3).getDvptCard() != null)
-        {
+        if (getTerritoryTower().get(3).getDvptCard() != null) {
 
             board += "   " + getTerritoryTower().get(3).getDvptCard().getId() + ". " + getTerritoryTower().get(3).getDvptCard().getName();
-            board += " Imm: " + printSurplus(getTerritoryTower().get(3).getDvptCard().getImmediateEffect().getSurplus()) ;
+            board += " Imm: " + printSurplus(getTerritoryTower().get(3).getDvptCard().getImmediateEffect().getSurplus());
 
         }
         board += "\n";
         board += printTowerLine(3);
 
-        if (getTerritoryTower().get(2).getDvptCard() != null)
-        {
+        if (getTerritoryTower().get(2).getDvptCard() != null) {
 
             board += "   " + getTerritoryTower().get(2).getDvptCard().getId() + ". " + getTerritoryTower().get(2).getDvptCard().getName();
             board += " Imm: " + printSurplus(getTerritoryTower().get(2).getDvptCard().getImmediateEffect().getSurplus());
@@ -360,8 +365,7 @@ public class Board implements Serializable {
 
         board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
 
-        if (getTerritoryTower().get(1).getDvptCard() != null)
-        {
+        if (getTerritoryTower().get(1).getDvptCard() != null) {
 
             board += "   " + getTerritoryTower().get(1).getDvptCard().getId() + ". " + getTerritoryTower().get(1).getDvptCard().getName();
             board += " Imm: " + printSurplus(getTerritoryTower().get(1).getDvptCard().getImmediateEffect().getSurplus());
@@ -370,10 +374,9 @@ public class Board implements Serializable {
 
         board += "\n";
 
-        board += ("|   |____|                |____|                |____|                |____|             |" );
+        board += ("|   |____|                |____|                |____|                |____|             |");
 
-        if (getTerritoryTower().get(0).getDvptCard() != null)
-        {
+        if (getTerritoryTower().get(0).getDvptCard() != null) {
 
             board += "   " + getTerritoryTower().get(0).getDvptCard().getId() + ". " + getTerritoryTower().get(0).getDvptCard().getName();
             board += " Imm: " + printSurplus(getTerritoryTower().get(0).getDvptCard().getImmediateEffect().getSurplus());
@@ -383,8 +386,7 @@ public class Board implements Serializable {
 
         board += ("|   |    |___             |    |___             |    |___             |    |___          |");
 
-        if (getCharacterTower().get(3).getDvptCard() != null)
-        {
+        if (getCharacterTower().get(3).getDvptCard() != null) {
 
             board += "   " + getCharacterTower().get(3).getDvptCard().getId() + ". " + getCharacterTower().get(3).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(3).getDvptCard());
             board += " Imm: " + printSurplus(getCharacterTower().get(3).getDvptCard().getImmediateEffect().getSurplus());
@@ -396,18 +398,16 @@ public class Board implements Serializable {
 
         board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
 
-        if (getCharacterTower().get(2).getDvptCard() != null)
-        {
+        if (getCharacterTower().get(2).getDvptCard() != null) {
 
             board += "   " + getCharacterTower().get(2).getDvptCard().getId() + ". " + getCharacterTower().get(2).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(2).getDvptCard());
             board += " Imm: " + printSurplus(getCharacterTower().get(2).getDvptCard().getImmediateEffect().getSurplus());
 
         }
         board += "\n";
-        board +=  printTowerLine(2);
+        board += printTowerLine(2);
 
-        if (getCharacterTower().get(1).getDvptCard() != null)
-        {
+        if (getCharacterTower().get(1).getDvptCard() != null) {
 
             board += "   " + getCharacterTower().get(1).getDvptCard().getId() + ". " + getCharacterTower().get(1).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(1).getDvptCard());
             board += " Imm: " + printSurplus(getCharacterTower().get(1).getDvptCard().getImmediateEffect().getSurplus());
@@ -417,8 +417,7 @@ public class Board implements Serializable {
 
         board += ("|   |    |___|            |    |___|            |    |___|            |    |___|         |");
 
-        if (getCharacterTower().get(0).getDvptCard() != null)
-        {
+        if (getCharacterTower().get(0).getDvptCard() != null) {
 
             board += "   " + getCharacterTower().get(0).getDvptCard().getId() + ". " + getCharacterTower().get(0).getDvptCard().getName() + "   Cost:  " + printDvptCost(getCharacterTower().get(0).getDvptCard());
             board += " Imm: " + printSurplus(getCharacterTower().get(0).getDvptCard().getImmediateEffect().getSurplus());
@@ -428,10 +427,9 @@ public class Board implements Serializable {
 
         board += ("|   |____|                |____|                |____|                |____|             |");
 
-        if (getBuildingTower().get(3).getDvptCard() != null)
-        {
+        if (getBuildingTower().get(3).getDvptCard() != null) {
 
-            board += "   " + getBuildingTower().get(3).getDvptCard().getId() + ". " + getBuildingTower().get(3).getDvptCard().getName() +  "   Cost:  " + printDvptCost(getBuildingTower().get(3).getDvptCard());
+            board += "   " + getBuildingTower().get(3).getDvptCard().getId() + ". " + getBuildingTower().get(3).getDvptCard().getName() + "   Cost:  " + printDvptCost(getBuildingTower().get(3).getDvptCard());
             board += " Imm: " + printSurplus(getBuildingTower().get(3).getDvptCard().getImmediateEffect().getSurplus());
 
         }
@@ -439,10 +437,9 @@ public class Board implements Serializable {
 
         board += ("|   |    |___             |    |___             |    |___             |    |___          |");
 
-        if (getBuildingTower().get(2).getDvptCard() != null)
-        {
+        if (getBuildingTower().get(2).getDvptCard() != null) {
 
-            board += "   " + getBuildingTower().get(2).getDvptCard().getId() + ". " + getBuildingTower().get(2).getDvptCard().getName() +  "   Cost:  " + printDvptCost(getBuildingTower().get(2).getDvptCard());
+            board += "   " + getBuildingTower().get(2).getDvptCard().getId() + ". " + getBuildingTower().get(2).getDvptCard().getName() + "   Cost:  " + printDvptCost(getBuildingTower().get(2).getDvptCard());
             board += " Imm: " + printSurplus(getBuildingTower().get(2).getDvptCard().getImmediateEffect().getSurplus());
 
         }
@@ -455,7 +452,7 @@ public class Board implements Serializable {
 
         {
 
-            board += "   " + getBuildingTower().get(1).getDvptCard().getId() + ". " + getBuildingTower().get(1).getDvptCard().getName() +  "   Cost:  " + printDvptCost(getBuildingTower().get(1).getDvptCard());
+            board += "   " + getBuildingTower().get(1).getDvptCard().getId() + ". " + getBuildingTower().get(1).getDvptCard().getName() + "   Cost:  " + printDvptCost(getBuildingTower().get(1).getDvptCard());
             board += " Imm: " + printSurplus(getBuildingTower().get(1).getDvptCard().getImmediateEffect().getSurplus());
 
         }
@@ -466,9 +463,7 @@ public class Board implements Serializable {
         board += printTowerLine(1);
 
 
-
-        if (getBuildingTower().get(0).getDvptCard() != null)
-        {
+        if (getBuildingTower().get(0).getDvptCard() != null) {
 
             board += "   " + getBuildingTower().get(0).getDvptCard().getId() + ". " + getBuildingTower().get(0).getDvptCard().getName() + "   Cost:  " + printDvptCost(getBuildingTower().get(0).getDvptCard());
             board += " Imm: " + printSurplus(getBuildingTower().get(0).getDvptCard().getImmediateEffect().getSurplus());
@@ -481,7 +476,7 @@ public class Board implements Serializable {
         if (getVentureTower().get(3).getDvptCard() != null)
 
         {
-            board += "   " + getVentureTower().get(3).getDvptCard().getId() + ". " + getVentureTower().get(3).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(3).getDvptCard()) ;
+            board += "   " + getVentureTower().get(3).getDvptCard().getId() + ". " + getVentureTower().get(3).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(3).getDvptCard());
             board += " Imm: " + printSurplus(getVentureTower().get(3).getDvptCard().getImmediateEffect().getSurplus());
 
         }
@@ -490,9 +485,7 @@ public class Board implements Serializable {
         board += ("|   |____|                |____|                |____|                |____|             |");
 
 
-
-        if (getVentureTower().get(2).getDvptCard() != null)
-        {
+        if (getVentureTower().get(2).getDvptCard() != null) {
 
             board += "   " + getVentureTower().get(2).getDvptCard().getId() + ". " + getVentureTower().get(2).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(2).getDvptCard());
             board += " Imm: " + printSurplus(getVentureTower().get(2).getDvptCard().getImmediateEffect().getSurplus());
@@ -502,10 +495,10 @@ public class Board implements Serializable {
         board += "\n";
 
 
-        board += ("|   |    |___             |    |___             |    |___             |    |___          |");;
+        board += ("|   |    |___             |    |___             |    |___             |    |___          |");
+        ;
 
-        if (getVentureTower().get(1).getDvptCard() != null)
-        {
+        if (getVentureTower().get(1).getDvptCard() != null) {
 
             board += "   " + getVentureTower().get(1).getDvptCard().getId() + ". " + getVentureTower().get(1).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(1).getDvptCard());
             board += " Imm: " + printSurplus(getVentureTower().get(1).getDvptCard().getImmediateEffect().getSurplus());
@@ -515,8 +508,7 @@ public class Board implements Serializable {
 
         board += ("|   |    |   |            |    |   |            |    |   |            |    |   |         |");
 
-        if (getVentureTower().get(0).getDvptCard() != null)
-        {
+        if (getVentureTower().get(0).getDvptCard() != null) {
 
             board += "   " + getVentureTower().get(0).getDvptCard().getId() + ". " + getVentureTower().get(0).getDvptCard().getName() + "   Cost:  " + printDvptCost(getVentureTower().get(0).getDvptCard());
             board += " Imm: " + printSurplus(getVentureTower().get(0).getDvptCard().getImmediateEffect().getSurplus());
@@ -541,6 +533,7 @@ public class Board implements Serializable {
         board += printCouncilPalace();
 
         board += printCathedralLine();
+        board += "|     |" + printBannedPlayers(first) + "|" + printBannedPlayers(second) + "|" + printBannedPlayers(third) + "|" + "                                                                   |\n";
 
         board += ("|     |____|____|____|                                                                   |\n");
 
@@ -569,13 +562,13 @@ public class Board implements Serializable {
         board += ("|    |_____|     |_____|                                                                 |\n");
 
         board += ("|                                                  ");
-        board +=(AnsiColors.ANSI_BLACK);
-        board +=("     BLACK  ");
+        board += (AnsiColors.ANSI_BLACK);
+        board += ("     BLACK  ");
         board += (AnsiColors.ANSI_RESET);
         board += (AnsiColors.ANSI_WHITE);
         board += ("    WHITE  ");
         board += (AnsiColors.ANSI_RESET);
-        board +=(AnsiColors.ANSI_RED);
+        board += (AnsiColors.ANSI_RED);
         board += ("    ORANGE   ");
         board += (AnsiColors.ANSI_RESET);
         board += ("  |\n");
@@ -605,7 +598,7 @@ public class Board implements Serializable {
     public String printDvptCost(DvptCard card) {
 
         String board = new String();
-        for(Cost cost: card.getCost()){
+        for (Cost cost : card.getCost()) {
             if (cost.getResources() != null) {
                 for (Resource resource : cost.getResources())
                     board += printSingleResource(resource);
@@ -618,13 +611,15 @@ public class Board implements Serializable {
         return board;
     }
 
-    /** This method prints a line on the towers according to the different floor of them **/
+    /**
+     * This method prints a line on the towers according to the different floor of them
+     **/
 
     public String printTowerLine(Integer line) {
 
         String board = new String();
 
-        board += "|   | "  + printCardId(this.getTerritoryTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
+        board += "|   | " + printCardId(this.getTerritoryTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getTerritoryTower().get(line).getFamilyMember());
 
         board += " |            | " + printCardId(this.getCharacterTower().get(line).getDvptCard()) + " |" + printFamilyMember(this.getCharacterTower().get(line).getFamilyMember());
 
@@ -634,6 +629,51 @@ public class Board implements Serializable {
 
         return board;
 
+    }
+
+    public String printBannedPlayers(Period period) {
+        String board = new String();
+        for (Player player : players) {
+            Boolean banned = false;
+            for (BanCard banCard : player.getBanCards()) {
+                if (banCard.getId() == cathedral.getBanCard(period).getId()) {
+                    banned = true;
+                }
+            }
+            if (banned == true) {
+                if (player.getColor() == PlayerColor.Red)
+                    board += (AnsiColors.ANSI_RED);
+
+                if (player.getColor() == PlayerColor.Blue)
+                    board += (AnsiColors.ANSI_BLUE);
+
+                if (player.getColor() == PlayerColor.Black)
+                    board += (AnsiColors.ANSI_BLACK);
+
+                if (player.getColor() == PlayerColor.Purple)
+                    board += (AnsiColors.ANSI_PURPLE);
+
+                if (player.getColor() == PlayerColor.Cyan)
+                    board += (AnsiColors.ANSI_CYAN);
+
+                if (player.getColor() == PlayerColor.Green)
+                    board += (AnsiColors.ANSI_GREEN);
+
+                if (player.getColor() == PlayerColor.Yellow)
+                    board += (AnsiColors.ANSI_YELLOW);
+
+                if (player.getColor() == PlayerColor.White)
+                    board += (AnsiColors.ANSI_WHITE);
+                board += "*";
+                board += (AnsiColors.ANSI_RESET);
+            } else
+                board += " ";
+        }
+        if(players.size() == 3)
+            board += " ";
+        if(players.size() == 2)
+            board += "  ";
+        return board;
     }
 
     /** This method prints a particular family member**/
