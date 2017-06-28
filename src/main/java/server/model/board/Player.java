@@ -53,10 +53,10 @@ public class Player implements Serializable {
         System.out.println(AnsiColors.ANSI_RED + " HARDCODED PLAYER RESOURCES - REMOVE IT WHEN FINISHED" + AnsiColors.ANSI_RESET);
 
 
-        resources.put(ResourceType.Coins, 50);
-        resources.put(ResourceType.Servants, 50);
-        resources.put(ResourceType.Stones, 50);
-        resources.put(ResourceType.Wood, 50);
+        resources.put(ResourceType.Coins, 0);
+        resources.put(ResourceType.Servants, 0);
+        resources.put(ResourceType.Stones, 0);
+        resources.put(ResourceType.Wood, 0);
 
         //initialize hashMap that contains all points
 
@@ -64,9 +64,9 @@ public class Player implements Serializable {
 
         //put all kind of points in the hashMap
 
-        points.put(PointType.Military, 50);
-        points.put(PointType.Victory, 50);
-        points.put(PointType.Faith, 50);
+        points.put(PointType.Military, 0);
+        points.put(PointType.Victory, 0);
+        points.put(PointType.Faith, 0);
 
         //create the arrayList with all the player's familyMembers
 

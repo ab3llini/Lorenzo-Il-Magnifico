@@ -79,82 +79,82 @@
                                                    <children>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_1.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView fx:id="territory3" cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="2">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_2.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="4">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_3.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="6">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_4.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="2">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_49.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_b_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_50.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_b_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="2" GridPane.rowIndex="4">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_51.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_b_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="2" GridPane.rowIndex="6">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_52.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_b_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="4">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_25.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="4" GridPane.rowIndex="2">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_26.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="4" GridPane.rowIndex="4">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_27.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="4" GridPane.rowIndex="6">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_28.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_73.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6" GridPane.rowIndex="2">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_74.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6" GridPane.rowIndex="4">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_75.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                       <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" layoutX="652.0" layoutY="407.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6" GridPane.rowIndex="6">
                                                          <image>
-                                                            <Image url="@../assets/cards/dvpt/devcards_f_en_c_76.png" />
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
