@@ -424,9 +424,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
             //Resume the game, draft already done before..
             case ResumeGame:
-                break;
+                break;/*
             //Give the user the possibility do draft
-            /*case ResumeLeaderCardDraft:
+            case ResumeLeaderCardDraft:
                 this.draftLeaderCards();
                 break;
             //Give the user the possibility do draft
@@ -437,8 +437,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
             case MatchStart:
             default:
                 this.draftLeaderCards();
-                this.draftBonusTiles();*/
-
+                this.draftBonusTiles();
+*/
         }
 
         while (!this.localMatchController.matchHasEnded()) {
@@ -602,6 +602,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
         String choice = this.waitForCommandSelection();
 
         boolean valid = actionSelection.isValid(choice);
+
+        this.localMatchController.setActionPerformed(StandardActionType.DiscardLeaderCard, false);
+        this.localMatchController.setActionPerformed(StandardActionType.LeaderCardActivation, false);
+
 
         //Check if the user can roll the dices
         if(!this.localMatchController.diceAreRolled()){

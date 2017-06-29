@@ -1238,6 +1238,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 throw new PlaceOccupiedException("This place is already occupied");
 
             //control if the player has another family member in the tower
+            //but only if the number of player is less than 5, anyway he can place it without constraints
+            //This regulation change has been chosen in order to improve playability
+
             if (this.match.getBoard().getPlayersInTower(towerType).contains(player) && this.match.getPlayers().size() != 5)
                 throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
 
@@ -1250,7 +1253,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 throw new NotStrongEnoughException("Not strong enough to do this action");
             }
 
-            //if the tower is already occupied the player has to pay 3 coins
+            //if the tower is already occupied the player has to pay 3 coins, but only if he has not Filippo da Montefeltro Leader Card active
             if (this.match.getBoard().getPlayersInTower(towerType).size() > 0 && !player.isPermanentLeaderActive(PermanentLeaderEffectType.filippoEffect))
                 player.subtractCoins(3);
 
@@ -1878,8 +1881,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     }
 
     /**
-     * this method raise dice value
-     */
+     This method raises dice values following an algorithm to improve playability in case of five players, to allow them to place
+     any family members even in the highest floors of the towers, since the lower are easily already occupied, avoiding space problems.
+     Specifically, the value of all dices increases by one until it reaches a total of 14 */
+
     public void raiseDiceValue() {
 
         int sum = 0;
