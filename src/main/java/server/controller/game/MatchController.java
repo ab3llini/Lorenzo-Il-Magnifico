@@ -1231,7 +1231,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 throw new PlaceOccupiedException("This place is already occupied");
 
             //control if the player has another family member in the tower
-            if (this.match.getBoard().getPlayersInTower(towerType).contains(player))
+            if (this.match.getBoard().getPlayersInTower(towerType).contains(player) && this.match.getPlayers().size() != 5)
                 throw new PlayerAlreadyOccupiedTowerException("the player already has a family member in this tower");
 
             //check if the tower slot is already in use
@@ -1399,7 +1399,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 throw new PlaceOccupiedException("This place is already occupied");
 
             //control if the player has another family member in the tower
-            if (this.match.getBoard().getPlayersInTower(towerType).contains(player))
+            if (this.match.getBoard().getPlayersInTower(towerType).contains(player) && this.match.getPlayers().size() != 5)
                 throw new PlayerAlreadyOccupiedTowerException("The player already has a family member in this tower");
 
             //if the tower is already occupied the player have to pay 3 coins
@@ -1830,6 +1830,13 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         }
 
+        //avoid space problems if we have 5 players
+        if(this.match.getPlayers().size() == 5) {
+
+            raiseDiceValue();
+
+        }
+
         //Update the family member values of each player
         for (Player p : this.match.getPlayers()) {
 
@@ -1842,6 +1849,35 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         }
 
+    }
+
+    /**
+     * this method raise dice value
+     */
+    public void raiseDiceValue() {
+
+        int sum = 0;
+
+        for (Dice d : this.match.getBoard().getDices()) {
+
+            sum += d.getValue();
+
+        }
+
+        //14 is a good number because we can put family members in a lot of tower spaces
+        while(sum <=14) {
+
+            sum = 0;
+
+            for (Dice d : this.match.getBoard().getDices()) {
+
+                //increase all dices value
+                d.increaseValue(1);
+                sum += d.getValue();
+
+            }
+
+        }
     }
 
     /**

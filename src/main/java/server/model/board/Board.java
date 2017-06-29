@@ -31,7 +31,7 @@ public class Board implements Serializable {
     private ActionArea productionArea;
     private ActionArea harvestArea;
     private Market market;
-    ArrayList<Player> players;
+    private ArrayList<Player> players;
 
     public Board(ArrayList<Player> players) {
 

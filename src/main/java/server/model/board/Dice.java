@@ -32,4 +32,8 @@ public class Dice implements Serializable {
     public void setColor(ColorType color) {
         this.color = color;
     }
+
+    public void increaseValue(Integer i) {
+        this.value += i;
+    }
 }

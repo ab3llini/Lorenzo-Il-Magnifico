@@ -261,10 +261,12 @@ public class BoardConfigParser {
 
         Integer victoryBonus = 0;
 
+        if(faithPoints > 15)
+            faithPoints = 15;
+
         //get JsonObject productionArea from boardConfig
         JsonObject faithBonusObject = BoardConfigParser.getBoardConfig().getAsJsonObject("faithToVictoryPoints");
 
-        //TODO add try catch if it is necessary
         victoryBonus = faithBonusObject.get(""+faithPoints).getAsInt();
 
         return victoryBonus;
