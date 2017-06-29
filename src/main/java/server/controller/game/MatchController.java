@@ -200,8 +200,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     public void run() {
 
-
-        /*Draft the leader cards first
+/*
+        //Draft the leader cards first
         this.context = MatchControllerContext.LeaderCardDraft;
         this.handleLeaderCardDraft();
 
@@ -209,9 +209,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Draft the leader cards first
         this.context = MatchControllerContext.BonusTileDraft;
         this.handleBonusTileDrat();
-
-        *///We are now going to play
-        //Draft the leader cards first
+*/
+        ///We are now going to play
         this.context = MatchControllerContext.Playing;
 
         //Make sure that the match has already been initialized here!
@@ -813,6 +812,14 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             activateLeaderCard((LeaderCardActivationAction) action, player);
 
             message = "activated the leader card" + GameSingleton.getInstance().getSpecificLeaderCard(((LeaderCardActivationAction) action).getLeaderCardIndex());
+
+        }
+
+        if(action instanceof DiscardLeaderCardAction){
+
+            discardLeaderCard((DiscardLeaderCardAction) action, player);
+
+            message = "discarded the leader card" + GameSingleton.getInstance().getSpecificLeaderCard(((DiscardLeaderCardAction) action).getLeaderCardIndex());
 
         }
 
@@ -1608,12 +1615,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
-
         //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getActiveLeaderCards().contains(leaderCard))
         //     throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
             if (player.getActiveLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
-                throw new LeaderCardAlreadyActiveException("You have already activated this card!");
+                throw new LeaderCardAlreadyActiveException("You have already played this card!");
 
             else {
 
@@ -1709,6 +1715,26 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 }
             }
 
+    }
+
+    public void discardLeaderCard (DiscardLeaderCardAction action, Player player) throws NoActionPerformedException {
+
+        ArrayList<LeaderCard> activeLeaderCardsArray = new ArrayList<LeaderCard>();
+
+        Iterator i = player.getActiveLeaderCardsAsHashMap().entrySet().iterator();
+
+        while(i.hasNext()){
+            Map.Entry pair = (Map.Entry)i.next();
+            int id = ((LeaderCard)(pair.getKey())).getId();
+
+            if (id == action.getLeaderCardIndex()) {
+
+                player.getActiveLeaderCardsAsHashMap().remove(pair.getKey());
+                applyEffectSurplus(player, new EffectSurplus(new ArrayList<Resource>(), new ArrayList<Point>(), 1));
+                return;
+
+            }
+        }
     }
 
     /** this method applies the Production Chain

@@ -15,6 +15,7 @@ import client.view.cli.cmd.*;
 import client.utility.AsyncInputStream;
 import client.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
+import exception.NoLeaderException;
 import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
@@ -433,11 +434,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
                 this.draftBonusTiles();
                 break;
             //Normal bootstrap procedure
-            */
             case MatchStart:
             default:
-                //this.draftLeaderCards();
-                //this.draftBonusTiles();
+                this.draftLeaderCards();
+                this.draftBonusTiles();*/
 
         }
 
@@ -649,6 +649,30 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
         }
 
+        if ((actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.LeaderCardActivation ||actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.DiscardLeaderCard) && this.localMatchController.getLocalPlayer().getActiveLeaderCardsAsHashMap().size() == 0) {
+
+            Cmd.error("You haven't any leader card!");
+
+            //Ask the user which action he wants to perform printing the choices
+            Cmd.askFor("Which action would you like to perform ?");
+
+            choice = this.waitForCommandSelection();
+
+            while (!actionSelection.isValid(choice) || this.localMatchController.getLocalPlayer().getActiveLeaderCardsAsHashMap().size() == 0) {
+
+                Cmd.error("You haven't any leader card!");
+
+                //Ask the user which action he wants to perform printing the choices
+                Cmd.askFor("Which action would you like to perform ?");
+
+                choice = this.waitForCommandSelection();
+
+            }
+
+        }
+
+
+
         //If we got here then we entered a valid choice, go on asking the user what to do
         //However the timeout is still ticking.
         if (actionSelection.choiceMatch(choice, StandardActionType.FamilyMemberPlacement)) {
@@ -673,7 +697,17 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
             this.activateLeaderCard();
 
-        } else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
+
+        }
+
+        else if (actionSelection.choiceMatch(choice, StandardActionType.DiscardLeaderCard)) {
+
+            this.discardLeaderCard();
+
+        }
+
+
+        else if (actionSelection.choiceMatch(choice, StandardActionType.TerminateRound)) {
 
             this.terminateRound();
 
@@ -780,7 +814,36 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
     private void activateLeaderCard() throws NoActionPerformedException, InterruptedException {
 
-        Cmd.askFor("Which leader card would you like to activate?");
+
+            Cmd.askFor("Which leader card would you like to play / activate?");
+
+        String choice = "";
+
+            ArrayCommand<LeaderCard> leaderCardSelection = new ArrayCommand<>(this.localMatchController.getLocalPlayer().getLeaderCards());
+
+            leaderCardSelection.printChoiches();
+
+            choice = this.waitForCommandSelection();
+
+            while (!leaderCardSelection.isValid(choice)) {
+
+                Cmd.askFor("Which leader card would you like to play / activate?");
+
+                leaderCardSelection.printChoiches();
+
+                choice = this.waitForCommandSelection();
+
+            }
+
+            int selection = Integer.parseInt(choice) - 1;
+
+            this.client.performAction(new LeaderCardActivationAction(this.localMatchController.getLocalPlayer().getLeaderCards().get(selection).getId(), this.client.getUsername()));
+        }
+
+    private void discardLeaderCard() throws NoActionPerformedException, InterruptedException {
+
+
+        Cmd.askFor("Which leader card would you like to discard to obtain a council privilege?");
 
         String choice = "";
 
@@ -792,7 +855,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
         while (!leaderCardSelection.isValid(choice)) {
 
-            Cmd.askFor("Which leader card would you like to activate?");
+            Cmd.askFor("Which leader card would you like to discard to obtain a council privilege?");
 
             leaderCardSelection.printChoiches();
 
@@ -802,8 +865,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
         int selection = Integer.parseInt(choice) - 1;
 
-        this.client.performAction(new LeaderCardActivationAction(this.localMatchController.getLocalPlayer().getLeaderCards().get(selection).getId(), this.client.getUsername()));
-
+        this.client.performAction(new DiscardLeaderCardAction(this.localMatchController.getLocalPlayer().getLeaderCards().get(selection).getId(), this.client.getUsername()));
     }
 
     /**
