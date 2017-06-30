@@ -10,7 +10,8 @@ public enum StandardActionType implements CliPrintable {
 
     FamilyMemberPlacement("Place a family member"),
     ShowPersonalBoard("Show personal board"),
-    LeaderCardActivation("Activate a leader card"),
+    LeaderCardActivation("Play or activate a leader card"),
+    DiscardLeaderCard("Discard a leader card"),
     ShowDvptCardDetail("Show development card details"),
     RollDice("Roll the dices"),
     TerminateRound("Terminate the round");
