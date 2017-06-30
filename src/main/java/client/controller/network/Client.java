@@ -30,7 +30,7 @@ public abstract class Client implements RemotePlayer, LocalPlayer {
 
     //The list of observers
     protected ArrayList<ClientObserver> clientObservers = new ArrayList<>();
-
+    protected ArrayList<LobbyObserver> lobbyObservers = new ArrayList<>();
     protected ArrayList<RemotePlayerObserver> remotePlayerObservers = new ArrayList<>();
 
 
@@ -102,7 +102,7 @@ public abstract class Client implements RemotePlayer, LocalPlayer {
 
     protected void notifyLobbyNotificationReceived(LobbyNotification not) {
 
-        for (ClientObserver o : this.clientObservers) {
+        for (LobbyObserver o : this.lobbyObservers) {
 
             o.onLobbyNotification(this, not);
 
@@ -116,21 +116,15 @@ public abstract class Client implements RemotePlayer, LocalPlayer {
 
     }
 
+    public boolean addLobbyObserver(LobbyObserver o) {
+
+        return o != null && this.lobbyObservers.add(o);
+
+    }
+
     public boolean addRemotePlayerObserver(RemotePlayerObserver o) {
 
         return o != null && this.remotePlayerObservers.add(o);
-
-    }
-
-    public boolean removeClientObserver(Observer o) {
-
-        return o != null && this.remotePlayerObservers.remove(o);
-
-    }
-
-    public boolean removeRemotePlayerObserver(Observer o) {
-
-        return o != null && this.remotePlayerObservers.remove(o);
 
     }
 

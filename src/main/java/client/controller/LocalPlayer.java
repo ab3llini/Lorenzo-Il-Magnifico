@@ -2,6 +2,7 @@ package client.controller;
 
 
 import netobject.action.Action;
+import netobject.notification.Notification;
 
 /*
  * @author  ab3llini
@@ -10,5 +11,7 @@ import netobject.action.Action;
 public interface LocalPlayer {
 
     void performAction(Action action);
+
+    void sendNotification(Notification notification);
 
 }

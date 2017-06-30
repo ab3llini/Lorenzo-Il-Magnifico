@@ -5,6 +5,8 @@ package server.controller.network;
  * @since   16/05/17.
  */
 
+import client.controller.network.Observer;
+import client.controller.network.ObserverType;
 import netobject.action.Action;
 
 /**
@@ -33,5 +35,8 @@ public interface ServerObserver {
     void onDisconnection(Server server, ClientHandler handler);
 
     void onAction(Server server, ClientHandler handler, Action action);
+
+    void onObserverReady(Server server, ClientHandler handler, ObserverType observerType);
+
 
 }

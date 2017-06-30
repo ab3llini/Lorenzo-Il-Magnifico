@@ -6,25 +6,15 @@ import client.controller.network.NetUtil;
 import client.controller.network.RMI.RMIClient;
 import client.controller.network.Socket.SocketClient;
 import client.view.cli.cmd.ClientType;
+import client.view.gui.lobby.LobbyController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import logger.Level;
 import logger.Logger;
-import netobject.action.Action;
-import netobject.action.immediate.ImmediateActionType;
-import netobject.notification.LobbyNotification;
-import netobject.notification.MatchNotification;
 import netobject.request.auth.LoginRequest;
-import server.model.Match;
-import server.model.board.BonusTile;
-import server.model.board.Player;
-import server.model.card.Deck;
-import server.model.card.leader.LeaderCard;
 import singleton.GameConfig;
-
-import java.util.ArrayList;
 
 public class ConnectionController extends NavigationController implements ClientObserver {
 
@@ -161,16 +151,11 @@ public class ConnectionController extends NavigationController implements Client
             @Override public void run() {
                 ConnectionController.this.showAlert(Alert.AlertType.CONFIRMATION, "Authentication", "Login succeeded", "Welcome back " + ConnectionController.this.client.getUsername());
 
-                ((GUIController)ConnectionController.this.navigateTo(View.Gui)).setClient(client);
+                ((LobbyController)ConnectionController.this.navigateTo(View.Lobby)).setClient(client);
 
             }
         });
 
-
-    }
-
-    @Override
-    public void onLobbyNotification(Client client, LobbyNotification not) {
 
     }
 

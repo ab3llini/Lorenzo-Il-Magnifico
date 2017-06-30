@@ -297,4 +297,11 @@ public class SocketClient extends Client implements Runnable {
         this.sendObject(action);
 
     }
+
+    @Override
+    public void sendNotification(Notification notification) {
+
+        this.sendObject(notification);
+
+    }
 }

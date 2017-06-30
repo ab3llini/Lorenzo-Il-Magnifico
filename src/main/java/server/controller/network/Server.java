@@ -1,5 +1,7 @@
 package server.controller.network;
 
+import client.controller.network.Observer;
+import client.controller.network.ObserverType;
 import exception.authentication.AlreadyLoggedInException;
 import exception.authentication.LoginFailedException;
 import logger.Level;
@@ -169,6 +171,22 @@ public abstract class Server implements Observable<ServerObserver> {
         for (ServerObserver o : this.observers) {
 
             o.onAction(this, handler, action);
+
+        }
+
+    }
+
+    protected final void notifyObserverReady(ClientHandler handler, ObserverType observerType) {
+
+        if (!handler.isAuthenticated()) {
+
+            return;
+
+        }
+
+        for (ServerObserver o : this.observers) {
+
+            o.onObserverReady(this, handler, observerType);
 
         }
 

@@ -52,6 +52,7 @@ public abstract class NavigationController {
             Parent root = loader.load();
             this.stage.setTitle(view.getTitle());
             this.stage.setScene(new Scene(root, view.getW(), view.getH()));
+            ((NavigationController)loader.getController()).setStage(stage);
 
             return loader.getController();
 

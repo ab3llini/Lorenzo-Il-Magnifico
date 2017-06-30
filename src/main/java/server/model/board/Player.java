@@ -60,7 +60,7 @@ public class Player implements Serializable {
 
         points = new HashMap<PointType, Integer>();
 
-        //put all kind of points in the hashMap
+        //put all kind of points kin the hashMap
 
         points.put(PointType.Military, 0);
         points.put(PointType.Victory, 0);

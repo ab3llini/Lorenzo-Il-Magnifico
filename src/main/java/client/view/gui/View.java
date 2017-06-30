@@ -5,7 +5,7 @@ package client.view.gui;/*
 public enum View {
 
     Connect("connect.fxml", "Connect", 400, 650),
-    Lobby("lobby.fxml", "Lobby", 400, 650),
+    Lobby("Lobby.fxml", "Lobby", 400, 650),
     Gui("GUI.fxml", "Lorenzo il Magnifico", 1400, 1000);
 
     private String filename;

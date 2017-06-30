@@ -4,6 +4,7 @@ package server.controller.game;
  * Created by alberto on 10/05/17.
  */
 
+import client.controller.network.ObserverType;
 import exception.NoSuchHanlderException;
 import exception.NoSuchPlayerException;
 import logger.Level;
@@ -16,6 +17,7 @@ import server.utility.UnicodeChars;
 import singleton.GameConfig;
 import server.controller.network.Observable;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * The Lobby represents a virtual room where handlers wait for other handlers to join and for the match to begin.
@@ -44,6 +46,8 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
     //Status variable that tells if the timeout has started
     private boolean timeoutDidStart = false;
+
+    private LinkedBlockingDeque<ObserverType> readyObservers = new LinkedBlockingDeque<>(5);
 
     /**
      * The observers
@@ -147,11 +151,8 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has joined!");
 
-        this.welcomeClient(handler);
 
         this.notifyAllExcept(handler, new LobbyNotification(LobbyNotificationType.ClientJoin, "Client " + handler.getUsername() + " has joined!"));
-
-        this.showConnectedClients();
 
 
         //Check whether or not to start the timeout
@@ -184,12 +185,6 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
             this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will start in " + GameConfig.getInstance().getMatchTimeout() + "s" ));
 
-
-        }
-
-        else if (this.handlers.size() > MINIMUM_PLAYERS && this.handlers.size() < MAXIMUM_PLAYERS) {
-
-            this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will soon.." ));
 
         }
 
@@ -293,7 +288,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
             this.notifyAllExcept(handler, new LobbyNotification(LobbyNotificationType.ClientLeave, "Client " + handler.getUsername() + " has left the lobby."));
 
-            this.showConnectedClients();
+            this.notifyAll(new LobbyNotification(LobbyNotificationType.LobbyInfo, this.getConnectedClients()));
 
             if (this.handlers.size() < MINIMUM_PLAYERS) {
 
@@ -352,9 +347,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         this.matchDidStart = true;
 
-        Logger.log(Level.FINE, this.toString(), "Match started");
-
-        this.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match has started"));
+        Logger.log(Level.FINE, this.toString(), "Starting the match...");
 
         this.matchController = new MatchController(this.handlers, this);
 
@@ -388,14 +381,22 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
     }
 
-    private void welcomeClient(ClientHandler handler) {
+    public void welcomeClient(ClientHandler handler) {
 
-        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername() + ", welcome to " + this.toString()));
+        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername()));
+        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Welcome to " + this.toString()));
+
         handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Action timeout set to " + GameConfig.getInstance().getPlayerTimeout() + "s"));
+        if (this.handlers.size() > MINIMUM_PLAYERS && this.handlers.size() < MAXIMUM_PLAYERS) {
 
+            this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will soon.." ));
+
+        }
+
+        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, this.getConnectedClients()));
     }
 
-    private void showConnectedClients() {
+    private String getConnectedClients() {
 
         StringBuilder b = new StringBuilder();
 
@@ -421,7 +422,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         }
 
-        this.notifyAll(new LobbyNotification(LobbyNotificationType.LobbyInfo, b.toString()));
+        return b.toString();
 
     }
 
@@ -439,7 +440,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
     }
 
-    private synchronized void notifyAll(LobbyNotification not) {
+    public synchronized void notifyAll(LobbyNotification not) {
 
         for (ClientHandler c : this.handlers) {
 
@@ -480,6 +481,10 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
             o.onDestroyRequest(this);
 
         }
+    }
+
+    public LinkedBlockingDeque<ObserverType> getReadyObservers() {
+        return readyObservers;
     }
 
     public boolean addObserver(LobbyObserver o) {

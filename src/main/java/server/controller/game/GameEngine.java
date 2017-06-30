@@ -4,6 +4,9 @@ package server.controller.game;
  * Created by alberto on 09/05/17.
  */
 
+import client.controller.network.ClientObserver;
+import client.controller.network.Observer;
+import client.controller.network.ObserverType;
 import exception.NoSuchHanlderException;
 import exception.NoSuchLobbyException;
 import exception.PlayerNeverDisconnectedException;
@@ -209,6 +212,48 @@ public class GameEngine implements ServerObserver, LobbyObserver {
         catch (NoSuchLobbyException e) {
 
             Logger.log(Level.SEVERE, "GameEngine", "Unable to find the lobby where the player is playing!", e);
+
+        }
+
+    }
+
+    @Override
+    public void onObserverReady(Server server, ClientHandler handler, ObserverType observerType) {
+
+        Lobby belonging = null;
+
+        try {
+
+            belonging = this.getLobby(handler);
+
+
+        }
+        catch (NoSuchLobbyException e) {
+
+            Logger.log(Level.SEVERE, "GameEngine", "Unable to find the lobby where the player is playing or waiting!", e);
+
+        }
+
+
+        switch (observerType) {
+
+            case Lobby:
+
+                belonging.welcomeClient(handler);
+
+                break;
+
+            case RemotePlayer:
+
+                belonging.getMatchController().getReadyObservers().add(observerType);
+
+                break;
+
+            default:
+
+                Logger.log(Level.WARNING, "GameEngine", "Don't know who notify for this observer.");
+
+                break;
 
         }
 

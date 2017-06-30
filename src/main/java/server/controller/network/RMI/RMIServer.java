@@ -11,6 +11,8 @@ import exception.authentication.*;
 
 import logger.*;
 import netobject.action.Action;
+import netobject.notification.Notification;
+import netobject.notification.ObserverReadyNotification;
 import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 import server.controller.game.GameEngine;
@@ -258,6 +260,16 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
     public void performAction(String connectionToken, Action action) throws RemoteException, NotRegisteredException, NotConnectedException {
 
         this.notifyAction(getClientHandler(connectionToken), action);
+
+    }
+
+    public void sendNotification(String connectionToken, Notification notification) throws RemoteException, NotRegisteredException, NotConnectedException {
+
+        if (notification instanceof ObserverReadyNotification) {
+
+            this.notifyObserverReady(getClientHandler(connectionToken), ((ObserverReadyNotification) notification).getObserverType());
+
+        }
 
     }
 

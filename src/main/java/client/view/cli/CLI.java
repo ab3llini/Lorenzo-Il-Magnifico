@@ -5,11 +5,8 @@ package client.view.cli;
  * @since   23/05/17.
  */
 
-import client.controller.network.Client;
-import client.controller.network.ClientObserver;
-import client.controller.network.NetUtil;
+import client.controller.network.*;
 import client.controller.network.RMI.RMIClient;
-import client.controller.network.RemotePlayerObserver;
 import client.controller.network.Socket.SocketClient;
 import client.view.cli.cmd.*;
 import client.utility.AsyncInputStream;
@@ -24,10 +21,7 @@ import netobject.action.immediate.ImmediateActionTypeImpl;
 import netobject.action.immediate.ImmediateChoiceAction;
 import netobject.action.immediate.ImmediatePlacementAction;
 import netobject.action.standard.*;
-import netobject.notification.LobbyNotification;
-import netobject.notification.LobbyNotificationType;
-import netobject.notification.MatchNotification;
-import netobject.notification.Notification;
+import netobject.notification.*;
 import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 import server.model.GameSingleton;
@@ -49,7 +43,7 @@ import java.util.concurrent.BlockingQueue;
 /**
  * The command line interface for the game :/
  */
-public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePlayerObserver {
+public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObserver, RemotePlayerObserver {
 
     /**
      * The client handler that will be dynamically bounded and used
@@ -234,6 +228,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
         //Register us as observer
         this.client.addClientObserver(this);
+        this.client.addLobbyObserver(this);
         this.client.addRemotePlayerObserver(this);
 
 
@@ -309,13 +304,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
             } else {
                 firstAttempt = false;
             }
-            //Request the IP
+            //Request the name
             Cmd.askFor("Please enter your username");
 
             username = this.inputQueue.take();
 
-            //Request the IP
-            Cmd.askFor("Please enter your password");
+            //Request the password
+            //Cmd.askFor("Please enter your password");
 
             //password = this.inputQueue.take();
 
@@ -382,6 +377,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
 
         this.ctx = CliContext.Lobby;
 
+        this.client.sendNotification(new ObserverReadyNotification(ObserverType.Lobby));
+
         this.keyboardEnabled = false;
 
         //Assuming that before the match start the client will receive just Lobby notifications
@@ -418,6 +415,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver,  RemotePla
     private void interactWithMatchController(LobbyNotificationType status) throws InterruptedException {
 
         this.ctx = CliContext.Match;
+
+        this.client.sendNotification(new ObserverReadyNotification(ObserverType.RemotePlayer));
+
 
         switch (status) {
 

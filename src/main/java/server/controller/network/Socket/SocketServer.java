@@ -11,6 +11,8 @@ import logger.Level;
 import logger.Logger;
 import netobject.NetObjectType;
 import netobject.action.Action;
+import netobject.notification.Notification;
+import netobject.notification.ObserverReadyNotification;
 import netobject.request.Request;
 import netobject.request.RequestType;
 import netobject.request.auth.LoginRequest;
@@ -101,6 +103,17 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
             this.notifyAction(handler, (Action)object);
 
         }
+
+        else if (object.getType() == NetObjectType.Notification) {
+
+            if (object instanceof ObserverReadyNotification) {
+
+                this.notifyObserverReady(handler, ((ObserverReadyNotification)object).getObserverType());
+
+            }
+
+        }
+
 
     }
 

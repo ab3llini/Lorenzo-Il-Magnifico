@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author  ab3llini
  * @since   30/05/17.
  */
-public interface RemotePlayerObserver {
+public interface RemotePlayerObserver extends Observer {
 
     void onNotification(Client sender, MatchNotification notification);
 

@@ -7,6 +7,7 @@ package netobject.notification;
 public enum NotificationType {
 
     Lobby,
-    Match
+    Match,
+    Controller
 
 }

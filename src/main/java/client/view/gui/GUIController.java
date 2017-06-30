@@ -1,5 +1,6 @@
 package client.view.gui;
 
+import client.controller.network.ObserverType;
 import exception.NoSuchPlayerException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -21,6 +22,7 @@ import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
+import netobject.notification.ObserverReadyNotification;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -175,6 +177,8 @@ public class GUIController extends NavigationController implements ClientObserve
         this.client.addClientObserver(this);
         this.client.addRemotePlayerObserver(this);
         this.localMatchController.setPlayerUsername(this.client.getUsername());
+        this.client.sendNotification(new ObserverReadyNotification(ObserverType.RemotePlayer));
+
 
     }
 
@@ -207,11 +211,7 @@ public class GUIController extends NavigationController implements ClientObserve
     public void onLoginSuccess(Client client) {
 
     }
-
-    @Override
-    public void onLobbyNotification(Client client, LobbyNotification not) {
-
-    }
+    
 
     @Override
     public void onNotification(Client sender, MatchNotification notification) {

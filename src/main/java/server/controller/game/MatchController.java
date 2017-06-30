@@ -1,4 +1,5 @@
 package server.controller.game;
+import client.controller.network.*;
 import exception.*;
 import logger.Level;
 import logger.Logger;
@@ -8,6 +9,8 @@ import netobject.action.immediate.ImmediateActionType;
 import netobject.action.immediate.ImmediateChoiceAction;
 import netobject.action.immediate.ImmediatePlacementAction;
 import netobject.action.standard.*;
+import netobject.notification.LobbyNotification;
+import netobject.notification.LobbyNotificationType;
 import netobject.notification.MatchNotification;
 import netobject.notification.MatchNotificationType;
 import server.controller.network.ClientHandler;
@@ -93,6 +96,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     ArrayList<MatchControllerObserver> observers;
 
     /**
+     * A blocking queue used to wait for the clients to be ready to receive events
+     */
+    private BlockingQueue<ObserverType> readyObservers;
+
+
+    /**
      * Constants
      */
     private static final int ACTION_TIMEOUT =  GameConfig.getInstance().getPlayerTimeout();
@@ -156,6 +165,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
          */
         this.actions = new LinkedBlockingQueue<Action>(players.size());
 
+        this.readyObservers = new LinkedBlockingQueue<>(players.size());
+
+
         //Init anything else in the future here..
 
     }
@@ -200,6 +212,13 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     public void run() {
 
+
+        //Inform the players that the match started
+        this.lobby.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match is starting..."));
+
+
+        //Wait fot CLI / GUI to fully load their observers..
+        this.waitUntilPlayerObserversAreSet();
 
         /*Draft the leader cards first
         this.context = MatchControllerContext.LeaderCardDraft;
@@ -303,6 +322,38 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         for (MatchControllerObserver o : this.observers) {
 
             o.onMatchEnded();
+
+        }
+
+    }
+
+    /**
+     * Suspends the thread until the players are ready to receive events
+     */
+    private void waitUntilPlayerObserversAreSet() {
+
+        int notReady = this.match.getPlayers().size();
+
+
+        Logger.log(Level.FINEST, this.toString(), "Waiting for " + this.match.getPlayers().size() + " players to load their GUI / CLI");
+
+
+        for (Player p : this.match.getPlayers()) {
+
+            try {
+
+                this.readyObservers.take();
+
+                notReady--;
+
+                Logger.log(Level.FINEST, this.toString(), "A player is ready.. " + notReady + " more to go.");
+
+
+            } catch (InterruptedException e) {
+
+                Logger.log(Level.WARNING, this.toString(), "Thread interrupted while waiting for observers ready");
+
+            }
 
         }
 
@@ -2229,6 +2280,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
     public MatchControllerContext getContext() {
         return context;
+    }
+
+    public BlockingQueue<ObserverType> getReadyObservers() {
+        return readyObservers;
     }
 
     @Override

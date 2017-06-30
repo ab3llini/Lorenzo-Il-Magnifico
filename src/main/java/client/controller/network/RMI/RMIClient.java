@@ -10,6 +10,7 @@ import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
+import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 import server.controller.network.RMI.RMIServerInterface;
@@ -89,7 +90,7 @@ public class RMIClient extends Client implements RMIClientInterface {
     }
 
     public void onTurnDisabled(Player player, String message) {
-        this.notifyTurnDisabled(player , message);
+        this.notifyTurnDisabled(player, message);
     }
 
     public void onActionTimeoutExpired(Player player, String message) {
@@ -178,7 +179,7 @@ public class RMIClient extends Client implements RMIClientInterface {
 
     }
 
-    public void registration(RegisterRequest authentication){
+    public void registration(RegisterRequest authentication) {
 
     }
 
@@ -195,7 +196,19 @@ public class RMIClient extends Client implements RMIClientInterface {
     }
 
     @Override
-    public void notify(MatchNotification notification) {
+    public void sendNotification(Notification notification) {
+
+        try {
+            this.serverRef.sendNotification(this.token, notification);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotRegisteredException e) {
+            e.printStackTrace();
+        } catch (NotConnectedException e) {
+            e.printStackTrace();
+        }
 
     }
+
 }
+

@@ -21,7 +21,7 @@ public class GUI extends Application {
 
         System.out.println();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/connect.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Connect.fxml"));
 
         Parent root = loader.load();
 

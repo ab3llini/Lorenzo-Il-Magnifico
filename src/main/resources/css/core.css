@@ -10,6 +10,12 @@
 
 }
 
+.theme-pane-inverse {
+
+    -fx-background-color: -fx-secondary-color;
+
+}
+
 .tab-pane .tab-header-area .tab-header-background {
 
     -fx-background-color: -fx-main-color;

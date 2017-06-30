@@ -7,6 +7,7 @@ import exception.authentication.LoginFailedException;
 import exception.authentication.NotConnectedException;
 import exception.authentication.UsernameAlreadyInUseException;
 import netobject.action.Action;
+import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 
@@ -59,5 +60,11 @@ public interface RMIServerInterface extends Remote {
      * @throws RemoteException Needed for RMI Pattern
      */
     void performAction(String connectionToken, Action action) throws RemoteException, NotRegisteredException, NotConnectedException;
+
+
+    /**
+     * Sends a notification to the server
+     */
+    void sendNotification(String connectionToken,Notification notification) throws RemoteException, NotRegisteredException, NotConnectedException;
 
 }
