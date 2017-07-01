@@ -43,6 +43,12 @@ public class FinalStanding {
         return standingsAndPoints;
     }
 
+    public int getScore(Player player){
+
+        return standingsAndPoints.get(player);
+
+    }
+
     @Override
     public String toString() {
 

@@ -1095,7 +1095,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * @throws NotEnoughPointsException
      */
     public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException, InterruptedException {
-        //TODO
+
         StandardPlacementAction action;
 
         if(card != null) {
@@ -1955,7 +1955,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             for (Dice d : this.match.getBoard().getDices()) {
 
                 //increase all dices value
-                d.increaseValue(1);
+                if(d.getValue()<6)
+                    d.increaseValue(1);
                 sum += d.getValue();
 
             }

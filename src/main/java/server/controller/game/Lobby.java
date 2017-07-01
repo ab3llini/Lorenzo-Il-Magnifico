@@ -55,7 +55,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
     ArrayList<LobbyObserver> observers;
 
     //Constants
-    private static final int MAXIMUM_PLAYERS = 4;
+    private static final int MAXIMUM_PLAYERS = 5;
     private static final int MINIMUM_PLAYERS = 2;
     private static final int START_DELAY = GameConfig.getInstance().getMatchTimeout() * 1000;
 

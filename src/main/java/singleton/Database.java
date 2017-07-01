@@ -151,6 +151,8 @@ public class Database
 
         }
 
+        System.out.println("fin qua tutto ok ");
+
         try {
 
             //Create a statement
@@ -160,7 +162,7 @@ public class Database
             stmt.setQueryTimeout(QUERY_TIMEOUT);
 
             //Create the query;
-            String query = "INSERT INTO users " + "VALUES ("+username+", "+Security.MD5Hash(password)+");";
+            String query = "INSERT INTO users VALUES ('"+username+"', '"+Security.MD5Hash(password)+"');";
 
             //Execute the query
             stmt.executeQuery(query);
