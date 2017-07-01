@@ -424,7 +424,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
             //Resume the game, draft already done before..
             case ResumeGame:
-                break;/*
+                break;
             //Give the user the possibility do draft
             case ResumeLeaderCardDraft:
                 this.draftLeaderCards();
@@ -438,7 +438,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
             default:
                 this.draftLeaderCards();
                 this.draftBonusTiles();
-*/
+
         }
 
         while (!this.localMatchController.matchHasEnded()) {
@@ -662,7 +662,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
             choice = this.waitForCommandSelection();
 
-            while (!actionSelection.isValid(choice) || this.localMatchController.getLocalPlayer().getActiveLeaderCardsAsHashMap().size() == 0) {
+            while ((!actionSelection.isValid(choice) || this.localMatchController.getLocalPlayer().getActiveLeaderCardsAsHashMap().size() == 0) && (actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.LeaderCardActivation ||actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.DiscardLeaderCard)) {
 
                 Cmd.error("You haven't any leader card!");
 
