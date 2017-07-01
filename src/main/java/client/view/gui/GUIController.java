@@ -283,6 +283,11 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+    @FXML
+    public void initialize(){
+        System.out.println("Sto inizializando");
+        this.buildCache();
+    }
 
     private void buildCache() {
 
