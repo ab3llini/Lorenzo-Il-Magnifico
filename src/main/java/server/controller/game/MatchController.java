@@ -220,7 +220,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Wait fot CLI / GUI to fully load their observers..
         this.waitUntilPlayerObserversAreSet();
 
-        /*Draft the leader cards first
+        //Draft the leader cards first
         this.context = MatchControllerContext.LeaderCardDraft;
         this.handleLeaderCardDraft();
 
@@ -229,7 +229,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         this.context = MatchControllerContext.BonusTileDraft;
         this.handleBonusTileDrat();
 
-        *///We are now going to play
+        //We are now going to play
         //Draft the leader cards first
         this.context = MatchControllerContext.Playing;
 
@@ -293,8 +293,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     player.freeFamilyMembers();
 
                 }
-
-                this.sendUpdatedModel();
 
             }
 
@@ -991,8 +989,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         //territory cards doesn't have cost
         if(card != null){
-        if(card.getType() == DvptCardType.territory)
-            return;
+            if(card.getType() == DvptCardType.territory)
+                return;
 
             //some cards could have a double cost
             int choose=0;
@@ -1014,31 +1012,31 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             }
 
 
-        //get the choosen one cost
-        //clone the cost in order to modify a temporary variable
-        Cost costo = new Cost(card.getCost().get(choose));
+            //get the choosen one cost
+            //clone the cost in order to modify a temporary variable
+            Cost costo = new Cost(card.getCost().get(choose));
 
-        //apply discount
+            //apply discount
             costo = applyDiscount(costo,discount);
 
 
 
-        //try to apply military cost, if it does not succeed it returns an exception
-        if(costo.getMilitary().getRequired() <= player.getMilitaryPoints())
-            player.subtractMilitaryPoints(costo.getMilitary().getMalus());
+            //try to apply military cost, if it does not succeed it returns an exception
+            if(costo.getMilitary().getRequired() <= player.getMilitaryPoints())
+                player.subtractMilitaryPoints(costo.getMilitary().getMalus());
 
-        else{
-            throw new NotEnoughMilitaryPointsException("Not enough military point to do this");}
+            else{
+                throw new NotEnoughMilitaryPointsException("Not enough military point to do this");}
 
-        //check if there are enough resources to apply the cost in order to have an atomic transaction, if it does not succeed it returns an exception
-        //deducts the cost of the card from the player's resources
-        if(player.hasEnoughCostResources(costo)) {
-            player.subtractResources(costo);
+            //check if there are enough resources to apply the cost in order to have an atomic transaction, if it does not succeed it returns an exception
+            //deducts the cost of the card from the player's resources
+            if(player.hasEnoughCostResources(costo)) {
+                player.subtractResources(costo);
+            }
+            else
+                throw new NotEnoughResourcesException("Not enough resources to do this");
+
         }
-        else
-            throw new NotEnoughResourcesException("Not enough resources to do this");
-
-    }
     }
     /**
      * this method subtract a discount from a cost
@@ -1095,7 +1093,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * @throws NotEnoughPointsException
      */
     public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException, InterruptedException {
-        //TODO
+
         StandardPlacementAction action;
 
         if(card != null) {
@@ -1219,8 +1217,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             if(noMarket)
                 throw new NoMarketException("You can't place any family member in market because of the Special BanCard NoMarketMalus");
             else{
-            EffectSurplus surplus = boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants() + bonus.getForceBonus(),this.match.getPlayers().size());
-            applyEffectSurplus(player,surplus);}
+                EffectSurplus surplus = boardController.placeOnMarket(familyMember,action.getPlacementIndex(),action.getAdditionalServants() + bonus.getForceBonus(),this.match.getPlayers().size());
+                applyEffectSurplus(player,surplus);}
 
         }
 
@@ -1334,67 +1332,67 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         familyMember.setBusy(true);
     }
     public ActionBonus applyLeaderCardEffect(Player player, StandardPlacementAction action, ActionBonus bonus){
-            for(LeaderCard leaderCard : player.getActiveLeaderCards()){
+        for(LeaderCard leaderCard : player.getActiveLeaderCards()){
 
-                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ariostoEffect)) {
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ariostoEffect)) {
 
-                    if (action.getActionTarget() == BoardSectorType.TerritoryTower)
-                        getMatch().getBoard().getTerritoryTower().get(action.getPlacementIndex()).setOccupied(false);
+                if (action.getActionTarget() == BoardSectorType.TerritoryTower)
+                    getMatch().getBoard().getTerritoryTower().get(action.getPlacementIndex()).setOccupied(false);
 
-                    if (action.getActionTarget() == BoardSectorType.BuildingTower)
-                        getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).setOccupied(false);
+                if (action.getActionTarget() == BoardSectorType.BuildingTower)
+                    getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).setOccupied(false);
 
-                    if (action.getActionTarget() == BoardSectorType.CharacterTower)
-                        getMatch().getBoard().getCharacterTower().get(action.getPlacementIndex()).setOccupied(false);
+                if (action.getActionTarget() == BoardSectorType.CharacterTower)
+                    getMatch().getBoard().getCharacterTower().get(action.getPlacementIndex()).setOccupied(false);
 
-                    if (action.getActionTarget() == BoardSectorType.BuildingTower)
-                        getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).setOccupied(false);
+                if (action.getActionTarget() == BoardSectorType.BuildingTower)
+                    getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).setOccupied(false);
 
-                    if (action.getActionTarget() == BoardSectorType.CouncilPalace)
-                        getMatch().getBoard().getCouncilPalace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+                if (action.getActionTarget() == BoardSectorType.CouncilPalace)
+                    getMatch().getBoard().getCouncilPalace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
 
-                    if (action.getActionTarget() == BoardSectorType.Market)
-                        getMatch().getBoard().getMarket().getMarketPlaces().get(action.getPlacementIndex()).setOccupied(false);
+                if (action.getActionTarget() == BoardSectorType.Market)
+                    getMatch().getBoard().getMarket().getMarketPlaces().get(action.getPlacementIndex()).setOccupied(false);
 
-                    if (action.getActionTarget() == BoardSectorType.SingleHarvestPlace)
-                        getMatch().getBoard().getHarvestArea().getMainPlace().setOccupied(false);
+                if (action.getActionTarget() == BoardSectorType.SingleHarvestPlace)
+                    getMatch().getBoard().getHarvestArea().getMainPlace().setOccupied(false);
 
-                    if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace)
-                        getMatch().getBoard().getHarvestArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+                if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace)
+                    getMatch().getBoard().getHarvestArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
 
-                    if (action.getActionTarget() == BoardSectorType.SingleProductionPlace)
-                        getMatch().getBoard().getProductionArea().getMainPlace().setOccupied(false);
+                if (action.getActionTarget() == BoardSectorType.SingleProductionPlace)
+                    getMatch().getBoard().getProductionArea().getMainPlace().setOccupied(false);
 
-                    if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace)
-                        getMatch().getBoard().getProductionArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+                if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace)
+                    getMatch().getBoard().getProductionArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
 
-                }
+            }
 
-                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.sigismondoEffect) && action.getColorType() == ColorType.Nautral) {
-                    bonus.setForceBonus(bonus.getForceBonus()+3);
-                }
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.sigismondoEffect) && action.getColorType() == ColorType.Nautral) {
+                bonus.setForceBonus(bonus.getForceBonus()+3);
+            }
 
-                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect) && action.getColorType() != ColorType.Nautral) {
-                    bonus.setForceBonus(bonus.getForceBonus()+2);
-                }
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect) && action.getColorType() != ColorType.Nautral) {
+                bonus.setForceBonus(bonus.getForceBonus()+2);
+            }
 
-                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.moroEffect) && action.getColorType() != ColorType.Nautral) {
-                    try {
-                        bonus.setForceBonus(bonus.getForceBonus()+5-player.getFamilyMember(action.getColorType()).getForce());
-                    } catch (FamilyMemberAlreadyInUseException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if(player.isPermanentLeaderActive(PermanentLeaderEffectType.picoEffect)){
-                    ArrayList <Resource> coinDiscount = new ArrayList<Resource>();
-                    coinDiscount.add(new Resource(ResourceType.Coins, 3));
-                    Discount discount = new Discount(coinDiscount);
-                    bonus.getDiscounts().add(discount);
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.moroEffect) && action.getColorType() != ColorType.Nautral) {
+                try {
+                    bonus.setForceBonus(bonus.getForceBonus()+5-player.getFamilyMember(action.getColorType()).getForce());
+                } catch (FamilyMemberAlreadyInUseException e) {
+                    e.printStackTrace();
                 }
             }
 
-            return bonus;
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.picoEffect)){
+                ArrayList <Resource> coinDiscount = new ArrayList<Resource>();
+                coinDiscount.add(new Resource(ResourceType.Coins, 3));
+                Discount discount = new Discount(coinDiscount);
+                bonus.getDiscounts().add(discount);
+            }
+        }
+
+        return bonus;
 
     }
 
@@ -1673,102 +1671,102 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getActiveLeaderCards().contains(leaderCard))
         //     throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
-            if (player.getActiveLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
-                throw new LeaderCardAlreadyActiveException("You have already played this card!");
+        if (player.getActiveLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
+            throw new LeaderCardAlreadyActiveException("You have already played this card!");
 
-            else {
+        else {
 
-                player.getActiveLeaderCardsAsHashMap().replace(leaderCard, true);
+            player.getActiveLeaderCardsAsHashMap().replace(leaderCard, true);
 
-                if (leaderCard.getLeaderEffect().getOnceARound() != null) {
+            if (leaderCard.getLeaderEffect().getOnceARound() != null) {
 
-                    if(player.getTurnActiveLeaderCard().contains(leaderCard))
-                        throw new LeaderCardAlreadyActiveTurnException("You have already activated the effect of this Leader card in this turn");
+                if(player.getTurnActiveLeaderCard().contains(leaderCard))
+                    throw new LeaderCardAlreadyActiveTurnException("You have already activated the effect of this Leader card in this turn");
 
-                    if(!player.getTurnActiveLeaderCard().contains(leaderCard)) {
+                if(!player.getTurnActiveLeaderCard().contains(leaderCard)) {
 
-                        EffectSurplus surplus = new EffectSurplus(leaderCard.getLeaderEffect().getOnceARound().getResources(),leaderCard.getLeaderEffect().getOnceARound().getPoints(),leaderCard.getLeaderEffect().getOnceARound().getCouncil());
-                        applyEffectSurplus(player, surplus);
+                    EffectSurplus surplus = new EffectSurplus(leaderCard.getLeaderEffect().getOnceARound().getResources(),leaderCard.getLeaderEffect().getOnceARound().getPoints(),leaderCard.getLeaderEffect().getOnceARound().getCouncil());
+                    applyEffectSurplus(player, surplus);
 
-                        ImmediatePlacementAction placementAction;
+                    ImmediatePlacementAction placementAction;
 
-                        if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.harvest)) {
+                    if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.harvest)) {
 
-                            this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
 
-                            placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+                        placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                            try {
-                                doImmediateAction(placementAction, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest), player);
-                            } catch (ActionException e) {
-                                e.printStackTrace();
-                            }
-
-                            this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
+                        try {
+                            doImmediateAction(placementAction, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest), player);
+                        } catch (ActionException e) {
+                            e.printStackTrace();
                         }
 
-                        if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.production)) {
+                        this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
+                    }
 
-                            this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
+                    if (leaderCard.getLeaderEffect().getOnceARound().getAction().containsKey(ActionType.production)) {
 
-                            placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action");
 
-                            try {
-                                doImmediateAction(placementAction, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production), player);
-                            } catch (ActionException e) {
-                                e.printStackTrace();
-                            }
+                        placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                            this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
+                        try {
+                            doImmediateAction(placementAction, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.production), player);
+                        } catch (ActionException e) {
+                            e.printStackTrace();
                         }
 
-                        if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect() == true) {
+                        this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
+                    }
 
-                            this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectFamilyMember, this.currentPlayer, "");
+                    if (leaderCard.getLeaderEffect().getOnceARound().getSixEffect() == true) {
 
-                            ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectFamilyMember, this.currentPlayer, "");
 
-                            if (choice.getSelection() == 1) {
-                                player.setFamilyMemberForce(ColorType.White, 6);
-                            } else if (choice.getSelection() == 2) {
-                                player.setFamilyMemberForce(ColorType.Orange, 6);
-                            } else if (choice.getSelection() == 3) {
-                                player.setFamilyMemberForce(ColorType.Black, 6);
-                            } else if (choice.getSelection() == 4) {
+                        ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                                player.setFamilyMemberForce(ColorType.Nautral, 6);
+                        if (choice.getSelection() == 1) {
+                            player.setFamilyMemberForce(ColorType.White, 6);
+                        } else if (choice.getSelection() == 2) {
+                            player.setFamilyMemberForce(ColorType.Orange, 6);
+                        } else if (choice.getSelection() == 3) {
+                            player.setFamilyMemberForce(ColorType.Black, 6);
+                        } else if (choice.getSelection() == 4) {
 
-                            } else {
+                            player.setFamilyMemberForce(ColorType.Nautral, 6);
 
-                                Logger.log(Level.SEVERE, this.toString(), "Received a choice out of bounds");
+                        } else {
 
-                            }
-
-                            this.notifyAllActionPerformed(this.currentPlayer, choice, player.getUsername() + " performed an immediate action");
-
+                            Logger.log(Level.SEVERE, this.toString(), "Received a choice out of bounds");
 
                         }
 
-                            player.getTurnActiveLeaderCard().add(leaderCard);
+                        this.notifyAllActionPerformed(this.currentPlayer, choice, player.getUsername() + " performed an immediate action");
+
 
                     }
 
-                }
-
-                if (leaderCard.getLeaderEffect().getPermanentEffect() == PermanentLeaderEffectType.lorenzoEffect) {
-
-                    this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectActiveLeaderCard, this.currentPlayer, "You can select a leader card to copy");
-
-                    ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
-
-                    LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
-
-                    player.getActiveLeaderCardsAsHashMap().put(leader, true);
-
-                    this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
+                    player.getTurnActiveLeaderCard().add(leaderCard);
 
                 }
+
             }
+
+            if (leaderCard.getLeaderEffect().getPermanentEffect() == PermanentLeaderEffectType.lorenzoEffect) {
+
+                this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectActiveLeaderCard, this.currentPlayer, "You can select a leader card to copy");
+
+                ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+
+                LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
+
+                player.getActiveLeaderCardsAsHashMap().put(leader, true);
+
+                this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
+
+            }
+        }
 
     }
 
@@ -1868,19 +1866,19 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         if (!conversionList.get(choose).getFrom().getResources().isEmpty()) {
 
-                for (Resource from : conversionList.get(choose).getFrom().getResources())
+            for (Resource from : conversionList.get(choose).getFrom().getResources())
 
-                    player.subtractGenericResource(from.getType(), from.getAmount());
+                player.subtractGenericResource(from.getType(), from.getAmount());
 
-            }
+        }
 
-            if (!conversionList.get(choose).getFrom().getPoints().isEmpty()) {
+        if (!conversionList.get(choose).getFrom().getPoints().isEmpty()) {
 
-                for (Point from : conversionList.get(choose).getFrom().getPoints())
+            for (Point from : conversionList.get(choose).getFrom().getPoints())
 
-                    player.subtractGenericPoint(from.getType(), from.getAmount());
+                player.subtractGenericPoint(from.getType(), from.getAmount());
 
-            }
+        }
 
         applyEffectSurplus(player, conversionList.get(choose).getTo());
 
@@ -1955,7 +1953,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             for (Dice d : this.match.getBoard().getDices()) {
 
                 //increase all dices value
-                d.increaseValue(1);
+                if(d.getValue()<6)
+                    d.increaseValue(1);
                 sum += d.getValue();
 
             }
@@ -1964,14 +1963,22 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     }
 
     /**
+     * this method create the final standings
+     */
+    public FinalStanding createFinalStanding() {
+
+        HashMap<Player,Integer> scores = calculatesFinalScore();
+
+        return  new FinalStanding(scores);
+
+    }
+
+    /**
      * this method calculate the final score of the players
      */
-    public LinkedHashMap<Player,Integer> calculatesFinalScore(){
+    public HashMap<Player,Integer> calculatesFinalScore(){
 
-        HashMap<Integer,Player> playersScore = new HashMap<>();
-        LinkedHashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
-
-
+        HashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
 
         for (Player player : this.match.getPlayers()) {
 
@@ -1986,8 +1993,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //each venture card give a victory bonus
             if(BanFlag.get(DvptCardType.venture) == false){
                 for (VentureDvptCard card: player.getPersonalBoard().getVentureCards()) {
-                totalScore += card.getPermanentEffect().getvPoints();
-            }}
+                    totalScore += card.getPermanentEffect().getvPoints();
+                }}
 
 
             //one victory point from every 5 resources of all type
@@ -1995,9 +2002,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             //victory points that depends on building card on the player personal board
             if(BanFlag.get(DvptCardType.territory) == false){
-            totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.territory,player.getPersonalBoard().getTerritoryCards().size());}
+                totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.territory,player.getPersonalBoard().getTerritoryCards().size());}
 
-                //victory points that depends on character card on the player personal board
+            //victory points that depends on character card on the player personal board
 
             if(BanFlag.get(DvptCardType.character) == false){
                 totalScore += BoardConfigParser.getVictoryBonus(DvptCardType.character,player.getPersonalBoard().getCharacterCards().size());}
@@ -2019,11 +2026,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             finalScore.put(player,totalScore);
 
         }
-
-       finalScore.entrySet().stream()
-                .sorted(Comparator.comparing(Map.Entry::getValue))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
 
         return  finalScore;
     }
@@ -2328,7 +2330,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     @Override
     public boolean addObserver(MatchControllerObserver o) {
         return this.observers.add(o);
-}
+    }
 
     @Override
     public boolean removeObserver(MatchControllerObserver o) {
