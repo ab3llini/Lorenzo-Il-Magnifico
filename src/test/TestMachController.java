@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -530,7 +531,7 @@ public class TestMachController {
 
         players.get(0).getPersonalBoard().addVentureCard((VentureDvptCard) cards.get(85));
 
-        LinkedHashMap<Player,Integer> finalScore =mc.calculatesFinalScore();
+        HashMap<Player,Integer> finalScore =mc.calculatesFinalScore();
 
         assertEquals(2 + cards.get(85).getPermanentEffect().getvPoints(),(int)finalScore.get(players.get(0)));
         assertEquals(5,(int)finalScore.get(players.get(1)));

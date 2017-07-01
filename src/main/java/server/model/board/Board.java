@@ -56,22 +56,12 @@ public class Board implements Serializable {
 
     public Player getPlayer(PlayerColor playerColor) {
 
-        System.out.println("......."+playerColor);
-
-        for (Player player : this.players) {
-
-            System.out.println(player.getColor());
-
-        }
-
         for (Player player : this.players) {
 
             if (player.getColor() == playerColor)
                 return player;
 
         }
-
-        System.out.println("Merdaaaaaaa");
 
         return null;
     }

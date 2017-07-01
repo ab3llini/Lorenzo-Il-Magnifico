@@ -1964,14 +1964,22 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     }
 
     /**
+     * this method create the final standings
+     */
+    public FinalStanding createFinalStanding() {
+
+        HashMap<Player,Integer> scores = calculatesFinalScore();
+
+        return  new FinalStanding(scores);
+
+    }
+
+    /**
      * this method calculate the final score of the players
      */
-    public LinkedHashMap<Player,Integer> calculatesFinalScore(){
+    public HashMap<Player,Integer> calculatesFinalScore(){
 
-        HashMap<Integer,Player> playersScore = new HashMap<>();
-        LinkedHashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
-
-
+        HashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
 
         for (Player player : this.match.getPlayers()) {
 
@@ -2019,11 +2027,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             finalScore.put(player,totalScore);
 
         }
-
-       finalScore.entrySet().stream()
-                .sorted(Comparator.comparing(Map.Entry::getValue))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
 
         return  finalScore;
     }
