@@ -3,10 +3,7 @@ package server.model;
 import exception.NoSuchPlayerException;
 import netobject.NetObject;
 import netobject.NetObjectType;
-import server.model.board.Board;
-import server.model.board.Period;
-import server.model.board.Player;
-import server.model.board.PlayerColor;
+import server.model.board.*;
 import server.model.card.leader.LeaderCard;
 
 import java.util.*;
@@ -170,7 +167,9 @@ public class Match extends NetObject {
         for(int i=0; i<8; i++)
             colorIndex.add(i);
         Collections.shuffle(colorIndex);
-        for(int i=0; i<players.size(); i++)
+        for(int i=0; i<players.size(); i++) {
             players.get(i).setColor(PlayerColor.toEnum(colorIndex.get(i)));
-    }
+            players.get(i).setFamilyMembersPlayerColor();
+          }
+        }
 }

@@ -1,9 +1,8 @@
 import org.junit.Test;
-import server.model.board.ColorType;
-import server.model.board.CouncilPalace;
-import server.model.board.FamilyMember;
-import server.model.board.Player;
+import server.model.board.*;
 import server.model.effect.EffectSurplus;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,27 +19,37 @@ public class TestCouncilPalace {
         Player player2 = new Player("test2");
         Player player3 = new Player("test3");
 
-        CouncilPalace councilPalace = new CouncilPalace(new EffectSurplus(null,null,0),0,0);
+        player1.setColor(PlayerColor.Black);
+        player2.setColor(PlayerColor.Yellow);
+        player3.setColor(PlayerColor.Green);
 
-        FamilyMember familyMember1 = new FamilyMember(player1, ColorType.Orange);
-        FamilyMember familyMember2 = new FamilyMember(player2, ColorType.Black);
-        FamilyMember familyMember3 = new FamilyMember(player3, ColorType.Nautral);
-        FamilyMember familyMember4 = new FamilyMember(player3, ColorType.White);
-        FamilyMember familyMember5 = new FamilyMember(player2, ColorType.Orange);
-        FamilyMember familyMember6 = new FamilyMember(player1, ColorType.Black);
-        FamilyMember familyMember7 = new FamilyMember(player3, ColorType.White);
+        FamilyMember familyMember1 = new FamilyMember(player1.getColor(), ColorType.Orange);
+        FamilyMember familyMember2 = new FamilyMember(player2.getColor(), ColorType.Black);
+        FamilyMember familyMember3 = new FamilyMember(player3.getColor(), ColorType.Nautral);
+        FamilyMember familyMember4 = new FamilyMember(player3.getColor(), ColorType.White);
+        FamilyMember familyMember5 = new FamilyMember(player2.getColor(), ColorType.Orange);
+        FamilyMember familyMember6 = new FamilyMember(player1.getColor(), ColorType.Black);
+        FamilyMember familyMember7 = new FamilyMember(player3.getColor(), ColorType.White);
 
-        councilPalace.placeFamilyMember(familyMember2);
-        councilPalace.placeFamilyMember(familyMember1);
-        councilPalace.placeFamilyMember(familyMember3);
-        councilPalace.placeFamilyMember(familyMember4);
-        councilPalace.placeFamilyMember(familyMember5);
-        councilPalace.placeFamilyMember(familyMember7);
-        councilPalace.placeFamilyMember(familyMember6);
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+        players.add(player3);
 
-        assertEquals(player2, councilPalace.getCouncilPalaceOrder().get(0));
-        assertEquals(player1, councilPalace.getCouncilPalaceOrder().get(1));
-        assertEquals(player3, councilPalace.getCouncilPalaceOrder().get(2));
+        Board board = new Board(players);
+
+
+        board.getCouncilPalace().placeFamilyMember(familyMember2);
+        board.getCouncilPalace().placeFamilyMember(familyMember1);
+        board.getCouncilPalace().placeFamilyMember(familyMember3);
+        board.getCouncilPalace().placeFamilyMember(familyMember4);
+        board.getCouncilPalace().placeFamilyMember(familyMember5);
+        board.getCouncilPalace().placeFamilyMember(familyMember7);
+        board.getCouncilPalace().placeFamilyMember(familyMember6);
+
+        assertEquals(player2, board.getCouncilPalaceOrder().get(0));
+        assertEquals(player1, board.getCouncilPalaceOrder().get(1));
+        assertEquals(player3, board.getCouncilPalaceOrder().get(2));
 
 
 

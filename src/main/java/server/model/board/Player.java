@@ -69,10 +69,10 @@ public class Player implements Serializable {
         //create the arrayList with all the player's familyMembers
 
         familyMembers = new ArrayList<FamilyMember>();
-        familyMembers.add(new FamilyMember(this, ColorType.Black));
-        familyMembers.add(new FamilyMember(this, ColorType.Orange));
-        familyMembers.add(new FamilyMember(this, ColorType.White));
-        familyMembers.add(new FamilyMember(this, ColorType.Nautral));
+        familyMembers.add(new FamilyMember(this.getColor(), ColorType.Black));
+        familyMembers.add(new FamilyMember(this.getColor(), ColorType.Orange));
+        familyMembers.add(new FamilyMember(this.getColor(), ColorType.White));
+        familyMembers.add(new FamilyMember(this.getColor(), ColorType.Nautral));
 
         //initialize player's board
         this.personalBoard = new PersonalBoard();
@@ -99,6 +99,15 @@ public class Player implements Serializable {
 
         }
 
+    }
+
+    public void setFamilyMembersPlayerColor(){
+
+        for (FamilyMember familyMember : this.familyMembers) {
+
+            familyMember.setPlayerColor(this.color);
+
+        }
     }
 
     public void setPersonalBoard(PersonalBoard personalBoard) {

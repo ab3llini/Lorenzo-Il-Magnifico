@@ -26,19 +26,5 @@ public class CouncilPalace extends CompositeActionPlace implements Serializable 
         return this.minPlayers;
     }
 
-    /**
-     * returns an ordered arrayList of players that has their familiar in the CouncilPalace area
-     * @return
-     */
-    public ArrayList<Player> getCouncilPalaceOrder(){
-        ArrayList<Player> playersOrder=new ArrayList<Player>();
-
-        for (FamilyMember place: this.places) {
-            if(!playersOrder.contains(place.getPlayer())){
-                playersOrder.add(place.getPlayer());
-            }
-        }
-        return playersOrder;
-    }
 
 }

@@ -48,12 +48,49 @@ public class Board implements Serializable {
         this.players = players;
 
         //create the three dices
-        this.dices = new ArrayList<Dice>();
+        this.dices = new ArrayList<>();
         dices.add(new Dice(ColorType.Black));
         dices.add(new Dice(ColorType.White));
         dices.add(new Dice(ColorType.Orange));
     }
 
+    public Player getPlayer(PlayerColor playerColor) {
+
+        System.out.println("......."+playerColor);
+
+        for (Player player : this.players) {
+
+            System.out.println(player.getColor());
+
+        }
+
+        for (Player player : this.players) {
+
+            if (player.getColor() == playerColor)
+                return player;
+
+        }
+
+        System.out.println("Merdaaaaaaa");
+
+        return null;
+    }
+
+    /**
+     * returns an ordered arrayList of players that has their familiar in the CouncilPalace area
+     * @return
+     */
+    public ArrayList<Player> getCouncilPalaceOrder(){
+
+        ArrayList<Player> playersOrder=new ArrayList<Player>();
+
+        for (FamilyMember familyMember: this.councilPalace.places) {
+            if(!playersOrder.contains(getPlayer(familyMember.getPlayerColor()))){
+                playersOrder.add(getPlayer(familyMember.getPlayerColor()));
+            }
+        }
+        return playersOrder;
+    }
 
     public ArrayList<TowerSlot> getTerritoryTower() {
         return territoryTower;
@@ -249,7 +286,7 @@ public class Board implements Serializable {
 
             if (towerSlot.isOccupied()) {
 
-                players.add(towerSlot.getFamilyMember().getPlayer());
+                players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
             }
         }
 
@@ -264,7 +301,7 @@ public class Board implements Serializable {
 
             if (towerSlot.isOccupied()) {
 
-                players.add(towerSlot.getFamilyMember().getPlayer());
+                players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
 
             }
         }
@@ -279,7 +316,7 @@ public class Board implements Serializable {
 
             if (towerSlot.isOccupied()) {
 
-                players.add(towerSlot.getFamilyMember().getPlayer());
+                players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
 
             }
         }
@@ -293,7 +330,9 @@ public class Board implements Serializable {
         for (TowerSlot towerSlot : this.buildingTower) {
 
             if (towerSlot.isOccupied()) {
-                players.add(towerSlot.getFamilyMember().getPlayer());
+
+                players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
+
             }
         }
         return players;
@@ -708,28 +747,28 @@ public class Board implements Serializable {
 
         else {
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.Red)
+            if(familyMember.getPlayerColor() == PlayerColor.Red)
                 board += (AnsiColors.ANSI_RED );
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.Blue)
+            if(familyMember.getPlayerColor() == PlayerColor.Blue)
                 board += (AnsiColors.ANSI_BLUE);
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.Black)
+            if(familyMember.getPlayerColor() == PlayerColor.Black)
                 board += (AnsiColors.ANSI_BLACK );
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.Purple)
+            if(familyMember.getPlayerColor() == PlayerColor.Purple)
                 board += (AnsiColors.ANSI_PURPLE );
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.Cyan)
+            if(familyMember.getPlayerColor() == PlayerColor.Cyan)
                 board += (AnsiColors.ANSI_CYAN );
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.Green)
+            if(familyMember.getPlayerColor() == PlayerColor.Green)
                 board += (AnsiColors.ANSI_GREEN );
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.Yellow)
+            if(familyMember.getPlayerColor() == PlayerColor.Yellow)
                 board += (AnsiColors.ANSI_YELLOW );
 
-            if(familyMember.getPlayer().getColor() == PlayerColor.White)
+            if(familyMember.getPlayerColor() == PlayerColor.White)
                 board += (AnsiColors.ANSI_WHITE);
 
             if (familyMember.getColor() == ColorType.Orange) {

@@ -436,7 +436,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         ArrayList <Player> newPlayerOrder = new ArrayList<>();
 
-        for (Player player : this.match.getBoard().getCouncilPalace().getCouncilPalaceOrder()) {
+        for (Player player : this.match.getBoard().getCouncilPalaceOrder()) {
 
             newPlayerOrder.add(player);
 
