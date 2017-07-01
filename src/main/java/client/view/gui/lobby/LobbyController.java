@@ -88,8 +88,6 @@ public class LobbyController extends NavigationController implements ClientObser
         switch (not.getLobbyNotificationType()) {
 
 
-            //TODO: Implement proper loading of gui with right state for resuming draft etc..
-
             case MatchStart:
             case ResumeGame:
             case ResumeBonusTileDraft:

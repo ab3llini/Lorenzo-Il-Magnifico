@@ -281,11 +281,10 @@ public class GUIController extends NavigationController implements ClientObserve
         this.localMatchController.setPlayerUsername(this.client.getUsername());
         this.client.sendNotification(new ObserverReadyNotification(ObserverType.RemotePlayer));
 
-
     }
 
-    @FXML
-    public void initialize() {
+
+    private void buildCache() {
 
         for (Node node : this.dvptCardGrid.getChildren()) {
 
@@ -454,6 +453,6 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @Override
     public String toString() {
-        return "GUI Controller for " + this.client.getUsername();
+        return "GUI Controller";
     }
 }
