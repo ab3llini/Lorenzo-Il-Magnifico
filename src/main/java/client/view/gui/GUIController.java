@@ -1,10 +1,10 @@
 package client.view.gui;
 
 import client.controller.network.ObserverType;
-import client.view.cli.cmd.Cmd;
 import exception.NoSuchPlayerException;
 import exception.gui.GuiException;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
 import client.controller.network.Client;
@@ -28,17 +29,14 @@ import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
-import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
 import netobject.notification.ObserverReadyNotification;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
-import server.model.board.SingleActionPlace;
 import server.model.board.TowerSlot;
 import server.model.card.Deck;
 import server.model.card.developement.DvptCard;
-import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
 
 import java.util.ArrayList;
@@ -85,7 +83,9 @@ public class GUIController extends NavigationController implements ClientObserve
     //The reference to the local match controller
     private LocalMatchController localMatchController;
 
-    HashMap<ImageView, DvptCard> dvptCardCache = new HashMap<>();
+    HashMap<ImageView, DvptCard> imageViewDvptCardCache = new HashMap<>();
+
+    HashMap<Circle, ImageView> actionPlaceImageViewCache = new HashMap<>();
 
 
     //The local client instance
@@ -116,8 +116,6 @@ public class GUIController extends NavigationController implements ClientObserve
         final int BUILDING_TOWER_COL = 4;
         final int VENTURE_TOWER_COL = 6;
 
-        //First thing to do is flush the cache
-        this.dvptCardCache.clear();
 
         int col, row;
 
@@ -173,9 +171,15 @@ public class GUIController extends NavigationController implements ClientObserve
                     this.clipImageForView(imgView);
 
                 }
+                else {
+
+                    imgView.setImage(null);
+
+                }
+
 
                 //Put a new pair in the cache : image view -> dvpt card (might be null)
-                this.dvptCardCache.put(imgView, card);
+                this.imageViewDvptCardCache.replace(imgView, card);
 
             }
 
@@ -206,7 +210,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private DvptCard getDvptCardFromImageView(ImageView view) throws GuiException {
 
-        DvptCard requested = this.dvptCardCache.get(view);
+        DvptCard requested = this.imageViewDvptCardCache.get(view);
 
         if (requested == null) {
 
@@ -223,7 +227,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private ImageView getImageViewFromDvptCard(DvptCard card) throws GuiException {
 
-        Iterator i = this.dvptCardCache.entrySet().iterator();
+        Iterator i = this.imageViewDvptCardCache.entrySet().iterator();
 
         while (i.hasNext()) {
             Map.Entry pair = (Map.Entry)i.next();
@@ -255,7 +259,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
-    private ArrayList<DvptCard> getDvptCardsFromTower(ArrayList<TowerSlot> tower) {
+    private ArrayList<DvptCard> getDvptCardgetDvptCardsFromTowersFromTower(ArrayList<TowerSlot> tower) {
 
         ArrayList<DvptCard> cards = new ArrayList<>();
 
@@ -283,6 +287,47 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     public void initialize() {
 
+        for (Node node : this.dvptCardGrid.getChildren()) {
+
+            if (node instanceof ImageView) {
+
+                this.imageViewDvptCardCache.put((ImageView)node, null);
+
+            }
+
+        }
+
+        for (Node node : this.dvptCardGrid.getChildren()) {
+
+            if (node instanceof AnchorPane) {
+
+                int row = GridPane.getRowIndex(node);
+                int col = GridPane.getColumnIndex(node);
+
+                Circle actionPlace = (Circle)((AnchorPane)node).getChildren().get(0);
+
+                ImageView relative = (ImageView)getNodeByRowColumnIndex(row, col - 1, this.dvptCardGrid);
+
+                this.actionPlaceImageViewCache.put(actionPlace, relative);
+
+            }
+
+        }
+
+    }
+
+    public Node getNodeByRowColumnIndex (final int row, final int column, GridPane gridPane) {
+        Node result = null;
+        ObservableList<Node> childrens = gridPane.getChildren();
+
+        for (Node node : childrens) {
+            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
+        }
+
+        return result;
     }
 
     @FXML
@@ -306,6 +351,8 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @FXML
     void placeFamilyMember(MouseEvent event) {
+
+
 
     }
 
