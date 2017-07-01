@@ -149,8 +149,6 @@ public class ConnectionController extends NavigationController implements Client
 
         Platform.runLater(new Runnable() {
             @Override public void run() {
-                ConnectionController.this.showAlert(Alert.AlertType.CONFIRMATION, "Authentication", "Login succeeded", "Welcome back " + ConnectionController.this.client.getUsername());
-
                 ((LobbyController)ConnectionController.this.navigateTo(View.Lobby)).setClient(client);
 
             }

@@ -220,7 +220,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Wait fot CLI / GUI to fully load their observers..
         this.waitUntilPlayerObserversAreSet();
 
-        //Draft the leader cards first
+        /*Draft the leader cards first
         this.context = MatchControllerContext.LeaderCardDraft;
         this.handleLeaderCardDraft();
 
@@ -229,7 +229,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         this.context = MatchControllerContext.BonusTileDraft;
         this.handleBonusTileDrat();
 
-        //We are now going to play
+        *///We are now going to play
         //Draft the leader cards first
         this.context = MatchControllerContext.Playing;
 
@@ -1095,7 +1095,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * @throws NotEnoughPointsException
      */
     public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException, InterruptedException {
-
+        //TODO
         StandardPlacementAction action;
 
         if(card != null) {
@@ -1955,8 +1955,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             for (Dice d : this.match.getBoard().getDices()) {
 
                 //increase all dices value
-                if(d.getValue()<6)
-                    d.increaseValue(1);
+                d.increaseValue(1);
                 sum += d.getValue();
 
             }
@@ -1965,22 +1964,14 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     }
 
     /**
-     * this method create the final standings
-     */
-    public FinalStanding createFinalStanding() {
-
-        HashMap<Player,Integer> scores = calculatesFinalScore();
-
-        return  new FinalStanding(scores);
-
-    }
-
-    /**
      * this method calculate the final score of the players
      */
-    public HashMap<Player,Integer> calculatesFinalScore(){
+    public LinkedHashMap<Player,Integer> calculatesFinalScore(){
 
-        HashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
+        HashMap<Integer,Player> playersScore = new HashMap<>();
+        LinkedHashMap<Player,Integer> finalScore = new LinkedHashMap<Player, Integer>();
+
+
 
         for (Player player : this.match.getPlayers()) {
 
@@ -2028,6 +2019,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             finalScore.put(player,totalScore);
 
         }
+
+       finalScore.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
         return  finalScore;
     }

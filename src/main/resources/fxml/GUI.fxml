@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
 
 <AnchorPane minHeight="1000.0" minWidth="1400.0" prefHeight="1000.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.gui.GUIController">
    <children>
@@ -77,27 +78,27 @@
                                                     <RowConstraints maxHeight="190.0" minHeight="190.0" prefHeight="190.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                    <children>
-                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card">
+                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="0" GridPane.columnIndex="0">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <ImageView fx:id="territory3" cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="2">
+                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="2" GridPane.columnIndex="0">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="4">
+                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="4" GridPane.columnIndex="0">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="6">
+                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="6" GridPane.columnIndex="0">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="2">
+                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.rowIndex="0" GridPane.columnIndex="2">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_b_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
@@ -117,7 +118,7 @@
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_b_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="4">
+                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="4" GridPane.rowIndex="0">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
@@ -137,7 +138,7 @@
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6">
+                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6" GridPane.rowIndex="0">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
@@ -157,6 +158,86 @@
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                                         <children>
+                                                            <Circle fill="WHITE" layoutX="34.0" layoutY="100.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="2">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="4">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="6">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="6">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
                                                    </children>
                                                 </GridPane>
                                              </children>
@@ -318,7 +399,7 @@
             </TabPane>
             <AnchorPane styleClass="theme-pane">
                <children>
-                  <TextField editable="false" layoutX="414.0" layoutY="12.0" maxHeight="10.0" prefHeight="10.0" styleClass="notification-text-field" text="It is your turn" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" />
+                  <TextField fx:id="turnIndicatorTextField" editable="false" layoutX="414.0" layoutY="12.0" maxHeight="10.0" prefHeight="10.0" styleClass="notification-text-field" text="It is your turn" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" />
                </children></AnchorPane>
             <AnchorPane styleClass="theme-pane" GridPane.rowIndex="2" />
          </children>

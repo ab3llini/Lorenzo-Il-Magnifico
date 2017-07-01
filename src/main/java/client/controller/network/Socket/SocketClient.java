@@ -113,32 +113,23 @@ public class SocketClient extends Client implements Runnable {
                 //Notify that an object was received
                 this.parse((NetObject) obj);
 
+            } catch (EOFException e) {
+
+                Logger.log(Level.WARNING, "SocketClient::run", "EOFException, server might have just closed the connection", e);
+
+            } catch (IOException e) {
+
+                Logger.log(Level.WARNING, "SocketClient::run", "THIS IS A BUG THAT I AM TRYING TO FIX; BE PATIENT.", e);
+
+                System.exit(0);
+
+
+            } catch (ClassNotFoundException e) {
+
+                Logger.log(Level.WARNING, "SocketClient::run", "Cast error", e);
+
             }
-            catch (EOFException e) {
-
-                //Notify observers so that they can remove the handler
-                this.notifyDisconnection();
-
-                break;
-
-            }
-            catch (IOException e) {
-
-                Logger.log(Level.WARNING, "SocketClient::run", "Broken pipe while listening.. Attempting to reset connection", e);
-
-                try {
-                    this.in.reset();
-                } catch (IOException e1) {
-
-                    try {
-                        this.socket.close();
-                    } catch (IOException e2) {
-                        e2.printStackTrace();
-                    }
-
-                    //Notify observers so that they can remove the handler
-                    this.notifyDisconnection();
-                }
+            finally {
 
                 if (this.socket.isClosed() || !this.socket.isConnected()) {
 
@@ -149,20 +140,8 @@ public class SocketClient extends Client implements Runnable {
 
                 }
 
-
-
             }
-            catch (ClassNotFoundException e) {
-
-                Logger.log(Level.WARNING, "SocketClient::run", "Cast error", e);
-
-                break;
-            }
-
         }
-
-        this.notifyDisconnection();
-
     }
 
     private void parse(NetObject object) {

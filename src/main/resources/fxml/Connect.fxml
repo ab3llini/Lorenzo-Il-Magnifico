@@ -81,8 +81,8 @@
                                  <children>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                                        <children>
-                                          <PasswordField fx:id="passwordTextField" promptText="password" styleClass="form-input" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                          <TextField fx:id="usernameTextField" layoutX="50.0" layoutY="44.0" promptText="username" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <PasswordField fx:id="passwordTextField" promptText="password" styleClass="form-input" text="unix" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                          <TextField fx:id="usernameTextField" layoutX="50.0" layoutY="44.0" promptText="username" styleClass="form-input" text="alberto" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane GridPane.rowIndex="2">

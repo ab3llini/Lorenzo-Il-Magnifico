@@ -427,17 +427,17 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
                 break;
             //Give the user the possibility do draft
             case ResumeLeaderCardDraft:
-                this.draftLeaderCards();
+                //this.draftLeaderCards();
                 break;
             //Give the user the possibility do draft
             case ResumeBonusTileDraft:
-                this.draftBonusTiles();
+                //this.draftBonusTiles();
                 break;
             //Normal bootstrap procedure
             case MatchStart:
             default:
-                this.draftLeaderCards();
-                this.draftBonusTiles();
+                //this.draftLeaderCards();
+                //this.draftBonusTiles();
 
         }
 
