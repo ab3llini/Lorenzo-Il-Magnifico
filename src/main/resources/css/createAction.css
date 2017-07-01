@@ -1,0 +1,10 @@
+.tab {
+
+    -fx-background-color: -fx-secondary-color;
+}
+
+.label {
+
+    -fx-text-fill: white;
+
+}

@@ -3,6 +3,8 @@ package client.view.gui;
 /**
  * Created by Federico on 01/07/2017.
  */
+import client.controller.network.Client;
+import client.view.cli.LocalMatchController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
@@ -10,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import netobject.action.BoardSectorType;
+import netobject.action.standard.StandardActionType;
 import netobject.action.standard.StandardPlacementAction;
 import server.model.board.ColorType;
 
@@ -19,6 +22,10 @@ public class StandardPlacementActionController extends NavigationController {
     private ColorType colorType = server.model.board.ColorType.Nautral;
     private BoardSectorType boardSector;
     private Integer index;
+
+    private Client client;
+
+    private LocalMatchController localMatchController;
 
     @FXML
     private TextField additionalServantsTextField;
@@ -45,7 +52,14 @@ public class StandardPlacementActionController extends NavigationController {
 
             this.additionalServants = Integer.parseInt(this.additionalServantsTextField.getText());
             this.colorType = (ColorType)this.colorTypeRadioGroup.getSelectedToggle().getUserData();
-            StandardPlacementAction action = new StandardPlacementAction(boardSector, index, colorType, additionalServants, "");
+            StandardPlacementAction action = new StandardPlacementAction(boardSector, index, colorType, additionalServants, this.client.getUsername());
+
+            this.client.performAction(action);
+
+            this.localMatchController.setLastPendingStandardAction(StandardActionType.FamilyMemberPlacement);
+
+            stage.close();
+
         }
         else {
 
@@ -77,6 +91,14 @@ public class StandardPlacementActionController extends NavigationController {
             return false;
         }
 
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setLocalMatchController(LocalMatchController localMatchController) {
+        this.localMatchController = localMatchController;
     }
 
     public void setBoardSector(BoardSectorType boardSector) {

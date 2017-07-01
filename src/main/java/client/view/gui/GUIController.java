@@ -6,7 +6,10 @@ import exception.gui.GuiException;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -25,10 +28,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
+import netobject.action.BoardSectorType;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.action.standard.StandardPlacementAction;
 import netobject.notification.MatchNotification;
 import netobject.notification.ObserverReadyNotification;
 import server.model.Match;
@@ -39,6 +45,7 @@ import server.model.card.Deck;
 import server.model.card.developement.DvptCard;
 import server.model.card.leader.LeaderCard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -179,7 +186,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
 
                 //Put a new pair in the cache : image view -> dvpt card (might be null)
-                this.imageViewDvptCardCache.replace(imgView, card);
+                this.imageViewDvptCardCache.put(imgView, card);
 
             }
 
@@ -283,23 +290,8 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
-    @FXML
-    public void initialize(){
-        System.out.println("Sto inizializando");
-        this.buildCache();
-    }
 
     private void buildCache() {
-
-        for (Node node : this.dvptCardGrid.getChildren()) {
-
-            if (node instanceof ImageView) {
-
-                this.imageViewDvptCardCache.put((ImageView)node, null);
-
-            }
-
-        }
 
         for (Node node : this.dvptCardGrid.getChildren()) {
 
@@ -356,6 +348,62 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     void placeFamilyMember(MouseEvent event) {
 
+        if (this.actionPlaceImageViewCache.size() == 0) {
+
+            this.buildCache();
+
+        }
+
+        ImageView relative = this.actionPlaceImageViewCache.get(event.getSource());
+        DvptCard card = this.imageViewDvptCardCache.get(relative);
+
+
+        BoardSectorType boardSector = null;
+
+        switch (card.getType()) {
+
+            case territory:
+                boardSector = BoardSectorType.TerritoryTower;
+                break;
+            case character:
+                boardSector = BoardSectorType.CharacterTower;
+                break;
+            case building:
+                boardSector = BoardSectorType.BuildingTower;
+                break;
+            case venture:
+                boardSector = BoardSectorType.VentureTower;
+                break;
+
+        }
+
+        int index = 3 - GridPane.getRowIndex(relative) / 2;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StandardPlacement.fxml"));
+
+        Parent root = null;
+
+        try {
+
+            root = loader.load();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+        Stage dialog = new Stage();
+        dialog.setTitle("Select placement details");
+        dialog.setScene(new Scene(root, 500, 300));
+        dialog.show();
+
+        StandardPlacementActionController controller =  ((StandardPlacementActionController)loader.getController());
+
+        controller.setStage(dialog);
+        controller.setBoardSector(boardSector);
+        controller.setIndex(index);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
 
 
     }
@@ -439,10 +487,15 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onActionRefused(Client sender, Action action, String message) {
 
+        System.out.println("Action refused");
+
+
     }
 
     @Override
     public void onActionPerformed(Client sender, Player player, Action action, String message) {
+
+        this.localMatchController.confirmLastStandardPendingAction();
 
     }
 
