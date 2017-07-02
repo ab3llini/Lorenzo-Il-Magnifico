@@ -319,7 +319,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
             this.client.login(new LoginRequest(username, password));
 
             //Wait for the server response
-            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+            this.serverTokenQueue.take();
 
 
         }
@@ -444,7 +444,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         while (!this.localMatchController.matchHasEnded()) {
 
             //Wait for the next token
-            this.serverTokenQueue.take();System.out.println("Taking token to start round, toal = " + this.serverTokenQueue.size());
+            this.serverTokenQueue.take();
 
             try {
 
@@ -477,7 +477,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
      */
     private void draftLeaderCards() throws InterruptedException {
 
-        this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+        this.serverTokenQueue.take();
 
         int drafRound = 0;
 
@@ -525,10 +525,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
             this.client.performAction(new ShuffleLeaderCardStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableLeaderCards(), this.client.getUsername()));
 
             //Wait for the action confirmation
-            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+            this.serverTokenQueue.take();
 
             //Wait for the next draft request
-            this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+            this.serverTokenQueue.take();
 
             drafRound++;
         }
@@ -545,7 +545,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
     private void draftBonusTiles() throws InterruptedException {
 
         //Wait for the next token
-        this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+        this.serverTokenQueue.take();
 
         ArrayCommand<BonusTile> bonusTileSelection = new ArrayCommand<>(this.localMatchController.getDraftableBonusTiles());
 
@@ -582,7 +582,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         this.client.performAction(new ShuffleBinusTileStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableBonusTiles(), this.client.getUsername()));
 
         //Wait for the action confirmation
-        this.serverTokenQueue.take();System.out.println("Taking token , toal = " + this.serverTokenQueue.size());
+        this.serverTokenQueue.take();
 
     }
 
@@ -717,32 +717,17 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
         }
 
-        System.out.println("Checking if the action requires server response..");
-
-
         boolean requiresServerConfirmation = !(actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail) || actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) ;
 
         if (requiresServerConfirmation) {
 
-            System.out.println("Server response required.. setting last pending action to " + actionSelection.getEnumEntryFromChoice(choice));
-
             //Before setting the move as done, wait for server confirmation or refusal
             this.localMatchController.setLastPendingStandardAction(actionSelection.getEnumEntryFromChoice(choice));
-
-            System.out.println("Waiting for token from server (standard action confirmation or immediate action request)");
 
             //Wait until a token comes
             Object token = this.serverTokenQueue.take();
 
-            System.out.println("Got token, checking what to do");
-
             boolean isActionConfirmationOrRefusal = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
-
-            System.out.println("The check upon whether this is the standard action confirmation returned : " + isActionConfirmationOrRefusal);
-
-            System.out.println("if true, we leave the method and give the user the ability to make another standard action, otherwise we received an immediate action");
-
-            System.out.println("The token contains : " + token.toString());
 
             //Wait for the token that confirms the standard action.
             //In the meanwhile some immediate action requests may arrive
@@ -753,29 +738,12 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
                 //Wait until we receive either a confirmation or a refusal for the current standard action or a new immediate one
                 token = this.serverTokenQueue.take();
 
-                System.out.println("We received a token, lets check if it is the confirmation of the standard or another immediate action..");
-
                 //Recheck the condition
                 isActionConfirmationOrRefusal = (token instanceof Action) && ((Action)token).getActionType() == ActionType.Standard;
 
-                System.out.println("isActionConfirmation = " + isActionConfirmationOrRefusal);
-
-                System.out.println("if = false, it is another immediate action, otherwise we will leave the while loop since it is the standard action confirmation");
-
-
             }
 
-            System.out.println("We exited the wile loop that waits for immediate actions...Standard action completed, leaving method");
-
         }
-
-        else {
-
-            System.out.println("No server response required");
-
-
-        }
-
 
         //After the action was performed, return the choice made so that if the user wants to terminate the round we can know it
         return actionSelection.getEnumEntryFromChoice(choice);
@@ -819,30 +787,30 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
     private void activateLeaderCard() throws NoActionPerformedException, InterruptedException {
 
 
-            Cmd.askFor("Which leader card would you like to play / activate?");
+        Cmd.askFor("Which leader card would you like to play / activate?");
 
         String choice = "";
 
-            ArrayCommand<LeaderCard> leaderCardSelection = new ArrayCommand<>(this.localMatchController.getLocalPlayer().getLeaderCards());
+        ArrayCommand<LeaderCard> leaderCardSelection = new ArrayCommand<>(this.localMatchController.getLocalPlayer().getLeaderCards());
+
+        leaderCardSelection.printChoiches();
+
+        choice = this.waitForCommandSelection();
+
+        while (!leaderCardSelection.isValid(choice)) {
+
+            Cmd.askFor("Which leader card would you like to play / activate?");
 
             leaderCardSelection.printChoiches();
 
             choice = this.waitForCommandSelection();
 
-            while (!leaderCardSelection.isValid(choice)) {
-
-                Cmd.askFor("Which leader card would you like to play / activate?");
-
-                leaderCardSelection.printChoiches();
-
-                choice = this.waitForCommandSelection();
-
-            }
-
-            int selection = Integer.parseInt(choice) - 1;
-
-            this.client.performAction(new LeaderCardActivationAction(this.localMatchController.getLocalPlayer().getLeaderCards().get(selection).getId(), this.client.getUsername()));
         }
+
+        int selection = Integer.parseInt(choice) - 1;
+
+        this.client.performAction(new LeaderCardActivationAction(this.localMatchController.getLocalPlayer().getLeaderCards().get(selection).getId(), this.client.getUsername()));
+    }
 
     private void discardLeaderCard() throws NoActionPerformedException, InterruptedException {
 
@@ -1416,9 +1384,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
             queue.add(new Object());
 
-            System.out.println("Adding token to connection queue.. total = " + queue.size());
-
-
         }
 
     }
@@ -1428,9 +1393,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         if (queue.remainingCapacity() > 0) {
 
             queue.add(o);
-
-            System.out.println("Adding token to connection queue.. total = " + queue.size());
-
 
         }
 
@@ -1494,8 +1456,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
     public void onModelUpdate(Client sender, Match model) {
 
-        System.out.println("MODEL UPDATE !!!! :  ROUND = " + model.getCurrentRound() + " -- TURN = " + model.getCurrentTurn() + " -- PERIOD = " + model.getCurrentPeriod());
-
         this.localMatchController.setMatch(model);
 
     }
@@ -1531,8 +1491,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
             //Add the action to the queue
             this.immediateActionQueue.add(actionType);
-
-            System.out.println("IMMEDIATE ACTION AVAILABLE, TYPE = : " + actionType+  "ADDING TOKEN");
 
 
             //Wake up the thread
@@ -1590,8 +1548,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
     public void onActionRefused(Client sender,  Action action, String message) {
 
-        System.out.println("ACTION REFUSED! ADDING TOKEN");
-
         Cmd.forbidden("Action refused for reason: " + message);
 
         this.addTokenToQueue(this.serverTokenQueue, action);
@@ -1624,9 +1580,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
                 Cmd.success("Immediate action performed successfully");
 
             }
-
-            System.out.println("ACTION PERFORMED, TYPE = : " + action.getActionType() +  "ADDING TOKEN");
-
 
             this.addTokenToQueue(this.serverTokenQueue, action);
 

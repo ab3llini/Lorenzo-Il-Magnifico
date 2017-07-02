@@ -268,7 +268,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         if (this.matchDidStart) {
 
-            Logger.log(Level.WARNING, this.toString(), "Client " + handler.getUsername() + " disconnected while playing, disabling player..");
+            Logger.log(Level.FINEST, this.toString(), "Player " + handler.getUsername() + " was playing inside a match.");
 
             try {
 
@@ -373,9 +373,6 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
             this.matchController.destroy();
 
         }
-
-        Logger.log(Level.FINEST, this.toString(), "Disconnecting handlers - > NEEDS IMPLEMENTATION");
-
 
         Logger.log(Level.FINEST, this.toString(), "Waiting to be garbage collected..");
 

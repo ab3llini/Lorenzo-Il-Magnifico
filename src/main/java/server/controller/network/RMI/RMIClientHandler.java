@@ -171,12 +171,24 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
     }
 
     @Override
+    protected void disconnect() {
+
+        try {
+            this.clientRef.terminate();
+        } catch (RemoteException e) {
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to disconnectn", e);
+        }
+
+    }
+
+    @Override
     public void notify(MatchNotification notification) {
 
         try {
             this.clientRef.onNotification(notification);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to send notification", e);
+
         }
 
     }
@@ -186,7 +198,8 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onModelUpdate(model);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to send model", e);
+
         }
 
     }
@@ -196,7 +209,8 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onTurnEnabled(player, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify turn enabled", e);
+
         }
 
     }
@@ -206,7 +220,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onTurnDisabled(player, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify turn disabled", e);
         }
 
     }
@@ -216,7 +230,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onActionTimeoutExpired(player, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify timeout expired", e);
         }
 
     }
@@ -226,7 +240,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onActionRefused(action, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify action refused", e);
         }
 
     }
@@ -236,7 +250,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onImmediateActionAvailable(immediateActionType, player, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify immediate action available", e);
         }
 
     }
@@ -246,7 +260,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onActionPerformed(player, action, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify action performed", e);
         }
 
     }
@@ -256,7 +270,7 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onLeaderCardDraftRequest(cards, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify leader card draft available", e);
         }
 
     }
@@ -266,9 +280,11 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
         try {
             this.clientRef.onBonusTileDraftRequest(tiles, message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify bonus tiles draft available", e);
         }
 
     }
+
+
 
 }

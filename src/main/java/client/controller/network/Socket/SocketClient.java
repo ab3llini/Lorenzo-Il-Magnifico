@@ -102,7 +102,6 @@ public class SocketClient extends Client implements Runnable {
 
     public void run() {
 
-
         while (!this.socket.isClosed() && this.socket.isConnected()) {
 
             try {
@@ -117,26 +116,27 @@ public class SocketClient extends Client implements Runnable {
 
                 Logger.log(Level.WARNING, "SocketClient::run", "EOFException, server might have just closed the connection", e);
 
+                break;
+
             } catch (IOException e) {
 
                 Logger.log(Level.WARNING, "SocketClient::run", "THIS IS A BUG THAT I AM TRYING TO FIX; BE PATIENT.", e);
 
-                System.exit(0);
+                break;
 
 
             } catch (ClassNotFoundException e) {
 
                 Logger.log(Level.WARNING, "SocketClient::run", "Cast error", e);
 
-            }
-            finally {
+                break;
+
+            } finally {
 
                 if (this.socket.isClosed() || !this.socket.isConnected()) {
 
                     //Notify observers so that they can remove the handler
                     this.notifyDisconnection();
-
-                    break;
 
                 }
 
@@ -248,7 +248,7 @@ public class SocketClient extends Client implements Runnable {
      * @param object the object to be sent
      * @return true upon success, false otherwise.
      */
-    private boolean sendObject(NetObject object) {
+    private synchronized boolean sendObject(NetObject object) {
 
         try {
 

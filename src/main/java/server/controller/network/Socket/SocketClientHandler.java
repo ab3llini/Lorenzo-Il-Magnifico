@@ -5,6 +5,7 @@ package server.controller.network.Socket;
  */
 
 
+import client.controller.network.Socket.SocketClient;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObject;
@@ -72,15 +73,13 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
      * @param object the object
      * @return true upon success
      */
-    public boolean sendObject(NetObject object) {
+    public synchronized boolean sendObject(NetObject object) {
 
         if (this.socket.isClosed()) {
 
             return false;
 
         }
-
-
 
         try {
 
@@ -96,9 +95,6 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
             Logger.log(Level.WARNING, this.toString(), "Broken pipe: the client disconnected while writing", e);
 
-            this.notifyDisconnection();
-
-            this.running = false;
 
         }
 
@@ -111,7 +107,6 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
      */
     public void run() {
 
-
         while (this.running && !this.socket.isClosed() && this.socket.isConnected()) {
 
             try {
@@ -122,18 +117,16 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
                 //Notify that an object was received
                 this.notifyObjectReceived((NetObject) obj);
 
-            }
-            catch (EOFException e) {
+            } catch (EOFException e) {
 
                 //Notify observers so that they can remove the handler
                 this.notifyDisconnection();
 
                 break;
 
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
 
-                Logger.log(Level.WARNING, this.toString(), "Broken pipe while listening", e);
+                Logger.log(Level.FINEST, this.toString(), "Client " + this.username + " disconnected.");
 
                 this.notifyDisconnection();
 
@@ -141,8 +134,7 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
                 break;
 
-            }
-            catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
 
                 Logger.log(Level.WARNING, this.toString(), "Class not found", e);
 
@@ -150,7 +142,6 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
             }
 
         }
-
     }
 
     /* Observable<SocketClientHandlerObserver> implementation */
@@ -199,6 +190,20 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
 
     public void sendLobbyNotification(LobbyNotification not) {
         this.sendObject(not);
+    }
+
+    /**
+     * Close the connection.
+     */
+    @Override
+    protected void disconnect() {
+
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            Logger.log(Level.WARNING, this.toString(), "Unable to close the socket while disconnecting the client.", e);
+        }
+
     }
 
     public void notify(MatchNotification notification) {

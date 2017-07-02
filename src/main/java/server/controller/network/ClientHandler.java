@@ -33,4 +33,6 @@ public abstract class ClientHandler implements Runnable, RemotePlayer {
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
     }
+
+    protected abstract void disconnect();
 }
