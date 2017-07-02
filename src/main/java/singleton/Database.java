@@ -11,6 +11,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database
 {
@@ -285,6 +286,59 @@ public class Database
         }
 
         return false;
+
+    }
+
+    public ArrayList<String> wasInMatchWithHim(String username) throws SQLException {
+
+        ArrayList<String> players = new ArrayList<>();
+
+        //Create a statement
+        Statement stmt = this.connection.createStatement();
+
+        //Setup the timeout
+        stmt.setQueryTimeout(QUERY_TIMEOUT);
+
+        ResultSet result = null;
+
+        for(int i=1; i<=5; i++){
+
+            //Create the query;
+            String query = "SELECT count(*) FROM matches WHERE player_"+i+" = '" + username + "' AND finished = 0";
+
+            //Execute the query
+            ResultSet result1 = stmt.executeQuery(query);
+
+            if(result1.getInt(1) == 1){
+
+                //Create the query;
+                String query1 = "SELECT * FROM matches WHERE player_"+i+" = '" + username + "' AND finished = 0";
+
+                //Execute the query
+                result = stmt.executeQuery(query1);
+
+                break;
+
+            }
+
+        }
+
+        int i = 1;
+
+        if(result != null){
+
+            //Check results
+            while (i <= 5) {
+
+                if(result.getString("player_" + i) != null && !(result.getString("player_" + i).equals(username)))
+                        players.add(result.getString("player_" + i));
+
+                i++;
+            }
+
+        }
+
+        return players;
 
     }
 
