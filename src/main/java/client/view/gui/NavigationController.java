@@ -66,7 +66,36 @@ public abstract class NavigationController {
 
     }
 
+    protected NavigationController openNewStage(View view) {
 
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + view));
+        Parent root;
+
+        try {
+
+            root = loader.load();
+
+            Stage newStage = new Stage();
+            newStage.setTitle(view.getTitle());
+            newStage.setScene(new Scene(root, view.getW(), view.getH()));
+            newStage.show();
+            ((NavigationController)loader.getController()).setStage(newStage);
+
+
+            return loader.getController();
+
+
+        } catch (IOException e) {
+
+            this.showAlert(Alert.AlertType.ERROR, "Exception raised", "Unable to open stage for view", e.getMessage());
+
+        }
+
+        return null;
+
+
+    }
 
 
 }

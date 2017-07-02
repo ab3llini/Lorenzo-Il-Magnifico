@@ -6,7 +6,9 @@ public enum View {
 
     Connect("connect.fxml", "Connect", 400, 650),
     Lobby("Lobby.fxml", "Lobby", 400, 650),
-    Gui("GUI.fxml", "Lorenzo il Magnifico", 1400, 1000);
+    Gui("GUI.fxml", "Lorenzo il Magnifico", 1400, 1000),
+    StandardPlacement("StandardPlacement.fxml", "Select placement options", 300, 350),
+    ImmediatePlacement("ImmediatePlacement.fxml", "Select immediate action options", 300, 200);
 
     private String filename;
     private String title;

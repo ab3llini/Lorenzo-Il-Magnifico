@@ -4,6 +4,8 @@ package server.model.card.developement;
  * Created by alberto on 09/05/17.
  */
 
+import netobject.action.BoardSectorType;
+import netobject.action.ImmediateBoardSectorType;
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
 
@@ -24,4 +26,17 @@ public class BuildingDvptCard extends DvptCard implements Serializable {
     public ArrayList<Cost> getCost() {
         return cost;
     }
+
+    public BoardSectorType getBoardSector() {
+
+        return BoardSectorType.BuildingTower;
+
+    }
+
+    public ImmediateBoardSectorType getImmediateBoardSector() {
+
+        return ImmediateBoardSectorType.BuildingTower;
+
+    }
+
 }

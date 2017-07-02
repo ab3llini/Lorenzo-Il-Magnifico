@@ -1,8 +1,6 @@
-
 .form-text {
 
-    -fx-text-fill: white;
-
+    -fx-text-fill: -fx-main-color;
 
 }
 
@@ -30,13 +28,6 @@
 
 }
 
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-.scroll-pane {
-    -fx-background-color: transparent;
-}
-
 .form-button {
 
     -fx-background-color: -fx-main-color;
@@ -44,4 +35,22 @@
     -fx-font-size: 14;
     -fx-text-alignment: center;
 
+}
+
+.radio-button {
+
+    -fx-text-fill: -fx-main-color;
+
+}
+
+
+.dialog-pane
+{
+    -fx-tab-min-width:100px;
+    -fx-background-color: -fx-secondary-color;
+}
+
+.dialog-pane > .label
+{
+    -fx-text-fill: -fx-main-color;
 }

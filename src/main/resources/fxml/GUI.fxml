@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
@@ -45,7 +46,23 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <AnchorPane GridPane.columnIndex="2" />
+                                    <AnchorPane GridPane.columnIndex="2">
+                                       <children>
+                                          <Label styleClass="sidebar-label" text="White dice" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="10.0" />
+                                          <Label styleClass="sidebar-label" text="Black dice" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
+                                          <Label styleClass="sidebar-label" text="Orange dice" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="70.0" />
+                                          <Label fx:id="whiteDiceValueTextField" styleClass="sidebar-label" text="00" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                          <Label fx:id="blackDiceValueTextField" styleClass="sidebar-label" text="00" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+                                          <Label fx:id="orangeDiceValueTextField" styleClass="sidebar-label" text="00" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0" />
+                                          <JFXButton layoutX="66.0" layoutY="138.0" onMouseClicked="#onDiceRollClick" text="Roll the dices!" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="110.0" />
+                                          <Circle fill="WHITE" layoutX="100.0" layoutY="60.0" radius="10.0" stroke="#03a9f4" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                          <Circle layoutX="110.0" layoutY="70.0" radius="10.0" stroke="#03a9f4" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="40.0" />
+                                          <Circle fill="#ff6c00" layoutX="120.0" layoutY="80.0" radius="10.0" stroke="#03a9f4" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="70.0" />
+                                          <JFXButton layoutX="76.0" layoutY="148.0" onMouseClicked="#onTerminateRoundClick" text="Terminate the round" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+                                       </padding></AnchorPane>
                                     <ScrollPane vbarPolicy="NEVER" vvalue="0.87" GridPane.columnIndex="1">
                                        <content>
                                           <AnchorPane prefHeight="1300.0" prefWidth="1000.0">
@@ -154,7 +171,7 @@
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <ImageView cache="true" cacheHint="SPEED" fitHeight="190.0" fitWidth="116.0" layoutX="652.0" layoutY="407.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6" GridPane.rowIndex="6">
+                                                      <ImageView cache="true" cacheHint="QUALITY" fitHeight="190.0" fitWidth="116.0" layoutX="652.0" layoutY="407.0" onMouseClicked="#onDvptCardClick" pickOnBounds="true" styleClass="board-dvpt-card" GridPane.columnIndex="6" GridPane.rowIndex="6">
                                                          <image>
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
@@ -234,9 +251,14 @@
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="6">
+                                                         <children>
+                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+                                                         </children>
+                                                      </AnchorPane>
                                                    </children>
                                                 </GridPane>
-                                                <Pane fx:id="councilPalace" layoutX="454.0" layoutY="825.0" prefHeight="115.0" prefWidth="285.0" />
+                                                <Pane fx:id="councilPalace" layoutX="454.0" layoutY="825.0" onMouseClicked="#placeFamilyMember" prefHeight="115.0" prefWidth="285.0" />
                                              </children>
                                           </AnchorPane>
                                        </content>

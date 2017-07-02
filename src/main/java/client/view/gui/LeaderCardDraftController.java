@@ -19,7 +19,7 @@ public class LeaderCardDraftController extends NavigationController{
 
     HashMap<ImageView, LeaderCard> imageViewLeaderCardCache = new HashMap<>();
 
-    private synchronized void updatedLeaderCardGrid(Match model){
+    private void updatedLeaderCardGrid(Match model){
 
     }
 

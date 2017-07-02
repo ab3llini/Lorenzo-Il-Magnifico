@@ -3,8 +3,10 @@ package client.view.gui;
 /**
  * Created by Federico on 01/07/2017.
  */
+import client.controller.Utility;
 import client.controller.network.Client;
-import client.view.cli.LocalMatchController;
+import client.view.LocalMatchController;
+import client.view.gui.lobby.PlacementActionController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
@@ -16,16 +18,10 @@ import netobject.action.standard.StandardActionType;
 import netobject.action.standard.StandardPlacementAction;
 import server.model.board.ColorType;
 
-public class StandardPlacementActionController extends NavigationController {
+public class StandardPlacementActionController extends PlacementActionController {
 
-    private Integer additionalServants = 0;
-    private ColorType colorType = server.model.board.ColorType.Neutral;
     private BoardSectorType boardSector;
-    private Integer index;
-
-    private Client client;
-
-    private LocalMatchController localMatchController;
+    private ColorType colorType = ColorType.Neutral;
 
     @FXML
     private TextField additionalServantsTextField;
@@ -45,10 +41,11 @@ public class StandardPlacementActionController extends NavigationController {
     @FXML
     private RadioButton neutralColorTypeRadioButton;
 
+
     @FXML
     void onPlaceClick(MouseEvent event) {
 
-        if (this.isInteger(this.additionalServantsTextField.getText())) {
+        if (Utility.isInteger(this.additionalServantsTextField.getText())) {
 
             this.additionalServants = Integer.parseInt(this.additionalServantsTextField.getText());
             this.colorType = (ColorType)this.colorTypeRadioGroup.getSelectedToggle().getUserData();
@@ -79,35 +76,10 @@ public class StandardPlacementActionController extends NavigationController {
 
     }
 
-    private boolean isInteger(String s) {
-
-        try {
-
-            Integer.parseInt(s);
-
-            return true;
-
-        } catch (Exception e) {
-            return false;
-        }
-
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public void setLocalMatchController(LocalMatchController localMatchController) {
-        this.localMatchController = localMatchController;
-    }
-
     public void setBoardSector(BoardSectorType boardSector) {
         this.boardSector = boardSector;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
 
 
 }

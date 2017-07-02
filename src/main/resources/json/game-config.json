@@ -1,6 +1,6 @@
 {
   "player": {
-    "timeout": 60
+    "timeout": 999
   },
   "match": {
     "timeout": 5

@@ -17,20 +17,17 @@ public class ImmediatePlacementAction extends Action {
 
     private Integer placementIndex; //slot index of the board sector
 
-    private SelectionType costOptionType;
-
     private int additionalServants;
 
     private ArrayList<Discount> discounts;
 
-    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, int additionalServants, SelectionType costOptionType, String sender) {
+    public ImmediatePlacementAction(ImmediateBoardSectorType actionTarget, Integer placementIndex, int additionalServants, String sender) {
 
         super(ActionType.Immediate, sender);
 
         this.actionTarget = actionTarget;
         this.placementIndex = placementIndex;
         this.additionalServants = additionalServants;
-        this.costOptionType = costOptionType;
         this.discounts = new ArrayList<>();
 
     }
@@ -63,10 +60,6 @@ public class ImmediatePlacementAction extends Action {
 
     public void setAdditionalServants(int additionalServants) {
         this.additionalServants = additionalServants;
-    }
-
-    public SelectionType getCostOptionType() {
-        return costOptionType;
     }
 
     public ArrayList<Discount> getDiscounts() {

@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.gui.StandardPlacementActionController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="300.0" styleClass="dialog-pane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.gui.StandardPlacementActionController">
    <children>
-      <Text layoutX="56.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ColorType" wrappingWidth="187.22854614257812" AnchorPane.bottomAnchor="163.98828125" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="120.05078125" />
-      <Button layoutX="243.0" layoutY="276.0" mnemonicParsing="false" onMouseClicked="#onPlaceClick" text="Place" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-      <TextField fx:id="additionalServantsTextField" layoutX="56.0" layoutY="60.0" promptText="Insert a valid number" text="0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="70.0" />
-      <Text layoutX="56.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Addictional Servants" wrappingWidth="187.22854614257812" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0" />
-      <RadioButton fx:id="orangeColorTypeRadioButton" layoutX="56.0" layoutY="153.0" mnemonicParsing="false" selected="true" text="Orange" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="150.0">
+      <TextField fx:id="additionalServantsTextField" layoutX="56.0" layoutY="60.0" promptText="Insert a valid number" styleClass="form-input" text="0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" />
+      <RadioButton fx:id="orangeColorTypeRadioButton" layoutX="56.0" layoutY="153.0" mnemonicParsing="false" selected="true" text="Orange" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="160.0">
          <toggleGroup>
             <ToggleGroup fx:id="colorTypeRadioGroup" />
          </toggleGroup></RadioButton>
-      <RadioButton fx:id="blackColorTypeRadioButton" layoutX="56.0" layoutY="180.0" mnemonicParsing="false" text="Black" toggleGroup="$colorTypeRadioGroup" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="180.0" />
-      <RadioButton fx:id="whiteColorTypeRadioButton" layoutX="56.0" layoutY="208.0" mnemonicParsing="false" text="White" toggleGroup="$colorTypeRadioGroup" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="210.0" />
-      <RadioButton fx:id="neutralColorTypeRadioButton" layoutX="56.0" layoutY="237.0" mnemonicParsing="false" text="Neutral" toggleGroup="$colorTypeRadioGroup" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="240.0" />
+      <RadioButton fx:id="blackColorTypeRadioButton" layoutX="56.0" layoutY="180.0" mnemonicParsing="false" text="Black" toggleGroup="$colorTypeRadioGroup" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="190.0" />
+      <RadioButton fx:id="whiteColorTypeRadioButton" layoutX="56.0" layoutY="208.0" mnemonicParsing="false" text="White" toggleGroup="$colorTypeRadioGroup" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="220.0" />
+      <RadioButton fx:id="neutralColorTypeRadioButton" layoutX="56.0" layoutY="237.0" mnemonicParsing="false" text="Neutral" toggleGroup="$colorTypeRadioGroup" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="250.0" />
+      <Label layoutX="61.0" layoutY="41.0" styleClass="form-text" text="Additional servants" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
+      <Label layoutX="20.0" layoutY="107.0" styleClass="form-text" text="Family member" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="120.0" />
+      <JFXButton layoutX="211.0" layoutY="158.0" onMouseClicked="#onPlaceClick" styleClass="form-button" text="Place family member" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
    </children>
+   <stylesheets>
+      <URL value="@../css/core.css" />
+      <URL value="@../css/dialog.css" />
+   </stylesheets>
 </AnchorPane>

@@ -3,6 +3,8 @@ package server.model.card.developement;/*
  */
 
 import logger.AnsiColors;
+import netobject.action.BoardSectorType;
+import netobject.action.ImmediateBoardSectorType;
 import server.model.effect.ActionType;
 import server.model.effect.ImmediateEffect;
 import server.model.effect.PermanentEffect;
@@ -97,5 +99,10 @@ public abstract class DvptCard implements Serializable {
 
         return card;
     }
+
+    public abstract BoardSectorType getBoardSector();
+
+    public abstract ImmediateBoardSectorType getImmediateBoardSector();
+
 }
 

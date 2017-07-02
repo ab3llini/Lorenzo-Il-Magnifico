@@ -1,4 +1,4 @@
-package client.view.cli;
+package client.view;
 
 /*
  * @author  ab3llini
@@ -41,6 +41,9 @@ public class LocalMatchController {
 
     //actions performed by a player on this round
     private HashMap<StandardActionType, Boolean> actionsPerformedOnThisRound;
+
+    private boolean turnEnabled = false;
+
 
     public LocalMatchController() {
 
@@ -155,7 +158,7 @@ public class LocalMatchController {
         return this.matchEnded;
     }
 
-    protected void setActionPerformed(StandardActionType action, Boolean value) {
+    public void setActionPerformed(StandardActionType action, Boolean value) {
 
         this.actionsPerformedOnThisRound.put(action, value);
 
@@ -258,5 +261,15 @@ public class LocalMatchController {
 
     public ArrayList<BonusTile> getDraftableBonusTiles() {
         return draftableBonusTiles;
+    }
+
+    public void setTurnEnabled(boolean turnEnabled) {
+        this.turnEnabled = turnEnabled;
+    }
+
+    public boolean hasTurn() {
+
+        return turnEnabled;
+
     }
 }

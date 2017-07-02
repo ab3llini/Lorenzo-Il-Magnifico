@@ -8,11 +8,11 @@ package client.view.cli;
 import client.controller.network.*;
 import client.controller.network.RMI.RMIClient;
 import client.controller.network.Socket.SocketClient;
+import client.view.LocalMatchController;
 import client.view.cli.cmd.*;
 import client.utility.AsyncInputStream;
 import client.utility.AsyncInputStreamObserver;
 import exception.NoActionPerformedException;
-import exception.NoLeaderException;
 import exception.NoSuchPlayerException;
 import logger.Level;
 import logger.Logger;
@@ -1072,31 +1072,31 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
                 case TakeBuildingCard:
 
-                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.BuildingTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.BuildingTower, this.askForPlacementIndex(), this.askForServants(), this.client.getUsername());
 
                     break;
 
                 case TakeCharacterCard:
 
-                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.CharacterTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.CharacterTower, this.askForPlacementIndex(), this.askForServants(),this.client.getUsername());
 
                     break;
 
                 case TakeVentureCard:
 
-                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.VentureTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.VentureTower, this.askForPlacementIndex(), this.askForServants(), this.client.getUsername());
 
                     break;
 
                 case TakeTerritoryCard:
 
-                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.TerritoryTower, this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+                    immediatePlacementAction = new ImmediatePlacementAction(ImmediateBoardSectorType.TerritoryTower, this.askForPlacementIndex(), this.askForServants(), this.client.getUsername());
 
                     break;
 
                 case TakeAnyCard:
 
-                    immediatePlacementAction = new ImmediatePlacementAction(this.askForTypeOption(), this.askForPlacementIndex(), this.askForServants(), this.askForCostOption(), this.client.getUsername());
+                    immediatePlacementAction = new ImmediatePlacementAction(this.askForTypeOption(), this.askForPlacementIndex(), this.askForServants(), this.client.getUsername());
 
                     break;
             }
