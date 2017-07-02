@@ -184,7 +184,7 @@ public class GameEngine implements ServerObserver, LobbyObserver {
 
     public void onDisconnection(Server server, ClientHandler handler) {
 
-        Logger.log(Level.FINE, "GameEngine", "Client disconnected, username = " + handler.getUsername());
+        Logger.log(Level.FINE, "GameEngine", "Player " + handler.getUsername() + " disconnected");
 
         try {
 

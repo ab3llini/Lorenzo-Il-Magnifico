@@ -365,6 +365,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Find the player
         Player belonging = this.match.getPlayerFromUsername(handler.getUsername());
 
+        Logger.log(Level.FINEST, this.toString(), "Disabling player " + belonging.getUsername());
+
         //Disable the player
         belonging.setDisabled(true);
 

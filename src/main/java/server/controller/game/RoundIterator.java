@@ -40,11 +40,11 @@ public class RoundIterator implements Iterator<Queue<Player>> {
 
     public boolean hasNext() {
 
-        boolean a = this.match.getCurrentPeriod().toInt() == PERIODS && this.match.getCurrentTurn() == TURNS && this.match.getCurrentRound() == ROUNDS;
+        boolean ended = this.match.getCurrentPeriod().toInt() == PERIODS && this.match.getCurrentTurn() == TURNS && this.match.getCurrentRound() == ROUNDS;
 
-        boolean b = this.match.getPlayers().size() > this.match.getDisabledPlayers().size();
+        boolean enough = this.match.getPlayers().size() - this.match.getDisabledPlayers().size() > 0;
 
-        return (!a && b);
+        return (!ended && enough);
 
     }
 
