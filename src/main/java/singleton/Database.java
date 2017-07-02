@@ -1,13 +1,15 @@
 package singleton;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import logger.Level;
 import logger.Logger;
 import server.model.Match;
 import server.model.board.Player;
+import server.model.card.ban.BanCard;
+import server.model.card.developement.BuildingDvptCard;
+import server.model.card.developement.DvptCard;
+import server.model.card.developement.TerritoryDvptCard;
+import server.utility.InterfaceAdapter;
 import server.utility.Json;
 import server.utility.Security;
 
@@ -245,7 +247,12 @@ public class Database
 
         int matchID = match.getMatch_id();
 
-        Gson gson = new Gson();
+        GsonBuilder gsonBilder = new GsonBuilder();
+        gsonBilder.registerTypeAdapter(DvptCard.class, new InterfaceAdapter<DvptCard>());
+        gsonBilder.registerTypeAdapter(BanCard.class, new InterfaceAdapter<BanCard>());
+        gsonBilder.setPrettyPrinting();
+
+        Gson gson =gsonBilder.create();
 
         String jsonInString = gson.toJson(match);
 
@@ -363,19 +370,14 @@ public class Database
 
         String matchString = resultSet.getString(1);
 
-        System.out.println(matchString);
+        GsonBuilder gsonBilder = new GsonBuilder();
+        gsonBilder.registerTypeAdapter(DvptCard.class, new InterfaceAdapter<DvptCard>());
+        gsonBilder.registerTypeAdapter(BanCard.class, new InterfaceAdapter<BanCard>());
+        gsonBilder.setPrettyPrinting();
 
-        Gson gson = new Gson();
+        Gson gson = gsonBilder.create();
 
-        JsonParser parser = new JsonParser();
-
-        JsonObject matchObject = parser.parse(matchString).getAsJsonObject();
-
-        abstractAdapter(matchObject);
-
-        System.out.println(matchString);
-
-        return  gson.fromJson(matchObject, Match.class);
+        return  gson.fromJson(matchString, Match.class);
 
     }
 
@@ -393,19 +395,6 @@ public class Database
         //Execute the query
         stmt.executeUpdate(query);
 
-    }
-
-    public void abstractAdapter(JsonObject matchObject){
-
-        JsonObject boardObject = matchObject.getAsJsonObject("board");
-
-        JsonArray array = boardObject.getAsJsonArray("territoryTower");
-
-        JsonObject cardObject = array.get(0).getAsJsonObject();
-
-        String cardString = cardObject.toString();
-
-        cardString = cardString.replace("dvptCard","territoryDvptCard");
     }
 
 }
