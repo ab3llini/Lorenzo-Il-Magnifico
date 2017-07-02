@@ -1110,7 +1110,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 for(Resource resource: immediateEffect.getSurplus().getResources())
                     resource.setAmount(resource.getAmount()*2);
             }
-            ActionType actionType = ActionType.unknown;
 
             ImmediatePlacementAction placementAction;
 
@@ -1205,6 +1204,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         bonus = applyLeaderCardEffect(player, action, bonus);
 
         boolean noMarket = false;
+
         //some players' ban card can reduce family member's force
         noMarket = applyDiceMalusBanCard(action, player, familyMember, noMarket);
 
@@ -1213,6 +1213,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //if boardSectorType is CouncilPalace we place the family member in the council palace
         //once positioned the council palace give to the player an effectSurplus
         if (action.getActionTarget() == BoardSectorType.CouncilPalace) {
+
             EffectSurplus surplus = boardController.placeOnCouncilPalace(familyMember, action.getAdditionalServants()+bonus.getForceBonus(),this.match.getPlayers().size());
             applyEffectSurplus(player,surplus);
 

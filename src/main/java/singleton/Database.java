@@ -1,14 +1,17 @@
 package singleton;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import logger.Level;
 import logger.Logger;
 import server.model.Match;
 import server.model.board.Player;
+import server.utility.Json;
 import server.utility.Security;
 
-import javax.xml.bind.DatatypeConverter;
-import java.security.MessageDigest;
+
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -213,6 +216,7 @@ public class Database
 
         int matchID = result.getInt(1);
 
+        //use this int to create dynamic queries
         int i=1;
 
         for (Player player : match.getPlayers()) {
@@ -267,7 +271,7 @@ public class Database
         //Setup the timeout
         stmt.setQueryTimeout(QUERY_TIMEOUT);
 
-
+        //use this int to create dynamic queries (we can have maximum 5 players)
         for(int i=1;i<=5;i++){
 
             //Create the query;
@@ -301,6 +305,7 @@ public class Database
 
         ResultSet result = null;
 
+        //use this int to create dynamic queries (we can have maximum 5 players)
         for(int i=1; i<=5; i++){
 
             //Create the query;
@@ -323,6 +328,7 @@ public class Database
 
         }
 
+        //use this int to create dynamic queries (we can have maximum 5 players)
         int i = 1;
 
         if(result != null){
@@ -342,7 +348,7 @@ public class Database
 
     }
 
-    public void endMatch() throws SQLException {
+    public Match getMatchFromID(int matchID) throws SQLException {
 
         //Create a statement
         Statement stmt = this.connection.createStatement();
@@ -351,11 +357,55 @@ public class Database
         stmt.setQueryTimeout(QUERY_TIMEOUT);
 
         //Create the query;
-        String query = "UPDATE matches SET 'finished' = 1";
+        String query = "SELECT date FROM matches WHERE ID = " + matchID+";";
+
+        ResultSet resultSet = stmt.executeQuery(query);
+
+        String matchString = resultSet.getString(1);
+
+        System.out.println(matchString);
+
+        Gson gson = new Gson();
+
+        JsonParser parser = new JsonParser();
+
+        JsonObject matchObject = parser.parse(matchString).getAsJsonObject();
+
+        abstractAdapter(matchObject);
+
+        System.out.println(matchString);
+
+        return  gson.fromJson(matchObject, Match.class);
+
+    }
+
+    public void endMatch(int matchID) throws SQLException {
+
+        //Create a statement
+        Statement stmt = this.connection.createStatement();
+
+        //Setup the timeout
+        stmt.setQueryTimeout(QUERY_TIMEOUT);
+
+        //Create the query;
+        String query = "UPDATE matches SET 'finished' = 1 WHERE ID = "+matchID+";";
 
         //Execute the query
         stmt.executeUpdate(query);
 
+    }
+
+    public void abstractAdapter(JsonObject matchObject){
+
+        JsonObject boardObject = matchObject.getAsJsonObject("board");
+
+        JsonArray array = boardObject.getAsJsonArray("territoryTower");
+
+        JsonObject cardObject = array.get(0).getAsJsonObject();
+
+        String cardString = cardObject.toString();
+
+        cardString = cardString.replace("dvptCard","territoryDvptCard");
     }
 
 }

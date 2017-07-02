@@ -197,8 +197,8 @@ public class BoardConfigParser {
 
         Integer minPlayers = singleActionPlaceObject.get("minPlayers").getAsInt();
 
-        //TODO load values from file
-        EffectSurplus surplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0);
+        //the game doesn't foresee this possibility
+        EffectSurplus surplus = new EffectSurplus(new ArrayList<>(),new ArrayList<>(),0);
 
         return new SingleActionPlace(surplus, minForce,minPlayers);
     }
@@ -214,8 +214,8 @@ public class BoardConfigParser {
 
         Integer forceMalus = compositeActionPlaceObject.get("malus").getAsInt();
 
-        //TODO load values from file
-        EffectSurplus surplus = new EffectSurplus(new ArrayList<Resource>(),new ArrayList<Point>(),0);
+        //the game doesn't foresee this possibility
+        EffectSurplus surplus = new EffectSurplus(new ArrayList<>(),new ArrayList<>(),0);
 
         return new PHCompositeActionPlace(surplus, minForce, forceMalus, minPlayers);
     }
