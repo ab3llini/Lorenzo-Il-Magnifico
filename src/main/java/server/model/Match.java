@@ -165,6 +165,8 @@ public class Match extends NetObject {
         }
     }
 
+    public int getMatch_id() {return match_id;
+    }
 
     public void setCurrentTurn(int currentTurn) {
         this.currentTurn = currentTurn;

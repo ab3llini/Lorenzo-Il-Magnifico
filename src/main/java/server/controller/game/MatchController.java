@@ -25,8 +25,11 @@ import server.model.effect.ActionType;
 import server.model.valuable.*;
 import server.utility.BoardConfigParser;
 import server.utility.BonusTilesParser;
+import singleton.Database;
 import singleton.GameConfig;
 import server.controller.network.Observable;
+
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -294,6 +297,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 }
 
             }
+
+            save();
 
             Logger.log(Level.FINEST, this.toString(), "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
@@ -709,6 +714,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
+
+                    save();
 
                     break;
 
@@ -1456,10 +1463,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //control if the towerSlot is already occupied
             if (this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).isOccupied())
                 throw new PlaceOccupiedException("This place is already occupied");
-
-            //control if the player has another family member in the tower
-            if (this.match.getBoard().getPlayersInTower(towerType).contains(player) && this.match.getPlayers().size() != 5)
-                throw new PlayerAlreadyOccupiedTowerException("The player already has a family member in this tower");
 
             //if the tower is already occupied the player have to pay 3 coins
             if (this.match.getBoard().getPlayersInTower(towerType).size() > 0 && !player.isPermanentLeaderActive(PermanentLeaderEffectType.filippoEffect))
@@ -2334,5 +2337,18 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     @Override
     public boolean removeObserver(MatchControllerObserver o) {
         return this.observers.remove(o);
+    }
+
+    public void save(){
+
+        try {
+            Database.getInstance().save(this.match);
+
+        } catch (SQLException e) {
+
+            Logger.log(Level.SEVERE, "Database::save", "Possible errors in saving", e);
+
+        }
+
     }
 }

@@ -196,8 +196,10 @@ public class Database
         //Setup the timeout
         stmt.setQueryTimeout(QUERY_TIMEOUT);
 
+        //TODO finished == 0
+        //if finished is 0 the match is not ended
         //Create the query;
-        String query1 = "INSERT INTO matches ('finished') VALUES (0);";
+        String query1 = "INSERT INTO matches ('finished') VALUES (1);";
 
         //Execute the query
         stmt.executeUpdate(query1);
@@ -234,6 +236,73 @@ public class Database
 
     }
 
+    public void save(Match match) throws SQLException {
+
+        int matchID = match.getMatch_id();
+
+        Gson gson = new Gson();
+
+        String jsonInString = gson.toJson(match);
+
+        //Create a statement
+        Statement stmt = this.connection.createStatement();
+
+        //Setup the timeout
+        stmt.setQueryTimeout(QUERY_TIMEOUT);
+
+        //Create the query;
+        String query = "UPDATE matches  SET 'date' = ( '"+ jsonInString+"') WHERE ID = "+matchID+";";
+
+        //Execute the query
+        stmt.executeUpdate(query);
+
+    }
+
+    public boolean isAnUnfinishedMatchPlayer(String username) throws SQLException {
+
+        //Create a statement
+        Statement stmt = this.connection.createStatement();
+
+        //Setup the timeout
+        stmt.setQueryTimeout(QUERY_TIMEOUT);
+
+
+        for(int i=1;i<=5;i++){
+
+            //Create the query;
+            String query = "SELECT * FROM matches WHERE player_"+i+" = '" + username + "' AND finished = 0";
+
+            //Execute the query
+            ResultSet result = stmt.executeQuery(query);
+
+            //Check results
+            while (result.next()) {
+
+                //If there is a match, login succeeded
+                 return true;
+
+            }
+        }
+
+        return false;
+
+    }
+
+    public void endMatch() throws SQLException {
+
+        //Create a statement
+        Statement stmt = this.connection.createStatement();
+
+        //Setup the timeout
+        stmt.setQueryTimeout(QUERY_TIMEOUT);
+
+        //Create the query;
+        String query = "UPDATE matches SET 'finished' = 1";
+
+        //Execute the query
+        stmt.executeUpdate(query);
+
+    }
 
 }
 
