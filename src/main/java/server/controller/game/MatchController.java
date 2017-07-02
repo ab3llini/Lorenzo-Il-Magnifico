@@ -1142,31 +1142,31 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                     if (immediateEffect.getEffectAction().getType() == null) {
 
-                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type");
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type with force: " + immediateEffect.getEffectAction().getForce());
 
                     }
 
                     else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory){
 
-                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card");
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card with force: " + immediateEffect.getEffectAction().getForce());
 
                     }
 
                     else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
 
-                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card");
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card with force: " + immediateEffect.getEffectAction().getForce());
 
                     }
 
                     else if (immediateEffect.getEffectAction().getType() == DvptCardType.building){
 
-                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card");
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card with force: " + immediateEffect.getEffectAction().getForce());
 
                     }
 
                     else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture){
 
-                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card");
+                        this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card with force: " + immediateEffect.getEffectAction().getForce());
 
                     }
                 }
