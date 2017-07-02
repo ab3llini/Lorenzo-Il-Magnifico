@@ -25,6 +25,7 @@ import client.controller.network.ClientObserver;
 import client.controller.network.RemotePlayerObserver;
 import client.view.cli.LocalMatchController;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -32,8 +33,10 @@ import javafx.stage.Stage;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
+import netobject.action.ActionType;
 import netobject.action.BoardSectorType;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.action.standard.StandardActionType;
 import netobject.action.standard.StandardPlacementAction;
 import netobject.notification.MatchNotification;
 import netobject.notification.ObserverReadyNotification;
@@ -85,7 +88,8 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     private TextField turnIndicatorTextField;
 
-
+    @FXML
+    private Pane councilPalace;
 
     //The reference to the local match controller
     private LocalMatchController localMatchController;
@@ -354,30 +358,52 @@ public class GUIController extends NavigationController implements ClientObserve
 
         }
 
-        ImageView relative = this.actionPlaceImageViewCache.get(event.getSource());
-        DvptCard card = this.imageViewDvptCardCache.get(relative);
+        if (!this.localMatchController.canPerformStandardAction(StandardActionType.FamilyMemberPlacement)) {
 
+            this.showAsynchAlert(Alert.AlertType.ERROR, "Forbidden", "You cant place a family member again in this round", "Wait for the next round");
 
-        BoardSectorType boardSector = null;
-
-        switch (card.getType()) {
-
-            case territory:
-                boardSector = BoardSectorType.TerritoryTower;
-                break;
-            case character:
-                boardSector = BoardSectorType.CharacterTower;
-                break;
-            case building:
-                boardSector = BoardSectorType.BuildingTower;
-                break;
-            case venture:
-                boardSector = BoardSectorType.VentureTower;
-                break;
+            return;
 
         }
 
-        int index = 3 - GridPane.getRowIndex(relative) / 2;
+        BoardSectorType boardSector = null;
+        int index = 0;
+
+
+        //If the action place clicked has a corresponding image view (aka has a card associated)
+        if (this.actionPlaceImageViewCache.get(event.getSource()) != null) {
+
+            //We need to find out the tower and the placement index
+
+            ImageView relative = this.actionPlaceImageViewCache.get(event.getSource());
+            DvptCard card = this.imageViewDvptCardCache.get(relative);
+
+            switch (card.getType()) {
+
+                case territory:
+                    boardSector = BoardSectorType.TerritoryTower;
+                    break;
+                case character:
+                    boardSector = BoardSectorType.CharacterTower;
+                    break;
+                case building:
+                    boardSector = BoardSectorType.BuildingTower;
+                    break;
+                case venture:
+                    boardSector = BoardSectorType.VentureTower;
+                    break;
+
+            }
+
+            index = 3 - GridPane.getRowIndex(relative) / 2;
+
+        }
+
+        this.loadStageForPlacement(boardSector, index);
+
+    }
+
+    private void loadStageForPlacement(BoardSectorType sector, int placementIndex) {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StandardPlacement.fxml"));
 
@@ -400,11 +426,10 @@ public class GUIController extends NavigationController implements ClientObserve
         StandardPlacementActionController controller =  ((StandardPlacementActionController)loader.getController());
 
         controller.setStage(dialog);
-        controller.setBoardSector(boardSector);
-        controller.setIndex(index);
+        controller.setBoardSector(sector);
+        controller.setIndex(placementIndex);
         controller.setClient(client);
         controller.setLocalMatchController(this.localMatchController);
-
 
     }
 
@@ -487,7 +512,7 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onActionRefused(Client sender, Action action, String message) {
 
-        System.out.println("Action refused");
+        this.showAsynchAlert(Alert.AlertType.WARNING, "Action refused", "The action you tried to perform was refused for the following reason:", message);
 
 
     }
@@ -495,7 +520,18 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onActionPerformed(Client sender, Player player, Action action, String message) {
 
-        this.localMatchController.confirmLastStandardPendingAction();
+        if (action.getActionType() == ActionType.Standard) {
+
+            this.localMatchController.confirmLastStandardPendingAction();
+
+        }
+        else {
+
+            this.localMatchController.confirmLastPendingImmediateAction();
+
+        }
+
+
 
     }
 
