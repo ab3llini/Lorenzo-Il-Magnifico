@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 
@@ -45,7 +46,7 @@
                                 </rowConstraints>
                                  <children>
                                     <AnchorPane GridPane.columnIndex="2" />
-                                    <ScrollPane vbarPolicy="NEVER" GridPane.columnIndex="1">
+                                    <ScrollPane vbarPolicy="NEVER" vvalue="0.87" GridPane.columnIndex="1">
                                        <content>
                                           <AnchorPane prefHeight="1300.0" prefWidth="1000.0">
                                              <children>
@@ -158,88 +159,84 @@
                                                             <Image url="@../assets/cards/dvpt/devcards_b_c_p_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
                                                          </image>
                                                       </ImageView>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                                          <children>
                                                             <Circle fill="WHITE" layoutX="34.0" layoutY="100.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="3">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="5">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="0">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="7">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="0">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="3">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="5">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="2">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="7">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="2">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="3">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="5">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="4">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="7">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="4">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6" GridPane.columnIndex="3">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="6">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6" GridPane.columnIndex="5">
-                                                         <children>
-                                                            <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
-                                                         </children>
-                                                      </AnchorPane>
-                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="7">
+                                                      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="6">
                                                          <children>
                                                             <Circle fill="WHITE" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
                                                          </children>
                                                       </AnchorPane>
                                                    </children>
                                                 </GridPane>
+                                                <Pane fx:id="councilPalace" layoutX="454.0" layoutY="825.0" prefHeight="115.0" prefWidth="285.0" />
                                              </children>
                                           </AnchorPane>
                                        </content>
