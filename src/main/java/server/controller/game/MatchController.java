@@ -30,7 +30,6 @@ import server.controller.network.Observable;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
 
 import static server.utility.BoardConfigParser.getVictoryBonusFromRanking;
 

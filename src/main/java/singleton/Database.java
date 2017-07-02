@@ -1,7 +1,10 @@
 package singleton;
 
+import com.google.gson.Gson;
 import logger.Level;
 import logger.Logger;
+import server.model.Match;
+import server.model.board.Player;
 import server.utility.Security;
 
 import javax.xml.bind.DatatypeConverter;
@@ -151,8 +154,6 @@ public class Database
 
         }
 
-        System.out.println("fin qua tutto ok ");
-
         try {
 
             //Create a statement
@@ -165,7 +166,7 @@ public class Database
             String query = "INSERT INTO users VALUES ('"+username+"', '"+Security.MD5Hash(password)+"');";
 
             //Execute the query
-            stmt.executeQuery(query);
+            stmt.executeUpdate(query);
 
             registrated = true;
 
@@ -180,6 +181,56 @@ public class Database
         }
 
         return registrated;
+
+    }
+
+    public int saveMatch(Match match) throws SQLException {
+
+        Gson gson = new Gson();
+
+        String jsonInString = gson.toJson(match);
+
+        //Create a statement
+        Statement stmt = this.connection.createStatement();
+
+        //Setup the timeout
+        stmt.setQueryTimeout(QUERY_TIMEOUT);
+
+        //Create the query;
+        String query1 = "INSERT INTO matches ('finished') VALUES (0);";
+
+        //Execute the query
+        stmt.executeUpdate(query1);
+
+        //Create the query;
+        String query = "SELECT max(ID) FROM matches";
+
+        //Execute the query
+        ResultSet result = stmt.executeQuery(query);
+
+        int matchID = result.getInt(1);
+
+        int i=1;
+
+        for (Player player : match.getPlayers()) {
+
+            //Create the query;
+            String queryPlayer = "UPDATE matches SET "+"'player_"+i+"'  =  ('"+player.getUsername()+"') WHERE ID ="+matchID+";";
+
+            //Execute the query
+            stmt.executeUpdate(queryPlayer);
+
+            i++;
+
+        }
+
+        //Create the query;
+        String query2 = "UPDATE matches  SET 'date' = ( '"+ jsonInString+"') WHERE ID = "+matchID+";";
+
+        //Execute the query
+        stmt.executeUpdate(query2);
+
+        return matchID;
 
     }
 

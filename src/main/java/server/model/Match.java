@@ -1,11 +1,15 @@
 package server.model;
 
 import exception.NoSuchPlayerException;
+import logger.Level;
+import logger.Logger;
 import netobject.NetObject;
 import netobject.NetObjectType;
 import server.model.board.*;
 import server.model.card.leader.LeaderCard;
+import singleton.Database;
 
+import java.sql.SQLException;
 import java.util.*;
 
 
@@ -17,6 +21,7 @@ import java.util.*;
 
 public class Match extends NetObject {
 
+    private int match_id;
     private Board board;
     private ArrayList<Player> players;
 
@@ -51,6 +56,17 @@ public class Match extends NetObject {
 
         //Assign a random color to the player
         generateRandomColor();
+
+        try {
+
+             match_id = saveOnDatabase();
+
+        } catch (SQLException e) {
+
+            Logger.log(Level.SEVERE, "Database::save", "Errors in saving match!", e);
+
+        }
+
     }
 
     public Board getBoard() {
@@ -172,4 +188,10 @@ public class Match extends NetObject {
             players.get(i).setFamilyMembersPlayerColor();
           }
         }
+
+    public int saveOnDatabase() throws SQLException {
+
+        return Database.getInstance().saveMatch(this);
+
+    }
 }
