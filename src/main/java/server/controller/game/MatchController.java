@@ -1377,15 +1377,15 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
-            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.sigismondoEffect) && action.getColorType() == ColorType.Nautral) {
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.sigismondoEffect) && action.getColorType() == ColorType.Neutral) {
                 bonus.setForceBonus(bonus.getForceBonus()+3);
             }
 
-            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect) && action.getColorType() != ColorType.Nautral) {
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.lucreziaEffect) && action.getColorType() != ColorType.Neutral) {
                 bonus.setForceBonus(bonus.getForceBonus()+2);
             }
 
-            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.moroEffect) && action.getColorType() != ColorType.Nautral) {
+            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.moroEffect) && action.getColorType() != ColorType.Neutral) {
                 try {
                     bonus.setForceBonus(bonus.getForceBonus()+5-player.getFamilyMember(action.getColorType()).getForce());
                 } catch (FamilyMemberAlreadyInUseException e) {
@@ -1739,7 +1739,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                             player.setFamilyMemberForce(ColorType.Black, 6);
                         } else if (choice.getSelection() == 4) {
 
-                            player.setFamilyMemberForce(ColorType.Nautral, 6);
+                            player.setFamilyMemberForce(ColorType.Neutral, 6);
 
                         } else {
 

@@ -1,6 +1,5 @@
 import org.junit.Test;
 import server.model.board.*;
-import server.model.effect.EffectSurplus;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,7 @@ public class TestCouncilPalace {
 
         FamilyMember familyMember1 = new FamilyMember(player1.getColor(), ColorType.Orange);
         FamilyMember familyMember2 = new FamilyMember(player2.getColor(), ColorType.Black);
-        FamilyMember familyMember3 = new FamilyMember(player3.getColor(), ColorType.Nautral);
+        FamilyMember familyMember3 = new FamilyMember(player3.getColor(), ColorType.Neutral);
         FamilyMember familyMember4 = new FamilyMember(player3.getColor(), ColorType.White);
         FamilyMember familyMember5 = new FamilyMember(player2.getColor(), ColorType.Orange);
         FamilyMember familyMember6 = new FamilyMember(player1.getColor(), ColorType.Black);

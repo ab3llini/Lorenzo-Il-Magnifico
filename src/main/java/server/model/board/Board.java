@@ -12,7 +12,6 @@ import server.utility.BoardConfigParser;
 import server.utility.UnicodeChars;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static server.model.board.Period.*;
@@ -773,8 +772,8 @@ public class Board implements Serializable {
                 board += ("WF");
             }
 
-            if (familyMember.getColor() == ColorType.Nautral) {
-                board += ("UF");
+            if (familyMember.getColor() == ColorType.Neutral) {
+                board += ("NF");
             }
             board += (AnsiColors.ANSI_RESET);
 

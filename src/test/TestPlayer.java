@@ -2,7 +2,6 @@ import exception.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import server.model.Match;
 import server.model.board.ColorType;
 import server.model.board.FamilyMember;
 import server.model.board.Player;
@@ -269,14 +268,14 @@ public class TestPlayer {
                 familyMember = player.getFamilyMember(ColorType.Black);
             }
             else{
-                familyMember = player.getFamilyMember(ColorType.Nautral);
+                familyMember = player.getFamilyMember(ColorType.Neutral);
             }
 
             if(j%2 == 0){
                 assertEquals(ColorType.Black,familyMember.getColor());
             }
             else {
-                assertEquals(ColorType.Nautral,familyMember.getColor());
+                assertEquals(ColorType.Neutral,familyMember.getColor());
             }
         }
     }

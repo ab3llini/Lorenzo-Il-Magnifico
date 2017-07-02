@@ -10,7 +10,7 @@ public enum ColorType implements Serializable {
     White("White", 1),
     Orange("Orange", 2),
     Black("Black", 3),
-    Nautral("Neutral", 4);
+    Neutral("Neutral", 4);
 
 
     private final String name;

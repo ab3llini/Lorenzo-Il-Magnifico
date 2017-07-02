@@ -19,7 +19,7 @@ import server.model.board.ColorType;
 public class StandardPlacementActionController extends NavigationController {
 
     private Integer additionalServants = 0;
-    private ColorType colorType = server.model.board.ColorType.Nautral;
+    private ColorType colorType = server.model.board.ColorType.Neutral;
     private BoardSectorType boardSector;
     private Integer index;
 
@@ -75,7 +75,7 @@ public class StandardPlacementActionController extends NavigationController {
         this.blackColorTypeRadioButton.setUserData(ColorType.Black);
         this.orangeColorTypeRadioButton.setUserData(ColorType.Orange);
         this.whiteColorTypeRadioButton.setUserData(ColorType.White);
-        this.neutralColorTypeRadioButton.setUserData(ColorType.Nautral);
+        this.neutralColorTypeRadioButton.setUserData(ColorType.Neutral);
 
     }
 

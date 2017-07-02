@@ -72,7 +72,7 @@ public class Player implements Serializable {
         familyMembers.add(new FamilyMember(this.getColor(), ColorType.Black));
         familyMembers.add(new FamilyMember(this.getColor(), ColorType.Orange));
         familyMembers.add(new FamilyMember(this.getColor(), ColorType.White));
-        familyMembers.add(new FamilyMember(this.getColor(), ColorType.Nautral));
+        familyMembers.add(new FamilyMember(this.getColor(), ColorType.Neutral));
 
         //initialize player's board
         this.personalBoard = new PersonalBoard();
