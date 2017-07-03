@@ -9,7 +9,12 @@ public enum View {
     Gui("GUI.fxml", "Lorenzo il Magnifico", 1400, 1000),
     StandardPlacement("StandardPlacement.fxml", "Select placement options", 300, 350),
     ImmediatePlacement("ImmediatePlacement.fxml", "Select immediate action options", 300, 200),
-    CouncilPrivilegeSelection("CouncilPrivilegeSelection.fxml", "Select a council privilege", 300, 200);
+    CouncilPrivilegeSelection("CouncilPrivilegeSelection.fxml", "Select a council privilege", 300, 200),
+    SelectFamilyMember("SelectFamilyMember.fxml", "Select a family member", 300, 200),
+    SelectConversion("SelectConversion.fxml", "Select a conversion option", 300, 200),
+    SelectCost("SelectCost.fxml", "Select a cost option", 300, 200),
+    SelectDiscount("DecideDiscountOption.fxml", "Select a discount option", 300, 200);
+
 
     private String filename;
     private String title;

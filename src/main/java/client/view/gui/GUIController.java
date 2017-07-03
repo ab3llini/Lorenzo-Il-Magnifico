@@ -623,6 +623,40 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+    private void showFamilyMemberSelection() {
+
+        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectFamilyMember);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
+
+    private void showCostSelection() {
+
+        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectCost);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
+
+
+    private void showConversionSelection() {
+
+        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectConversion);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
+
+
+    private void showDiscountOption() {
+
+        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectDiscount);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
+
     @Override
     public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
@@ -635,6 +669,22 @@ public class GUIController extends NavigationController implements ClientObserve
 
                 case SelectCouncilPrivilege:
                     Platform.runLater(this::showCouncilPrivilegeSelection);
+                    break;
+
+                case SelectCost:
+                    Platform.runLater(this::showCostSelection);
+                    break;
+
+                case SelectConversion:
+                    Platform.runLater(this::showConversionSelection);
+                    break;
+
+                case SelectFamilyMember:
+                    Platform.runLater(this::showFamilyMemberSelection);
+                    break;
+
+                case DecideDiscountOption:
+                    Platform.runLater(this::showDiscountOption);
                     break;
 
             }
