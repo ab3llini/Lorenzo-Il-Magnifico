@@ -248,20 +248,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 //Look at council palace order to calculate new order of precedence
                 changePlayerOrder();
 
-                String newOrder = "";
-
-                int i=1;
-
-                for (Player player : this.match.getRoundOrder()) {
-
-                    newOrder += i+"° "+player.getUsername()+"\n";
-
-                    i++;
-
-                }
-
-                this.notifyAll("The player order has changed" + "\n" +newOrder );
-
+                this.notifyAllOfNewOrder();
             }
 
 
@@ -298,7 +285,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
-            save();
+            //save on database the updated model
+            this.save();
 
             Logger.log(Level.FINEST, this.toString(), "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
@@ -685,6 +673,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         //Update the current player
         this.currentPlayer = player;
+
+        //Useful to save it also in the model
+        this.match.updateCurrentPlayer(currentPlayer);
+
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
 
@@ -975,6 +967,24 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             }
 
         }
+
+    }
+
+    private void notifyAllOfNewOrder(){
+
+        String newOrder = "";
+
+        int i=1;
+
+        for (Player player : this.match.getRoundOrder()) {
+
+            newOrder += i+"° "+player.getUsername()+"\n";
+
+            i++;
+
+        }
+
+        this.notifyAll("The player order has changed" + "\n" +newOrder );
 
     }
 

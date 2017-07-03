@@ -24,9 +24,8 @@ public class Match extends NetObject {
     private int match_id;
     private Board board;
     private ArrayList<Player> players;
-
     private ArrayList<Player> roundOrder;
-
+    private Player currentPlayer;
     private Period currentPeriod;
     private int currentTurn;
     private int currentRound;
@@ -67,6 +66,18 @@ public class Match extends NetObject {
 
         }
 
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void updateCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public Board getBoard() {
