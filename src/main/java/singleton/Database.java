@@ -270,7 +270,7 @@ public class Database
 
     }
 
-    public boolean isAnUnfinishedMatchPlayer(String username) throws SQLException {
+    public int isAnUnfinishedMatchPlayer(String username) throws SQLException {
 
         //Create a statement
         Statement stmt = this.connection.createStatement();
@@ -291,12 +291,12 @@ public class Database
             while (result.next()) {
 
                 //If there is a match, login succeeded
-                 return true;
+                 return result.getInt("ID");
 
             }
         }
 
-        return false;
+        return -1;
 
     }
 
