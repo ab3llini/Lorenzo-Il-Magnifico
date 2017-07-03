@@ -1,7 +1,6 @@
 package client.view.gui;
 
 import client.controller.Utility;
-import client.view.gui.lobby.PlacementActionController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -31,8 +30,6 @@ public class ImmediatePlacementActionController extends PlacementActionControlle
             ImmediatePlacementAction action = new ImmediatePlacementAction(immediateBoardSectorType, index, additionalServants, this.client.getUsername());
 
             this.client.performAction(action);
-            this.localMatchController.setLastPendingStandardAction(StandardActionType.FamilyMemberPlacement);
-
             stage.close();
 
         }

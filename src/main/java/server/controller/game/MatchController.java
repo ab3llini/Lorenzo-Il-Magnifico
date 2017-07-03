@@ -1532,7 +1532,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //We have one or more privileges available and must ask the player to chose one
             ArrayList<Integer> selections = new ArrayList<>();
 
-
             ArrayList<EffectSurplus> councilPrivileges = BoardConfigParser.getCouncilPrivilegeOptions();
 
             for (int i = 0; i < council; i++) {

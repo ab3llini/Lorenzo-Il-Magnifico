@@ -1,17 +1,12 @@
 package client.view.gui;
 
 import client.controller.network.ObserverType;
-import client.view.cli.cmd.Cmd;
-import client.view.gui.lobby.PlacementActionController;
 import exception.NoSuchPlayerException;
 import exception.gui.GuiException;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -31,13 +26,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
 import netobject.action.ActionType;
 import netobject.action.BoardSectorType;
-import netobject.action.ImmediateBoardSectorType;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.RollDicesAction;
 import netobject.action.standard.StandardActionType;
@@ -53,7 +46,6 @@ import server.model.card.Deck;
 import server.model.card.developement.*;
 import server.model.card.leader.LeaderCard;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -361,6 +353,13 @@ public class GUIController extends NavigationController implements ClientObserve
         int index = this.getTowerPlacementIndex(card);
         ImmediateActionType type = this.localMatchController.getLastPendingImmediateAction();
 
+        if (type == null) {
+
+            this.showAsynchAlert(Alert.AlertType.ERROR, "Frobidden", "You can't take this card", "There is no immediate action available");
+            return;
+
+        }
+
         switch (type) {
 
             case TakeAnyCard:
@@ -391,7 +390,7 @@ public class GUIController extends NavigationController implements ClientObserve
                 break;
 
             default:
-                this.showAsynchAlert(Alert.AlertType.ERROR, "Frobidden", "You can't take this card", "There is no immediate action available");
+                this.showAsynchAlert(Alert.AlertType.ERROR, "Frobidden", "You can't take this card", "This immediate action doesn't allow you to take a card");
                 return;
 
         }
@@ -616,6 +615,14 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+    private void showCouncilPrivilegeSelection() {
+
+        CouncilPrivilegeSelectionController controller = (CouncilPrivilegeSelectionController) this.openNewStage(View.CouncilPrivilegeSelection);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
+
     @Override
     public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
@@ -623,6 +630,14 @@ public class GUIController extends NavigationController implements ClientObserve
         if (player.getUsername().equals(this.client.getUsername())) {
 
             this.localMatchController.setLastPendingImmediateAction(actionType);
+
+            switch (actionType) {
+
+                case SelectCouncilPrivilege:
+                    Platform.runLater(this::showCouncilPrivilegeSelection);
+                    break;
+
+            }
 
             this.showAsynchAlert(Alert.AlertType.INFORMATION, "Immediate action", "Immediate action available", message);
 

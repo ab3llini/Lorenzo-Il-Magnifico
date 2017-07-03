@@ -8,7 +8,8 @@ public enum View {
     Lobby("Lobby.fxml", "Lobby", 400, 650),
     Gui("GUI.fxml", "Lorenzo il Magnifico", 1400, 1000),
     StandardPlacement("StandardPlacement.fxml", "Select placement options", 300, 350),
-    ImmediatePlacement("ImmediatePlacement.fxml", "Select immediate action options", 300, 200);
+    ImmediatePlacement("ImmediatePlacement.fxml", "Select immediate action options", 300, 200),
+    CouncilPrivilegeSelection("CouncilPrivilegeSelection.fxml", "Select a council privilege", 300, 200);
 
     private String filename;
     private String title;

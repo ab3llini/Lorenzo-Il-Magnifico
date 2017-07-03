@@ -4,9 +4,6 @@ package client.view.gui;
  * Created by Federico on 01/07/2017.
  */
 import client.controller.Utility;
-import client.controller.network.Client;
-import client.view.LocalMatchController;
-import client.view.gui.lobby.PlacementActionController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
@@ -79,8 +76,6 @@ public class StandardPlacementActionController extends PlacementActionController
     public void setBoardSector(BoardSectorType boardSector) {
         this.boardSector = boardSector;
     }
-
-
 
 }
 
