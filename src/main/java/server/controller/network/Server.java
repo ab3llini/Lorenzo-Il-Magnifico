@@ -3,6 +3,7 @@ package server.controller.network;
 import client.controller.network.Observer;
 import client.controller.network.ObserverType;
 import exception.authentication.AlreadyLoggedInException;
+import exception.authentication.AuthenticationException;
 import exception.authentication.LoginFailedException;
 import exception.authentication.RegistrationFailedException;
 import logger.Level;
@@ -194,7 +195,7 @@ public abstract class Server implements Observable<ServerObserver> {
     }
 
 
-    protected final synchronized boolean authenticate(ClientHandler handler, Request genericRequest) throws AlreadyLoggedInException, LoginFailedException, RegistrationFailedException {
+    protected final synchronized boolean authenticate(ClientHandler handler, Request genericRequest) throws AuthenticationException {
 
         //Login or register
         if (genericRequest.getRequestType() == RequestType.Login) {
@@ -212,8 +213,7 @@ public abstract class Server implements Observable<ServerObserver> {
             //Attempt to login
             if (Database.getInstance().login(request.getUsername(), request.getPassword())) {
 
-                //Assign username & session to hand
-                // ler
+                //Assign username & session to handler
                 handler.setUsername(request.getUsername());
                 handler.setAuthenticated(true);
 
@@ -238,6 +238,9 @@ public abstract class Server implements Observable<ServerObserver> {
             //Attempt to registration
             if (Database.getInstance().registration(request.getUsername(), request.getPassword())) {
 
+                handler.setUsername(request.getUsername());
+                handler.setAuthenticated(true);
+
                 //Notify the request
                 this.notifyAuthentication(handler);
 
@@ -245,14 +248,14 @@ public abstract class Server implements Observable<ServerObserver> {
 
             } else {
 
-                throw new RegistrationFailedException("Wrong username or password");
+                throw new RegistrationFailedException("A player with the name '"+ request.getUsername() +"' already exists!");
 
             }
 
         }
         else  {
 
-            throw new RegistrationFailedException("Wrong login request");
+            throw new AuthenticationException("Unknown authentication request");
 
         }
 

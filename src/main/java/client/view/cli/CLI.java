@@ -294,26 +294,19 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         this.ctx = CliContext.Login;
 
         String username;
-        String password = "unix";
-
-        boolean firstAttempt = true;
+        String password;
 
         do {
 
-            if (!firstAttempt) {
-                Cmd.forbidden("Wrong username o password");
-            } else {
-                firstAttempt = false;
-            }
             //Request the name
             Cmd.askFor("Please enter your username");
 
             username = this.inputQueue.take();
 
             //Request the password
-            //Cmd.askFor("Please enter your password");
+            Cmd.askFor("Please enter your password");
 
-            //password = this.inputQueue.take();
+            password = this.inputQueue.take();
 
             //Perform login request
             this.client.login(new LoginRequest(username, password));
@@ -341,35 +334,39 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         String confirmPassword;
         boolean twoIdentical = false;
 
-
-        //Request the IP
-        Cmd.askFor("Please enter your username");
-
-        username = this.inputQueue.take();
-
         do {
-            //Request the IP
-            Cmd.askFor("Please enter your password");
+            Cmd.askFor("Please enter your username");
 
-            password = this.inputQueue.take();
+            username = this.inputQueue.take();
 
-            //Request the IP
-            Cmd.askFor("Please re - enter your password");
+            do {
 
-            confirmPassword = this.inputQueue.take();
+                Cmd.askFor("Please enter your password");
 
-            if(password.equals(confirmPassword))
-                twoIdentical = true;
+                password = this.inputQueue.take();
+
+                Cmd.askFor("Please re - enter your password");
+
+                confirmPassword = this.inputQueue.take();
+
+                if (password.equals(confirmPassword))
+                    twoIdentical = true;
+            }
+            while (!twoIdentical);
+
+            //Perform login request
+            this.client.registration(new RegisterRequest(username, password));
+
+            //Wait for the server response
+            this.serverTokenQueue.take();
+
         }
-        while (!twoIdentical);
+        while (!this.client.hasAuthenticated());
 
-        //Perform login request
-        this.client.registration(new RegisterRequest(username, password));
+        this.localMatchController.setPlayerUsername(this.client.getUsername());
 
-        //Wait for the server response
-        this.serverTokenQueue.take();
+        Cmd.success("Registration successful, welcome " + client.getUsername());
 
-        this.login();
 
     }
 
@@ -1436,6 +1433,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
     public void onLoginFailed(Client client, String reason) {
 
+        Cmd.forbidden(reason);
         this.addTokenToQueue(this.serverTokenQueue);
 
     }
@@ -1444,6 +1442,18 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
         this.addTokenToQueue(this.serverTokenQueue);
 
+    }
+
+    @Override
+    public void onRegistrationSuccess(Client client) {
+        this.addTokenToQueue(this.serverTokenQueue);
+
+    }
+
+    @Override
+    public void onRegistrationFailed(Client client, String reason) {
+        Cmd.forbidden(reason);
+        this.addTokenToQueue(this.serverTokenQueue);
     }
 
     public void onLobbyNotification(Client client, LobbyNotification not) {

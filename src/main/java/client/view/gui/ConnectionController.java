@@ -157,6 +157,16 @@ public class ConnectionController extends NavigationController implements Client
 
     }
 
+    @Override
+    public void onRegistrationSuccess(Client client) {
+
+    }
+
+    @Override
+    public void onRegistrationFailed(Client client, String reason) {
+
+    }
+
 }
 
 

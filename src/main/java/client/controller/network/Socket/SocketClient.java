@@ -12,6 +12,7 @@ import netobject.request.auth.RegisterRequest;
 import netobject.response.Response;
 import netobject.response.ResponseType;
 import netobject.response.auth.LoginResponse;
+import netobject.response.auth.RegistrationResponse;
 import server.model.Match;
 
 import java.io.EOFException;
@@ -167,6 +168,27 @@ public class SocketClient extends Client implements Runnable {
                 else {
 
                     this.notifyLoginFailed(loginResponse.getMessage());
+
+                }
+
+            }
+            else if (resp.getResponseType() == ResponseType.Registration) {
+
+                RegistrationResponse registrationResponse = (RegistrationResponse)resp;
+
+                if (registrationResponse.registerHasSucceeded()) {
+
+                    this.username = registrationResponse.getUsername();
+
+                    this.authenticated = true;
+
+                    this.notifyRegistrationSucceeded();
+
+                }
+
+                else {
+
+                    this.notifyRegistrationFailed(registrationResponse.getMessage());
 
                 }
 

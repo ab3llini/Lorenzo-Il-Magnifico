@@ -81,6 +81,16 @@ public class LobbyController extends NavigationController implements ClientObser
     }
 
     @Override
+    public void onRegistrationSuccess(Client client) {
+
+    }
+
+    @Override
+    public void onRegistrationFailed(Client client, String reason) {
+
+    }
+
+    @Override
     public void onLobbyNotification(Client client, LobbyNotification not) {
 
         this.newLogEntry(not.getMessage());

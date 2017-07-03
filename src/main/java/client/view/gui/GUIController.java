@@ -567,6 +567,16 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+    @Override
+    public void onRegistrationSuccess(Client client) {
+
+    }
+
+    @Override
+    public void onRegistrationFailed(Client client, String reason) {
+
+    }
+
 
     @Override
     public void onNotification(Client sender, MatchNotification notification) {

@@ -247,7 +247,13 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
             throw e;
 
+        } catch (AuthenticationException e) {
+
+            Logger.log(Level.SEVERE, "Server (RMI)", "Unknown authentication request " + loginRequest.getUsername());
+
         }
+
+        return false;
 
     }
 

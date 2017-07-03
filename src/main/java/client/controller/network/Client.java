@@ -100,6 +100,27 @@ public abstract class Client implements RemotePlayer, LocalPlayer {
 
     }
 
+    protected void notifyRegistrationSucceeded() {
+
+        for (ClientObserver o : this.clientObservers) {
+
+            o.onRegistrationSuccess(this);
+
+        }
+
+    }
+
+    protected void notifyRegistrationFailed(String reason) {
+
+        for (ClientObserver o : this.clientObservers) {
+
+            o.onRegistrationFailed(this, reason);
+
+        }
+
+    }
+
+
     protected void notifyLobbyNotificationReceived(LobbyNotification not) {
 
         for (LobbyObserver o : this.lobbyObservers) {
