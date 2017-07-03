@@ -1531,7 +1531,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             //We have one or more privileges available and must ask the player to chose one
             ArrayList<Integer> selections = new ArrayList<>();
-            ArrayList<Integer> selectionControl = new ArrayList<>();
 
 
             ArrayList<EffectSurplus> councilPrivileges = BoardConfigParser.getCouncilPrivilegeOptions();
@@ -1541,7 +1540,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 ImmediateChoiceAction choice = null;
 
                 //Foreach council privilege available, ask to chose
-                while (choice == null || selectionControl.contains(choice.getSelection())) {
+                while (choice == null || selections.contains(choice.getSelection())) {
 
                     //1 - Ask
                     this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCouncilPrivilege, this.currentPlayer, "Select a council privilege");
@@ -1551,14 +1550,14 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                         choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                        if (selectionControl.contains(choice.getSelection())) {
+                        if (selections.contains(choice.getSelection())) {
 
                             this.remotePlayerMap.get(player).notifyActionRefused(choice, "Each privilege must be different");
 
                         }
                         else {
-                            if(!selectionControl.isEmpty() && selectionControl.contains(choice.getSelection()))
-                                selectionControl.remove(choice.getSelection());
+                            if(!selections.isEmpty() && selections.contains(choice.getSelection()))
+                                selections.remove(choice.getSelection());
                             this.notifyAllActionPerformed(player, choice, player.getUsername() + " performed an immediate action");
 
                         }
@@ -1581,7 +1580,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                 //Add the selection
                 selections.add(choice.getSelection());
-                selectionControl.add(choice.getSelection());
 
 
 
