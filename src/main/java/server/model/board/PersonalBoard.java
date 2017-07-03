@@ -149,7 +149,7 @@ public class PersonalBoard implements Serializable {
         if(!ventureCards.isEmpty())
             pBoard += "|";
         if(buildingCards.size() > 0)
-            pBoard += "   " + buildingCards.get(0).getId() + ". " + buildingCards.get(0).getName() + "    MIN FORCE: " + buildingCards.get(5).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(0));
+            pBoard += "   " + buildingCards.get(0).getId() + ". " + buildingCards.get(0).getName() + "    MIN FORCE: " + buildingCards.get(0).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(0));
         pBoard += "\n";
 
         pBoard += ("|          |    |    |    |    |    |    |     |   ");
@@ -160,7 +160,7 @@ public class PersonalBoard implements Serializable {
         if(!ventureCards.isEmpty())
             pBoard += "|";
         if(buildingCards.size() > 1)
-            pBoard += "   " +  buildingCards.get(1).getId() + ". " + buildingCards.get(1).getName() + "    MIN FORCE: " + buildingCards.get(5).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(1));
+            pBoard += "   " +  buildingCards.get(1).getId() + ". " + buildingCards.get(1).getName() + "    MIN FORCE: " + buildingCards.get(1).getPermanentEffect().getMinForce() + "    " + printProductionEffect(buildingCards.get(1));
         pBoard += "\n";
 
         pBoard += ("|          ");
