@@ -230,7 +230,6 @@ public abstract class Server implements Observable<ServerObserver> {
 
         }
 
-
         if (genericRequest.getRequestType() == RequestType.Registration) {
 
             RegisterRequest request = (RegisterRequest) genericRequest;

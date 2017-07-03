@@ -3,7 +3,7 @@
     "timeout": 999
   },
   "match": {
-    "timeout": 5
+    "timeout": 15
   },
   "server": {
     "socket-port": 4545,

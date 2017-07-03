@@ -274,13 +274,13 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         this.waitUntilPlayerObserversAreSet();
 
         //Draft the leader cards first
-        //this.context = MatchControllerContext.LeaderCardDraft;
-        //this.handleLeaderCardDraft();
+        this.context = MatchControllerContext.LeaderCardDraft;
+        this.handleLeaderCardDraft();
 
         //Draft the bonus tiles
         //Draft the leader cards first
-        //this.context = MatchControllerContext.BonusTileDraft;
-        //this.handleBonusTileDrat();
+        this.context = MatchControllerContext.BonusTileDraft;
+        this.handleBonusTileDrat();
 
         //We are now going to play
         //Draft the leader cards first

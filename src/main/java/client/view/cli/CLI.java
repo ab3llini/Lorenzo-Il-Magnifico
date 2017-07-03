@@ -159,8 +159,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         //Set the context
         this.ctx = CliContext.Bootstrap;
 
-        String hostIP = "localhost";
-        String connection = "1";
+        String hostIP ;
+        String connection;
 
         EnumCommand<ClientType> clientCmd = new EnumCommand<ClientType>(ClientType.class);
 
@@ -168,7 +168,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         Cmd.askFor("Please enter the IP address of the host");
 
         //Read the IP
-        //hostIP = this.inputQueue.take();
+        hostIP = this.inputQueue.take();
 
 
         while (!NetUtil.isIPv4(hostIP) && !hostIP.equals("localhost")) {
@@ -188,7 +188,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         clientCmd.printChoiches();
 
         //Read the selection
-        //connection = this.inputQueue.take();
+        connection = this.inputQueue.take();
 
         //Check it
         while (!clientCmd.isValid(connection)) {
@@ -428,17 +428,17 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
                 break;
             //Give the user the possibility do draft
             case ResumeLeaderCardDraft:
-                //this.draftLeaderCards();
+                this.draftLeaderCards();
                 break;
             //Give the user the possibility do draft
             case ResumeBonusTileDraft:
-                //this.draftBonusTiles();
+                this.draftBonusTiles();
                 break;
             //Normal bootstrap procedure
             case MatchStart:
             default:
-                //this.draftLeaderCards();
-                //this.draftBonusTiles();
+                this.draftLeaderCards();
+                this.draftBonusTiles();
 
         }
 
