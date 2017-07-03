@@ -32,12 +32,14 @@ public class SelectCostController extends  DialogController {
     @FXML
     void selectNo(ActionEvent event) {
         this.selectionTextField.setText("No");
+        this.selected = "No";
 
     }
 
     @FXML
     void selectYes(ActionEvent event) {
         this.selectionTextField.setText("Yes");
+        this.selected = "No";
 
 
     }

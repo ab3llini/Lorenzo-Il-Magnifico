@@ -32,16 +32,17 @@ public class DecideBanOptionController extends  DialogController {
         @FXML
         void selectNo(ActionEvent event) {
             this.selectionTextField.setText("No");
+            this.selected = "No";
 
         }
 
         @FXML
         void selectYes(ActionEvent event) {
             this.selectionTextField.setText("Yes");
+            this.selected = "No";
 
 
         }
-
         public DecideBanOptionController() {
 
             this.selectionCache = new HashMap<>();
