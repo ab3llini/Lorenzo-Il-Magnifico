@@ -75,16 +75,20 @@ public class GameSingleton {
         return this.banCards.get(CardId);
     }
 
-    public LeaderCard getSpecificLeaderCard(Integer cardId) {
+    public LeaderCard getSpecificLeaderCard(Integer CardId) {
 
-        Iterator<LeaderCard> itr = leaderCards.iterator();
-        while (itr.hasNext()) {
-            {
-                if (itr.next().getId() == cardId)
-                    return itr.next();
+        for (LeaderCard c : this.leaderCards) {
+
+            if (c.getId().equals(CardId)) {
+
+                return c;
+
             }
+
         }
+
         return null;
+
     }
 
     public ArrayList<DvptCard> getDvptCards() {
