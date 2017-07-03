@@ -677,6 +677,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Useful to save it also in the model
         this.match.updateCurrentPlayer(currentPlayer);
 
+        //Save it in order to avoid two consecutive actions for a player that has just terminate his round
+        this.save();
+
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
 
