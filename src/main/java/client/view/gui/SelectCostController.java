@@ -30,16 +30,16 @@ public class SelectCostController extends  DialogController {
     private Label selectionTextField;
 
     @FXML
-    void selectNo(ActionEvent event) {
-        this.selectionTextField.setText("No");
-        this.selected = "No";
+    void selectFirst(ActionEvent event) {
+        this.selectionTextField.setText("First");
+        this.selected = "First";
 
     }
 
     @FXML
-    void selectYes(ActionEvent event) {
-        this.selectionTextField.setText("Yes");
-        this.selected = "No";
+    void selectSecond(ActionEvent event) {
+        this.selectionTextField.setText("Second");
+        this.selected = "Second";
 
 
     }
@@ -49,8 +49,8 @@ public class SelectCostController extends  DialogController {
         this.selectionCache = new HashMap<>();
 
         //Build the cache
-        this.selectionCache.put("Yes", 0);
-        this.selectionCache.put("No", 1);
+        this.selectionCache.put("Second", 1);
+        this.selectionCache.put("First", 0);
 
     }
 

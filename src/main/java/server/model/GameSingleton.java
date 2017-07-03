@@ -11,9 +11,7 @@ import server.utility.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by Federico on 15/05/2017.
@@ -77,20 +75,16 @@ public class GameSingleton {
         return this.banCards.get(CardId);
     }
 
-    public LeaderCard getSpecificLeaderCard(Integer CardId) {
+    public LeaderCard getSpecificLeaderCard(Integer cardId) {
 
-        for (LeaderCard c : this.leaderCards) {
-
-            if (c.getId().equals(CardId)) {
-
-                return c;
-
+        Iterator<LeaderCard> itr = leaderCards.iterator();
+        while (itr.hasNext()) {
+            {
+                if (itr.next().getId() == cardId)
+                    return itr.next();
             }
-
         }
-
         return null;
-
     }
 
     public ArrayList<DvptCard> getDvptCards() {

@@ -13,8 +13,8 @@
         <JFXButton layoutX="201.0" layoutY="148.0" onMouseClicked="#onSelectClick" styleClass="form-button" text="Select ban option" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
         <MenuButton fx:id="discountSelectionMenuButton" layoutX="27.0" layoutY="100.0" mnemonicParsing="false" text="Select.." AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
             <items>
-                <MenuItem mnemonicParsing="false" onAction="#selectYes" text="Yes" />
-                <MenuItem mnemonicParsing="false" onAction="#selectNo" text="No" />
+                <MenuItem mnemonicParsing="false" onAction="#selectFirst" text="First" />
+                <MenuItem mnemonicParsing="false" onAction="#selectSecond" text="Second" />
             </items>
         </MenuButton>
         <Label fx:id="selectionTextField" layoutX="20.0" layoutY="111.0" text="Selected:" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0" />
