@@ -109,7 +109,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     private static final int ACTION_TIMEOUT =  GameConfig.getInstance().getPlayerTimeout();
 
     /**
-     * This is the match controller constructor.
+     * This is the match controller constructor (when we start a new game).
      * It is called only by the lobby itself when the match starts
      * @param handlers the handlers of the model players
      */
@@ -171,6 +171,57 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
 
         //Init anything else in the future here..
+
+    }
+
+    /**
+     * This is the match controller constructor (when we start a preexisting game).
+     * It is called only by the lobby itself when the match starts
+     * @param handlers the handlers of the model players
+     */
+    public MatchController(ArrayList<ClientHandler> handlers, Lobby lobby, Match match) throws NoSuchPlayerException {
+
+        //Set the lobby
+        this.lobby = lobby;
+
+        /*
+         * Initialize the map
+         */
+        this.remotePlayerMap = new LinkedHashMap<>();
+
+        //Init observer
+        this.observers = new ArrayList<>();
+
+        for (ClientHandler handler : handlers) {
+
+            Player player = match.getPlayerFromUsername(handler.getUsername());
+
+            this.remotePlayerMap.put(player, handler);
+
+        }
+
+        /*
+         * First up, restore the model for the current match.
+         * The players are always provided
+         */
+        this.match = match;
+
+        /*
+         * Assign the board controller
+         * Keep in mind that match.board must be initialized at this time
+         */
+        this.boardController = new BoardController(this.match.getBoard());
+
+        /*
+         * Initialize the blocking queue for the actions
+         * Make it maximum size equals to the number of players so that in the draft we can block until it is full
+         */
+        this.actions = new LinkedBlockingQueue<>(match.getPlayers().size());
+
+        this.readyObservers = new LinkedBlockingQueue<>(match.getPlayers().size());
+
+        //set the current player
+        this.currentPlayer = this.match.getCurrentPlayer();
 
     }
 
@@ -248,20 +299,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 //Look at council palace order to calculate new order of precedence
                 changePlayerOrder();
 
-                String newOrder = "";
-
-                int i=1;
-
-                for (Player player : this.match.getRoundOrder()) {
-
-                    newOrder += i+"° "+player.getUsername()+"\n";
-
-                    i++;
-
-                }
-
-                this.notifyAll("The player order has changed" + "\n" +newOrder );
-
+                this.notifyAllOfNewOrder();
             }
 
 
@@ -298,7 +336,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
-            save();
+            //save on database the updated model
+            this.save();
 
             Logger.log(Level.FINEST, this.toString(), "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
@@ -685,6 +724,13 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         //Update the current player
         this.currentPlayer = player;
+
+        //Useful to save it also in the model
+        this.match.updateCurrentPlayer(currentPlayer);
+
+        //Save it in order to avoid two consecutive actions for a player that has just terminate his round
+        this.save();
+
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
 
@@ -975,6 +1021,24 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             }
 
         }
+
+    }
+
+    private void notifyAllOfNewOrder(){
+
+        String newOrder = "";
+
+        int i=1;
+
+        for (Player player : this.match.getRoundOrder()) {
+
+            newOrder += i+"° "+player.getUsername()+"\n";
+
+            i++;
+
+        }
+
+        this.notifyAll("The player order has changed" + "\n" +newOrder );
 
     }
 
