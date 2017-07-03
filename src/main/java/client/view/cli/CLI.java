@@ -255,8 +255,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         //Print the available choices
         authCmd.printChoiches();
 
-        //String choice = this.inputQueue.take();
-        String choice = "1";
+        String choice = this.inputQueue.take();
+
         //Check it
         while (!authCmd.isValid(choice)) {
 
@@ -275,7 +275,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         } else {
 
             Logger.log(Level.SEVERE, "Authentication", "Bad selection");
-            ;
+
 
         }
 
@@ -366,6 +366,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         //Perform login request
         this.client.registration(new RegisterRequest(username, password));
 
+        //Wait for the server response
+        this.serverTokenQueue.take();
+
+        this.login();
 
     }
 

@@ -7,6 +7,7 @@ package server.controller.network.Socket;
 
 import exception.authentication.AlreadyLoggedInException;
 import exception.authentication.LoginFailedException;
+import exception.authentication.RegistrationFailedException;
 import logger.Level;
 import logger.Logger;
 import netobject.NetObjectType;
@@ -19,6 +20,7 @@ import netobject.request.auth.LoginRequest;
 import netobject.NetObject;
 import netobject.request.auth.RegisterRequest;
 import netobject.response.auth.LoginResponse;
+import netobject.response.auth.RegistrationResponse;
 import server.controller.game.GameEngine;
 import server.controller.network.Server;
 import server.controller.network.ClientHandler;
@@ -88,6 +90,13 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                     System.out.println("Login failed");
 
                     handler.sendObject(new LoginResponse(false, loginRequest.getUsername(), e.getMessage()));
+                } catch (RegistrationFailedException e) {
+
+                    System.out.println("Login failed");
+
+                    //Request failed: remove the client but tell him why
+                    handler.sendObject(new LoginResponse(false, loginRequest.getUsername(), e.getMessage()));
+
                 }
 
             }
@@ -95,6 +104,35 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
             else if(req.getRequestType() == RequestType.Registration) {
 
                 RegisterRequest registerRequest = (RegisterRequest) req;
+
+                try {
+
+                    this.authenticate(handler,registerRequest);
+
+                    handler.sendObject(new RegistrationResponse(true, registerRequest.getUsername(), "Registration succeeded"));
+
+                } catch (AlreadyLoggedInException e) {
+
+                    System.out.println("Registration failed");
+
+                    //Request failed: remove the client but tell him why
+                    handler.sendObject(new RegistrationResponse(false, registerRequest.getUsername(), e.getMessage()));
+
+                } catch (LoginFailedException e) {
+
+                    System.out.println("Registration failed");
+
+                    //Request failed: remove the client but tell him why
+                    handler.sendObject(new RegistrationResponse(false, registerRequest.getUsername(), e.getMessage()));
+
+                } catch (RegistrationFailedException e) {
+
+                    System.out.println("Registration failed");
+
+                    //Request failed: remove the client but tell him why
+                    handler.sendObject(new RegistrationResponse(false, registerRequest.getUsername(), e.getMessage()));
+
+                }
             }
 
         }

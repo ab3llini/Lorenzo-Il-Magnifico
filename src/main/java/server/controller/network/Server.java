@@ -4,6 +4,7 @@ import client.controller.network.Observer;
 import client.controller.network.ObserverType;
 import exception.authentication.AlreadyLoggedInException;
 import exception.authentication.LoginFailedException;
+import exception.authentication.RegistrationFailedException;
 import logger.Level;
 import logger.Logger;
 import netobject.action.Action;
@@ -193,26 +194,27 @@ public abstract class Server implements Observable<ServerObserver> {
     }
 
 
-    protected final synchronized boolean authenticate(ClientHandler handler, LoginRequest loginRequest) throws AlreadyLoggedInException, LoginFailedException {
+    protected final synchronized boolean authenticate(ClientHandler handler, Request genericRequest) throws AlreadyLoggedInException, LoginFailedException, RegistrationFailedException {
 
         //Login or register
-        if (loginRequest.getRequestType() == RequestType.Login) {
+        if (genericRequest.getRequestType() == RequestType.Login) {
 
+            LoginRequest request = (LoginRequest)genericRequest;
 
             //Check if there is a client already authenticated with the same username
-            if (this.gameEngine.hasAlreadyAuthenticated(loginRequest.getUsername())) {
+            if (this.gameEngine.hasAlreadyAuthenticated(request.getUsername())) {
 
-                throw new AlreadyLoggedInException("A client with username " + loginRequest.getUsername() + " has already logged in");
+                throw new AlreadyLoggedInException("A client with username " + request.getUsername() + " has already logged in");
 
             }
 
 
             //Attempt to login
-            if (Database.getInstance().login(loginRequest.getUsername(), loginRequest.getPassword())) {
+            if (Database.getInstance().login(request.getUsername(), request.getPassword())) {
 
                 //Assign username & session to hand
                 // ler
-                handler.setUsername(loginRequest.getUsername());
+                handler.setUsername(request.getUsername());
                 handler.setAuthenticated(true);
 
                 //Notify the request
@@ -227,11 +229,33 @@ public abstract class Server implements Observable<ServerObserver> {
             }
 
         }
-        else  {
 
-            throw new LoginFailedException("Wrong login request");
+
+        if (genericRequest.getRequestType() == RequestType.Registration) {
+
+            RegisterRequest request = (RegisterRequest) genericRequest;
+
+            //Attempt to registration
+            if (Database.getInstance().registration(request.getUsername(), request.getPassword())) {
+
+                //Notify the request
+                this.notifyAuthentication(handler);
+
+                return true;
+
+            } else {
+
+                throw new RegistrationFailedException("Wrong username or password");
+
+            }
 
         }
+        else  {
+
+            throw new RegistrationFailedException("Wrong login request");
+
+        }
+
 
 
     }

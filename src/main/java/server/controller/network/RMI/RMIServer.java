@@ -221,7 +221,7 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
     }
 
-    public synchronized boolean login(String connectionToken, LoginRequest loginRequest) throws RemoteException, LoginFailedException, AlreadyLoggedInException, NotConnectedException {
+    public synchronized boolean login(String connectionToken, LoginRequest loginRequest) throws RemoteException, LoginFailedException, AlreadyLoggedInException, NotConnectedException, RegistrationFailedException {
 
         ClientHandler handler = null;
 
