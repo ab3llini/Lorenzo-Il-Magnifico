@@ -1026,23 +1026,15 @@ public class Player implements Serializable {
         if(color == PlayerColor.Blue)
             playerString += (AnsiColors.ANSI_BLUE );
 
-        if(color == PlayerColor.Black)
-            playerString += (AnsiColors.ANSI_BLACK );
 
         if(color == PlayerColor.Purple)
             playerString += (AnsiColors.ANSI_PURPLE );
-
-        if(color == PlayerColor.Cyan)
-            playerString += (AnsiColors.ANSI_CYAN );
 
         if(color == PlayerColor.Green)
             playerString += (AnsiColors.ANSI_GREEN);
 
         if(color == PlayerColor.Yellow)
             playerString += (AnsiColors.ANSI_YELLOW );
-
-        if(color == PlayerColor.White)
-            playerString += (AnsiColors.ANSI_WHITE );
 
         playerString += (AnsiColors.ANSI_RESET );
 

@@ -675,14 +675,9 @@ public class Board implements Serializable {
                 if (player.getColor() == PlayerColor.Blue)
                     board += (AnsiColors.ANSI_BLUE);
 
-                if (player.getColor() == PlayerColor.Black)
-                    board += (AnsiColors.ANSI_BLACK);
-
                 if (player.getColor() == PlayerColor.Purple)
                     board += (AnsiColors.ANSI_PURPLE);
 
-                if (player.getColor() == PlayerColor.Cyan)
-                    board += (AnsiColors.ANSI_CYAN);
 
                 if (player.getColor() == PlayerColor.Green)
                     board += (AnsiColors.ANSI_GREEN);
@@ -690,8 +685,6 @@ public class Board implements Serializable {
                 if (player.getColor() == PlayerColor.Yellow)
                     board += (AnsiColors.ANSI_YELLOW);
 
-                if (player.getColor() == PlayerColor.White)
-                    board += (AnsiColors.ANSI_WHITE);
                 board += "*";
                 board += (AnsiColors.ANSI_RESET);
             } else
@@ -742,23 +735,14 @@ public class Board implements Serializable {
             if(familyMember.getPlayerColor() == PlayerColor.Blue)
                 board += (AnsiColors.ANSI_BLUE);
 
-            if(familyMember.getPlayerColor() == PlayerColor.Black)
-                board += (AnsiColors.ANSI_BLACK );
-
             if(familyMember.getPlayerColor() == PlayerColor.Purple)
                 board += (AnsiColors.ANSI_PURPLE );
-
-            if(familyMember.getPlayerColor() == PlayerColor.Cyan)
-                board += (AnsiColors.ANSI_CYAN );
 
             if(familyMember.getPlayerColor() == PlayerColor.Green)
                 board += (AnsiColors.ANSI_GREEN );
 
             if(familyMember.getPlayerColor() == PlayerColor.Yellow)
                 board += (AnsiColors.ANSI_YELLOW );
-
-            if(familyMember.getPlayerColor() == PlayerColor.White)
-                board += (AnsiColors.ANSI_WHITE);
 
             if (familyMember.getColor() == ColorType.Orange) {
                 board += ("OF");

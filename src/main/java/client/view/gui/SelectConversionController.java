@@ -19,38 +19,24 @@ import java.util.HashMap;
 public class SelectConversionController extends  DialogController {
 
 
-    private String selected;
+    private int selected = 0;
 
-    private HashMap<String, Integer> selectionCache;
-
-    @FXML
-    private MenuButton privilegeSelectionMenuButton;
 
     @FXML
-    private Label selectionTextField;
+    private Label conversionTextField;
 
     @FXML
     void selectFirst(ActionEvent event) {
-        this.selectionTextField.setText("First");
-        this.selected = "First";
+        this.conversionTextField.setText("First");
+        this.selected = 0;
 
     }
 
     @FXML
     void selectSecond(ActionEvent event) {
-        this.selectionTextField.setText("Second");
-        this.selected = "Second";
+        this.conversionTextField.setText("Second");
+        this.selected = 1;
 
-
-    }
-
-    public SelectConversionController() {
-
-        this.selectionCache = new HashMap<>();
-
-        //Build the cache
-        this.selectionCache.put("First", 0);
-        this.selectionCache.put("Second", 1);
 
     }
 
@@ -58,10 +44,10 @@ public class SelectConversionController extends  DialogController {
 
     @FXML
     void onSelectClick(MouseEvent event) {
-        if (this.selected != null) {
+        if (this.selected >= 0) {
 
             //Useful to get the corresponding index
-            this.client.performAction(new ImmediateChoiceAction(this.selectionCache.get(this.selected), this.client.getUsername()));
+            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
 
             //Close the stage
             stage.close();
@@ -70,7 +56,7 @@ public class SelectConversionController extends  DialogController {
         }
         else {
 
-            this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a privilege!");
+            this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a conversion!");
 
         }
     }
@@ -84,7 +70,7 @@ public class SelectConversionController extends  DialogController {
         super.setStage(stage);
         stage.setOnCloseRequest((WindowEvent e) -> {
             //We send the first choice always before closing the stage!
-            this.client.performAction(new ImmediateChoiceAction(0, this.client.getUsername()));
+            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
 
         });
     }

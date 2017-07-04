@@ -19,38 +19,26 @@ import java.util.HashMap;
 public class SelectCostController extends  DialogController {
 
 
-    private String selected;
-
-    private HashMap<String, Integer> selectionCache;
+    private int selected = 0;
 
     @FXML
     private MenuButton privilegeSelectionMenuButton;
 
     @FXML
-    private Label selectionTextField;
+    private Label costTextField;
 
     @FXML
     void selectFirst(ActionEvent event) {
-        this.selectionTextField.setText("First");
-        this.selected = "First";
+        this.costTextField.setText("First");
+        this.selected = 0;
 
     }
 
     @FXML
     void selectSecond(ActionEvent event) {
-        this.selectionTextField.setText("Second");
-        this.selected = "Second";
+        this.costTextField.setText("Second");
+        this.selected = 1;
 
-
-    }
-
-    public SelectCostController() {
-
-        this.selectionCache = new HashMap<>();
-
-        //Build the cache
-        this.selectionCache.put("Second", 1);
-        this.selectionCache.put("First", 0);
 
     }
 
@@ -58,10 +46,10 @@ public class SelectCostController extends  DialogController {
 
     @FXML
     void onSelectClick(MouseEvent event) {
-        if (this.selected != null) {
+        if (this.selected >= 0) {
 
             //Useful to get the corresponding index
-            this.client.performAction(new ImmediateChoiceAction(this.selectionCache.get(this.selected), this.client.getUsername()));
+            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
 
             //Close the stage
             stage.close();
@@ -70,7 +58,7 @@ public class SelectCostController extends  DialogController {
         }
         else {
 
-            this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a privilege!");
+            this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a cost!");
 
         }
     }
@@ -84,7 +72,7 @@ public class SelectCostController extends  DialogController {
         super.setStage(stage);
         stage.setOnCloseRequest((WindowEvent e) -> {
             //We send the first choice always before closing the stage!
-            this.client.performAction(new ImmediateChoiceAction(0, this.client.getUsername()));
+            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
 
         });
     }

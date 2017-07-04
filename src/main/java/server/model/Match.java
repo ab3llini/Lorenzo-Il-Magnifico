@@ -193,7 +193,7 @@ public class Match extends NetObject {
 
     public void generateRandomColor(){
         ArrayList<Integer> colorIndex = new ArrayList<Integer>();
-        for(int i=0; i<8; i++)
+        for(int i=0; i<PlayerColor.values().length; i++)
             colorIndex.add(i);
         Collections.shuffle(colorIndex);
         for(int i=0; i<players.size(); i++) {

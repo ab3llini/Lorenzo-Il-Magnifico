@@ -273,15 +273,14 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Wait fot CLI / GUI to fully load their observers..
         this.waitUntilPlayerObserversAreSet();
 
-        //Draft the leader cards first
+       /* //Draft the leader cards first
         this.context = MatchControllerContext.LeaderCardDraft;
         this.handleLeaderCardDraft();
 
         //Draft the bonus tiles
         //Draft the leader cards first
         this.context = MatchControllerContext.BonusTileDraft;
-        this.handleBonusTileDrat();
-
+        this.handleBonusTileDrat();*/
         //We are now going to play
         //Draft the leader cards first
         this.context = MatchControllerContext.Playing;
@@ -1850,11 +1849,16 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 player.getLeaderCards().remove(leaderCardToDiscard);
                 EffectSurplus effectSurplus = new EffectSurplus(new ArrayList<Resource>(), new ArrayList<Point>(), 1);
                 applyEffectSurplus(player, effectSurplus);
+
+                if(player.getPlayedLeaderCards().contains(leaderCardToDiscard))
+                    player.getPlayedLeaderCards().remove(leaderCardToDiscard);
+                if(player.getTurnActiveLeaderCard().contains(leaderCardToDiscard))
+                    player.getTurnActiveLeaderCard().remove(leaderCardToDiscard);
+
+                break;
+
             }
-            if(player.getPlayedLeaderCards().contains(leaderCardToDiscard))
-                player.getPlayedLeaderCards().remove(leaderCardToDiscard);
-            if(player.getTurnActiveLeaderCard().contains(leaderCardToDiscard))
-                player.getTurnActiveLeaderCard().remove(leaderCardToDiscard);
+
         }
     }
 

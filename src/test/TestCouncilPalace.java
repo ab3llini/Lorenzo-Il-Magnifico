@@ -18,7 +18,7 @@ public class TestCouncilPalace {
         Player player2 = new Player("test2");
         Player player3 = new Player("test3");
 
-        player1.setColor(PlayerColor.Black);
+        player1.setColor(PlayerColor.Blue);
         player2.setColor(PlayerColor.Yellow);
         player3.setColor(PlayerColor.Green);
 

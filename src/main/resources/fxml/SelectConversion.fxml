@@ -17,7 +17,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#selectSecond" text="Second" />
             </items>
         </MenuButton>
-        <Label fx:id="TextField" layoutX="20.0" layoutY="111.0" text="Selected:" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0" />
+        <Label fx:id="ConversionTextField" layoutX="20.0" layoutY="111.0" text="Selected:" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0" />
     </children>
     <stylesheets>
         <URL value="@../css/core.css" />

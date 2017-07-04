@@ -19,73 +19,59 @@ import java.util.HashMap;
 public class DecideBanOptionController extends  DialogController {
 
 
-        private String selected;
+    private int selected = 0;
 
-        private HashMap<String, Integer> selectionCache;
+    @FXML
+    private Label banTextField;
 
-        @FXML
-        private MenuButton privilegeSelectionMenuButton;
+    @FXML
+    void selectYes(ActionEvent event) {
+        this.banTextField.setText("Yes");
+        this.selected = 0;
 
-        @FXML
-        private Label selectionTextField;
+    }
 
-        @FXML
-        void selectNo(ActionEvent event) {
-            this.selectionTextField.setText("No");
-            this.selected = "No";
+    @FXML
+    void selectNo(ActionEvent event) {
+        this.banTextField.setText("No");
+        this.selected = 1;
+
+
+    }
+
+
+
+    @FXML
+    void onSelectClick(MouseEvent event) {
+        if (this.selected > 0) {
+
+            //Useful to get the corresponding index
+            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
+
+            //Close the stage
+            stage.close();
+
 
         }
+        else {
 
-        @FXML
-        void selectYes(ActionEvent event) {
-            this.selectionTextField.setText("Yes");
-            this.selected = "No";
-
+            this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a ban option!");
 
         }
-        public DecideBanOptionController() {
+    }
 
-            this.selectionCache = new HashMap<>();
+    /**
+     * Very important to override this in order to detect windows closure and send a default action
+     * @param stage the stage loaded
+     */
+    @Override
+    public void setStage(Stage stage) {
+        super.setStage(stage);
+        stage.setOnCloseRequest((WindowEvent e) -> {
+            //We send the first choice always before closing the stage!
+            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
 
-            //Build the cache
-            this.selectionCache.put("Yes", 0);
-            this.selectionCache.put("No", 1);
-
-            }
-
-
-
-        @FXML
-        void onSelectClick(MouseEvent event) {
-            if (this.selected != null) {
-
-                //Useful to get the corresponding index
-                this.client.performAction(new ImmediateChoiceAction(this.selectionCache.get(this.selected), this.client.getUsername()));
-
-                //Close the stage
-                stage.close();
-
-
-            }
-            else {
-
-                this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a privilege!");
-
-            }
-        }
-
-        /**
-         * Very important to override this in order to detect windows closure and send a default action
-         * @param stage the stage loaded
-         */
-        @Override
-        public void setStage(Stage stage) {
-            super.setStage(stage);
-            stage.setOnCloseRequest((WindowEvent e) -> {
-                //We send the first choice always before closing the stage!
-                this.client.performAction(new ImmediateChoiceAction(0, this.client.getUsername()));
-
-            });
-        }
+        });
+    }
 
 }
