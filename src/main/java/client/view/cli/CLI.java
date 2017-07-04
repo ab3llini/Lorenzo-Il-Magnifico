@@ -181,6 +181,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
         }
 
+
         //Request the connection type
         Cmd.askFor("Select which connection method you would like to use");
 

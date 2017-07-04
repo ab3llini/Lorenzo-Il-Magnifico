@@ -247,12 +247,7 @@ public class Database
 
         int matchID = match.getMatch_id();
 
-        GsonBuilder gsonBilder = new GsonBuilder();
-        gsonBilder.registerTypeAdapter(DvptCard.class, new InterfaceAdapter<DvptCard>());
-        gsonBilder.registerTypeAdapter(BanCard.class, new InterfaceAdapter<BanCard>());
-        gsonBilder.setPrettyPrinting();
-
-        Gson gson =gsonBilder.create();
+        Gson gson = getCorrectGson();
 
         String jsonInString = gson.toJson(match);
 
@@ -370,12 +365,7 @@ public class Database
 
         String matchString = resultSet.getString(1);
 
-        GsonBuilder gsonBilder = new GsonBuilder();
-        gsonBilder.registerTypeAdapter(DvptCard.class, new InterfaceAdapter<DvptCard>());
-        gsonBilder.registerTypeAdapter(BanCard.class, new InterfaceAdapter<BanCard>());
-        gsonBilder.setPrettyPrinting();
-
-        Gson gson = gsonBilder.create();
+        Gson gson = getCorrectGson();
 
         return  gson.fromJson(matchString, Match.class);
 
@@ -394,6 +384,17 @@ public class Database
 
         //Execute the query
         stmt.executeUpdate(query);
+
+    }
+
+    public Gson getCorrectGson(){
+
+        GsonBuilder gsonBilder = new GsonBuilder();
+        gsonBilder.registerTypeAdapter(DvptCard.class, new InterfaceAdapter<DvptCard>());
+        gsonBilder.registerTypeAdapter(BanCard.class, new InterfaceAdapter<BanCard>());
+        gsonBilder.setPrettyPrinting();
+
+        return gsonBilder.create();
 
     }
 
