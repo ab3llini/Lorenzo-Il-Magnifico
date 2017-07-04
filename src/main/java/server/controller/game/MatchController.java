@@ -628,9 +628,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 if (!p.isDisabled()) {
 
                     Deck<LeaderCard> draftable = draftingMap.get(p.getUsername());
-
-                    System.out.println("I am sending a draftable deck of size " + draftable.getCards().size() + " to " + p.getUsername());
-
                     this.remotePlayerMap.get(p).notifyLeaderCardDraftRequest(draftable, "Please select a leader card and draft");
                 }
 
@@ -669,7 +666,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             }
 
             //Send a request to each player and wait for a response
-            this.remotePlayerMap.get(curr).notifyBonusTileDraftRequest(bonusTileSet, "Please select a bonus tile.");
+            this.remotePlayerMap.get(curr).notifyBonusTileDraftRequest(bonusTileSet, "Please select a bonus tile. BEBUG: The size of the tiles is " + bonusTileSet.size());
 
             ShuffleBinusTileStandardAction shuffleAction;
 
@@ -769,7 +766,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 }
                 else {
 
-                    Logger.log(Level.FINEST, this.toString(), "Parsing action request, the active player is " + this.currentPlayer.getUsername());
+                    Logger.log(Level.FINEST, this.toString(), "Parsing action request for player " + this.currentPlayer.getUsername());
+
 
                     try {
 
@@ -904,7 +902,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         if(action instanceof StandardPlacementAction){
 
+            System.out.println("Placement target : " + ((StandardPlacementAction) action).getActionTarget());
+
             placeFamilyMember((StandardPlacementAction) action,player);
+
+            System.out.println("Placement successful");
+
 
             message = "placed a family member on " + ((StandardPlacementAction)action).getActionTarget();
 

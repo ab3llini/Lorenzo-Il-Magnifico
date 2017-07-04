@@ -127,7 +127,7 @@ public class GUIController extends NavigationController implements ClientObserve
         final int VENTURE_TOWER_COL = 6;
 
 
-        int col, row;
+        int col, row, towerIndex;
 
         for (Node node : this.dvptCardGrid.getChildren()) {
 
@@ -142,6 +142,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
                 col = GridPane.getColumnIndex(node);
                 row = GridPane.getRowIndex(node);
+                towerIndex = 3-row/2;
 
             }
 
@@ -150,15 +151,19 @@ public class GUIController extends NavigationController implements ClientObserve
             switch (col) {
 
                 case TERRITORY_TOWER_COL:
+                case TERRITORY_TOWER_COL + 1:
                     tower = this.localMatchController.getMatch().getBoard().getTerritoryTower();
                     break;
                 case CHARACTER_TOWER_COL:
+                case CHARACTER_TOWER_COL + 1:
                     tower = this.localMatchController.getMatch().getBoard().getCharacterTower();
                     break;
                 case BUILDING_TOWER_COL:
+                case BUILDING_TOWER_COL + 1:
                     tower = this.localMatchController.getMatch().getBoard().getBuildingTower();
                     break;
                 case VENTURE_TOWER_COL:
+                case VENTURE_TOWER_COL + 1:
                     tower = this.localMatchController.getMatch().getBoard().getVentureTower();
                     break;
 
@@ -170,7 +175,7 @@ public class GUIController extends NavigationController implements ClientObserve
                 ImageView imgView = (ImageView)node;
 
                 //Take the card from the tower, if exists
-                DvptCard card = tower.get(3-row/2).getDvptCard();
+                DvptCard card = tower.get(towerIndex).getDvptCard();
 
                 if (card != null) {
 
@@ -178,7 +183,7 @@ public class GUIController extends NavigationController implements ClientObserve
                     imgView.setImage(new Image("assets/cards/dvpt/devcards_f_en_c_" + card.getId() + ".png"));
 
                     //Round the borders
-                    this.clipImageForView(imgView);
+                    //this.clipImageForView(imgView);
 
                 }
                 else {
@@ -190,6 +195,25 @@ public class GUIController extends NavigationController implements ClientObserve
 
                 //Put a new pair in the cache : image view -> dvpt card (might be null)
                 this.imageViewDvptCardCache.put(imgView, card);
+
+            }
+            else if (node instanceof AnchorPane) {
+
+                //Check whether or not to put a family member
+                AnchorPane container = (AnchorPane)node;
+                ImageView familyMemberImageView = (ImageView) container.getChildren().get(0);
+
+                if (tower.get(towerIndex).isOccupied()) {
+
+                    //We need to add the family member to the image view
+                    familyMemberImageView.setImage(new Image("assets/members/fm_" + tower.get(towerIndex).getFamilyMember().getPlayerColor().toInt() + "_" + tower.get(towerIndex).getFamilyMember().getColor().getValue() + ".png"));
+
+                }
+                else {
+
+                    familyMemberImageView.setImage(null);
+
+                }
 
             }
 
@@ -315,7 +339,7 @@ public class GUIController extends NavigationController implements ClientObserve
                 int row = GridPane.getRowIndex(node);
                 int col = GridPane.getColumnIndex(node);
 
-                Circle actionPlace = (Circle)((AnchorPane)node).getChildren().get(0);
+                Circle actionPlace = (Circle)((AnchorPane)node).getChildren().get(1);
 
                 ImageView relative = (ImageView)getNodeByRowColumnIndex(row, col - 1, this.dvptCardGrid);
 
@@ -479,6 +503,8 @@ public class GUIController extends NavigationController implements ClientObserve
         int index = 0;
 
 
+        /* Find out where the click came from */
+
         //If the action place clicked has a corresponding image view (aka has a card associated)
         if (this.actionPlaceImageViewCache.get(event.getSource()) != null) {
 
@@ -509,7 +535,74 @@ public class GUIController extends NavigationController implements ClientObserve
 
             }
 
+            else if (pane.getId().equals("compositeProduction")) {
+
+                boardSector = BoardSectorType.CompositeProductionPlace;
+
+            }
+
+            else if (pane.getId().equals("compositeHarvest")) {
+
+                boardSector = BoardSectorType.CompositeHarvestPlace;
+
+
+            }
+
         }
+
+        else if (event.getSource() instanceof Circle) {
+
+            Circle circle = (Circle)event.getSource();
+
+            if (circle.getId().equals("singleProduction")) {
+
+                //We clicked on the council palace
+                boardSector = BoardSectorType.SingleProductionPlace;
+
+            }
+
+            else if (circle.getId().equals("singleHarvest")) {
+
+                boardSector = BoardSectorType.SingleHarvestPlace;
+
+            }
+
+            else if (circle.getId().equals("marketOne")) {
+
+                boardSector = BoardSectorType.Market;
+                index = 0;
+
+
+            }
+            else if (circle.getId().equals("marketTwo")) {
+
+                boardSector = BoardSectorType.Market;
+                index = 1;
+
+
+            }
+            else if (circle.getId().equals("marketThree")) {
+
+                boardSector = BoardSectorType.Market;
+                index = 2;
+
+            }
+            else if (circle.getId().equals("marketFour")) {
+
+                boardSector = BoardSectorType.Market;
+                index = 3;
+
+            }
+            else {
+
+                Logger.log(Level.SEVERE, this.toString(), "Event not bound!");
+
+                return;
+
+            }
+
+        }
+
 
         StandardPlacementActionController controller = (StandardPlacementActionController) this.openNewStage(View.StandardPlacement);
 
@@ -643,25 +736,16 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private void showCostSelection() {
 
-        SelectCostController controller = (SelectCostController) this.openNewStage(View.SelectCost);
+        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectCost);
         controller.setClient(client);
         controller.setLocalMatchController(this.localMatchController);
 
     }
-
-    private void showBanOptionSelection() {
-
-        DecideBanOptionController controller = (DecideBanOptionController) this.openNewStage(View.SelectCost);
-        controller.setClient(client);
-        controller.setLocalMatchController(this.localMatchController);
-
-    }
-
 
 
     private void showConversionSelection() {
 
-        SelectConversionController controller = (SelectConversionController) this.openNewStage(View.SelectConversion);
+        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectConversion);
         controller.setClient(client);
         controller.setLocalMatchController(this.localMatchController);
 
@@ -670,7 +754,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private void showDiscountOption() {
 
-        DecideDiscountOptionController controller = (DecideDiscountOptionController) this.openNewStage(View.SelectDiscount);
+        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectDiscount);
         controller.setClient(client);
         controller.setLocalMatchController(this.localMatchController);
 
@@ -705,11 +789,6 @@ public class GUIController extends NavigationController implements ClientObserve
                 case DecideDiscountOption:
                     Platform.runLater(this::showDiscountOption);
                     break;
-
-                case DecideBanOption:
-                    Platform.runLater(this::showBanOptionSelection);
-                    break;
-
 
             }
 
