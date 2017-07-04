@@ -31,8 +31,9 @@ public class Player implements Serializable {
     private HashMap<PointType, Integer> points;
     private ArrayList<FamilyMember> familyMembers;
     private ArrayList<BanCard> banCards;
-    private HashMap<LeaderCard, Boolean> leaderCards;
-    private ArrayList<LeaderCard> turnActiveLeaderCard;
+    private ArrayList<LeaderCard> leaderCards;
+    private ArrayList<LeaderCard> playedLeaderCards;
+    private ArrayList<LeaderCard> turnActiveLeaderCards;
     private PlayerColor color;
 
 
@@ -79,9 +80,11 @@ public class Player implements Serializable {
 
         this.banCards = new ArrayList<BanCard>();
 
-        this.leaderCards = new HashMap<LeaderCard, Boolean>();
+        this.leaderCards = new ArrayList<LeaderCard>();
 
-        this.turnActiveLeaderCard = new ArrayList<LeaderCard>();
+        this.playedLeaderCards = new ArrayList<LeaderCard>();
+
+        this.turnActiveLeaderCards = new ArrayList<LeaderCard>();
 
     }
 
@@ -123,11 +126,11 @@ public class Player implements Serializable {
     }
 
     public ArrayList<LeaderCard> getTurnActiveLeaderCard() {
-        return turnActiveLeaderCard;
+        return turnActiveLeaderCards;
     }
 
     public void setTurnActiveLeaderCard(ArrayList<LeaderCard> turnActiveLeaderCard) {
-        this.turnActiveLeaderCard = turnActiveLeaderCard;
+        this.turnActiveLeaderCards = turnActiveLeaderCard;
     }
 
     public PlayerColor getColor() {
@@ -189,18 +192,13 @@ public class Player implements Serializable {
             return getStones();
 
     }
-    public HashMap<LeaderCard,Boolean> getActiveLeaderCardsAsHashMap() {
-        return this.leaderCards;
-    }
 
     public ArrayList<LeaderCard> getLeaderCards() {
+        return leaderCards;
+    }
 
-        ArrayList<LeaderCard> result = new ArrayList<>();
-
-        result.addAll(this.leaderCards.keySet());
-
-        return result;
-
+    public ArrayList<LeaderCard> getTurnActiveLeaderCards() {
+        return turnActiveLeaderCards;
     }
 
     public Integer getMilitaryPoints() {
@@ -226,25 +224,14 @@ public class Player implements Serializable {
         return getVictoryPoints();
     }
 
-    public void setActiveLeaderCards(HashMap<LeaderCard, Boolean> activeLeaderCards) {
-        this.leaderCards = activeLeaderCards;
-    }
 
 
-    public ArrayList<LeaderCard> getActiveLeaderCards() {
-        ArrayList<LeaderCard> activeLeaderCardsArray = new ArrayList<LeaderCard>();
-        Iterator i = leaderCards.entrySet().iterator();
-        while(i.hasNext()){
-            Map.Entry pair = (Map.Entry)i.next();
-            int id = ((LeaderCard)(pair.getKey())).getId();
-            if (((Boolean)pair.getValue()) == true)
-                    activeLeaderCardsArray.add(GameSingleton.getInstance().getSpecificLeaderCard(id));
-        }
-        return activeLeaderCardsArray;
+    public ArrayList<LeaderCard> getPlayedLeaderCards() {
+        return playedLeaderCards;
     }
 
     public boolean isPermanentLeaderActive(PermanentLeaderEffectType permanentLeader){
-        for(LeaderCard leaderCard : getActiveLeaderCards()){
+        for(LeaderCard leaderCard : getPlayedLeaderCards()){
             if(permanentLeader == leaderCard.getLeaderEffect().getPermanentEffect())
                 return true;
         }
@@ -279,7 +266,7 @@ public class Player implements Serializable {
 
         if (this.leaderCards != null) {
 
-            this.leaderCards.put(card, false);
+            this.leaderCards.add(card);
 
         }
     }

@@ -1405,7 +1405,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         familyMember.setBusy(true);
     }
     public ActionBonus applyLeaderCardEffect(Player player, StandardPlacementAction action, ActionBonus bonus){
-        for(LeaderCard leaderCard : player.getActiveLeaderCards()){
+        for(LeaderCard leaderCard : player.getPlayedLeaderCards()){
 
             if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ariostoEffect)) {
 
@@ -1739,15 +1739,15 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
-        //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getActiveLeaderCards().contains(leaderCard))
+        //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getPlayedLeaderCards().contains(leaderCard))
         //     throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
-        if (player.getActiveLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
+        if (player.getPlayedLeaderCards().contains(leaderCard))
             throw new LeaderCardAlreadyActiveException("You have already played this card!");
 
         else {
 
-            player.getActiveLeaderCardsAsHashMap().replace(leaderCard, true);
+            player.getPlayedLeaderCards().add(leaderCard);
 
             if (leaderCard.getLeaderEffect().getOnceARound() != null) {
 
@@ -1832,7 +1832,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                 LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
 
-                player.getActiveLeaderCardsAsHashMap().put(leader, true);
+                player.getLeaderCards().add(leader);
+                player.getLeaderCards().remove(leaderCard);
 
                 this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
 
@@ -1843,21 +1844,17 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
     public void discardLeaderCard (DiscardLeaderCardAction action, Player player) throws NoActionPerformedException {
 
-        ArrayList<LeaderCard> activeLeaderCardsArray = new ArrayList<LeaderCard>();
-
-        Iterator i = player.getActiveLeaderCardsAsHashMap().entrySet().iterator();
-
-        while(i.hasNext()){
-            Map.Entry pair = (Map.Entry)i.next();
-            int id = ((LeaderCard)(pair.getKey())).getId();
-
-            if (id == action.getLeaderCardIndex()) {
-
-                player.getActiveLeaderCardsAsHashMap().remove(pair.getKey());
-                applyEffectSurplus(player, new EffectSurplus(new ArrayList<Resource>(), new ArrayList<Point>(), 1));
-                return;
-
+        LeaderCard leaderCardToDiscard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
+        for(LeaderCard leaderCard : player.getLeaderCards()){
+            if(action.getLeaderCardIndex() == leaderCard.getId()) {
+                player.getLeaderCards().remove(leaderCardToDiscard);
+                EffectSurplus effectSurplus = new EffectSurplus(new ArrayList<Resource>(), new ArrayList<Point>(), 1);
+                applyEffectSurplus(player, effectSurplus);
             }
+            if(player.getPlayedLeaderCards().contains(leaderCardToDiscard))
+                player.getPlayedLeaderCards().remove(leaderCardToDiscard);
+            if(player.getTurnActiveLeaderCard().contains(leaderCardToDiscard))
+                player.getTurnActiveLeaderCard().remove(leaderCardToDiscard);
         }
     }
 

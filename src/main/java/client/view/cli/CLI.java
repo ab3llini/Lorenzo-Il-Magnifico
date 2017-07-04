@@ -654,7 +654,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
         }
 
-        if ((actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.LeaderCardActivation ||actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.DiscardLeaderCard) && this.localMatchController.getLocalPlayer().getActiveLeaderCardsAsHashMap().size() == 0) {
+        if ((actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.LeaderCardActivation ||actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.DiscardLeaderCard) && this.localMatchController.getLocalPlayer().getLeaderCards().size() == 0) {
 
             Cmd.error("You haven't any leader card!");
 
@@ -663,7 +663,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
             choice = this.waitForCommandSelection();
 
-            while ((!actionSelection.isValid(choice) || this.localMatchController.getLocalPlayer().getActiveLeaderCardsAsHashMap().size() == 0) && (actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.LeaderCardActivation ||actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.DiscardLeaderCard)) {
+            while ((!actionSelection.isValid(choice) || this.localMatchController.getLocalPlayer().getPlayedLeaderCards().size() == 0) && (actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.LeaderCardActivation ||actionSelection.getEnumEntryFromChoice(choice) == StandardActionType.DiscardLeaderCard)) {
 
                 Cmd.error("You haven't any leader card!");
 
@@ -1021,7 +1021,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
                     for(Player player : this.localMatchController.getMatch().getPlayers()) {
                         if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
-                            container.addAll(player.getActiveLeaderCards());
+                            container.addAll(player.getPlayedLeaderCards());
                     }
 
                     ArrayCommand<LeaderCard> leaderSelection = new ArrayCommand<>(container);
