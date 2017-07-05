@@ -532,7 +532,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
-    private void updateLeaderCard(Match model) {
+    private void updateLeaderCards(Match model) {
 
         Player me = null;
         try {
@@ -557,8 +557,6 @@ public class GUIController extends NavigationController implements ClientObserve
                     else{
                         imgView.setImage(new Image("assets/cards/leader/leaders_f_c_" + card.getId() + ".jpg"));
                     }
-
-
 
                 } else {
 
@@ -631,7 +629,7 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     void onDiceRollClick(MouseEvent event) {
 
-        if (!this.checkTurnEnabled()) return;
+        if (!this.checkMoveEnabled()) return;
 
 
         if (!this.localMatchController.diceAreRolled() && this.localMatchController.canRollDices()) {
@@ -651,7 +649,7 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     void onTerminateRoundClick(MouseEvent event) {
 
-        if (!this.checkTurnEnabled()) return;
+        if (!this.checkMoveEnabled()) return;
 
         //Check if the user can roll the dices
         if(!this.localMatchController.diceAreRolled()){
@@ -671,7 +669,7 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     void placeFamilyMember(MouseEvent event) {
 
-        if (!this.checkTurnEnabled()) return;
+        if (!this.checkMoveEnabled()) return;
 
         //Check if the user can roll the dices
         if(!this.localMatchController.diceAreRolled()){
@@ -827,7 +825,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
-    private boolean checkTurnEnabled() {
+    private boolean checkMoveEnabled() {
 
         if (!this.localMatchController.hasTurn()) {
 
@@ -835,6 +833,13 @@ public class GUIController extends NavigationController implements ClientObserve
 
             return false;
 
+        }
+
+        if (this.localMatchController.getLastPendingImmediateAction() != null) {
+
+            this.showAsynchAlert(Alert.AlertType.ERROR, "Forbidden", "Immediate action pending", "You must complete the immediate action first");
+
+            return false;
         }
 
         return true;
@@ -884,10 +889,11 @@ public class GUIController extends NavigationController implements ClientObserve
 
         Platform.runLater(() -> {
 
-            GUIController.this.updatedDvptCardGrid(model);
-            GUIController.this.updateSidebars(model);
-            GUIController.this.updatePersonalBoard(model);
-            GUIController.this.updateFamilyMembers(model);
+            this.updatedDvptCardGrid(model);
+            this.updateSidebars(model);
+            this.updatePersonalBoard(model);
+            this.updateFamilyMembers(model);
+            this.updateLeaderCards(model);
 
         });
 
@@ -1071,6 +1077,19 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @Override
     public void onLeaderCardDraftRequest(Client sender, Deck<LeaderCard> cards, String message) {
+
+        if (cards.getCards().size() == 0) return;
+
+        Platform.runLater(() -> {
+
+            this.localMatchController.setDraftableLeaderCards(cards);
+
+            //Open the stage to allow the user to select something
+            LeaderCardDraftController controller = (LeaderCardDraftController) this.openNewStage(View.DraftLeaderCards);
+            controller.setClient(client);
+            controller.setLocalMatchController(this.localMatchController);
+
+        });
 
     }
 

@@ -10,7 +10,7 @@ public class DialogController extends NavigationController {
     protected Client client;
     protected LocalMatchController localMatchController;
 
-    public final void setLocalMatchController(LocalMatchController localMatchController) {
+    public void setLocalMatchController(LocalMatchController localMatchController) {
 
         this.localMatchController = localMatchController;
     }

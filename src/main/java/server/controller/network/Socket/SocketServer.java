@@ -78,7 +78,7 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                     handler.sendObject(new LoginResponse(true, loginRequest.getUsername(), "Login succeeded"));
 
                 } catch (AuthenticationException e) {
-                    handler.sendObject(new RegistrationResponse(false, loginRequest.getUsername(), e.getMessage()));
+                    handler.sendObject(new LoginResponse(false, loginRequest.getUsername(), e.getMessage()));
 
                 }
 

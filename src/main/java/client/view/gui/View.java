@@ -13,7 +13,8 @@ public enum View {
     SelectFamilyMember("SelectFamilyMember.fxml", "Select a family member", 300, 200),
     SelectConversion("SelectConversion.fxml", "Select a conversion option", 300, 200),
     SelectCost("SelectCost.fxml", "Select a cost option", 300, 200),
-    SelectDiscount("DecideDiscountOption.fxml", "Select a discount option", 300, 200);
+    SelectDiscount("DecideDiscountOption.fxml", "Select a discount option", 300, 200),
+    DraftLeaderCards("LeaderCardDraft.fxml", "Select a leader card to draft!", 1020, 450);
 
 
     private String filename;

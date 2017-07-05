@@ -137,13 +137,10 @@ public class ConnectionController extends NavigationController implements Client
 
     @Override
     public void onLoginFailed(Client client, String reason) {
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
-                ConnectionController.this.showAlert(Alert.AlertType.ERROR, "Authentication", "Login failed", reason);
-            }
-        });
-    }
 
+        this.showAsynchAlert(Alert.AlertType.ERROR, "Authentication", "Login failed", reason);
+
+    }
     @Override
     public void onLoginSuccess(Client client) {
 
