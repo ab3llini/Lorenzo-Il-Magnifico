@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" styleClass="dialog-pane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.gui.PlayerLeaderCardsController">
+   <children>
+      <Label layoutX="51.0" layoutY="31.0" prefHeight="17.0" prefWidth="260.0" text="Select an action to do with this Leader Card" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
+      <JFXButton layoutX="201.0" layoutY="148.0" onMouseClicked="#onSelectClick" styleClass="form-button" text="Select action" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+      <MenuButton fx:id="leaderMenuButton" layoutX="27.0" layoutY="100.0" mnemonicParsing="false" text="Select.." AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#selectActivate" text="Activate / Play" />
+          <MenuItem mnemonicParsing="false" onAction="#selectDiscard" text="Discard" />
+        </items>
+      </MenuButton>
+      <Label fx:id="leaderTextField" layoutX="20.0" layoutY="111.0" text="Selected:" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0" />
+   </children>
+   <stylesheets>
+      <URL value="@../css/core.css" />
+      <URL value="@../css/dialog.css" />
+   </stylesheets>
+</AnchorPane>

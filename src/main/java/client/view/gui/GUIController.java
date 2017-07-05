@@ -58,6 +58,10 @@ public class GUIController extends NavigationController implements ClientObserve
     private GridPane dvptCardGrid;
 
     @FXML
+    private GridPane leaderCardGrid;
+
+
+    @FXML
     private Label whiteDiceValueTextField;
 
     @FXML
@@ -520,6 +524,50 @@ public class GUIController extends NavigationController implements ClientObserve
         controller.setImmediateBoardSectorType(card.getImmediateBoardSector());
 
 
+    }
+
+
+    @FXML
+    void onLeaderCardClick(MouseEvent event) {
+
+    }
+
+    private void updateLeaderCard(Match model) {
+
+        Player me = null;
+        try {
+            me = model.getPlayerFromUsername(this.client.getUsername());
+        } catch (NoSuchPlayerException e) {
+            e.printStackTrace();
+        }
+        ArrayList<LeaderCard> leaderCards = me.getLeaderCards();
+
+        for (Node node : this.leaderCardGrid.getChildren()) {
+
+            if (node instanceof ImageView) {
+
+                ImageView imgView = (ImageView) node;
+
+                if(me.getLeaderCards().size() > GridPane.getColumnIndex(node)){
+                    LeaderCard card = leaderCards.get(GridPane.getColumnIndex(node));
+
+                    if(card.getId() < 10){
+                    //Assign the image
+                    imgView.setImage(new Image("assets/cards/leader/leaders_f_c_0" + card.getId() + ".jpg"));}
+                    else{
+                        imgView.setImage(new Image("assets/cards/leader/leaders_f_c_" + card.getId() + ".jpg"));
+                    }
+
+
+
+                } else {
+
+                    imgView.setImage(null);
+
+                }
+
+            }
+        }
     }
 
 
