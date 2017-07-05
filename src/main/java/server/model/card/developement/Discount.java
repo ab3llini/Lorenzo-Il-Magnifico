@@ -25,4 +25,15 @@ public class Discount implements Serializable {
     public ArrayList<Resource> getDiscount() {
         return discount;
     }
+
+    @Override
+    public String toString() {
+
+        String discountString = "";
+
+        discountString += discount.toString();
+
+        return discountString;
+
+    }
 }

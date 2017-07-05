@@ -1131,7 +1131,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         if(discount.size()>1) {
 
-            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideDiscountOption, this.currentPlayer, "Which discount do you want ?");
+            String message = "";
+
+            message += "Which discount do you want ?"+"\n"+discount.get(0).toString()+" "+discount.get(1).toString();
+
+            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideDiscountOption, this.currentPlayer, message);
 
             ImmediateChoiceAction choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
