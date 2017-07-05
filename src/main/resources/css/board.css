@@ -27,6 +27,11 @@
 
 }
 
+.bottom-label {
+
+    -fx-text-fill: -fx-secondary-color;
+
+}
 .button {
 
     -fx-background-color: -fx-main-color;

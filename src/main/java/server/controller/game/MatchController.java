@@ -1506,6 +1506,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                         throw new NotStrongEnoughException("Not strong enough to make this move because of Venture DiceBanCard");
                     }
                 }
+
+                if(familyMember.getColor() != ColorType.Neutral){
+                    if (familyMember.getForce() + action.getAdditionalServants() - ((DiceBanCard) bancard).getEffectDiceMalus().getRoundDiceMalus() < getMatch().getBoard().getTerritoryTower().get(action.getPlacementIndex()).getEntryForce()) {
+                        throw new NotStrongEnoughException("Not strong enough to make this move because of RoundDiceMalus BanCard");
+                    }
+                }
             }
             if(bancard instanceof SpecialBanCard){
                 if(((SpecialBanCard) bancard).getSpecialEffect() == SpecialEffectType.servantsPowerMalus)

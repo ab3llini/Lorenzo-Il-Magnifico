@@ -117,6 +117,15 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     private ImageView singleProductionImageView;
 
+    @FXML
+    private Pane compositeProduction;
+
+    @FXML
+    private Pane compositeHarvest;
+
+    @FXML
+    private Label notificationTextField;
+
     //The reference to the local match controller
     private LocalMatchController localMatchController;
 
@@ -224,7 +233,7 @@ public class GUIController extends NavigationController implements ClientObserve
                 AnchorPane container = (AnchorPane)node;
                 ImageView familyMemberImageView = (ImageView) container.getChildren().get(0);
 
-                this.setActionPlaceImageView(familyMemberImageView, tower.get(towerIndex));
+                this.setSingleActionPlaceImageView(familyMemberImageView, tower.get(towerIndex));
 
             }
 
@@ -232,7 +241,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
-    private void setActionPlaceImageView(ImageView view, SingleActionPlace place) {
+    private void setSingleActionPlaceImageView(ImageView view, SingleActionPlace place) {
 
         if (place.isOccupied()) {
 
@@ -249,12 +258,14 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private void setCompositeActionPlaceImageViews(Pane container, CompositeActionPlace place) {
 
-        double startX = 80;
-        double startY = 40;
-        int count = 0;
 
         final int COUNT_MAX = 5;
         final int OFFSET = 40;
+        final double FIT = 32;
+
+        double startX = 80;
+        double startY = container.getHeight() / 2 - FIT / 2;
+        int count = 0;
 
         if (place.getFamilyMembers().size() == 0) return;
 
@@ -265,13 +276,11 @@ public class GUIController extends NavigationController implements ClientObserve
 
             ImageView imageView = new ImageView();
             imageView.setImage(this.getFamilyMemberImage(member.getColor(), member.getPlayerColor()));
-            imageView.setFitHeight(32);
-            imageView.setFitWidth(32);
+            imageView.setFitHeight(FIT);
+            imageView.setFitWidth(FIT);
             imageView.setPreserveRatio(true);
 
             container.getChildren().add(imageView);
-
-            System.out.println(imageView.getLayoutX() + " - " + imageView.getLayoutY());
 
             imageView.setLayoutX(startX + OFFSET * count);
             imageView.setLayoutY(startY);
@@ -285,14 +294,15 @@ public class GUIController extends NavigationController implements ClientObserve
     private void updateFamilyMembers(Match model) {
 
         //Update all family member image views
-        this.setActionPlaceImageView(this.singleProductionImageView, model.getBoard().getProductionArea().getMainPlace());
-        this.setActionPlaceImageView(this.singleHarvestImageView, model.getBoard().getHarvestArea().getMainPlace());
-        this.setActionPlaceImageView(this.marketOneImageView, model.getBoard().getMarket().getMarketPlaces().get(0));
-        this.setActionPlaceImageView(this.marketTwoImageView, model.getBoard().getMarket().getMarketPlaces().get(1));
-        this.setActionPlaceImageView(this.marketThreeImageView, model.getBoard().getMarket().getMarketPlaces().get(2));
-        this.setActionPlaceImageView(this.marketFourImageView, model.getBoard().getMarket().getMarketPlaces().get(3));
-
+        this.setSingleActionPlaceImageView(this.singleProductionImageView, model.getBoard().getProductionArea().getMainPlace());
+        this.setSingleActionPlaceImageView(this.singleHarvestImageView, model.getBoard().getHarvestArea().getMainPlace());
+        this.setSingleActionPlaceImageView(this.marketOneImageView, model.getBoard().getMarket().getMarketPlaces().get(0));
+        this.setSingleActionPlaceImageView(this.marketTwoImageView, model.getBoard().getMarket().getMarketPlaces().get(1));
+        this.setSingleActionPlaceImageView(this.marketThreeImageView, model.getBoard().getMarket().getMarketPlaces().get(2));
+        this.setSingleActionPlaceImageView(this.marketFourImageView, model.getBoard().getMarket().getMarketPlaces().get(3));
         this.setCompositeActionPlaceImageViews(this.councilPalace, model.getBoard().getCouncilPalace());
+        this.setCompositeActionPlaceImageViews(this.compositeHarvest, model.getBoard().getHarvestArea().getSecondaryPlace());
+        this.setCompositeActionPlaceImageViews(this.compositeProduction, model.getBoard().getProductionArea().getSecondaryPlace());
 
     }
 
@@ -813,6 +823,8 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onNotification(Client sender, MatchNotification notification) {
 
+        Platform.runLater(() -> this.notificationTextField.setText(notification.getMessage()));
+
     }
 
     @Override
@@ -856,6 +868,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
 
         }
+
 
     }
 
@@ -936,6 +949,11 @@ public class GUIController extends NavigationController implements ClientObserve
             this.showAsynchAlert(Alert.AlertType.INFORMATION, "Immediate action", "Immediate action available", message);
 
         }
+        else {
+
+            Platform.runLater(() -> this.notificationTextField.setText(message));
+
+        }
 
     }
 
@@ -948,6 +966,9 @@ public class GUIController extends NavigationController implements ClientObserve
             this.localMatchController.setTurnEnabled(false);
 
         }
+        else {
+            Platform.runLater(() -> this.notificationTextField.setText(message));
+        }
 
     }
 
@@ -959,6 +980,9 @@ public class GUIController extends NavigationController implements ClientObserve
 
             this.showAsynchAlert(Alert.AlertType.WARNING, "Timeout expired", "Your move timeout expired", "Please reconnect to the game to continue playing");
 
+        }
+        else {
+            Platform.runLater(() -> this.notificationTextField.setText(message));
         }
 
     }
@@ -987,6 +1011,11 @@ public class GUIController extends NavigationController implements ClientObserve
                 this.localMatchController.confirmLastPendingImmediateAction();
 
             }
+
+        }
+        else {
+
+            Platform.runLater(() -> this.notificationTextField.setText(message));
 
         }
 
