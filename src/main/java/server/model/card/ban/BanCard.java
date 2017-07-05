@@ -24,4 +24,16 @@ public abstract class BanCard implements Serializable {
     }
 
     public BanType getType() {return type;}
+
+    @Override
+    public String toString() {
+
+        String banString = "";
+
+        banString += "ID : "+id+"\t";
+
+        banString += "Period : "+this.getPeriod()+"\n";
+
+        return banString;
+    }
 }

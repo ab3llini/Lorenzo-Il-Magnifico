@@ -36,5 +36,24 @@ public class EffectDiceMalus implements Serializable {
     public Integer getMalus() {
         return malus;
     }
-    
+
+    @Override
+    public String toString() {
+
+        String malusString = "";
+
+        if(target != null)
+            malusString += "Target: "+target.toString();
+
+        if(type != null)
+            malusString += "  Type: "+type.toString();
+
+        if(getRoundDiceMalus() >0)
+            malusString += "All your colored Family Members receive a "+getRoundDiceMalus()+" reduction of their value each time you place them";
+
+        if(malus > 0)
+            malusString += " Malus "+malus;
+
+        return malusString;
+    }
 }

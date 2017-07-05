@@ -19,4 +19,16 @@ public class NoVictoryBanCard extends BanCard implements Serializable {
     public DvptCardType getCardType() {
         return cardType;
     }
+
+    @Override
+    public String toString() {
+
+        String banString = "";
+
+        banString += super.toString();
+
+        banString += "No victory bonus get from  : "+cardType;
+
+        return banString;
+    }
 }

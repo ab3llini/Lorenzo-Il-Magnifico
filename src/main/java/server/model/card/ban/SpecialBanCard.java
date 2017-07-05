@@ -17,4 +17,16 @@ public class SpecialBanCard extends BanCard implements Serializable {
     public SpecialEffectType getSpecialEffect() {
         return specialEffect;
     }
+
+    @Override
+    public String toString() {
+
+        String banString = "";
+
+        banString += super.toString();
+
+        banString += specialEffect;
+
+        return banString;
+    }
 }

@@ -17,4 +17,16 @@ public class VictoryMalusBanCard extends BanCard implements Serializable {
     public EffectVictoryMalus getEffectVictoryMalus() {
         return effectVictoryMalus;
     }
+
+    @Override
+    public String toString() {
+
+        String banString = "";
+
+        banString += super.toString();
+
+        banString += effectVictoryMalus.toString();
+
+        return banString;
+    }
 }

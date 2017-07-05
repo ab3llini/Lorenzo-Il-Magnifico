@@ -19,4 +19,17 @@ public class DiceBanCard extends BanCard implements Serializable {
     public EffectDiceMalus getEffectDiceMalus() {
         return effectDiceMalus;
     }
+
+    @Override
+    public String toString() {
+
+        String diceBanCardString = "";
+
+        diceBanCardString += super.toString();
+
+        diceBanCardString += effectDiceMalus.toString();
+
+        return diceBanCardString;
+
+    }
 }

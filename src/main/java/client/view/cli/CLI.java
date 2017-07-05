@@ -712,6 +712,11 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
             this.showDvptCardDetail();
 
         }
+        else if (actionSelection.choiceMatch(choice, StandardActionType.ShowBanCardDetail)) {
+
+            this.showBanCardDetail();
+
+        }
         else if (actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) {
 
             this.showPersonalBoard();
@@ -737,7 +742,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
         }
 
-        boolean requiresServerConfirmation = !(actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail) || actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) ;
+        boolean requiresServerConfirmation = !(actionSelection.choiceMatch(choice,StandardActionType.ShowBanCardDetail) || actionSelection.choiceMatch(choice, StandardActionType.ShowDvptCardDetail) || actionSelection.choiceMatch(choice, StandardActionType.ShowPersonalBoard)) ;
 
         if (requiresServerConfirmation) {
 
@@ -1236,6 +1241,29 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
 
         System.out.println(GameSingleton.getInstance().getSpecificDvptCard(Integer.parseInt(id) - 1));
+
+    }
+
+    /**
+     * Asks the user for a ban card ID and prints the card details
+     *
+     * @throws InterruptedException
+     */
+    private void showBanCardDetail() throws InterruptedException {
+
+        String id;
+
+        Cmd.askFor("Enter the card ID of which you would like to see more details");
+
+        do {
+
+            id = this.inputQueue.take();
+
+        }
+        while (!this.isIntegerInRange(id, 1, GameSingleton.getInstance().getDvptCards().size()));
+
+
+        System.out.println(GameSingleton.getInstance().getSpecificBanCard(Integer.parseInt(id) - 1));
 
     }
 

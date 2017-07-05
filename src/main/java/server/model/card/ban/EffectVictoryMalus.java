@@ -39,4 +39,26 @@ public class EffectVictoryMalus implements Serializable {
         return causedByPoints;
     }
 
+    @Override
+    public String toString() {
+
+        String banString = "";
+
+        banString += "At the end of the game, you lose 1 Victory Point for every :";
+
+        if(causedByPoints.size() > 0)
+
+            banString += causedByPoints.toString();
+
+        if(causedByResources.size() > 0)
+
+            banString += causedByResources.toString();
+
+        if(isRelatedToBuilding)
+
+            banString +=" you lose 1 Victory Point for every resource on your Building Cards’ costs";
+
+        return banString;
+
+    }
 }

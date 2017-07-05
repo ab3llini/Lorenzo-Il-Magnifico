@@ -26,4 +26,23 @@ public class ValuableBanCard extends BanCard implements Serializable {
     }
 
     public ArrayList<Point> getPoints() { return points; }
+
+    @Override
+    public String toString() {
+
+        String banString = "";
+
+        banString += super.toString();
+
+        banString += "Valuable malus ...";
+
+        if(resources.size()> 0)
+            banString +=  " "+resources;
+
+        if(points.size() > 0)
+            banString += " "+points;
+
+        return banString;
+
+    }
 }
