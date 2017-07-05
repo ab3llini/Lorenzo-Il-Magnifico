@@ -9,8 +9,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" styleClass="dialog-pane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.gui.DecideDiscountOptionController">
     <children>
-        <Label layoutX="51.0" layoutY="31.0" text="Select a ban option" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
-        <JFXButton layoutX="201.0" layoutY="148.0" onMouseClicked="#onSelectClick" styleClass="form-button" text="Select ban option" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+        <Label layoutX="51.0" layoutY="31.0" text="Select a discount option" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
+        <JFXButton layoutX="201.0" layoutY="148.0" onMouseClicked="#onSelectClick" styleClass="form-button" text="Select discount option" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
         <MenuButton fx:id="discountSelectionMenuButton" layoutX="27.0" layoutY="100.0" mnemonicParsing="false" text="Select.." AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
             <items>
                 <MenuItem mnemonicParsing="false" onAction="#selectFirst" text="First" />

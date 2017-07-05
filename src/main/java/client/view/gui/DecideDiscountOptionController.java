@@ -21,8 +21,6 @@ public class DecideDiscountOptionController extends  DialogController {
 
     private int selected = 0;
 
-    @FXML
-    private MenuButton privilegeSelectionMenuButton;
 
     @FXML
     private Label discountTextField;
@@ -58,7 +56,7 @@ public class DecideDiscountOptionController extends  DialogController {
         }
         else {
 
-            this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a cost!");
+            this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a discount!");
 
         }
     }
