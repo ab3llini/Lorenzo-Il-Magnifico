@@ -1131,7 +1131,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         if(discount.size()>1) {
 
-            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideDiscountOption, this.currentPlayer, "Which discount do you want ?");
+            String message = "";
+
+            message += "Which discount do you want ?"+"\n"+discount.get(0).toString()+" "+discount.get(1).toString();
+
+            this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideDiscountOption, this.currentPlayer, message);
 
             ImmediateChoiceAction choice = (ImmediateChoiceAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
@@ -1353,6 +1357,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //once positioned the towerSlot give to the player an effectSurplus
         else if (action.getActionTarget() == BoardSectorType.VentureTower || action.getActionTarget() == BoardSectorType.CharacterTower || action.getActionTarget() == BoardSectorType.BuildingTower || action.getActionTarget() == BoardSectorType.TerritoryTower) {
 
+            //control if the player can add a new card of this type
+            player.getPersonalBoard().canAddNewCard(getCardTypeFromSector(action.getActionTarget()));
+
             //get tower type from board sector
             DvptCardType towerType = getTowerType(action.getActionTarget());
 
@@ -1530,14 +1537,24 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     public void doImmediateAction(ImmediatePlacementAction action, Integer force, Player player) throws ActionException, NoActionPerformedException, InterruptedException {
 
-        //TODO character permanent effect -------> ImmediatePlacementAction && Standard Placement Action has to extend PlacementAction in order to use only one single character filter
+        //apply character permanent effect
+        ActionBonus bonus = actionCharacterFilter(player,action);
 
         //if boardSectorType is a tower sector we place the family member in the correct (placementIndex) towerSlot of the tower
         //once positioned the towerSlot give to the player an effectSurplus
         if (action.getActionTarget() == ImmediateBoardSectorType.VentureTower || action.getActionTarget() == ImmediateBoardSectorType.CharacterTower || action.getActionTarget() == ImmediateBoardSectorType.BuildingTower || action.getActionTarget() == ImmediateBoardSectorType.TerritoryTower) {
 
+            //control if the player can add a new card of this type
+            player.getPersonalBoard().canAddNewCard(getCardTypeFromSector(action.getActionTarget()));
+
             //get tower type from board sector
             DvptCardType towerType = getTowerType(action.getActionTarget());
+
+            //control if the player can take another territory card
+            if(towerType == DvptCardType.territory){
+                if(player.getMilitaryPoints() < BoardConfigParser.getMinimumMilitaryPoints(player.getPersonalBoard().getTerritoryCards().size() + 1) && !player.isPermanentLeaderActive(PermanentLeaderEffectType.cesareEffect))
+                    throw new NotEnoughMilitaryPointsException("Not enough military points to take another territory card");
+            }
 
             //control if the towerSlot is already occupied
             if (this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).isOccupied())
@@ -1548,9 +1565,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 player.subtractCoins(3);
 
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
-            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), action.getDiscounts());
+            applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), bonus.getDiscounts());
 
-            EffectSurplus effectSurplus = boardController.immediatePlacementOnTower(force + action.getAdditionalServants(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
+            EffectSurplus effectSurplus = boardController.immediatePlacementOnTower(force + action.getAdditionalServants() +bonus.getForceBonus(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
             applyEffectSurplus(player, effectSurplus);
 
             //add to the personal board of the player the building card set in the tower slot
@@ -2260,6 +2277,61 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
     }
 
+    /**
+     * this method apply permanent effect of character cards when a player try to place his family member during immediate action (cause board sector are different)
+     * @param action
+     * @param player
+     * @return
+     */
+    public ActionBonus actionCharacterFilter(Player player, ImmediatePlacementAction action) throws PreacherEffectException {
+
+        ActionBonus bonus = new ActionBonus();
+
+        //scroll through the character cards of a player looking for permanent effect Action
+        for (CharacterDvptCard card: player.getPersonalBoard().getCharacterCards()) {
+
+            EffectPermanentAction permanentEffectAction = card.getPermanentEffect().getAction();
+
+            //if a permanent effect is relative to cardtype, check the DvptCardType type and modify the Action
+
+            if(permanentEffectAction.getTarget() == ActionType.card){
+
+                if(permanentEffectAction.getType() == getTowerType(action.getActionTarget()))
+                    bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
+
+                bonus.setDiscounts(permanentEffectAction.getDiscounts());
+            }
+
+            //if a permanent effect is relative to harvest type, check whether the Action target is CompositeHarvestPlace or SingleHarvestPlace and modify the Action
+            else if(permanentEffectAction.getTarget() == ActionType.harvest) {
+
+                if (action.getActionTarget() == ImmediateBoardSectorType.Harvest) {
+                    bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
+                }
+            }
+
+            //if a permanent effect is relative to production type, check whether the Action target is CompositeProductionPlace or SingleProductionPlace and modify the Action
+            else if(permanentEffectAction.getTarget() == ActionType.production) {
+
+                if (action.getActionTarget() == ImmediateBoardSectorType.Production) {
+                    bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
+                }
+            }
+
+            //if the effect is the preacher penality forbid the Action if the placement index is > 1
+            else if(card.getPermanentEffect().isPenality()){
+                if (action.getPlacementIndex()>1) {
+                    throw new PreacherEffectException("Preacher's permanent effect forbid it");
+                }
+            }
+
+
+        }
+
+        return  bonus;
+
+    }
+
     public void handleVaticanReport(Player player) throws InterruptedException, NoActionPerformedException {
 
 
@@ -2336,6 +2408,14 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         else
             return DvptCardType.venture;
+    }
+
+    public DvptCardType getCardTypeFromSector(BoardSectorType boardSectorType){
+        return getTowerType(boardSectorType);
+    }
+
+    public DvptCardType getCardTypeFromSector(ImmediateBoardSectorType boardSectorType){
+        return getTowerType(boardSectorType);
     }
 
     public BoardController getBoardController() {

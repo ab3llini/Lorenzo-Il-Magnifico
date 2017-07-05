@@ -105,6 +105,28 @@ public class PersonalBoard implements Serializable {
             throw new SixCardsLimitReachedException("The player has already reached the maximum limit of six cards");
     }
 
+    public int getNumberOfCards(DvptCardType dvptCardType) {
+
+        if(dvptCardType == DvptCardType.building)
+            return buildingCards.size();
+
+        else if(dvptCardType == DvptCardType.territory)
+            return territoryCards.size();
+
+        else if(dvptCardType == DvptCardType.venture)
+            return ventureCards.size();
+
+        return characterCards.size();
+
+    }
+
+    public void canAddNewCard(DvptCardType cardType) throws SixCardsLimitReachedException {
+
+        if(getNumberOfCards(cardType) == 6)
+            throw new SixCardsLimitReachedException("The player has already reached the maximum limit of six cards");
+
+    }
+
     public void addCard(DvptCard card) throws SixCardsLimitReachedException {
 
         if(card != null) {
