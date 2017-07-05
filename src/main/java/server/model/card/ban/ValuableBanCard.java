@@ -34,7 +34,7 @@ public class ValuableBanCard extends BanCard implements Serializable {
 
         banString += super.toString();
 
-        banString += "Valuable malus ...";
+        banString += "You always gain a -1 malus on ";
 
         if(resources.size()> 0)
             banString +=  " "+resources;
