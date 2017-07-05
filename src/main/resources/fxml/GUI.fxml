@@ -277,12 +277,12 @@
                                                 <Pane fx:id="councilPalace" layoutX="454.0" layoutY="825.0" onMouseClicked="#placeFamilyMember" prefHeight="115.0" prefWidth="285.0" />
                                                 <Pane fx:id="compositeProduction" layoutX="129.0" layoutY="1235.0" onMouseClicked="#placeFamilyMember" prefHeight="76.0" prefWidth="285.0" />
                                                 <Pane fx:id="compositeHarvest" layoutX="129.0" layoutY="1365.0" onMouseClicked="#placeFamilyMember" prefHeight="76.0" prefWidth="285.0" />
-                                                <ImageView fx:id="marketFourImageView" fitHeight="60.0" fitWidth="70.0" layoutX="813.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
-                                                <ImageView fx:id="marketThreeImageView" fitHeight="60.0" fitWidth="70.0" layoutX="741.0" layoutY="148.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
-                                                <ImageView fx:id="marketTwoImageView" fitHeight="60.0" fitWidth="70.0" layoutX="647.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
-                                                <ImageView fx:id="marketOneImageView" fitHeight="60.0" fitWidth="70.0" layoutX="547.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
-                                                <ImageView fx:id="singleHarvestImageView" fitHeight="60.0" fitWidth="70.0" layoutX="22.0" layoutY="275.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
-                                                <ImageView fx:id="singleProductionImageView" fitHeight="60.0" fitWidth="70.0" layoutX="23.0" layoutY="145.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="marketFourImageView" fitHeight="32.0" fitWidth="32.0" layoutX="827.0" layoutY="232.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="marketThreeImageView" fitHeight="32.0" fitWidth="32.0" layoutX="755.0" layoutY="157.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="marketTwoImageView" fitHeight="32.0" fitWidth="32.0" layoutX="661.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="marketOneImageView" fitHeight="32.0" fitWidth="32.0" layoutX="561.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="singleHarvestImageView" fitHeight="32.0" fitWidth="32.0" layoutX="36.0" layoutY="289.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="singleProductionImageView" fitHeight="32.0" fitWidth="32.0" layoutX="38.0" layoutY="157.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
                                                 <Circle fx:id="singleProduction" fill="WHITE" layoutX="53.0" layoutY="1273.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
                                                 <Circle fx:id="singleHarvest" fill="WHITE" layoutX="52.0" layoutY="1405.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
                                                 <Circle fx:id="marketOne" cache="true" cacheHint="SPEED" fill="WHITE" layoutX="577.0" layoutY="1248.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
@@ -517,7 +517,7 @@
                </children></AnchorPane>
             <AnchorPane styleClass="theme-pane" GridPane.rowIndex="2">
                <children>
-                  <Label fx:id="notificationTextField" alignment="CENTER" contentDisplay="CENTER" layoutX="200.0" layoutY="9.0" text="Label" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0" />
+                  <Label fx:id="notificationTextField" alignment="CENTER" contentDisplay="CENTER" layoutX="200.0" layoutY="9.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0" />
                </children></AnchorPane>
          </children>
       </GridPane>

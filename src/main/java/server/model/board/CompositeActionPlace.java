@@ -33,7 +33,7 @@ public class CompositeActionPlace extends ActionPlace implements Serializable {
 
     public void clean(){
 
-        this.familyMembers.clear();
+        this.familyMembers.removeAll(familyMembers);
 
     }
 }
