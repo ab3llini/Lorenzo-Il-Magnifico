@@ -94,6 +94,12 @@ public class GUIController extends NavigationController implements ClientObserve
     private TextField turnIndicatorTextField;
 
     @FXML
+    private GridPane territoryPersonalGrid;
+
+    @FXML
+    private GridPane buildingPersonalGrid;
+
+    @FXML
     private Pane councilPalace;
 
     //The reference to the local match controller
@@ -431,6 +437,64 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+
+    private void updatePersonalBoard(Match model) {
+
+        Player me = null;
+        try {
+            me = model.getPlayerFromUsername(this.client.getUsername());
+        } catch (NoSuchPlayerException e) {
+            e.printStackTrace();
+        }
+        ArrayList<TerritoryDvptCard> territoryCard = me.getPersonalBoard().getTerritoryCards();
+        ArrayList<BuildingDvptCard> buildingCard = me.getPersonalBoard().getBuildingCards();
+
+            for (Node node : this.territoryPersonalGrid.getChildren()) {
+
+
+                if (node instanceof ImageView) {
+
+                    ImageView imgView = (ImageView) node;
+
+                    if(me.getPersonalBoard().getTerritoryCards().size() > GridPane.getColumnIndex(node)){
+                     DvptCard card = territoryCard.get(GridPane.getColumnIndex(node));
+
+
+                        //Assign the image
+                        imgView.setImage(new Image("assets/cards/dvpt/devcards_f_en_c_" + card.getId() + ".png"));
+
+
+                    } else {
+
+                        imgView.setImage(null);
+
+                    }
+
+                }
+                }
+
+        for (Node node : this.buildingPersonalGrid.getChildren()) {
+
+
+            if (node instanceof ImageView) {
+
+                ImageView imgView = (ImageView) node;
+
+                if(me.getPersonalBoard().getBuildingCards().size() > GridPane.getColumnIndex(node)){
+                    DvptCard card = buildingCard.get(GridPane.getColumnIndex(node));
+
+
+                    //Assign the image
+                    imgView.setImage(new Image("assets/cards/dvpt/devcards_f_en_c_" + card.getId() + ".png"));
+
+
+                } else {
+                    imgView.setImage(null);
+                    }
+                }
+            }
+        }
+
     @FXML
     void onDiceRollClick(MouseEvent event) {
 
@@ -687,6 +751,8 @@ public class GUIController extends NavigationController implements ClientObserve
 
             GUIController.this.updatedDvptCardGrid(model);
             GUIController.this.updateSidebars(model);
+            GUIController.this.updatePersonalBoard(model);
+
 
         });
 
