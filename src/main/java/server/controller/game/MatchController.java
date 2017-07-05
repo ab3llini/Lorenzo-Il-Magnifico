@@ -1424,7 +1424,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     getMatch().getBoard().getBuildingTower().get(action.getPlacementIndex()).setOccupied(false);
 
                 if (action.getActionTarget() == BoardSectorType.CouncilPalace)
-                    getMatch().getBoard().getCouncilPalace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+                    getMatch().getBoard().getCouncilPalace().getFamilyMembers().get(action.getPlacementIndex()).setBusy(false);
 
                 if (action.getActionTarget() == BoardSectorType.Market)
                     getMatch().getBoard().getMarket().getMarketPlaces().get(action.getPlacementIndex()).setOccupied(false);
@@ -1433,13 +1433,13 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     getMatch().getBoard().getHarvestArea().getMainPlace().setOccupied(false);
 
                 if (action.getActionTarget() == BoardSectorType.CompositeHarvestPlace)
-                    getMatch().getBoard().getHarvestArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+                    getMatch().getBoard().getHarvestArea().getSecondaryPlace().getFamilyMembers().get(action.getPlacementIndex()).setBusy(false);
 
                 if (action.getActionTarget() == BoardSectorType.SingleProductionPlace)
                     getMatch().getBoard().getProductionArea().getMainPlace().setOccupied(false);
 
                 if (action.getActionTarget() == BoardSectorType.CompositeProductionPlace)
-                    getMatch().getBoard().getProductionArea().getSecondaryPlace().getPlaces().get(action.getPlacementIndex()).setBusy(false);
+                    getMatch().getBoard().getProductionArea().getSecondaryPlace().getFamilyMembers().get(action.getPlacementIndex()).setBusy(false);
 
             }
 

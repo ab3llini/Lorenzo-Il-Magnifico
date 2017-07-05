@@ -10,29 +10,30 @@ import java.util.ArrayList;
  * Created by Federico on 11/05/2017.
  */
 public class CompositeActionPlace extends ActionPlace implements Serializable {
-    protected ArrayList<FamilyMember> places;
+
+    protected ArrayList<FamilyMember> familyMembers;
 
     public CompositeActionPlace(EffectSurplus effectSurplus, Integer entryForce, Integer minPlayers) {
         super(effectSurplus, entryForce, minPlayers);
-        places = new ArrayList<FamilyMember>();
+        familyMembers = new ArrayList<FamilyMember>();
     }
 
-    public ArrayList<FamilyMember> getPlaces() {
-        return places;
+    public ArrayList<FamilyMember> getFamilyMembers() {
+        return familyMembers;
     }
 
-    public void setPlaces(ArrayList<FamilyMember> places) {
+    public void setFamilyMembers(ArrayList<FamilyMember> places) {
 
-        this.places = places;
+        this.familyMembers = places;
     }
 
     public void placeFamilyMember(FamilyMember familyMember){
-        this.places.add(familyMember);
+        this.familyMembers.add(familyMember);
     }
 
     public void clean(){
 
-        this.places.removeAll(places);
+        this.familyMembers.clear();
 
     }
 }

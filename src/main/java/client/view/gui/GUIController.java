@@ -38,10 +38,7 @@ import netobject.action.standard.TerminateRoundStandardAction;
 import netobject.notification.MatchNotification;
 import netobject.notification.ObserverReadyNotification;
 import server.model.Match;
-import server.model.board.BonusTile;
-import server.model.board.ColorType;
-import server.model.board.Player;
-import server.model.board.TowerSlot;
+import server.model.board.*;
 import server.model.card.Deck;
 import server.model.card.developement.*;
 import server.model.card.leader.LeaderCard;
@@ -101,6 +98,24 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @FXML
     private Pane councilPalace;
+
+    @FXML
+    private ImageView marketFourImageView;
+
+    @FXML
+    private ImageView marketThreeImageView;
+
+    @FXML
+    private ImageView marketTwoImageView;
+
+    @FXML
+    private ImageView marketOneImageView;
+
+    @FXML
+    private ImageView singleHarvestImageView;
+
+    @FXML
+    private ImageView singleProductionImageView;
 
     //The reference to the local match controller
     private LocalMatchController localMatchController;
@@ -209,21 +224,81 @@ public class GUIController extends NavigationController implements ClientObserve
                 AnchorPane container = (AnchorPane)node;
                 ImageView familyMemberImageView = (ImageView) container.getChildren().get(0);
 
-                if (tower.get(towerIndex).isOccupied()) {
-
-                    //We need to add the family member to the image view
-                    familyMemberImageView.setImage(new Image("assets/members/fm_" + tower.get(towerIndex).getFamilyMember().getPlayerColor().toInt() + "_" + tower.get(towerIndex).getFamilyMember().getColor().getValue() + ".png"));
-
-                }
-                else {
-
-                    familyMemberImageView.setImage(null);
-
-                }
+                this.setActionPlaceImageView(familyMemberImageView, tower.get(towerIndex));
 
             }
 
         }
+
+    }
+
+    private void setActionPlaceImageView(ImageView view, SingleActionPlace place) {
+
+        if (place.isOccupied()) {
+
+            //We need to add the family member to the image view
+            view.setImage(this.getFamilyMemberImage(place.getFamilyMember().getColor(),place.getFamilyMember().getPlayerColor()));
+
+        }
+        else {
+
+            view.setImage(null);
+
+        }
+    }
+
+    private void setCompositeActionPlaceImageViews(Pane container, CompositeActionPlace place) {
+
+        double startX = 80;
+        double startY = 40;
+        int count = 0;
+
+        final int COUNT_MAX = 5;
+        final int OFFSET = 40;
+
+        if (place.getFamilyMembers().size() == 0) return;
+
+        //Display maximum 5 family members per pane
+        for (FamilyMember member : place.getFamilyMembers()) {
+
+            if (count >= COUNT_MAX ) return;
+
+            ImageView imageView = new ImageView();
+            imageView.setImage(this.getFamilyMemberImage(member.getColor(), member.getPlayerColor()));
+            imageView.setFitHeight(32);
+            imageView.setFitWidth(32);
+            imageView.setPreserveRatio(true);
+
+            container.getChildren().add(imageView);
+
+            System.out.println(imageView.getLayoutX() + " - " + imageView.getLayoutY());
+
+            imageView.setLayoutX(startX + OFFSET * count);
+            imageView.setLayoutY(startY);
+
+            count++;
+
+        }
+
+    }
+
+    private void updateFamilyMembers(Match model) {
+
+        //Update all family member image views
+        this.setActionPlaceImageView(this.singleProductionImageView, model.getBoard().getProductionArea().getMainPlace());
+        this.setActionPlaceImageView(this.singleHarvestImageView, model.getBoard().getHarvestArea().getMainPlace());
+        this.setActionPlaceImageView(this.marketOneImageView, model.getBoard().getMarket().getMarketPlaces().get(0));
+        this.setActionPlaceImageView(this.marketTwoImageView, model.getBoard().getMarket().getMarketPlaces().get(1));
+        this.setActionPlaceImageView(this.marketThreeImageView, model.getBoard().getMarket().getMarketPlaces().get(2));
+        this.setActionPlaceImageView(this.marketFourImageView, model.getBoard().getMarket().getMarketPlaces().get(3));
+
+        this.setCompositeActionPlaceImageViews(this.councilPalace, model.getBoard().getCouncilPalace());
+
+    }
+
+    private Image getFamilyMemberImage(ColorType memberColor, PlayerColor playerColor){
+
+        return new Image("assets/members/fm_" +playerColor.toInt() + "_" + memberColor.getValue() + ".png");
 
     }
 
@@ -752,7 +827,7 @@ public class GUIController extends NavigationController implements ClientObserve
             GUIController.this.updatedDvptCardGrid(model);
             GUIController.this.updateSidebars(model);
             GUIController.this.updatePersonalBoard(model);
-
+            GUIController.this.updateFamilyMembers(model);
 
         });
 

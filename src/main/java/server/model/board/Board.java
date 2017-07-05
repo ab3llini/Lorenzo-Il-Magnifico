@@ -73,7 +73,7 @@ public class Board implements Serializable {
 
         ArrayList<Player> playersOrder=new ArrayList<Player>();
 
-        for (FamilyMember familyMember: this.councilPalace.places) {
+        for (FamilyMember familyMember: this.councilPalace.familyMembers) {
             if(!playersOrder.contains(getPlayer(familyMember.getPlayerColor()))){
                 playersOrder.add(getPlayer(familyMember.getPlayerColor()));
             }
@@ -780,7 +780,7 @@ public class Board implements Serializable {
     public String printCouncilPalace() {
         String board = new String();
         board += ("|     |    |    |    |                                      |");
-        for(FamilyMember member : getCouncilPalace().getPlaces()) {
+        for(FamilyMember member : getCouncilPalace().getFamilyMembers()) {
             board += (" ");
             board += printFamilyMember(member);
             board += (" ");
@@ -935,23 +935,23 @@ public class Board implements Serializable {
         String board = new String();
         Integer max;
 
-        if(productionArea.getSecondaryPlace().getPlaces().size() > harvestArea.getSecondaryPlace().getPlaces().size())
-            max = productionArea.getSecondaryPlace().getPlaces().size();
+        if(productionArea.getSecondaryPlace().getFamilyMembers().size() > harvestArea.getSecondaryPlace().getFamilyMembers().size())
+            max = productionArea.getSecondaryPlace().getFamilyMembers().size();
 
         else
-            max = harvestArea.getSecondaryPlace().getPlaces().size();
+            max = harvestArea.getSecondaryPlace().getFamilyMembers().size();
 
         for(int i=0; i<max; i++){
             board += ("|    | ");
 
-            if(productionArea.getSecondaryPlace().getPlaces().size() > i)
-                board += printFamilyMember(productionArea.getSecondaryPlace().getPlaces().get(i));
+            if(productionArea.getSecondaryPlace().getFamilyMembers().size() > i)
+                board += printFamilyMember(productionArea.getSecondaryPlace().getFamilyMembers().get(i));
             else
                 board += ("  ");
             board += ("  |     | ");
 
-            if(harvestArea.getSecondaryPlace().getPlaces().size() > i)
-                board += printFamilyMember(harvestArea.getSecondaryPlace().getPlaces().get(i));
+            if(harvestArea.getSecondaryPlace().getFamilyMembers().size() > i)
+                board += printFamilyMember(harvestArea.getSecondaryPlace().getFamilyMembers().get(i));
             else
                 board += ("  ");
 

@@ -139,7 +139,7 @@ public class ConnectionController extends NavigationController implements Client
     public void onLoginFailed(Client client, String reason) {
         Platform.runLater(new Runnable() {
             @Override public void run() {
-                ConnectionController.this.showAlert(Alert.AlertType.ERROR, "Authentication", "Login failed", "Username or password already in use or already logged in");
+                ConnectionController.this.showAlert(Alert.AlertType.ERROR, "Authentication", "Login failed", reason);
             }
         });
     }

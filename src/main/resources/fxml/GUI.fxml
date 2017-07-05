@@ -63,7 +63,7 @@
                                        <padding>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
                                        </padding></AnchorPane>
-                                    <ScrollPane vbarPolicy="NEVER" GridPane.columnIndex="1">
+                                    <ScrollPane vbarPolicy="NEVER" vvalue="1.0" GridPane.columnIndex="1">
                                        <content>
                                           <AnchorPane prefHeight="1300.0" prefWidth="1000.0">
                                              <children>
@@ -277,6 +277,12 @@
                                                 <Pane fx:id="councilPalace" layoutX="454.0" layoutY="825.0" onMouseClicked="#placeFamilyMember" prefHeight="115.0" prefWidth="285.0" />
                                                 <Pane fx:id="compositeProduction" layoutX="129.0" layoutY="1235.0" onMouseClicked="#placeFamilyMember" prefHeight="76.0" prefWidth="223.0" />
                                                 <Pane fx:id="compositeHarvest" layoutX="129.0" layoutY="1365.0" onMouseClicked="#placeFamilyMember" prefHeight="76.0" prefWidth="223.0" />
+                                                <ImageView fx:id="marketFourImageView" fitHeight="60.0" fitWidth="70.0" layoutX="813.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="marketThreeImageView" fitHeight="60.0" fitWidth="70.0" layoutX="741.0" layoutY="148.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="marketTwoImageView" fitHeight="60.0" fitWidth="70.0" layoutX="647.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="marketOneImageView" fitHeight="60.0" fitWidth="70.0" layoutX="547.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="singleHarvestImageView" fitHeight="60.0" fitWidth="70.0" layoutX="22.0" layoutY="275.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
+                                                <ImageView fx:id="singleProductionImageView" fitHeight="60.0" fitWidth="70.0" layoutX="23.0" layoutY="145.0" pickOnBounds="true" preserveRatio="true" y="1100.0" />
                                                 <Circle fx:id="singleProduction" fill="WHITE" layoutX="53.0" layoutY="1273.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
                                                 <Circle fx:id="singleHarvest" fill="WHITE" layoutX="52.0" layoutY="1405.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
                                                 <Circle fx:id="marketOne" cache="true" cacheHint="SPEED" fill="WHITE" layoutX="577.0" layoutY="1248.0" onMouseClicked="#placeFamilyMember" opacity="0.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
@@ -348,7 +354,7 @@
                                                 <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" smooth="false" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" smooth="false" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                                    <image>
                                                       <Image url="@../assets/cards/dvpt/devcards_f_en_c_25.png" />
                                                    </image>
@@ -396,7 +402,7 @@
                                                 <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" smooth="false" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" smooth="false" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                                    <image>
                                                       <Image url="@../assets/cards/dvpt/devcards_f_en_c_6.png" />
                                                    </image>
