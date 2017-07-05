@@ -335,8 +335,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
+            //TODO
             //save on database the updated model
-            this.save();
+            //this.save();
 
             Logger.log(Level.FINEST, this.toString(), "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
@@ -724,8 +725,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Useful to save it also in the model
         this.match.updateCurrentPlayer(currentPlayer);
 
+        //TODO
         //Save it in order to avoid two consecutive actions for a player that has just terminate his round
-        this.save();
+        //this.save();
 
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
@@ -759,7 +761,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
 
-                    save();
+                    //TODO
+                    //save on database
+                    //this.save();
 
                     break;
 
