@@ -43,7 +43,7 @@ public class DecideBanOptionController extends  DialogController {
 
     @FXML
     void onSelectClick(MouseEvent event) {
-        if (this.selected > 0) {
+        if (this.selected >= 0) {
 
             //Useful to get the corresponding index
             this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
