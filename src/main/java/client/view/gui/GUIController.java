@@ -1068,8 +1068,9 @@ public class GUIController extends NavigationController implements ClientObserve
             if (action.getActionType() == ActionType.Standard) {
 
                 this.localMatchController.confirmLastStandardPendingAction();
-
-                this.showAsynchAlert(Alert.AlertType.CONFIRMATION, "Action performed", "Action performed", "Your action was performed successfully");
+                Platform.runLater(() -> {
+                    this.notificationTextField.setText("Your action was performed successfully");
+                });
 
 
             } else {
@@ -1107,6 +1108,19 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @Override
     public void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message) {
+
+        if (tiles.size() == 0) return;
+
+        Platform.runLater(() -> {
+
+            this.localMatchController.setDraftableBonusTiles(tiles);
+
+            //Open the stage to allow the user to select something
+            BonusTileDraftController controller = (BonusTileDraftController) this.openNewStage(View.DraftBonusTiles);
+            controller.setClient(client);
+            controller.setLocalMatchController(this.localMatchController);
+
+        });
 
     }
 

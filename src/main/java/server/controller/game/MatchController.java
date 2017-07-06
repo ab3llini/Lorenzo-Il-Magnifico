@@ -279,8 +279,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         //Draft the bonus tiles
         //Draft the leader cards first
-        //this.context = MatchControllerContext.BonusTileDraft;
-        //this.handleBonusTileDrat();
+        this.context = MatchControllerContext.BonusTileDraft;
+        this.handleBonusTileDrat();
         //We are now going to play
         //Draft the leader cards first
         this.context = MatchControllerContext.Playing;
@@ -669,12 +669,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //Send a request to each player and wait for a response
             this.remotePlayerMap.get(curr).notifyBonusTileDraftRequest(bonusTileSet, "Please select a bonus tile. BEBUG: The size of the tiles is " + bonusTileSet.size());
 
-            ShuffleBinusTileStandardAction shuffleAction;
+            ShuffleBonusTileStandardAction shuffleAction;
 
             try {
 
                 //Wait for the player to take his action
-                shuffleAction = (ShuffleBinusTileStandardAction)this.waitForAction(ACTION_TIMEOUT * 1000);
+                shuffleAction = (ShuffleBonusTileStandardAction)this.waitForAction(ACTION_TIMEOUT * 1000);
 
                 BonusTile selected = bonusTileSet.get(shuffleAction.getSelection());
 

@@ -599,7 +599,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
         }
 
-        this.client.performAction(new ShuffleBinusTileStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableBonusTiles(), this.client.getUsername()));
+        this.client.performAction(new ShuffleBonusTileStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableBonusTiles(), this.client.getUsername()));
 
         //Wait for the action confirmation
         this.serverTokenQueue.take();

@@ -15,6 +15,7 @@ public enum View {
     SelectCost("SelectCost.fxml", "Select a cost option", 300, 200),
     SelectDiscount("DecideDiscountOption.fxml", "Select a discount option", 300, 200),
     DraftLeaderCards("LeaderCardDraft.fxml", "Select a leader card to draft!", 1020, 450),
+    DraftBonusTiles("BonusTileDraft.fxml", "Select a bonus tile to draft!", 500, 500),
     SelectBanOption("DecideBanOption.fxml", "Decide if you want to get banned", 300, 200);
 
 
