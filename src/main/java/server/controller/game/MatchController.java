@@ -1088,7 +1088,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             if(card.getCost().size()>1) {
 
-                this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCost, this.currentPlayer, "Which cost do you want to apply?");
+                String message = "Which cost do you want to apply? "+card.getCost().get(0).toString()+" "+card.getCost().get(1).toString();
+
+                this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCost, this.currentPlayer, message);
 
                 ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 

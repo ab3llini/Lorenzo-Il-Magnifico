@@ -181,6 +181,28 @@ public class RMIClient extends Client implements RMIClientInterface {
 
     public void registration(RegisterRequest authentication) {
 
+        try {
+
+            this.serverRef.register(this.token, authentication);
+
+            this.authenticated = true;
+
+            this.username = authentication.getUsername();
+
+            this.notifyRegistrationSucceeded();
+
+            }
+
+          catch (RemoteException e) {
+
+            Logger.log(Level.SEVERE, "RMIClient::registration", "Remote exception", e);
+
+        } catch (AuthenticationException e) {
+
+            this.notifyRegistrationFailed(e.getMessage());
+
+        }
+
     }
 
     public void performAction(Action action) {

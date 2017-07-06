@@ -95,7 +95,9 @@ public class SocketServer extends Server implements Runnable, SocketClientHandle
                     handler.sendObject(new RegistrationResponse(true, registerRequest.getUsername(), "Registration succeeded"));
 
                 } catch (AuthenticationException e) {
+
                     handler.sendObject(new RegistrationResponse(false, registerRequest.getUsername(), e.getMessage()));
+
                 }
             }
 
