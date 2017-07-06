@@ -944,7 +944,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private void showCostSelection() {
 
-        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectCost);
+        SelectCostController controller = (SelectCostController) this.openNewStage(View.SelectCost);
         controller.setClient(client);
         controller.setLocalMatchController(this.localMatchController);
 
@@ -953,7 +953,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private void showConversionSelection() {
 
-        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectConversion);
+        SelectConversionController controller = (SelectConversionController) this.openNewStage(View.SelectConversion);
         controller.setClient(client);
         controller.setLocalMatchController(this.localMatchController);
 
@@ -962,7 +962,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private void showDiscountOption() {
 
-        SelectFamilyMemberController controller = (SelectFamilyMemberController) this.openNewStage(View.SelectDiscount);
+        DecideDiscountOptionController controller = (DecideDiscountOptionController) this.openNewStage(View.SelectDiscount);
         controller.setClient(client);
         controller.setLocalMatchController(this.localMatchController);
 
