@@ -273,7 +273,7 @@ public class Board implements Serializable {
 
         for (TowerSlot towerSlot : this.characterTower) {
 
-            if (towerSlot.isOccupied()) {
+            if (towerSlot.isOccupied() && towerSlot.getFamilyMember() != null) {
 
                 players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
             }
@@ -288,7 +288,7 @@ public class Board implements Serializable {
 
         for (TowerSlot towerSlot : this.ventureTower) {
 
-            if (towerSlot.isOccupied()) {
+            if (towerSlot.isOccupied() && towerSlot.getFamilyMember() != null) {
 
                 players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
 
@@ -303,7 +303,7 @@ public class Board implements Serializable {
 
         for (TowerSlot towerSlot : this.territoryTower) {
 
-            if (towerSlot.isOccupied()) {
+            if (towerSlot.isOccupied() && towerSlot.getFamilyMember() != null) {
 
                 players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
 
@@ -318,7 +318,7 @@ public class Board implements Serializable {
 
         for (TowerSlot towerSlot : this.buildingTower) {
 
-            if (towerSlot.isOccupied()) {
+            if (towerSlot.isOccupied() && towerSlot.getFamilyMember() != null) {
 
                 players.add(getPlayer(towerSlot.getFamilyMember().getPlayerColor()));
 
