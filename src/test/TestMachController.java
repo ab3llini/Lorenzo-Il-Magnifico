@@ -9,11 +9,9 @@ import netobject.action.standard.StandardActionType;
 import netobject.action.standard.StandardPlacementAction;
 import org.junit.Test;
 import server.controller.game.MatchController;
+import server.model.FinalStanding;
 import server.model.GameSingleton;
-import server.model.board.BonusTile;
-import server.model.board.ColorType;
-import server.model.board.FamilyMember;
-import server.model.board.Player;
+import server.model.board.*;
 import server.model.card.developement.*;
 import server.model.card.leader.LeaderCard;
 import server.model.effect.ActionType;
@@ -30,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by LBARCELLA on 02/06/2017.
@@ -535,6 +534,60 @@ public class TestMachController {
 
         assertEquals(2 + cards.get(85).getPermanentEffect().getvPoints(),(int)finalScore.get(players.get(0)));
         assertEquals(5,(int)finalScore.get(players.get(1)));
+
+    }
+
+    @Test
+    public void createFinalStanding() throws IOException, URISyntaxException, SixCardsLimitReachedException {
+
+        ArrayList<Player> players = new ArrayList<>();
+        ArrayList<DvptCard> cards = DvptCardParser.parse();
+        players.add(new Player("testA"));
+        players.add(new Player("testB"));
+
+        MatchController mc = new MatchController(players,0);
+
+        players.get(0).setMilitaryPoints(10);
+        players.get(1).setMilitaryPoints(11);
+
+        players.get(0).getPersonalBoard().addVentureCard((VentureDvptCard) cards.get(85));
+
+        FinalStanding finalStanding = new FinalStanding(mc.calculatesFinalScore());
+
+        assertEquals(2 + cards.get(85).getPermanentEffect().getvPoints(),finalStanding.getScore(players.get(0)));
+
+    }
+
+    @Test
+    public void testDicesWith5Players() throws IOException, URISyntaxException {
+
+        ArrayList<Player> players = new ArrayList<>();
+        ArrayList<DvptCard> cards = DvptCardParser.parse();
+        players.add(new Player("testA"));
+        players.add(new Player("testB"));
+        players.add(new Player("testC"));
+        players.add(new Player("testD"));
+        players.add(new Player("testE"));
+
+        MatchController mc = new MatchController(players,0);
+
+        for(int i=0;i<10000;i++){
+
+            int tot=0;
+
+            mc.rollDices();
+
+            for (Dice dice : mc.getBoardController().getBoard().getDices() ) {
+
+                    tot+=dice.getValue();
+
+            }
+
+            assertTrue(tot >= 14);
+
+        }
+
+
 
     }
 }

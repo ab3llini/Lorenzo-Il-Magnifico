@@ -5,8 +5,10 @@ import static org.junit.Assert.*;
 import server.model.board.ColorType;
 import server.model.board.FamilyMember;
 import server.model.board.Player;
+import server.model.valuable.Point;
 import server.model.valuable.PointType;
 import server.model.valuable.ResourceType;
+import server.model.valuable.RollbackClass;
 
 /**
  * Created by LBARCELLA on 02/06/2017.
@@ -263,20 +265,84 @@ public class TestPlayer {
         for(int i=0; i<100 ; i++){
 
             int j=(int)(Math.random()*100)%2;
+
             FamilyMember familyMember;
+
             if(j%2 == 0){
+
                 familyMember = player.getFamilyMember(ColorType.Black);
+
             }
             else{
+
                 familyMember = player.getFamilyMember(ColorType.Neutral);
+
             }
 
             if(j%2 == 0){
+
                 assertEquals(ColorType.Black,familyMember.getColor());
+
             }
             else {
+
                 assertEquals(ColorType.Neutral,familyMember.getColor());
+
             }
         }
+    }
+
+    @Test
+    public void rollbackTest() {
+
+        Player player = new Player("test");
+
+        int j=(int)(Math.random()*100)%2;
+        int a=(int)(Math.random()*100)%2;
+        int v=(int)(Math.random()*100)%2;
+        int s=(int)(Math.random()*100)%2;
+        int w=(int)(Math.random()*100)%2;
+
+        player.setWood(j);
+        player.setCoins(a);
+        player.setServants(v);
+        player.setFaithPoints(s);
+        player.setMilitaryPoints(w);
+
+        RollbackClass rollbackClass = new RollbackClass(player);
+
+        for(int i=0; i<1000; i++){
+
+            ResourceType resourceType;
+
+            if(i%2 == 0)
+                resourceType = ResourceType.Wood;
+
+            else
+                resourceType = ResourceType.Coins;
+
+            player.addGenericResource(resourceType,i);
+
+            PointType pointType;
+
+            if(i%7 == 0)
+                pointType = PointType.Military;
+            else if(i%3 == 0)
+                pointType = PointType.Faith;
+            else
+                pointType = PointType.Victory;
+
+            player.addGenericPoint(pointType,i);
+
+        }
+
+        player.rollback(rollbackClass);
+
+        assertEquals(j,(int)player.getWood());
+        assertEquals(a,(int)player.getCoins());
+        assertEquals(v,(int)player.getServants());
+        assertEquals(s,(int)player.getFaithPoints());
+        assertEquals(w,(int)player.getMilitaryPoints());
+
     }
 }

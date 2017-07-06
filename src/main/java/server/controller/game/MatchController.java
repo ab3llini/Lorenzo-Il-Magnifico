@@ -1088,7 +1088,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             if(card.getCost().size()>1) {
 
-                String message = "Which cost do you want to apply? "+card.getCost().get(0).toString()+" "+card.getCost().get(1).toString();
+                String message = "Which cost do you want to apply?\n1°->"+card.getCost().get(0).toString()+"2°-> "+card.getCost().get(1).toString();
 
                 this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCost, this.currentPlayer, message);
 
@@ -1148,7 +1148,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             String message = "";
 
-            message += "Which discount do you want ?"+"\n"+discount.get(0).toString()+" "+discount.get(1).toString();
+            message += "Which discount do you want ?"+"\n1°-> "+discount.get(0).toString()+"2°-> "+discount.get(1).toString();
 
             this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideDiscountOption, this.currentPlayer, message);
 
