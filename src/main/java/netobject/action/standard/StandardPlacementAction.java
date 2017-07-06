@@ -22,7 +22,6 @@ public class StandardPlacementAction extends Action {
 
     private Integer additionalServants;
 
-
     private ArrayList<Discount> discounts;
 
     public StandardPlacementAction(BoardSectorType actionTarget, Integer placementIndex, ColorType colorType, int additionalServants, String sender) {
@@ -47,19 +46,12 @@ public class StandardPlacementAction extends Action {
             return colorType;
     }
 
-
     public int getAdditionalServants() {
             return additionalServants;
     }
 
     public void setAdditionalServants(Integer additionalServants) {
         this.additionalServants = additionalServants;
-    }
-
-    public void increaseBonus(int bonus) {
-
-        this.additionalServants += bonus;
-
     }
 
     public void setDiscounts(ArrayList<Discount> discounts) {

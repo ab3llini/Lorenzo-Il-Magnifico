@@ -259,6 +259,40 @@ public class RMIServer extends Server implements RMIServerInterface, ClientHandl
 
     public synchronized void register(String connectionToken, RegisterRequest registerAuthentication) throws RemoteException, UsernameAlreadyInUseException, AlreadyLoggedInException, LoginFailedException {
 
+        ClientHandler handler;
+
+        try {
+
+            handler = this.getClientHandler(connectionToken);
+
+            this.authenticate(handler, registerAuthentication);
+
+        }
+        //If we want to terminate the handler we must, before forwarding the exception to the client, catch it and do something.
+        catch (LoginFailedException e) {
+
+            Logger.log(Level.FINEST, "Server (RMI)", "Bad registration for client " + registerAuthentication.getUsername());
+
+            throw e;
+
+        }
+
+        catch (AlreadyLoggedInException e) {
+
+            Logger.log(Level.FINEST, "Server (RMI)", "Client " + registerAuthentication.getUsername() + " was already logged in!");
+
+            throw e;
+
+        } catch (AuthenticationException e) {
+
+            Logger.log(Level.SEVERE, "Server (RMI)", "Unknown authentication request " + registerAuthentication.getUsername());
+
+
+        } catch (NotConnectedException e) {
+
+            Logger.log(Level.SEVERE, "Server (RMI)", "Not connected authentication request " + registerAuthentication.getUsername());
+
+        }
 
 
     }

@@ -992,6 +992,22 @@ public class Player implements Serializable {
         }
     }
 
+    /**
+     * this method is useful to reset player resources and points when something goes wrong
+     * @return
+     */
+    public void rollback(RollbackClass rollbackThings){
+
+        this.setVictoryPoints(rollbackThings.getVictoryPoints());
+        this.setMilitaryPoints(rollbackThings.getMilitaryPoints());
+        this.setFaithPoints(rollbackThings.getFaithPoints());
+        this.setStones(rollbackThings.getStones());
+        this.setServants(rollbackThings.getServants());
+        this.setCoins(rollbackThings.getCoins());
+        this.setWood(rollbackThings.getWood());
+
+    }
+
     public String toString2() {
 
         String playerString = "";

@@ -3,12 +3,13 @@ package server.model;
 import com.sun.xml.internal.fastinfoset.tools.FI_DOM_Or_XML_DOM_SAX_SAXEvent;
 import server.model.board.Player;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by LBARCELLA on 01/07/2017.
  */
-public class FinalStanding {
+public class FinalStanding implements Serializable {
 
     private ArrayList<Player> standings;
     private LinkedHashMap<Player,Integer> standingsAndPoints;

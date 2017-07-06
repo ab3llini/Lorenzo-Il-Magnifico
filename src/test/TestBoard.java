@@ -6,6 +6,7 @@ import server.model.board.Player;
 import server.model.board.TowerSlot;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
+import server.model.card.developement.DvptCardType;
 import server.utility.BanCardParser;
 import server.utility.DvptCardParser;
 
@@ -138,6 +139,39 @@ public class TestBoard {
         assertEquals(50,(int)board.getCharacterTower().get(1).getDvptCard().getId());
         assertEquals(51,(int)board.getCharacterTower().get(2).getDvptCard().getId());
         assertEquals(52,(int)board.getCharacterTower().get(3).getDvptCard().getId());
+    }
+
+    @Test
+    public void getPlayersInTowersTest() {
+
+        Board board = new Board(new ArrayList<>());
+
+        board.getPlayersInTower(DvptCardType.building);
+
+        board.getBuildingTower().get(0).setOccupied(true);
+
+        board.getPlayersInTower(DvptCardType.building);
+
+        board.getPlayersInTower(DvptCardType.venture);
+
+        board.getBuildingTower().get(0).setOccupied(true);
+
+        board.getPlayersInTower(DvptCardType.venture);
+
+        board.getPlayersInTower(DvptCardType.character);
+
+        board.getBuildingTower().get(0).setOccupied(true);
+
+        board.getPlayersInTower(DvptCardType.character);
+
+        board.getPlayersInTower(DvptCardType.territory);
+
+        board.getBuildingTower().get(0).setOccupied(true);
+
+        board.getPlayersInTower(DvptCardType.territory);
+
+
+
     }
 }
 

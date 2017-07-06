@@ -908,7 +908,20 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             System.out.println("Placement target : " + ((StandardPlacementAction) action).getActionTarget());
 
-            placeFamilyMember((StandardPlacementAction) action,player);
+            RollbackClass playerRollback = new RollbackClass(player);
+
+            try{
+
+                placeFamilyMember((StandardPlacementAction) action,player);
+
+            }
+            catch (ActionException actionException){
+
+                player.rollback(playerRollback);
+
+                throw actionException;
+
+            }
 
             System.out.println("Placement successful");
 
@@ -1075,7 +1088,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             if(card.getCost().size()>1) {
 
-                this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCost, this.currentPlayer, "Which cost do you want to apply?");
+                String message = "Which cost do you want to apply?\n1°->"+card.getCost().get(0).toString()+"2°-> "+card.getCost().get(1).toString();
+
+                this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectCost, this.currentPlayer, message);
 
                 ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
@@ -1133,7 +1148,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             String message = "";
 
-            message += "Which discount do you want ?"+"\n"+discount.get(0).toString()+" "+discount.get(1).toString();
+            message += "Which discount do you want ?"+"\n1°-> "+discount.get(0).toString()+"2°-> "+discount.get(1).toString();
 
             this.notifyAllImmediateActionAvailable(ImmediateActionType.DecideDiscountOption, this.currentPlayer, message);
 
@@ -1282,7 +1297,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //some players' ban card can reduce family member's force
         noMarket = applyDiceMalusBanCard(action, player, familyMember, noMarket);
 
-
+        //subtract the additional servants used
+        player.subtractServants(action.getAdditionalServants());
 
         //if boardSectorType is CouncilPalace we place the family member in the council palace
         //once positioned the council palace give to the player an effectSurplus
@@ -1393,16 +1409,15 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             if (this.match.getBoard().getPlayersInTower(towerType).size() > 0 && !player.isPermanentLeaderActive(PermanentLeaderEffectType.filippoEffect))
                 player.subtractCoins(3);
 
+            applyEffectSurplus(player,this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getEffectSurplus());
+
             //try to apply card cost to the player that made the action .. if this method return an exception no family members will be set here
             applyDvptCardCost(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard(), bonus.getDiscounts());
 
-            EffectSurplus effectSurplus = boardController.placeOnTower(familyMember, action.getAdditionalServants() + bonus.getForceBonus(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
-
-            applyEffectSurplus(player, effectSurplus);
+            boardController.placeOnTower(familyMember, action.getAdditionalServants() + bonus.getForceBonus(), this.match.getPlayers().size(), towerType, action.getPlacementIndex());
 
             //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
-
 
             applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
@@ -1410,9 +1425,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
 
         }
-
-        //subtract the additional servants used
-        player.subtractServants(action.getAdditionalServants());
 
         //set the familiar busy
         familyMember.setBusy(true);
