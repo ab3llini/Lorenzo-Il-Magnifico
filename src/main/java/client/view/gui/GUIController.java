@@ -271,7 +271,11 @@ public class GUIController extends NavigationController implements ClientObserve
         double startY = container.getHeight() / 2 - FIT / 2;
         int count = 0;
 
-        if (place.getFamilyMembers().size() == 0) return;
+        if (place.getFamilyMembers().size() == 0) {
+
+            container.getChildren().clear();
+
+        };
 
         //Display maximum 5 family members per pane
         for (FamilyMember member : place.getFamilyMembers()) {
