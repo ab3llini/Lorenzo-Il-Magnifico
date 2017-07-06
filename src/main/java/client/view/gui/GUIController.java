@@ -968,6 +968,14 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+    private void showBanOption() {
+
+        DecideBanOptionController controller = (DecideBanOptionController) this.openNewStage(View.SelectBanOption);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
+
     @Override
     public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
@@ -996,6 +1004,10 @@ public class GUIController extends NavigationController implements ClientObserve
 
                 case DecideDiscountOption:
                     Platform.runLater(this::showDiscountOption);
+                    break;
+
+                case DecideBanOption:
+                    Platform.runLater(this::showBanOption);
                     break;
 
             }
