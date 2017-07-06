@@ -247,7 +247,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
     private void setSingleActionPlaceImageView(ImageView view, SingleActionPlace place) {
 
-        if (place.isOccupied()) {
+        if (place.isOccupied() && place.getFamilyMember() != null) {
 
             //We need to add the family member to the image view
             view.setImage(this.getFamilyMemberImage(place.getFamilyMember().getColor(),place.getFamilyMember().getPlayerColor()));
@@ -835,12 +835,12 @@ public class GUIController extends NavigationController implements ClientObserve
 
         }
 
-        if (this.localMatchController.getLastPendingImmediateAction() != null) {
+        /*if (this.localMatchController.getLastPendingImmediateAction() != null) {
 
             this.showAsynchAlert(Alert.AlertType.ERROR, "Forbidden", "Immediate action pending", "You must complete the immediate action first");
 
             return false;
-        }
+        }*/
 
         return true;
 

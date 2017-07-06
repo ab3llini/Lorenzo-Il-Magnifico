@@ -322,123 +322,135 @@
                   </Tab>
                   <Tab text="Personal board">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0">
                            <children>
-                              <GridPane layoutX="7.0" layoutY="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <GridPane layoutX="7.0" layoutY="-1.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                                  <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="200.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1000.0" minWidth="1000.0" prefWidth="1000.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="200.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="1000.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="1">
-                                       <children>
-                                          <ImageView cache="true" cacheHint="SPEED" fitHeight="735.0" fitWidth="999.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <image>
-                                                <Image url="@../assets/tiles/punchboard_f_c_03.jpg" />
-                                             </image>
-                                          </ImageView>
-                                          <GridPane fx:id="buildingPersonalGrid" alignment="CENTER" layoutX="9.0" layoutY="13.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="15.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
+                                    <ScrollPane hbarPolicy="NEVER" maxHeight="735.0" minHeight="735.0" prefHeight="735.0" vbarPolicy="NEVER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                       <content>
+                                          <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                                              <children>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                <ImageView cache="true" cacheHint="SPEED" fitHeight="735.0" fitWidth="999.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                      <Image url="@../assets/tiles/punchboard_f_c_03.jpg" />
                                                    </image>
                                                 </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
+                                                <GridPane fx:id="buildingPersonalGrid" alignment="CENTER" layoutX="9.0" layoutY="13.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="15.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_y_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets top="15.0" />
+                                                   </padding>
+                                                </GridPane>
+                                                <GridPane fx:id="territoryPersonalGrid" alignment="CENTER" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="300.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                                                         <image>
+                                                            <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets top="15.0" />
+                                                   </padding>
+                                                </GridPane>
                                              </children>
-                                             <padding>
-                                                <Insets top="15.0" />
-                                             </padding>
-                                          </GridPane>
-                                          <GridPane fx:id="territoryPersonalGrid" alignment="CENTER" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="300.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView cache="true" cacheHint="SPEED" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
-                                                   <image>
-                                                      <Image url="@../assets/cards/dvpt/devcards_b_c_g_1.jdevcards_b_c_pdevcards_b_c_g.jdevcards_b_c_pg.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                             </children>
-                                             <padding>
-                                                <Insets top="15.0" />
-                                             </padding>
-                                          </GridPane>
-                                       </children>
-                                    </AnchorPane>
+                                          </AnchorPane>
+                                       </content>
+                                    </ScrollPane>
+                                    <ImageView fitHeight="550.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                       <image>
+                                          <Image url="@../assets/common/personalbonustile_1.png" />
+                                       </image>
+                                       <GridPane.margin>
+                                          <Insets bottom="175.0" />
+                                       </GridPane.margin>
+                                    </ImageView>
                                  </children>
                               </GridPane>
                            </children></AnchorPane>
