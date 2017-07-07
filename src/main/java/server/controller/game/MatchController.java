@@ -102,6 +102,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     private BlockingQueue<ObserverType> readyObservers;
 
+    /**
+     * The round iterator
+     */
+    private RoundIterator roundIterator;
+
 
     /**
      * Constants
@@ -167,8 +172,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
          */
         this.actions = new LinkedBlockingQueue<Action>(players.size());
 
+        //Init the observers ready queue
         this.readyObservers = new LinkedBlockingQueue<>(players.size());
 
+        //Make sure that the match has already been initialized here!
+        roundIterator = new RoundIterator(this.match);
 
         //Init anything else in the future here..
 
@@ -234,6 +242,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //set the current player
         this.currentPlayer = this.match.getCurrentPlayer();
 
+        //Init the proper round iterator
+        this.roundIterator = new PersistenceRoundIterator(match, currentPlayer);
+
     }
 
     /**
@@ -298,10 +309,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         //We are now going to play
         this.context = MatchControllerContext.Playing;
-
-
-        //Make sure that the match has already been initialized here!
-        RoundIterator roundIterator = new RoundIterator(this.match);
 
         while (roundIterator.hasNext()) {
 

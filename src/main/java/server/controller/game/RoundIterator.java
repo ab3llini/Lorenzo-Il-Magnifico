@@ -25,7 +25,6 @@ public class RoundIterator implements Iterator<Queue<Player>> {
     private static final int TURNS = 2;
     private static final int ROUNDS = 4;
 
-    private static final int MINIMUM_PLAYERS = 2;
 
     private static final int FIRST_ROUND = 1;
     private static final int LAST_ROUND = 4;
@@ -37,6 +36,7 @@ public class RoundIterator implements Iterator<Queue<Player>> {
         this.match = match;
 
     }
+
 
     public boolean hasNext() {
 
