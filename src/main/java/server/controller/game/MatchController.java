@@ -454,13 +454,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Re enable the player
         belonging.setDisabled(false);
 
+        Logger.log(Level.FINEST, this.toString(), "Player " + belonging.getUsername() + " re enabled");
+
         //Re add the map entry
         this.remotePlayerMap.put(belonging, handler);
 
-        //Send a model update to him
-        handler.notifyModelUpdate(this.match);
-
-        this.notifyAll("Player " + belonging.getUsername() + " reconnected");
+        this.remotePlayerMap.get(belonging).notifyModelUpdate(this.match);
 
         //If the players are playing
         if (this.currentPlayer != null) {
@@ -468,7 +467,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             handler.notifyTurnEnabled(this.currentPlayer,"It is " + this.currentPlayer.getUsername() + "'s turn!");
 
         }
-        Logger.log(Level.FINEST, this.toString(), "Player " + belonging.getUsername() + " reconnected");
+
+        this.notifyAll("Player " + belonging.getUsername() + " rejoined the match");
 
 
     }
@@ -504,8 +504,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * When all the players have selected one card, the draft takes places and the decks received from the nearby player are sent.
      */
     private void handleLeaderCardDraft() {
-
-        //TODO: Fix a bug : when a user stop the process at the beginning of the draft without selecting anything something goes wrong with the tiles.
 
         final int NUMBER_OF_CARDS_PER_DECK = 4;
 
@@ -668,6 +666,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             //Send a request to each player and wait for a response
             this.remotePlayerMap.get(curr).notifyBonusTileDraftRequest(bonusTileSet, "Please select a bonus tile. BEBUG: The size of the tiles is " + bonusTileSet.size());
+
+            Logger.log(Level.FINEST, this.toString(), "Sending draftable bonus tiles to " + curr.getUsername());
+
 
             ShuffleBonusTileStandardAction shuffleAction;
 
@@ -906,7 +907,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         if(action instanceof StandardPlacementAction){
 
-            System.out.println("Placement target : " + ((StandardPlacementAction) action).getActionTarget());
+            Logger.log(Level.FINEST, this.toString(), "Placement target : " + ((StandardPlacementAction) action).getActionTarget());
 
             RollbackClass playerRollback = new RollbackClass(player);
 
@@ -923,8 +924,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
-            System.out.println("Placement successful");
-
+            Logger.log(Level.FINEST, this.toString(), "Placement successful");
 
             message = "placed a family member on " + ((StandardPlacementAction)action).getActionTarget();
 

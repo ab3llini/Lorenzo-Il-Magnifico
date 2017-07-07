@@ -18,7 +18,7 @@ import netobject.notification.ObserverReadyNotification;
  * @author  ab3llini
  * @since   29/06/17.
  */
-public class LobbyController extends NavigationController implements ClientObserver, LobbyObserver{
+public class LobbyController extends NavigationController implements LobbyObserver {
 
 
     @FXML
@@ -42,15 +42,12 @@ public class LobbyController extends NavigationController implements ClientObser
 
     private void newLogEntry(String entry) {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                LobbyController.this.notifications.add(
-                        new TableCellEntry(entry)
-                );
+        Platform.runLater(() -> {
+            LobbyController.this.notifications.add(
+                    new TableCellEntry(entry)
+            );
 
-                LobbyController.this.notificationTableView.getItems().setAll(LobbyController.this.notifications);
-            }
+            LobbyController.this.notificationTableView.getItems().setAll(LobbyController.this.notifications);
         });
 
     }
@@ -58,37 +55,11 @@ public class LobbyController extends NavigationController implements ClientObser
     public void setClient(Client client) {
 
         this.client = client;
-        this.client.addClientObserver(this);
         this.client.addLobbyObserver(this);
         this.client.sendNotification(new ObserverReadyNotification(ObserverType.Lobby));
 
     }
 
-    @Override
-    public void onDisconnection(Client client) {
-
-
-    }
-
-    @Override
-    public void onLoginFailed(Client client, String reason) {
-
-    }
-
-    @Override
-    public void onLoginSuccess(Client client) {
-
-    }
-
-    @Override
-    public void onRegistrationSuccess(Client client) {
-
-    }
-
-    @Override
-    public void onRegistrationFailed(Client client, String reason) {
-
-    }
 
     @Override
     public void onLobbyNotification(Client client, LobbyNotification not) {
@@ -103,14 +74,7 @@ public class LobbyController extends NavigationController implements ClientObser
             case ResumeBonusTileDraft:
             case ResumeLeaderCardDraft:
 
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        ((GUIController)LobbyController.this.navigateTo(View.Gui)).setClient(LobbyController.this.client);
-
-                    }
-                });
+                Platform.runLater(() -> ((GUIController)this.navigateTo(View.Gui)).setClient(this.client));
 
                 break;
 

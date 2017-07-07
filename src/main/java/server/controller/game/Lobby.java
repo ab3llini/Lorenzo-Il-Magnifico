@@ -202,42 +202,19 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
     /**
      * Remaps a client handler to a player that is already playing.
-     * Note that event though getPlayerForUsername may return null
-     * when this method is triggered a check has already been made
-     * to be sure that this lobby's match instance has that player.
      * @param handler
      * @return
      */
     public synchronized void joinAfterDisconnection(ClientHandler handler) {
 
+        Logger.log(Level.FINEST, this.toString(), "Player " + handler.getUsername() + " rejoined the match.");
 
+
+        //Inform the match controller after sending the game resume notification
         try {
-
-            //Re add the client to the handlers list
-            this.handlers.add(handler);
-
-            Logger.log(Level.FINEST, this.toString(), "Client " + handler.getUsername() + " has rejoined!");
-
-            switch (this.matchController.getContext()) {
-
-                case LeaderCardDraft:
-                case BonusTileDraft:
-                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeBonusTileDraft, "Welcome back to game " + handler.getUsername() + ", you will be able to draft the bonus tiles soon"));
-                    break;
-                case Playing:
-                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
-                    break;
-
-            }
-
-            //Inform the match controller after sending the game resume notification
             this.matchController.addPlayer(handler);
-
-
         } catch (NoSuchPlayerException e) {
-
-            Logger.log(Level.SEVERE, this.toString(), "Cant find the player corresponding player after rejoin!", e);
-
+            Logger.log(Level.WARNING, this.toString(), "Unable to add player to match controller");
         }
 
     }
@@ -380,17 +357,35 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
     public void welcomeClient(ClientHandler handler) {
 
-        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername()));
-        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Welcome to " + this.toString()));
+        if (!this.hasStarted()) {
 
-        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Action timeout set to " + GameConfig.getInstance().getPlayerTimeout() + "s"));
-        if (this.handlers.size() > MINIMUM_PLAYERS && this.handlers.size() < MAXIMUM_PLAYERS) {
+            handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Hi " + handler.getUsername()));
+            handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Welcome to " + this.toString()));
 
-            this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will soon.." ));
+            handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Action timeout set to " + GameConfig.getInstance().getPlayerTimeout() + "s"));
+            if (this.handlers.size() > MINIMUM_PLAYERS && this.handlers.size() < MAXIMUM_PLAYERS) {
+
+                this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will soon.." ));
+
+            }
+
+            handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, this.getConnectedClients()));
 
         }
+        else {
+            switch (this.matchController.getContext()) {
 
-        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, this.getConnectedClients()));
+                case LeaderCardDraft:
+                case BonusTileDraft:
+                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeBonusTileDraft, "Welcome back to game " + handler.getUsername() + ", you will be able to draft the bonus tiles soon"));
+                    break;
+                case Playing:
+                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
+                    break;
+
+            }
+        }
+
     }
 
     private String getConnectedClients() {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -23,31 +22,11 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <ImageView fx:id="tile0" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <image>
-                  <Image url="@../assets/tiles/personalbonustile_1.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="tile1" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <image>
-                  <Image url="@../assets/tiles/personalbonustile_1.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="tile2" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <image>
-                  <Image url="@../assets/tiles/personalbonustile_1.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="tile3" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <image>
-                  <Image url="@../assets/tiles/personalbonustile_1.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="tile4" fitHeight="400.0" fitWidth="60.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <image>
-                  <Image url="@../assets/tiles/personalbonustile_1.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="tile0" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <ImageView fx:id="tile1" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <ImageView fx:id="tile2" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <ImageView fx:id="tile3" fitHeight="400.0" fitWidth="65.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <ImageView fx:id="tile4" fitHeight="400.0" fitWidth="60.0" onMouseClicked="#onTileSelection" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
       <AnchorPane prefHeight="50.0" styleClass="theme-pane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

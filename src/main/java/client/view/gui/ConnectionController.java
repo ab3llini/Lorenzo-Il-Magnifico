@@ -144,13 +144,7 @@ public class ConnectionController extends NavigationController implements Client
     @Override
     public void onLoginSuccess(Client client) {
 
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
-                ((LobbyController)ConnectionController.this.navigateTo(View.Lobby)).setClient(client);
-
-            }
-        });
-
+        Platform.runLater(() -> ((LobbyController)this.navigateTo(View.Lobby)).setClient(client));
 
     }
 

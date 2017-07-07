@@ -166,10 +166,11 @@ public class GameEngine implements ServerObserver, LobbyObserver {
         try {
 
             //Search the lobby whose model contains the player with the just-logged-in client's username
-            Lobby previousLobby = this.getLobbyAfterDisconnection(handler);
+            this.getLobbyAfterDisconnection(handler).getHandlers().add(handler);
 
-            //Upon success, rejoin the lobby!
-            previousLobby.joinAfterDisconnection(handler);
+            //Upon success it means that the client was already in a lobby, just wait for his observer to load.
+            //An automatic procedure will be triggered to rejoin the user
+
 
         }
         catch (PlayerNeverDisconnectedException e) {
@@ -245,7 +246,12 @@ public class GameEngine implements ServerObserver, LobbyObserver {
 
             case RemotePlayer:
 
-                belonging.getMatchController().getReadyObservers().add(observerType);
+                if (belonging.getMatchController().getContext() == MatchControllerContext.Playing) {
+                    belonging.joinAfterDisconnection(handler);
+                }
+                else {
+                    belonging.getMatchController().getReadyObservers().add(observerType);
+                }
 
                 break;
 

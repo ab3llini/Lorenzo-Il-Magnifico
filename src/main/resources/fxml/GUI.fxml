@@ -525,7 +525,7 @@
             </TabPane>
             <AnchorPane styleClass="theme-pane">
                <children>
-                  <TextField fx:id="turnIndicatorTextField" editable="false" layoutX="414.0" layoutY="12.0" maxHeight="10.0" prefHeight="10.0" styleClass="notification-text-field" text="It is your turn" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" />
+                  <TextField fx:id="turnIndicatorTextField" editable="false" layoutX="414.0" layoutY="12.0" maxHeight="10.0" prefHeight="10.0" styleClass="notification-text-field" text="Drafting" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" />
                </children></AnchorPane>
             <AnchorPane styleClass="theme-pane" GridPane.rowIndex="2">
                <children>
