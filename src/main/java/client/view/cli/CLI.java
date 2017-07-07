@@ -29,6 +29,7 @@ import server.model.GameSingleton;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.ColorType;
+import server.model.board.ColoredColorType;
 import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.developement.DvptCardType;
@@ -962,9 +963,9 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
                 case SelectFamilyMember:
 
-                    EnumCommand<ColorType> colorSelection = new EnumCommand<>(ColorType.class);
+                    EnumCommand<ColoredColorType> colorSelection = new EnumCommand<>(ColoredColorType.class);
 
-                    Cmd.askFor("Which family member do you want to use force = 6?");
+                    Cmd.askFor("Which colored family member do you want to use force = 6?");
 
                     colorSelection.printChoiches();
 
@@ -972,7 +973,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
                     while (!colorSelection.isValid(choice)) {
 
-                        Cmd.askFor("Which family member do you want to use force = 6?");
+                        Cmd.askFor("Which colored family member do you want to use force = 6?");
 
                         colorSelection.printChoiches();
 

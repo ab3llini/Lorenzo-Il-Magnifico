@@ -208,14 +208,14 @@
   },
 
   "15" : {
-	"name":"Lorenzo de' Medici",
+    "name":"Lorenzo de' Medici",
     "requirement" : {
-		"points":{
-		  "victory": 35
-        }
-	},
+      "points":{
+        "victory": 35
+      }
+    },
     "effects" : {
-		"permanents":"lorenzoEffect"
+      "permanents":"lorenzoEffect"
     }
   },
 
@@ -227,12 +227,12 @@
         "character":2,
         "venture":2,
         "building":2
-       }
-     },
-		"effects" : {
-			"permanents":"moroEffect"
-		}
-	},
+      }
+    },
+    "effects" : {
+      "permanents":"moroEffect"
+    }
+  },
 
   "17" : {
     "name":"Cesare Borgia",
@@ -258,12 +258,12 @@
     "requirement" : {
       "points":{
         "faith":8
-			}
-		},
+      }
+    },
     "effects" : {
       "permanents":"ritaEffect"
-		}
-	},
+    }
+  },
 
   "19" : {
     "name":"Cosimo de' Medici",
@@ -285,20 +285,20 @@
     }
   },
 
-	"20" : {
-		"name":"Bartolomeo Colleoni",
-		"requirement" : {
-			"cards":{
-				"territory": 4,
-				"venture":2
-			}
-		},
-		"effects" : {
-			"onceARound":{
-				"points": {
-					"victory": 1
-				}
-			}
-		}
-	}
- }
+  "20" : {
+    "name":"Bartolomeo Colleoni",
+    "requirement" : {
+      "cards":{
+        "territory": 4,
+        "venture":2
+      }
+    },
+    "effects" : {
+      "onceARound":{
+        "points": {
+          "victory": 1
+        }
+      }
+    }
+  }
+}

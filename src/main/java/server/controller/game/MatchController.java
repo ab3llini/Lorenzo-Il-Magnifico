@@ -1808,7 +1808,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getPlayedLeaderCards().contains(leaderCard))
         //     throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
-        if (player.getPlayedLeaderCards().contains(leaderCard))
+        if (player.getPlayedLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
             throw new LeaderCardAlreadyActiveException("You have already played this card!");
 
         else {
@@ -1869,10 +1869,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                             player.setFamilyMemberForce(ColorType.Orange, 6);
                         } else if (choice.getSelection() == 3) {
                             player.setFamilyMemberForce(ColorType.Black, 6);
-                        } else if (choice.getSelection() == 4) {
-
-                            player.setFamilyMemberForce(ColorType.Neutral, 6);
-
                         } else {
 
                             Logger.log(Level.SEVERE, this.toString(), "Received a choice out of bounds");
@@ -1899,6 +1895,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
 
                 player.getLeaderCards().add(leader);
+                player.getPlayedLeaderCards().add(leader);
                 player.getLeaderCards().remove(leaderCard);
 
                 this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");

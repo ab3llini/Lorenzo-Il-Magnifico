@@ -63,6 +63,8 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     private GridPane leaderCardGrid;
 
+    @FXML
+    private ImageView personalTile;
 
     @FXML
     private Label whiteDiceValueTextField;
@@ -607,29 +609,29 @@ public class GUIController extends NavigationController implements ClientObserve
         ArrayList<TerritoryDvptCard> territoryCard = me.getPersonalBoard().getTerritoryCards();
         ArrayList<BuildingDvptCard> buildingCard = me.getPersonalBoard().getBuildingCards();
 
-            for (Node node : this.territoryPersonalGrid.getChildren()) {
+        for (Node node : this.territoryPersonalGrid.getChildren()) {
 
 
-                if (node instanceof ImageView) {
+            if (node instanceof ImageView) {
 
-                    ImageView imgView = (ImageView) node;
+                ImageView imgView = (ImageView) node;
 
-                    if(me.getPersonalBoard().getTerritoryCards().size() > GridPane.getColumnIndex(node)){
-                     DvptCard card = territoryCard.get(GridPane.getColumnIndex(node));
-
-
-                        //Assign the image
-                        imgView.setImage(new Image("assets/cards/dvpt/devcards_f_en_c_" + card.getId() + ".png"));
+                if(me.getPersonalBoard().getTerritoryCards().size() > GridPane.getColumnIndex(node)){
+                    DvptCard card = territoryCard.get(GridPane.getColumnIndex(node));
 
 
-                    } else {
+                    //Assign the image
+                    imgView.setImage(new Image("assets/cards/dvpt/devcards_f_en_c_" + card.getId() + ".png"));
 
-                        imgView.setImage(null);
 
-                    }
+                } else {
+
+                    imgView.setImage(null);
 
                 }
-                }
+
+            }
+        }
 
         for (Node node : this.buildingPersonalGrid.getChildren()) {
 
@@ -648,10 +650,12 @@ public class GUIController extends NavigationController implements ClientObserve
 
                 } else {
                     imgView.setImage(null);
-                    }
                 }
             }
         }
+        personalTile.setImage(new Image("assets/tiles/personalbonustile_" + me.getPersonalBoard().getBonusTile().getId() + ".png"));
+
+    }
 
     @FXML
     void onDiceRollClick(MouseEvent event) {

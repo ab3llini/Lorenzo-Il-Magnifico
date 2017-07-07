@@ -13,18 +13,17 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import netobject.action.immediate.ImmediateChoiceAction;
 import server.model.board.ColorType;
+import server.model.board.ColoredColorType;
 import server.model.board.CouncilPrivilege;
 
 import java.util.HashMap;
 
 public class SelectFamilyMemberController extends DialogController {
 
-    private ColorType selected;
+    private ColoredColorType selected;
 
-    private HashMap<ColorType, Integer> selectionCache;
+    private HashMap<ColoredColorType, Integer> selectionCache;
 
-    @FXML
-    private MenuButton privilegeSelectionMenuButton;
 
     @FXML
     private Label selectionTextField;
@@ -32,15 +31,11 @@ public class SelectFamilyMemberController extends DialogController {
     public SelectFamilyMemberController() {
 
         this.selectionCache = new HashMap<>();
-
-        //Build the cache
-        int value = 0;
-        for (ColorType color: ColorType.values()) {
-
-            this.selectionCache.put(color, value);
-            value++;
-
+        for(ColoredColorType color: ColoredColorType.values()) {
+            this.selectionCache.put(color, color.getValue());
         }
+
+
 
 
     }
@@ -67,13 +62,13 @@ public class SelectFamilyMemberController extends DialogController {
 
     @FXML
     void selectWhite (ActionEvent event) {
-        this.selected = ColorType.White;
+        this.selected = ColoredColorType.White;
         this.selectionTextField.setText(this.selected.toString());
     }
 
     @FXML
     void selectBlack (ActionEvent event) {
-        this.selected = ColorType.Black;
+        this.selected = ColoredColorType.Black;
         this.selectionTextField.setText(this.selected.toString());
 
 
@@ -81,19 +76,12 @@ public class SelectFamilyMemberController extends DialogController {
 
     @FXML
     void selectOrange(ActionEvent event) {
-        this.selected = ColorType.Orange;
+        this.selected = ColoredColorType.Orange;
         this.selectionTextField.setText(this.selected.toString());
 
 
     }
 
-    @FXML
-    void selectNeutral(ActionEvent event) {
-        this.selected = ColorType.Neutral;
-        this.selectionTextField.setText(this.selected.toString());
-
-
-    }
 
     /**
      * Very important to override this in order to detect windows closure and send a default action

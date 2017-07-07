@@ -443,7 +443,7 @@
                                           </AnchorPane>
                                        </content>
                                     </ScrollPane>
-                                    <ImageView fitHeight="550.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                    <ImageView fx:id="personalTile" fitHeight="550.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                        <image>
                                           <Image url="@../assets/tiles/personalbonustile_1.png" />
                                        </image>
