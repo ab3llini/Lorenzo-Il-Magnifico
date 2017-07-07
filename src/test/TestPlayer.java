@@ -18,7 +18,7 @@ public class TestPlayer {
     Player player = new Player("testPlayer");
 
     @Test
-    public void vPointsTest(){
+    public void addvPointsTest(){
 
         for(int i=0;i<1000;i++){
 
@@ -40,7 +40,7 @@ public class TestPlayer {
     }
 
     @Test
-    public void militaryPointsTest(){
+    public void addmilitaryPointsTest(){
 
         for(int i=0;i<1000;i++){
 
@@ -343,6 +343,36 @@ public class TestPlayer {
         assertEquals(v,(int)player.getServants());
         assertEquals(s,(int)player.getFaithPoints());
         assertEquals(w,(int)player.getMilitaryPoints());
+
+    }
+
+    @Test
+    public void hasEnoughPointTest() {
+
+        Player player = new Player("test");
+
+        for(int i=0; i<1000; i++){
+
+            player.setMilitaryPoints(i);
+            player.setFaithPoints(i);
+            player.setVictoryPoints(i);
+
+
+            player.hasEnoughPoints(PointType.Victory,i-1);
+            player.hasEnoughPoints(PointType.Faith,i-1);
+            player.hasEnoughPoints(PointType.Military,i-1);
+
+            player.setCoins(i);
+            player.setWood(i);
+            player.setServants(i);
+            player.setStones(i);
+
+            player.hasEnoughResources(ResourceType.Coins,i-1);
+            player.hasEnoughResources(ResourceType.Wood,i-1);
+            player.hasEnoughResources(ResourceType.Servants,i-1);
+            player.hasEnoughResources(ResourceType.Stones,i-1);
+
+        }
 
     }
 }

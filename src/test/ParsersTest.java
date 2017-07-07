@@ -1,4 +1,5 @@
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import netobject.action.BoardSectorType;
 import org.junit.Test;
 import server.model.board.Board;
 import server.model.board.BonusTile;
@@ -6,10 +7,8 @@ import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
 import server.model.card.leader.LeaderCard;
-import server.utility.BanCardParser;
-import server.utility.BonusTilesParser;
-import server.utility.DvptCardParser;
-import server.utility.LeaderCardParser;
+import server.utility.*;
+import singleton.GameConfig;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -182,5 +181,37 @@ public class ParsersTest {
         }
 
     }
+
+    @Test
+    public void BoardConfigParserTest() {
+
+        BoardConfigParser.getInitialResource(1);
+        BoardConfigParser.getCathedral();
+        BoardConfigParser.getMinimumMilitaryPoints(1);
+        BoardConfigParser.getCouncilPalace();
+        BoardConfigParser.getCouncilPrivilegeOptions();
+        BoardConfigParser.getMarket();
+        BoardConfigParser.getHarvestActionArea();
+        BoardConfigParser.getProductionActionArea();
+        BoardConfigParser.getTower(DvptCardType.territory);
+        BoardConfigParser.getTower(DvptCardType.building);
+        BoardConfigParser.getTower(DvptCardType.character);
+        BoardConfigParser.getTower(DvptCardType.venture);
+
+
+    }
+
+    @Test
+    public void GameConfigParserTest() {
+
+        GameConfigParser.getConfig();
+        GameConfigParser.getMatchTimeout();
+        GameConfigParser.getPlayerTimeout();
+        GameConfigParser.getSocketPort();
+        GameConfigParser.getRmiPort();
+
+    }
+
+
     
 }

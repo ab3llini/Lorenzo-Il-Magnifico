@@ -2,6 +2,7 @@ import javafx.scene.effect.Effect;
 import org.junit.Test;
 import server.model.GameSingleton;
 import server.model.board.BonusTile;
+import server.model.board.Player;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
 import server.model.card.leader.LeaderCard;
@@ -28,6 +29,10 @@ public class TestAllToString {
         ArrayList<BonusTile> bonusTiles = GameSingleton.getInstance().getBonusTiles();
         ArrayList<EffectSurplus> surpluses = BoardConfigParser.getCouncilPrivilegeOptions();
         ArrayList<Resource> resources = BoardConfigParser.getInitialResource(1);
+        Player player = new Player("test");
+
+        player.toString();
+        player.toString2();
 
         for (DvptCard card : dvptCards) {
 
