@@ -375,6 +375,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         Logger.log(Level.FINEST, this.toString(), "Match ended.");
 
+        endDatabaseMatch();
+
         for (MatchControllerObserver o : this.observers) {
 
             o.onMatchEnded();
@@ -2537,6 +2539,19 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         } catch (SQLException e) {
 
             Logger.log(Level.SEVERE, "Database::save", "Possible errors in saving", e);
+
+        }
+
+    }
+
+    public void endDatabaseMatch() {
+
+        try {
+            Database.getInstance().endMatch(this.match.getMatch_id());
+
+        } catch (SQLException e) {
+
+            Logger.log(Level.SEVERE, "Database::ending", "Possible errors in ending", e);
 
         }
 

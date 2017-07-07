@@ -190,6 +190,22 @@ public class Database
 
     }
 
+    public void endMatch(int matchID) throws SQLException {
+
+        //Create a statement
+        Statement stmt = this.connection.createStatement();
+
+        //Setup the timeout
+        stmt.setQueryTimeout(QUERY_TIMEOUT);
+
+        //Create the query;
+        String query = "UPDATE matches SET 'finished' = 1 WHERE ID = "+matchID+";";
+
+        //Execute the query
+        stmt.executeUpdate(query);
+
+    }
+
     public int saveMatch(Match match) throws SQLException {
 
         Gson gson = new Gson();
@@ -204,6 +220,7 @@ public class Database
 
         //TODO finished == 0
         //if finished is 0 the match is not ended
+        //we have maximum one not ended match for each player
         //Create the query;
         String query1 = "INSERT INTO matches ('finished') VALUES (1);";
 
@@ -267,6 +284,8 @@ public class Database
 
     public int isAnUnfinishedMatchPlayer(String username)  {
 
+        //we have maximum one not ended match for each player
+
         try {
 
             //Create a statement
@@ -306,6 +325,8 @@ public class Database
     }
 
     public ArrayList<String> wasInMatchWithHim(String username) {
+
+        //we have maximum one not ended match for each player
 
         try {
 
@@ -402,21 +423,6 @@ public class Database
 
     }
 
-    public void endMatch(int matchID) throws SQLException {
-
-        //Create a statement
-        Statement stmt = this.connection.createStatement();
-
-        //Setup the timeout
-        stmt.setQueryTimeout(QUERY_TIMEOUT);
-
-        //Create the query;
-        String query = "UPDATE matches SET 'finished' = 1 WHERE ID = "+matchID+";";
-
-        //Execute the query
-        stmt.executeUpdate(query);
-
-    }
 
     public Gson getCorrectGson(){
 
