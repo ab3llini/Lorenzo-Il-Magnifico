@@ -2292,10 +2292,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             else if(permanentEffectAction.getTarget() == ActionType.card){
 
-                if(permanentEffectAction.getType() == getTowerType(action.getActionTarget()))
+                if(permanentEffectAction.getType() == getTowerType(action.getActionTarget())) {
                     bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
+                    bonus.setDiscounts(permanentEffectAction.getDiscounts());
+                }
 
-                bonus.setDiscounts(permanentEffectAction.getDiscounts());
             }
 
             //if the effect is the preacher penality forbid the Action if the placement index is > 1
