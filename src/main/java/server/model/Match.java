@@ -57,15 +57,15 @@ public class Match extends NetObject {
         generateRandomColor();
 
         //TODO
-        //try {
+        try {
 
-          //   match_id = saveOnDatabase();
+             match_id = saveOnDatabase();
 
-        //} catch (SQLException e) {
+        } catch (SQLException e) {
 
-          //  Logger.log(Level.SEVERE, "Database::save", "Errors in saving match!", e);
+            Logger.log(Level.SEVERE, "Database::save", "Errors in saving match!", e);
 
-        //}
+        }
 
     }
 
