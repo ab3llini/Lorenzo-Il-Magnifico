@@ -4,8 +4,6 @@ package server.controller.game;
  * Created by alberto on 09/05/17.
  */
 
-import client.controller.network.ClientObserver;
-import client.controller.network.Observer;
 import client.controller.network.ObserverType;
 import exception.NoSuchHanlderException;
 import exception.NoSuchLobbyException;
@@ -16,6 +14,7 @@ import netobject.action.Action;
 import server.controller.network.*;
 import server.controller.network.RMI.RMIServer;
 import server.controller.network.Socket.SocketServer;
+import singleton.Database;
 import singleton.GameConfig;
 
 import java.util.ArrayList;
@@ -99,11 +98,11 @@ public class GameEngine implements ServerObserver, LobbyObserver {
 
     }
 
-    private synchronized Lobby joinNewLobby(ClientHandler handler) {
+    private synchronized Lobby joinStandardLobby(ClientHandler handler) {
 
         for (Lobby lobby : this.lobbies) {
 
-            if (lobby.isJoinable()) {
+            if (!(lobby instanceof PersistenceLobby) && lobby.isJoinable()) {
 
                 lobby.join(handler);
 
@@ -120,6 +119,30 @@ public class GameEngine implements ServerObserver, LobbyObserver {
         newLobby.addObserver(this);
 
         return newLobby;
+
+    }
+
+    private synchronized Lobby joinPersistanceLobby(ClientHandler handler, int previousMatchId) {
+
+        for (Lobby lobby : this.lobbies) {
+
+            if (lobby instanceof PersistenceLobby && lobby.isJoinable()) {
+
+                lobby.join(handler);
+
+                return lobby;
+
+            }
+
+        }
+
+        PersistenceLobby persistenceLobby = new PersistenceLobby(handler, previousMatchId);
+
+        this.lobbies.add(persistenceLobby);
+
+        persistenceLobby.addObserver(this);
+
+        return persistenceLobby;
 
     }
 
@@ -176,8 +199,22 @@ public class GameEngine implements ServerObserver, LobbyObserver {
         catch (PlayerNeverDisconnectedException e) {
 
             //If we get here it means that no player with the username of the just-logged-in client was playing
-            //Follow the standard procedure: join the first available lobby
-            this.joinNewLobby(handler);
+            //Follow the standard procedure: join the first available lobby (Standard or Persistent)
+            int previousMatch = Database.getInstance().isAnUnfinishedMatchPlayer(handler.getUsername());
+
+            if (previousMatch > 0) {
+
+                //Persistence: must finish the match
+                this.joinPersistanceLobby(handler, previousMatch);
+
+            }
+            else {
+
+                //Standard join
+                this.joinStandardLobby(handler);
+
+            }
+
 
         }
 

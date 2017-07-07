@@ -121,7 +121,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         /*
          * Initialize the map
          */
-        this.remotePlayerMap = new LinkedHashMap<Player, RemotePlayer>();
+        this.remotePlayerMap = new LinkedHashMap<>();
 
         //Init observer
         this.observers = new ArrayList<>();
@@ -179,7 +179,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * It is called only by the lobby itself when the match starts
      * @param handlers the handlers of the model players
      */
-    public MatchController(ArrayList<ClientHandler> handlers, Lobby lobby, Match match) throws NoSuchPlayerException {
+    public MatchController(ArrayList<ClientHandler> handlers, Lobby lobby, Match match) {
 
         //Set the lobby
         this.lobby = lobby;
@@ -194,7 +194,16 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         for (ClientHandler handler : handlers) {
 
-            Player player = match.getPlayerFromUsername(handler.getUsername());
+            Player player = null;
+            try {
+
+                player = match.getPlayerFromUsername(handler.getUsername());
+
+            } catch (NoSuchPlayerException e) {
+
+                Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
+
+            }
 
             this.remotePlayerMap.put(player, handler);
 
@@ -205,6 +214,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
          * The players are always provided
          */
         this.match = match;
+
+        this.context = MatchControllerContext.PeristenceResume;
 
         /*
          * Assign the board controller
@@ -273,17 +284,21 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Wait fot CLI / GUI to fully load their observers..
         this.waitUntilPlayerObserversAreSet();
 
-        //Draft the leader cards first
-        this.context = MatchControllerContext.LeaderCardDraft;
-        this.handleLeaderCardDraft();
+        if (this.context == null || this.context != MatchControllerContext.PeristenceResume) {
 
-        //Draft the bonus tiles
-        //Draft the leader cards first
-        this.context = MatchControllerContext.BonusTileDraft;
-        this.handleBonusTileDrat();
+            //Draft the leader cards first
+            this.context = MatchControllerContext.LeaderCardDraft;
+            this.handleLeaderCardDraft();
+
+            //Draft the bonus tiles
+            this.context = MatchControllerContext.BonusTileDraft;
+            this.handleBonusTileDrat();
+
+        }
+
         //We are now going to play
-        //Draft the leader cards first
         this.context = MatchControllerContext.Playing;
+
 
         //Make sure that the match has already been initialized here!
         RoundIterator roundIterator = new RoundIterator(this.match);

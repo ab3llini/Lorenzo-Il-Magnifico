@@ -4,22 +4,24 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import netobject.action.immediate.ImmediateChoiceAction;
-import server.model.board.CouncilPrivilege;
-
-import java.util.HashMap;
+import netobject.action.standard.DiscardLeaderCardAction;
+import netobject.action.standard.LeaderCardActivationAction;
+import server.model.card.leader.LeaderCard;
 
 /**
  * Created by Federico on 03/07/2017.
  */
+
+
 public class PlayerLeaderCardsController extends  DialogController {
 
 
-    private int selected = 0;
+    private int selection = -1;
+
+    private LeaderCard clicked = null;
+
 
     @FXML
     private Label leaderTextField;
@@ -27,14 +29,14 @@ public class PlayerLeaderCardsController extends  DialogController {
     @FXML
     void selectDiscard(ActionEvent event) {
         this.leaderTextField.setText("Discard");
-        this.selected = 1;
+        this.selection = 1;
 
     }
 
     @FXML
     void selectActivate(ActionEvent event) {
         this.leaderTextField.setText("Activate / Play");
-        this.selected = 0;
+        this.selection = 0;
 
 
     }
@@ -43,14 +45,20 @@ public class PlayerLeaderCardsController extends  DialogController {
 
     @FXML
     void onSelectClick(MouseEvent event) {
-        if (this.selected > 0) {
 
-            //Useful to get the corresponding index
-            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
+        if (this.selection == 1) {
 
-            //Close the stage
-            stage.close();
+            this.client.performAction(new DiscardLeaderCardAction(this.clicked.getId(), this.client.getUsername()));
 
+            this.cleanUp();
+
+
+        }
+        else if (this.selection == 0) {
+
+            this.client.performAction(new LeaderCardActivationAction(this.clicked.getId(), this.client.getUsername()));
+
+            this.cleanUp();
 
         }
         else {
@@ -58,20 +66,19 @@ public class PlayerLeaderCardsController extends  DialogController {
             this.showAsynchAlert(Alert.AlertType.WARNING, "Forbidden", "Invalid selection", "You must select a ban option!");
 
         }
+
     }
 
-    /**
-     * Very important to override this in order to detect windows closure and send a default action
-     * @param stage the stage loaded
-     */
-    @Override
-    public void setStage(Stage stage) {
-        super.setStage(stage);
-        stage.setOnCloseRequest((WindowEvent e) -> {
-            //We send the first choice always before closing the stage!
-            this.client.performAction(new ImmediateChoiceAction(this.selected, this.client.getUsername()));
+    private void cleanUp() {
 
-        });
+        //Close the stage
+        stage.close();
+
+    }
+
+
+    public void setClicked(LeaderCard clicked) {
+        this.clicked = clicked;
     }
 
 }

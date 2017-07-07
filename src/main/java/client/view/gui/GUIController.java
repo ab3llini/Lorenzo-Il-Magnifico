@@ -138,6 +138,8 @@ public class GUIController extends NavigationController implements ClientObserve
 
     HashMap<ImageView, DvptCard> imageViewDvptCardCache = new HashMap<>();
 
+    HashMap<ImageView, LeaderCard> imageViewLeaderCardCache = new HashMap<>();
+
     HashMap<Circle, ImageView> actionPlaceImageViewCache = new HashMap<>();
 
 
@@ -537,16 +539,31 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     void onLeaderCardClick(MouseEvent event) {
 
+        LeaderCard clicked = this.imageViewLeaderCardCache.get(event.getSource());
+
+        if (clicked != null) {
+
+            PlayerLeaderCardsController controller = (PlayerLeaderCardsController)this.openNewStage(View.LeaderCardActivationDiscard);
+            controller.setClient(client);
+            controller.setLocalMatchController(this.localMatchController);
+            controller.setClicked(clicked);
+
+        }
+
     }
 
     private void updateLeaderCards(Match model) {
 
+        this.imageViewLeaderCardCache.clear();
+
         Player me = null;
+
         try {
             me = model.getPlayerFromUsername(this.client.getUsername());
         } catch (NoSuchPlayerException e) {
             e.printStackTrace();
         }
+
         ArrayList<LeaderCard> leaderCards = me.getLeaderCards();
 
         for (Node node : this.leaderCardGrid.getChildren()) {
@@ -556,11 +573,14 @@ public class GUIController extends NavigationController implements ClientObserve
                 ImageView imgView = (ImageView) node;
 
                 if(me.getLeaderCards().size() > GridPane.getColumnIndex(node)){
+
                     LeaderCard card = leaderCards.get(GridPane.getColumnIndex(node));
 
+                    this.imageViewLeaderCardCache.put(imgView, card);
+
                     if(card.getId() < 10){
-                    //Assign the image
-                    imgView.setImage(new Image("assets/cards/leader/leaders_f_c_0" + card.getId() + ".jpg"));}
+                        //Assign the image
+                        imgView.setImage(new Image("assets/cards/leader/leaders_f_c_0" + card.getId() + ".jpg"));}
                     else{
                         imgView.setImage(new Image("assets/cards/leader/leaders_f_c_" + card.getId() + ".jpg"));
                     }

@@ -30,8 +30,8 @@
          <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="theme-pane">
                <children>
-                  <Label layoutX="208.0" layoutY="17.0" styleClass="header" text="Matchmaking..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
-                  <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="348.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="9.0">
+                  <Label layoutX="208.0" layoutY="17.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" styleClass="header" text="Matchmaking..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                  <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="348.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="9.0">
                      <image>
                         <Image url="@../assets/style/matchmaking.png" />
                      </image>
@@ -50,14 +50,14 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <JFXSpinner GridPane.columnIndex="1" />
+                        <JFXSpinner style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                </children>
             </AnchorPane>
             <TableView fx:id="notificationTableView" style="-fx-background-color: transparent;" styleClass="notification-table" GridPane.rowIndex="1">
               <columns>
-                <TableColumn fx:id="statusColumn" maxWidth="398.0" minWidth="398.0" prefWidth="398.0" text="Status" />
+                <TableColumn fx:id="statusColumn" editable="false" maxWidth="400.0" minWidth="400.0" prefWidth="400.0" text="Status" />
               </columns>
             </TableView>
          </children>

@@ -6,6 +6,7 @@ public enum MatchControllerContext {
 
     LeaderCardDraft,
     BonusTileDraft,
+    PeristenceResume,
     Playing
 
 }

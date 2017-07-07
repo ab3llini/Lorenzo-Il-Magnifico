@@ -1,4 +1,6 @@
-package client.view.gui;/*
+package client.view.gui;
+
+/*
  * Created by albob on 22/06/2017.
  */
 
@@ -16,7 +18,8 @@ public enum View {
     SelectDiscount("DecideDiscountOption.fxml", "Select a discount option", 300, 200),
     DraftLeaderCards("LeaderCardDraft.fxml", "Select a leader card to draft!", 1020, 450),
     DraftBonusTiles("BonusTileDraft.fxml", "Select a bonus tile to draft!", 500, 500),
-    SelectBanOption("DecideBanOption.fxml", "Decide if you want to get banned", 300, 200);
+    SelectBanOption("DecideBanOption.fxml", "Decide if you want to get banned", 300, 200),
+    LeaderCardActivationDiscard("PlayerLeaderCards.fxml", "What do you want to do with the selected leader card ?", 350, 200);
 
 
 

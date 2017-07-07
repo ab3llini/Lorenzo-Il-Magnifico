@@ -27,37 +27,37 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class Lobby implements MatchControllerObserver, Observable<LobbyObserver> {
 
     //This array list holds the clients in the lobby
-    private ArrayList<ClientHandler> handlers;
+    protected ArrayList<ClientHandler> handlers;
 
     //Match controller
-    private MatchController matchController;
+    protected MatchController matchController;
 
     //Match controller runner thread
-    private Thread matchControllerDaemon;
+    protected Thread matchControllerDaemon;
 
     //Timer to start the match
-    private Timer timeout;
+    protected Timer timeout;
 
     //The name of the lobby, given by the first player
-    private String name;
+    protected String name;
 
     //Status variable that tells if the match has started
-    private boolean matchDidStart = false;
+    protected boolean matchDidStart = false;
 
     //Status variable that tells if the timeout has started
-    private boolean timeoutDidStart = false;
+    protected boolean timeoutDidStart = false;
 
-    private LinkedBlockingDeque<ObserverType> readyObservers = new LinkedBlockingDeque<>(5);
+    protected LinkedBlockingDeque<ObserverType> readyObservers = new LinkedBlockingDeque<>(5);
 
     /**
      * The observers
      */
-    ArrayList<LobbyObserver> observers;
+    protected ArrayList<LobbyObserver> observers;
 
     //Constants
-    private static final int MAXIMUM_PLAYERS = 5;
-    private static final int MINIMUM_PLAYERS = 2;
-    private static final int START_DELAY = GameConfig.getInstance().getMatchTimeout() * 1000;
+    protected int MAXIMUM_PLAYERS = 5;
+    protected int MINIMUM_PLAYERS = 2;
+    protected int START_DELAY = GameConfig.getInstance().getMatchTimeout() * 1000;
 
     /**
      * Creates a new Lobby.
@@ -312,7 +312,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
      * Starts the match
      * It loads the match controller with the handlers
      */
-    private void startMatch() {
+    protected void startMatch() {
 
         if (this.handlers.size() < MINIMUM_PLAYERS) {
 
@@ -363,9 +363,10 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
             handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Welcome to " + this.toString()));
 
             handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.LobbyInfo, "Action timeout set to " + GameConfig.getInstance().getPlayerTimeout() + "s"));
+
             if (this.handlers.size() > MINIMUM_PLAYERS && this.handlers.size() < MAXIMUM_PLAYERS) {
 
-                this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will soon.." ));
+                this.notifyAll(new LobbyNotification(LobbyNotificationType.TimeoutStarted, "The match will start soon.." ));
 
             }
 
@@ -373,22 +374,33 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         }
         else {
-            switch (this.matchController.getContext()) {
 
-                case LeaderCardDraft:
-                case BonusTileDraft:
-                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeBonusTileDraft, "Welcome back to game " + handler.getUsername() + ", you will be able to draft the bonus tiles soon"));
-                    break;
-                case Playing:
-                    handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
-                    break;
+            if (this.matchController.getContext() != MatchControllerContext.PeristenceResume) {
+
+                switch (this.matchController.getContext()) {
+
+                    case LeaderCardDraft:
+                    case BonusTileDraft:
+                        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeBonusTileDraft, "Welcome back to game " + handler.getUsername() + ", you will be able to draft the bonus tiles soon"));
+                        break;
+                    case Playing:
+                        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
+                        break;
+
+                }
 
             }
+            else if (this instanceof PersistenceLobby) {
+
+                handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.MatchStart, "Welcome back to game " + handler.getUsername()));
+
+            }
+
         }
 
     }
 
-    private String getConnectedClients() {
+    protected String getConnectedClients() {
 
         StringBuilder b = new StringBuilder();
 
@@ -418,7 +430,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
     }
 
-    private synchronized void notifyAllExcept(ClientHandler handler, LobbyNotification not) {
+    protected synchronized void notifyAllExcept(ClientHandler handler, LobbyNotification not) {
 
         for (ClientHandler c : this.handlers) {
 
@@ -467,8 +479,6 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
     public void onMatchEnded() {
         for (LobbyObserver o : this.observers) {
-
-            //TODO: Save the match in the database
 
             o.onDestroyRequest(this);
 

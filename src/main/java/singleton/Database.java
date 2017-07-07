@@ -265,109 +265,140 @@ public class Database
 
     }
 
-    public int isAnUnfinishedMatchPlayer(String username) throws SQLException {
+    public int isAnUnfinishedMatchPlayer(String username)  {
 
-        //Create a statement
-        Statement stmt = this.connection.createStatement();
+        try {
 
-        //Setup the timeout
-        stmt.setQueryTimeout(QUERY_TIMEOUT);
+            //Create a statement
+            Statement stmt = this.connection.createStatement();
 
-        //use this int to create dynamic queries (we can have maximum 5 players)
-        for(int i=1;i<=5;i++){
+            //Setup the timeout
+            stmt.setQueryTimeout(QUERY_TIMEOUT);
 
-            //Create the query;
-            String query = "SELECT * FROM matches WHERE player_"+i+" = '" + username + "' AND finished = 0";
+            //use this int to create dynamic queries (we can have maximum 5 players)
+            for (int i = 1; i <= 5; i++) {
 
-            //Execute the query
-            ResultSet result = stmt.executeQuery(query);
+                //Create the query;
+                String query = "SELECT * FROM matches WHERE player_" + i + " = '" + username + "' AND finished = 0";
 
-            //Check results
-            while (result.next()) {
+                //Execute the query
+                ResultSet result = stmt.executeQuery(query);
 
-                //If there is a match, login succeeded
-                 return result.getInt("ID");
+                //Check results
+                while (result.next()) {
 
+                    //If there is a match, login succeeded
+                    return result.getInt("ID");
+
+                }
             }
+
+        }
+        catch (SQLException e) {
+
+            Logger.log(Level.WARNING, this.toString(), "SQL Exception", e);
+
+
         }
 
         return -1;
 
     }
 
-    public ArrayList<String> wasInMatchWithHim(String username) throws SQLException {
+    public ArrayList<String> wasInMatchWithHim(String username) {
 
-        ArrayList<String> players = new ArrayList<>();
+        try {
 
-        //Create a statement
-        Statement stmt = this.connection.createStatement();
+            ArrayList<String> players = new ArrayList<>();
 
-        //Setup the timeout
-        stmt.setQueryTimeout(QUERY_TIMEOUT);
+            //Create a statement
+            Statement stmt = this.connection.createStatement();
 
-        ResultSet result = null;
+            //Setup the timeout
+            stmt.setQueryTimeout(QUERY_TIMEOUT);
 
-        //use this int to create dynamic queries (we can have maximum 5 players)
-        for(int i=1; i<=5; i++){
+            ResultSet result = null;
 
-            //Create the query;
-            String query = "SELECT count(*) FROM matches WHERE player_"+i+" = '" + username + "' AND finished = 0";
-
-            //Execute the query
-            ResultSet result1 = stmt.executeQuery(query);
-
-            if(result1.getInt(1) == 1){
+            //use this int to create dynamic queries (we can have maximum 5 players)
+            for (int i = 1; i <= 5; i++) {
 
                 //Create the query;
-                String query1 = "SELECT * FROM matches WHERE player_"+i+" = '" + username + "' AND finished = 0";
+                String query = "SELECT count(*) FROM matches WHERE player_" + i + " = '" + username + "' AND finished = 0";
 
                 //Execute the query
-                result = stmt.executeQuery(query1);
+                ResultSet result1 = stmt.executeQuery(query);
 
-                break;
+                if (result1.getInt(1) == 1) {
+
+                    //Create the query;
+                    String query1 = "SELECT * FROM matches WHERE player_" + i + " = '" + username + "' AND finished = 0";
+
+                    //Execute the query
+                    result = stmt.executeQuery(query1);
+
+                    break;
+
+                }
 
             }
 
-        }
+            //use this int to create dynamic queries (we can have maximum 5 players)
+            int i = 1;
 
-        //use this int to create dynamic queries (we can have maximum 5 players)
-        int i = 1;
+            if (result != null) {
 
-        if(result != null){
+                //Check results
+                while (i <= 5) {
 
-            //Check results
-            while (i <= 5) {
-
-                if(result.getString("player_" + i) != null && !(result.getString("player_" + i).equals(username)))
+                    if (result.getString("player_" + i) != null && !(result.getString("player_" + i).equals(username)))
                         players.add(result.getString("player_" + i));
 
-                i++;
+                    i++;
+                }
+
             }
 
-        }
+            return players;
 
-        return players;
+        }
+        catch (SQLException e) {
+
+            Logger.log(Level.WARNING, this.toString(), "SQL Exception", e);
+
+            return null;
+
+        }
 
     }
 
-    public Match getMatchFromID(int matchID) throws SQLException {
+    public Match getMatchFromID(int matchID)  {
 
-        //Create a statement
-        Statement stmt = this.connection.createStatement();
+        try {
 
-        //Setup the timeout
-        stmt.setQueryTimeout(QUERY_TIMEOUT);
+            //Create a statement
+            Statement stmt = this.connection.createStatement();
 
-        //Create the query;
-        String query = "SELECT date FROM matches WHERE ID = " + matchID+";";
+            //Setup the timeout
+            stmt.setQueryTimeout(QUERY_TIMEOUT);
 
-        ResultSet resultSet = stmt.executeQuery(query);
+            //Create the query;
+            String query = "SELECT date FROM matches WHERE ID = " + matchID + ";";
 
-        String matchString = resultSet.getString(1);
+            ResultSet resultSet = stmt.executeQuery(query);
 
-        Gson gson = getCorrectGson();
+            String matchString = resultSet.getString(1);
 
-        return  gson.fromJson(matchString, Match.class);
+            Gson gson = getCorrectGson();
+
+            return gson.fromJson(matchString, Match.class);
+        }
+        catch (SQLException e) {
+
+            Logger.log(Level.WARNING, this.toString(), "SQL Exception", e);
+
+            return null;
+
+        }
 
     }
 
