@@ -222,7 +222,7 @@ public class Database
         //if finished is 0 the match is not ended
         //we have maximum one not ended match for each player
         //Create the query;
-        String query1 = "INSERT INTO matches ('finished') VALUES (1);";
+        String query1 = "INSERT INTO matches ('finished') VALUES (0);";
 
         //Execute the query
         stmt.executeUpdate(query1);

@@ -203,6 +203,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         for (ClientHandler handler : handlers) {
 
             Player player = null;
+
             try {
 
                 player = match.getPlayerFromUsername(handler.getUsername());
