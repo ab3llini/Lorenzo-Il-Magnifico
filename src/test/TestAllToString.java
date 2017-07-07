@@ -33,6 +33,7 @@ public class TestAllToString {
 
         player.toString();
         player.toString2();
+        player.getPersonalBoard().toString();
 
         for (DvptCard card : dvptCards) {
 

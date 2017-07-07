@@ -201,6 +201,7 @@ public class TestMachController {
             int fifthCard = (int)(Math.random()*100)%24;
             int sixthCard = (int)(Math.random()*100)%24;
 
+
             mc.applyEffectSurplus(testPlayer,territoryCards.get(firstCard).getPermanentEffect().getSurplus());
             mc.applyEffectSurplus(testPlayer,territoryCards.get(secondCard).getPermanentEffect().getSurplus());
             mc.applyEffectSurplus(testPlayer,territoryCards.get(thirdCard).getPermanentEffect().getSurplus());
@@ -538,7 +539,7 @@ public class TestMachController {
     }
 
     @Test
-    public void createFinalStanding() throws IOException, URISyntaxException, SixCardsLimitReachedException {
+    public void createFinalStandingTest() throws IOException, URISyntaxException, SixCardsLimitReachedException {
 
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<DvptCard> cards = DvptCardParser.parse();
@@ -552,17 +553,19 @@ public class TestMachController {
 
         players.get(0).getPersonalBoard().addVentureCard((VentureDvptCard) cards.get(85));
 
-        FinalStanding finalStanding = new FinalStanding(mc.calculatesFinalScore());
+        FinalStanding finalStanding = mc.createFinalStanding();
 
         assertEquals(2 + cards.get(85).getPermanentEffect().getvPoints(),finalStanding.getScore(players.get(0)));
 
     }
 
+
+
     @Test
-    public void testDicesWith5Players() throws IOException, URISyntaxException {
+    public void DicesWith5PlayersTest() throws IOException, URISyntaxException {
 
         ArrayList<Player> players = new ArrayList<>();
-        ArrayList<DvptCard> cards = DvptCardParser.parse();
+
         players.add(new Player("testA"));
         players.add(new Player("testB"));
         players.add(new Player("testC"));
@@ -587,7 +590,7 @@ public class TestMachController {
 
         }
 
-
-
     }
+
+
 }

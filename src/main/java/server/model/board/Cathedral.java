@@ -21,7 +21,7 @@ public class Cathedral  implements Serializable {
         this.firstMinFaith = firstMinFaith;
         this.secondMinFaith = secondMinFaith;
         this.thirdMinFaith = thirdMinFaith;
-        this.banCards = new HashMap<Period, BanCard>();
+        this.banCards = new HashMap<>();
     }
 
     public Integer getFirstMinFaith() {
