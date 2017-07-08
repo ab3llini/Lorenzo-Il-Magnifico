@@ -24,7 +24,7 @@ public class PersistenceRoundIterator extends RoundIterator {
     public Queue<Player> next() {
 
         //Get normal queue
-        Queue<Player> queue = super.next();
+        Queue<Player> queue = this.resolveRoundOrder();
 
         //Filter out players that have already played in this round until we find the previous player
         //This is a routine that we need to perform just once

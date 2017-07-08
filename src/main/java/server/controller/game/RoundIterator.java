@@ -7,6 +7,7 @@ import server.model.card.ban.BanType;
 import server.model.card.ban.SpecialBanCard;
 import server.model.card.ban.SpecialEffectType;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -21,15 +22,15 @@ import java.util.Queue;
  */
 public class RoundIterator implements Iterator<Queue<Player>> {
 
-    private static final int PERIODS = 3;
-    private static final int TURNS = 2;
-    private static final int ROUNDS = 4;
+    protected static final int PERIODS = 3;
+    protected static final int TURNS = 2;
+    protected static final int ROUNDS = 4;
 
 
-    private static final int FIRST_ROUND = 1;
-    private static final int LAST_ROUND = 4;
+    protected static final int FIRST_ROUND = 1;
+    protected static final int LAST_ROUND = 4;
 
-    private Match match;
+    protected Match match;
 
     public RoundIterator(Match match) {
 
@@ -49,13 +50,6 @@ public class RoundIterator implements Iterator<Queue<Player>> {
     }
 
     public Queue<Player> next() {
-
-        //For the moment the order of each round is given just by the council palace order
-        Queue<Player> roundOrder = new LinkedList<Player>();
-
-        //A queue of banned players that need to be put at the end of the round queue
-        Queue<Player> banned = new LinkedList<Player>();
-
 
         //Update period, turn &
         if (this.match.getCurrentRound() == 0 && this.match.getCurrentTurn() == 0 && this.match.getCurrentPeriod().toInt() == 0) {
@@ -89,6 +83,17 @@ public class RoundIterator implements Iterator<Queue<Player>> {
 
         }
 
+        return this.resolveRoundOrder();
+
+    }
+
+    protected Queue<Player> resolveRoundOrder() {
+
+        //For the moment the order of each round is given just by the council palace order
+        Queue<Player> roundOrder = new LinkedList<Player>();
+
+        //A queue of banned players that need to be put at the end of the round queue
+        Queue<Player> banned = new LinkedList<Player>();
         //Check if the player that is being added to the queue has been banned
         for (Player p : this.match.getRoundOrder()) {
 
@@ -134,6 +139,7 @@ public class RoundIterator implements Iterator<Queue<Player>> {
             roundOrder.addAll(banned);
 
         }
+
 
         return roundOrder;
 
