@@ -824,7 +824,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
 
-                    //TODO
                     //save on database
                     this.save();
 
@@ -2577,7 +2576,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     public void save(){
 
         try {
+
             Database.getInstance().save(this.match);
+
+            Logger.log(Level.FINEST, this.toString(), "Saving match status..");
 
         } catch (SQLException e) {
 
