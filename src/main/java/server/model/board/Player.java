@@ -348,6 +348,28 @@ public class Player implements Serializable {
     }
 
 
+    //Get all the family members
+    public FamilyMember getSpecificFamilyMemberInfo(ColorType colorType) {
+
+        FamilyMember memberWanted = null;
+
+        //search through the array of family members until finds the member we want
+        for (FamilyMember member : familyMembers) {
+
+            if (member.getColor() == colorType) {
+
+                memberWanted = member;
+
+                break;
+
+            }
+
+        }
+
+        return memberWanted;
+
+    }
+
     /**
      * this method returns an array of family members that has enough force(or they can have with an addition of servants) to do an Action
      *
@@ -684,6 +706,7 @@ public class Player implements Serializable {
 
         return true;
     }
+
 
     /**
      * this method verifies if there are enough points of a specific type (faith, victory, military) to activate a leader card

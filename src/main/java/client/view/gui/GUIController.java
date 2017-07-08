@@ -42,6 +42,7 @@ import netobject.notification.ObserverReadyNotification;
 import server.model.Match;
 import server.model.board.*;
 import server.model.card.Deck;
+import server.model.card.ban.BanCard;
 import server.model.card.developement.*;
 import server.model.card.leader.LeaderCard;
 
@@ -133,6 +134,18 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @FXML
     private Label notificationTextField;
+
+    @FXML
+    private Pane playersPane;
+
+    @FXML
+    private ImageView firstBanCard;
+
+    @FXML
+    private ImageView secondBanCard;
+
+    @FXML
+    private ImageView thirdBanCard;
 
     //The reference to the local match controller
     private LocalMatchController localMatchController;
@@ -407,6 +420,19 @@ public class GUIController extends NavigationController implements ClientObserve
         this.blackDiceValueTextField.setText(this.localMatchController.getMatch().getBoard().getDiceForce(ColorType.Black).toString());
         this.whiteDiceValueTextField.setText(this.localMatchController.getMatch().getBoard().getDiceForce(ColorType.White).toString());
         this.orangeDiceValueTextField.setText(this.localMatchController.getMatch().getBoard().getDiceForce(ColorType.Orange).toString());
+
+
+    }
+
+    private void updateBanCard(Match model) {
+
+        BanCard first = this.localMatchController.getMatch().getBoard().getCathedral().getBanCard(Period.first);
+        BanCard second = this.localMatchController.getMatch().getBoard().getCathedral().getBanCard(Period.second);
+        BanCard third = this.localMatchController.getMatch().getBoard().getCathedral().getBanCard(Period.third);
+
+        this.firstBanCard.setImage(new Image("assets/cards/ban/excomm_" + Period.first.toInt() + "_" + first.getId() + ".png"));
+        this.secondBanCard.setImage(new Image("assets/cards/ban/excomm_" + Period.second.toInt() + "_" + (second.getId() - 7) + ".png"));
+        this.thirdBanCard.setImage(new Image("assets/cards/ban/excomm_" + Period.third.toInt() + "_" + (third.getId() - 14) + ".png"));
 
 
     }
@@ -841,6 +867,46 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+    private void updatePlayers(Match model) {
+
+        this.playersPane.getChildren().clear();
+
+        final int OFFSET = 30;
+        final double FIT = 20;
+
+        double startX = 0;
+
+        int count = 0;
+
+        for (Player p : model.getRoundOrder()) {
+
+            FamilyMember member = p.getSpecificFamilyMemberInfo(ColorType.Black);
+
+            ImageView imageView = new ImageView();
+            imageView.setImage(this.getFamilyMemberImage(member.getColor(), member.getPlayerColor()));
+            imageView.setFitHeight(FIT);
+            imageView.setFitWidth(FIT);
+            imageView.setPreserveRatio(true);
+
+            this.playersPane.getChildren().add(imageView);
+
+            imageView.setLayoutX(startX);
+            imageView.setLayoutY(OFFSET * count);
+
+            Label label = new Label(p.getUsername() + " - " + (count + 1) + "°");
+            label.setStyle("-fx-text-fill: white");
+
+            this.playersPane.getChildren().add(label);
+
+            label.setLayoutX(startX + OFFSET);
+            label.setLayoutY(OFFSET * count);
+
+            count++;
+
+        }
+
+    }
+
     private int getTowerPlacementIndex(DvptCard card) {
 
         try {
@@ -926,6 +992,8 @@ public class GUIController extends NavigationController implements ClientObserve
             this.updatePersonalBoard(model);
             this.updateFamilyMembers(model);
             this.updateLeaderCards(model);
+            this.updateBanCard(model);
+            this.updatePlayers(model);
 
         });
 
