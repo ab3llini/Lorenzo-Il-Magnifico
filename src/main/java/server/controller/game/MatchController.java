@@ -1863,7 +1863,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                         this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action");
 
                         placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
-
                         try {
                             doImmediateAction(placementAction, leaderCard.getLeaderEffect().getOnceARound().getAction().get(ActionType.harvest), player);
                         } catch (ActionException e) {
@@ -2034,7 +2033,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         if (!conversionList.get(choose).getFrom().getResources().isEmpty()) {
 
             for (Resource from : conversionList.get(choose).getFrom().getResources())
-
+                if(player.hasEnoughRequiredResources(conversionList.get(choose).getFrom().getResources()))
                 player.subtractGenericResource(from.getType(), from.getAmount());
 
         }
@@ -2042,8 +2041,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         if (!conversionList.get(choose).getFrom().getPoints().isEmpty()) {
 
             for (Point from : conversionList.get(choose).getFrom().getPoints())
-
-                player.subtractGenericPoint(from.getType(), from.getAmount());
+                if(player.hasEnoughRequiredPoints(conversionList.get(choose).getFrom().getPoints()))
+                    player.subtractGenericPoint(from.getType(), from.getAmount());
 
         }
 
