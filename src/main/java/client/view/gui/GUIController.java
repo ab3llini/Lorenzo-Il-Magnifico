@@ -1007,6 +1007,20 @@ public class GUIController extends NavigationController implements ClientObserve
 
     }
 
+    private void showHarvestActivation() {
+
+        HarvestActivationController controller = (HarvestActivationController) this.openNewStage(View.ActivateHarvest);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
+    private void showProductionActivation() {
+
+        ProductionActivationController controller = (ProductionActivationController) this.openNewStage(View.ActivateProduction);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
     @Override
     public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
@@ -1016,6 +1030,14 @@ public class GUIController extends NavigationController implements ClientObserve
             this.localMatchController.setLastPendingImmediateAction(actionType);
 
             switch (actionType) {
+
+                case ActivateHarvest:
+                    Platform.runLater(this::showHarvestActivation);
+                    break;
+
+                case ActivateProduction:
+                    Platform.runLater(this::showProductionActivation);
+                    break;
 
                 case SelectCouncilPrivilege:
                     Platform.runLater(this::showCouncilPrivilegeSelection);
