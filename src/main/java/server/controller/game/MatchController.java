@@ -404,12 +404,16 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         if (!roundIterator.hasNext()) {
 
-            //The match has ended, notify the players!
-            endDatabaseMatch();
+            if (this.match.getCurrentPeriod() == Period.third && this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4) {
 
-            for (MatchControllerObserver o : this.observers) {
+                //The match has ended, notify the players!
+                endDatabaseMatch();
 
-                o.onMatchEnded();
+                for (MatchControllerObserver o : this.observers) {
+
+                    o.onMatchEnded();
+
+                }
 
             }
 
@@ -775,9 +779,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Useful to save it also in the model
         this.match.updateCurrentPlayer(currentPlayer);
 
-        //TODO
-        //Save it in order to avoid two consecutive actions for a player that has just terminate his round
-        this.save();
+        if (this.match.getCurrentPeriod() != Period.first && this.match.getCurrentTurn() != 1 && this.match.getCurrentRound() != 1) {
+            //Save it in order to avoid two consecutive actions for a player that has just terminate his round
+            this.save();
+        }
+
 
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
