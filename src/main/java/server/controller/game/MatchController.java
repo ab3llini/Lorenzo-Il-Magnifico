@@ -202,19 +202,21 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         for (ClientHandler handler : handlers) {
 
-            Player player = null;
+                Player player = null;
 
-            try {
+                try {
 
-                player = match.getPlayerFromUsername(handler.getUsername());
+                    player = match.getPlayerFromUsername(handler.getUsername());
 
-            } catch (NoSuchPlayerException e) {
+                    player.setDisabled(false);
 
-                Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
+                } catch (NoSuchPlayerException e) {
 
-            }
+                    Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
 
-            this.remotePlayerMap.put(player, handler);
+                }
+
+                this.remotePlayerMap.put(player, handler);
 
         }
 
@@ -241,10 +243,31 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         this.readyObservers = new LinkedBlockingQueue<>(match.getPlayers().size());
 
         //set the current player
-        this.currentPlayer = this.match.getCurrentPlayer();
+        try {
+            this.currentPlayer = match.getPlayerFromUsername(this.match.getCurrentPlayer().getUsername());
+        } catch (NoSuchPlayerException e) {
+            Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
+        }
 
         //Init the proper round iterator
         this.roundIterator = new PersistenceRoundIterator(match, currentPlayer);
+
+        /**
+         * Pointer fix
+         */
+        this.match.setCurrentPlayer(this.currentPlayer);
+
+        //Fix round order
+        for (int index = 0; index < this.match.getRoundOrder().size(); index++) {
+
+            try {
+                this.match.getRoundOrder().set(index, match.getPlayerFromUsername(this.match.getRoundOrder().get(index).getUsername()));
+            } catch (NoSuchPlayerException e) {
+                Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
+            }
+
+
+        }
 
     }
 
@@ -358,10 +381,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
-            //TODO
-            //save on database the updated model
-            this.save();
-
             Logger.log(Level.FINEST, this.toString(), "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 
             //Foreach round handle the current player
@@ -381,9 +400,25 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         }
 
-        Logger.log(Level.FINEST, this.toString(), "Match ended.");
 
-        endDatabaseMatch();
+        if (!roundIterator.hasNext()) {
+
+            if (this.match.getCurrentPeriod() == Period.third && this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4) {
+
+                //The match has ended, notify the players!
+                endDatabaseMatch();
+
+                Logger.log(Level.FINEST, this.toString(), "Match ended.");
+
+            }
+
+        }
+        else {
+
+            Logger.log(Level.FINEST, this.toString(), "Match interrupted.");
+
+
+        }
 
         for (MatchControllerObserver o : this.observers) {
 
@@ -751,9 +786,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Useful to save it also in the model
         this.match.updateCurrentPlayer(currentPlayer);
 
-        //TODO
-        //Save it in order to avoid two consecutive actions for a player that has just terminate his round
-        this.save();
+        if (!(this.match.getCurrentPeriod() == Period.first && this.match.getCurrentTurn() == 1 && this.match.getCurrentRound() == 1)) {
+            //Save it in order to avoid two consecutive actions for a player that has just terminate his round
+            this.save();
+        }
+
 
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
 
@@ -787,7 +824,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
 
-                    //TODO
                     //save on database
                     this.save();
 
@@ -2292,10 +2328,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             else if(permanentEffectAction.getTarget() == ActionType.card){
 
-                if(permanentEffectAction.getType() == getTowerType(action.getActionTarget()))
+                if(permanentEffectAction.getType() == getTowerType(action.getActionTarget())) {
                     bonus.increaseForceBonus(permanentEffectAction.getForceBonus());
+                    bonus.setDiscounts(permanentEffectAction.getDiscounts());
+                }
 
-                bonus.setDiscounts(permanentEffectAction.getDiscounts());
             }
 
             //if the effect is the preacher penality forbid the Action if the placement index is > 1
@@ -2539,7 +2576,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
     public void save(){
 
         try {
+
             Database.getInstance().save(this.match);
+
+            Logger.log(Level.FINEST, this.toString(), "Saving match status..");
 
         } catch (SQLException e) {
 

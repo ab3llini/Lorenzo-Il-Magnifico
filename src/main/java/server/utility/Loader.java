@@ -26,7 +26,9 @@ public abstract class Loader {
     public static JsonObject getJsonObjectFromFile(String filename) throws IOException, URISyntaxException {
 
         //The file
-        File file = new File(Loader.class.getClassLoader().getResource(filename).getFile());;
+        File file = new File(Loader.class.getClassLoader().getResource(filename).getFile());
+
+
 
         //The file reader
         BufferedReader reader = new BufferedReader(new FileReader(file));
