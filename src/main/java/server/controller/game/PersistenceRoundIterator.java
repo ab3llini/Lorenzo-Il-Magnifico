@@ -23,14 +23,22 @@ public class PersistenceRoundIterator extends RoundIterator {
     @Override
     public Queue<Player> next() {
 
-        //Get normal queue
-        Queue<Player> queue = this.resolveRoundOrder();
+        Queue<Player> queue;
 
-        //Filter out players that have already played in this round until we find the previous player
-        //This is a routine that we need to perform just once
+        //If we are restarting a persistence match, resolve just the previous order
+        //After that just call super.next()
+        if (previousCurrentPlayer == null) {
 
-        if (previousCurrentPlayer != null) {
+            queue = super.next();
 
+        }
+        else {
+
+            queue = this.resolveRoundOrder();
+
+
+            //Filter out players that have already played in this round until we find the previous player
+            //This is a routine that we need to perform just once
             while (!queue.peek().getUsername().equals(this.previousCurrentPlayer.getUsername())) {
 
                 //Remove the player, he has already played..
@@ -43,6 +51,7 @@ public class PersistenceRoundIterator extends RoundIterator {
             this.previousCurrentPlayer = null;
 
         }
+
 
         return queue;
 
