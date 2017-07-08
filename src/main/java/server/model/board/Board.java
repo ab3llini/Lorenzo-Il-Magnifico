@@ -53,6 +53,10 @@ public class Board implements Serializable {
         dices.add(new Dice(ColorType.Orange));
     }
 
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     public Player getPlayer(PlayerColor playerColor) {
 
         for (Player player : this.players) {

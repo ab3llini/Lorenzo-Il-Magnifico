@@ -269,6 +269,18 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         }
 
+        //fix players in board
+        for (int index = 0; index < this.match.getBoard().getPlayers().size(); index++) {
+
+            try {
+                this.match.getPlayers().set(index, match.getPlayerFromUsername(this.match.getPlayers().get(index).getUsername()));
+            } catch (NoSuchPlayerException e) {
+                Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
+            }
+
+
+        }
+
     }
 
     /**
