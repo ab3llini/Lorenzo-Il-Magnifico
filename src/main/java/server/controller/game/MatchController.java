@@ -400,7 +400,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         }
 
-        Logger.log(Level.FINEST, this.toString(), "Match ended.");
 
         if (!roundIterator.hasNext()) {
 
@@ -409,13 +408,21 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 //The match has ended, notify the players!
                 endDatabaseMatch();
 
-                for (MatchControllerObserver o : this.observers) {
-
-                    o.onMatchEnded();
-
-                }
+                Logger.log(Level.FINEST, this.toString(), "Match ended.");
 
             }
+
+        }
+        else {
+
+            Logger.log(Level.FINEST, this.toString(), "Match interrupted.");
+
+
+        }
+
+        for (MatchControllerObserver o : this.observers) {
+
+            o.onMatchEnded();
 
         }
 
