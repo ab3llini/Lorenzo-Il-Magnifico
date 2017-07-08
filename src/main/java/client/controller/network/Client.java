@@ -10,6 +10,7 @@ import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 import server.controller.game.RemotePlayer;
 import server.controller.network.Observable;
+import server.model.FinalStanding;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -130,6 +131,7 @@ public abstract class Client implements RemotePlayer, LocalPlayer {
         }
 
     }
+
 
     public boolean addClientObserver(ClientObserver o) {
 

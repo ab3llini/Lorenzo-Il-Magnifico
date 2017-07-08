@@ -14,6 +14,7 @@ import netobject.notification.MatchNotification;
 import server.controller.network.ClientHandler;
 import server.controller.network.ClientHandlerObserver;
 import server.controller.network.Observable;
+import server.model.FinalStanding;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -285,6 +286,16 @@ public class RMIClientHandler extends ClientHandler implements Observable<Client
 
     }
 
+
+    public void notifyMatchEnded(FinalStanding finalStanding, String message) {
+
+        try {
+            this.clientRef.onMatchEndedRequest(finalStanding,message);
+        } catch (RemoteException e) {
+            Logger.log(Level.SEVERE, "RMIClientHandler", "Unable to notify final standing before match ended", e);
+        }
+
+    }
 
 
 }

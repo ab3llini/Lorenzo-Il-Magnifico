@@ -3,6 +3,7 @@ package server.controller.game;
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.MatchNotification;
+import server.model.FinalStanding;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -41,5 +42,7 @@ public interface RemotePlayer {
     void notifyLeaderCardDraftRequest(Deck<LeaderCard> cards, String message);
 
     void notifyBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message);
+
+    void notifyMatchEnded(FinalStanding finalStanding, String message);
 
 }

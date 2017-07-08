@@ -14,6 +14,7 @@ public enum MatchNotificationType {
     BonusTileDraft,
     TimeoutExpired,
     ActionRefused,
-    ActionPerformed
+    ActionPerformed,
+    MatchEnded
 
 }

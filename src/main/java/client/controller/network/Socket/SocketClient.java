@@ -13,6 +13,7 @@ import netobject.response.Response;
 import netobject.response.ResponseType;
 import netobject.response.auth.LoginResponse;
 import netobject.response.auth.RegistrationResponse;
+import server.model.FinalStanding;
 import server.model.Match;
 
 import java.io.EOFException;
@@ -303,6 +304,11 @@ public class SocketClient extends Client implements Runnable {
     public void sendNotification(Notification notification) {
 
         this.sendObject(notification);
+
+    }
+
+    @Override
+    public void notifyMatchEnded(FinalStanding finalStanding, String message) {
 
     }
 }

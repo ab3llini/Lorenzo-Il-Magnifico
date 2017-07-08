@@ -164,6 +164,7 @@ public class TestMachController {
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
+
             } catch (NoActionPerformedException e) {
                 e.printStackTrace();
             }

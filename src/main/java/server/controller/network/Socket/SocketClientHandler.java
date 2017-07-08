@@ -16,6 +16,7 @@ import netobject.notification.MatchNotification;
 import netobject.notification.MatchNotificationType;
 import server.controller.network.ClientHandler;
 import server.controller.network.Observable;
+import server.model.FinalStanding;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -260,6 +261,13 @@ public class SocketClientHandler extends ClientHandler implements Observable<Soc
     public void notifyBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) {
 
         this.sendObject(new MatchNotification(MatchNotificationType.BonusTileDraft, tiles, message));
+
+    }
+
+
+    public void notifyMatchEnded(FinalStanding finalStanding, String message) {
+
+        this.sendObject(new MatchNotification(MatchNotificationType.MatchEnded, finalStanding, message));
 
     }
 

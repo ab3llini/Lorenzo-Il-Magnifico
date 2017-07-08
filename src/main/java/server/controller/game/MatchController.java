@@ -400,6 +400,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             if (this.match.getCurrentPeriod() == Period.third && this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4) {
 
+                this.notifyAllMatchEnded(createFinalStanding(),"The match is ended ...");
+
                 //The match has ended, notify the players!
                 endDatabaseMatch();
 
@@ -1093,6 +1095,17 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         for (Player p : this.match.getPlayers()) {
             if (!p.isDisabled()) {
                 this.remotePlayerMap.get(p).notifyImmediateActionAvailable(immediateActionType, current, message);
+            }
+
+        }
+
+    }
+
+    private void notifyAllMatchEnded(FinalStanding finalStanding, String message) {
+
+        for (Player p : this.match.getPlayers()) {
+            if (!p.isDisabled()) {
+                this.remotePlayerMap.get(p).notifyMatchEnded(finalStanding, message);
             }
 
         }
