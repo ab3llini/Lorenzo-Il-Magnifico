@@ -50,6 +50,7 @@ public class PlayerLeaderCardsController extends  DialogController {
 
             this.client.performAction(new DiscardLeaderCardAction(this.clicked.getId(), this.client.getUsername()));
 
+
             this.cleanUp();
 
 
