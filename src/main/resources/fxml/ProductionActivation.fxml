@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" styleClass="dialog-pane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.gui.ProductionActivationController">
+   <children>
+      <TextField fx:id="additionalServantsTextField" layoutX="56.0" layoutY="60.0" promptText="Insert a valid number" styleClass="form-input" text="0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0" />
+      <Label layoutX="51.0" layoutY="31.0" text="Additional servants" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
+      <JFXButton layoutX="201.0" layoutY="148.0" onMouseClicked="#onProductionActivation" styleClass="form-button" text="Activate production" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+   </children>
+   <stylesheets>
+      <URL value="@../css/core.css" />
+      <URL value="@../css/dialog.css" />
+   </stylesheets>
+</AnchorPane>
