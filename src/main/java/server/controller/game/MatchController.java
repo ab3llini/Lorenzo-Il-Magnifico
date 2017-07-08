@@ -311,11 +311,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     public void run() {
 
-
-        //Inform the players that the match started
-        this.lobby.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match is starting..."));
-
-
         //Wait fot CLI / GUI to fully load their observers..
         this.waitUntilPlayerObserversAreSet();
 
