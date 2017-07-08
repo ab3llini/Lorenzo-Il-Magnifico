@@ -54,7 +54,9 @@ public class Board implements Serializable {
     }
 
     public ArrayList<Player> getPlayers() {
+
         return players;
+
     }
 
     public Player getPlayer(PlayerColor playerColor) {

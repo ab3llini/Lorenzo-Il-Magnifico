@@ -273,7 +273,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         for (int index = 0; index < this.match.getBoard().getPlayers().size(); index++) {
 
             try {
-                this.match.getPlayers().set(index, match.getPlayerFromUsername(this.match.getPlayers().get(index).getUsername()));
+                this.match.getBoard().getPlayers().set(index, match.getPlayerFromUsername(this.match.getBoard().getPlayers().get(index).getUsername()));
             } catch (NoSuchPlayerException e) {
                 Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
             }
@@ -795,10 +795,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Useful to save it also in the model
         this.match.updateCurrentPlayer(currentPlayer);
 
-        if (!(this.match.getCurrentPeriod() == Period.first && this.match.getCurrentTurn() == 1 && this.match.getCurrentRound() == 1)) {
-            //Save it in order to avoid two consecutive actions for a player that has just terminate his round
-            this.save();
-        }
+        //Save it in order to avoid two consecutive actions for a player that has just terminate his round
+        this.save();
 
 
         Logger.log(Level.FINEST, this.toString(), "It is " + this.currentPlayer.getUsername() + "'s turn!");
