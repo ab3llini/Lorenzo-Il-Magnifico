@@ -334,6 +334,9 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         this.matchController.addObserver(this);
 
+        //Inform the players that the match started
+        this.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match is starting..."));
+
         this.matchControllerDaemon.start();
 
     }
@@ -380,13 +383,14 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
                 switch (this.matchController.getContext()) {
 
                     case LeaderCardDraft:
+                        handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeLeaderCardDraft, "Welcome back to game " + handler.getUsername() + ", you will be able to draft the bonus tiles soon"));
+                        break;
                     case BonusTileDraft:
                         handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeBonusTileDraft, "Welcome back to game " + handler.getUsername() + ", you will be able to draft the bonus tiles soon"));
                         break;
                     case Playing:
                         handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
                         break;
-
                 }
 
             }
