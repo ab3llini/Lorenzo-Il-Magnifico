@@ -2,6 +2,7 @@ package netobject.notification;
 
 import netobject.action.Action;
 import netobject.action.immediate.ImmediateActionType;
+import server.model.FinalStanding;
 import server.model.board.BonusTile;
 import server.model.board.Player;
 import server.model.card.Deck;
@@ -18,6 +19,7 @@ public class MatchNotification extends Notification {
     private final String message;
     private Deck<LeaderCard> deck;
     private ArrayList<BonusTile> tiles;
+    private FinalStanding finalStanding;
 
     public MatchNotification(MatchNotificationType matchNotificationType, ImmediateActionType actionType, Player player, String message) {
 
@@ -74,6 +76,14 @@ public class MatchNotification extends Notification {
         this.action = action;
         this.message = message;    }
 
+    public MatchNotification(MatchNotificationType matchNotificationType, FinalStanding finalStanding, String message){
+        super(NotificationType.Match);
+        this.matchNotificationType = matchNotificationType;
+        this.finalStanding = finalStanding;
+        this.message = message;
+
+    }
+
 
     public MatchNotificationType getMatchNotificationType() {
         return matchNotificationType;
@@ -101,5 +111,9 @@ public class MatchNotification extends Notification {
 
     public ArrayList<BonusTile> getTiles() {
         return tiles;
+    }
+
+    public FinalStanding getFinalStanding() {
+        return finalStanding;
     }
 }

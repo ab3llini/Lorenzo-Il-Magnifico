@@ -6,6 +6,7 @@ import netobject.action.ActionType;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.notification.LobbyNotification;
 import netobject.notification.MatchNotification;
+import server.model.FinalStanding;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -57,6 +58,8 @@ public interface RMIClientInterface extends Remote {
     void onLeaderCardDraftRequest(Deck<LeaderCard> cards, String message) throws RemoteException;
 
     void onBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) throws RemoteException;
+
+    void onMatchEndedRequest(FinalStanding finalStanding, String message) throws RemoteException;
 
 
 }

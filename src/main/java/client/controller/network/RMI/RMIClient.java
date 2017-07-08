@@ -14,6 +14,7 @@ import netobject.notification.Notification;
 import netobject.request.auth.LoginRequest;
 import netobject.request.auth.RegisterRequest;
 import server.controller.network.RMI.RMIServerInterface;
+import server.model.FinalStanding;
 import server.model.Match;
 import server.model.board.BonusTile;
 import server.model.board.Player;
@@ -118,6 +119,12 @@ public class RMIClient extends Client implements RMIClientInterface {
     public void onBonusTileDraftRequest(ArrayList<BonusTile> tiles, String message) throws RemoteException {
         this.notifyBonusTileDraftRequest(tiles, message);
     }
+
+
+    public void onMatchEndedRequest(FinalStanding finalStanding, String message) throws RemoteException {
+        this.notifyMatchEnded(finalStanding,message);
+    }
+
 
     public void connect() throws Exception {
 
@@ -232,5 +239,9 @@ public class RMIClient extends Client implements RMIClientInterface {
 
     }
 
+    @Override
+    public void notifyMatchEnded(FinalStanding finalStanding, String message) {
+
+    }
 }
 
