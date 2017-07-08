@@ -21,7 +21,9 @@ public enum View {
     SelectBanOption("DecideBanOption.fxml", "Decide if you want to get banned", 300, 200),
     LeaderCardActivationDiscard("PlayerLeaderCards.fxml", "What do you want to do with the selected leader card ?", 350, 200),
     ActivateHarvest("HarvestActivation.fxml", "Decide if you want to get banned", 300, 200),
-    ActivateProduction("ProductionActivation.fxml", "Decide if you want to get banned", 300, 200);
+    ActivateProduction("ProductionActivation.fxml", "Decide if you want to get banned", 300, 200),
+    LeaderCardSelection("LeaderCardSelection.fxml", "Decide what card do u want to copy", 1020, 450);
+
 
 
 

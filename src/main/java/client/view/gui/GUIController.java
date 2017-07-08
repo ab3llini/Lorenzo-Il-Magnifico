@@ -1020,6 +1020,13 @@ public class GUIController extends NavigationController implements ClientObserve
         controller.setLocalMatchController(this.localMatchController);
 
     }
+    private void showLeaderSelection() {
+
+        LeaderCardSelectionController controller = (LeaderCardSelectionController) this.openNewStage(View.LeaderCardSelection);
+        controller.setClient(client);
+        controller.setLocalMatchController(this.localMatchController);
+
+    }
     @Override
     public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
@@ -1062,6 +1069,9 @@ public class GUIController extends NavigationController implements ClientObserve
                     Platform.runLater(this::showBanOption);
                     break;
 
+                case SelectActiveLeaderCard:
+                    Platform.runLater(this::showLeaderSelection);
+                    break;
             }
 
             this.showAsynchAlert(Alert.AlertType.INFORMATION, "Immediate action", "Immediate action available", message);
