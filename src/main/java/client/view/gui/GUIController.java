@@ -540,6 +540,8 @@ public class GUIController extends NavigationController implements ClientObserve
     @FXML
     void onLeaderCardClick(MouseEvent event) {
 
+        if (!this.checkMoveEnabled()) return;
+
         LeaderCard clicked = this.imageViewLeaderCardCache.get(event.getSource());
 
         if (clicked != null) {
@@ -1130,6 +1132,7 @@ public class GUIController extends NavigationController implements ClientObserve
             if (action.getActionType() == ActionType.Standard) {
 
                 this.localMatchController.confirmLastStandardPendingAction();
+
                 Platform.runLater(() -> {
                     this.notificationTextField.setText("Your action was performed successfully");
                 });
