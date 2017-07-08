@@ -48,6 +48,7 @@ public class LeaderCardSelectionController extends DialogController {
 
     }
 
+    @FXML
     public void initialize(){
         for(Player player : this.localMatchController.getMatch().getPlayers()) {
             if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
