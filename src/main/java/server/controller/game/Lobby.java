@@ -334,22 +334,6 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
 
         this.matchController.addObserver(this);
 
-
-        //Inform the players that the match started
-        if (!(this instanceof PersistenceLobby)) {
-
-            //Inform the players that the match started
-            this.notifyAll(new LobbyNotification(LobbyNotificationType.MatchStart, "The match is starting..."));
-        }
-
-        else {
-
-            //Inform the players that the match started
-            this.notifyAll(new LobbyNotification(LobbyNotificationType.ResumeGame, "The match is resuming..."));
-
-        }
-
-
         this.matchControllerDaemon.start();
 
     }

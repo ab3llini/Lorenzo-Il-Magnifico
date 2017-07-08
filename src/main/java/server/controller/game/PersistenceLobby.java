@@ -120,6 +120,9 @@ public class PersistenceLobby extends Lobby {
 
         this.matchController.addObserver(this);
 
+        //Inform the players that the match started
+        this.notifyAll(new LobbyNotification(LobbyNotificationType.ResumeGame, "The match is resuming..."));
+
         this.matchControllerDaemon.start();
 
 

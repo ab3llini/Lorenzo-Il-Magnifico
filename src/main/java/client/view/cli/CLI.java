@@ -539,11 +539,15 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
             System.out.println("Bonus tiles bug finder: token received. going on..");
 
-            System.out.println("Bonus tiles bug finder: waiting for the next leader card deck..");
-            //Wait for the next draft request
-            this.serverTokenQueue.take();
+            if (this.localMatchController.getDraftableLeaderCards().getCards().size() != 1) {
 
-            System.out.println("Bonus tiles bug finder: token received. going on..");
+                System.out.println("Bonus tiles bug finder: waiting for the next leader card deck..");
+                //Wait for the next draft request
+                this.serverTokenQueue.take();
+
+                System.out.println("Bonus tiles bug finder: token received. going on..");
+
+            }
 
 
             drafRound++;
@@ -1660,10 +1664,10 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
         this.localMatchController.setDraftableLeaderCards(cards);
 
-        if (cards.getCards().size() > 0)
+        if (cards.getCards().size() > 0) {
             Cmd.notify(message);
-
-        this.addTokenToQueue(this.serverTokenQueue);
+            this.addTokenToQueue(this.serverTokenQueue);
+        }
 
     }
 

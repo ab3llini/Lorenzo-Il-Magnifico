@@ -35,7 +35,6 @@ import netobject.action.ActionType;
 import netobject.action.BoardSectorType;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.standard.RollDicesAction;
-import netobject.action.standard.ShuffleBonusTileStandardAction;
 import netobject.action.standard.StandardActionType;
 import netobject.action.standard.TerminateRoundStandardAction;
 import netobject.notification.MatchNotification;
