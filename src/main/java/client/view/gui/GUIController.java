@@ -5,6 +5,7 @@ import exception.NoSuchPlayerException;
 import exception.gui.GuiException;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -880,7 +881,7 @@ public class GUIController extends NavigationController implements ClientObserve
         final double FIT = 20;
 
         double startX = 0;
-        double startY = 0;
+        double startY;
 
         int count = 0;
 
@@ -929,9 +930,30 @@ public class GUIController extends NavigationController implements ClientObserve
             label.setLayoutX(startX + OFFSET);
             label.setLayoutY(startY);
 
+            //add click observers
+            imageView.setOnMouseClicked(event -> {
+                this.showAlert(Alert.AlertType.INFORMATION, "Player info", p.getUsername(), p.toString());
+            });
+
+            label.setOnMouseClicked(event -> {
+                this.showAlert(Alert.AlertType.INFORMATION, "Player info", p.getUsername(), p.toString2());
+            });
+
             count++;
 
         }
+
+        startY = this.playersPane.getHeight() - OFFSET * (model.getRoundOrder().size() + 2);
+
+        Label info = new Label("Click on a player for info");
+
+        info.setStyle("-fx-text-fill: white");
+
+        this.playersPane.getChildren().add(info);
+
+        info.setLayoutX(startX);
+        info.setLayoutY(startY);
+
 
     }
 
@@ -946,14 +968,10 @@ public class GUIController extends NavigationController implements ClientObserve
         Player me = null;
         Pane root = new Pane();
 
-        System.out.println(root.getHeight() + " - " +root.getWidth() + " - " + root.getLayoutY());
-
         root.setLayoutY(UPPER_Y);
         root.setPrefHeight(LOWER_Y - UPPER_Y);
         root.setMinHeight(LOWER_Y - UPPER_Y);
         root.setMaxHeight(LOWER_Y - UPPER_Y);
-
-        System.out.println(root.getHeight() + " - " +root.getWidth() + " - " + root.getLayoutY());
 
 
         try {
@@ -983,9 +1001,6 @@ public class GUIController extends NavigationController implements ClientObserve
         }
 
         this.allCardsPane.setContent(root);
-
-        System.out.println(root.getHeight() + " - " +root.getWidth() + " - " + root.getLayoutY());
-
 
     }
 
@@ -1074,7 +1089,7 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onNotification(Client sender, MatchNotification notification) {
 
-        Platform.runLater(() -> this.notificationTextField.setText(notification.getMessage()));
+        Platform.runLater(() -> this.setNotificationText(notification.getMessage()));
 
     }
 
@@ -1105,24 +1120,31 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onTurnEnabled(Client sender, Player player, String message) {
 
+
+        String text = "";
         //It it is our turn
         if (player.getUsername().equals(this.client.getUsername())) {
 
-            Platform.runLater(() -> {
-                this.turnIndicatorTextField.setText(player.getUsername() + ", is your turn!");
-            });
+            text = player.getUsername() + ", is your turn!";
 
             this.localMatchController.setTurnEnabled(true);
 
         }
         else {
 
-            Platform.runLater(() -> {
-                this.turnIndicatorTextField.setText(message);
-            });
-
+            text = message;
 
         }
+
+        text += "     -     Period = " + this.localMatchController.getMatch().getCurrentPeriod().toInt();
+        text += ", Turn = " + this.localMatchController.getMatch().getCurrentTurn();
+        text += ", Round = " + this.localMatchController.getMatch().getCurrentRound();
+
+        final String lambda = text;
+
+        Platform.runLater(() -> {
+            this.turnIndicatorTextField.setText(lambda);
+        });
 
 
     }
@@ -1251,7 +1273,7 @@ public class GUIController extends NavigationController implements ClientObserve
         }
         else {
 
-            Platform.runLater(() -> this.notificationTextField.setText(message));
+            Platform.runLater(() -> this.setNotificationText(message));
 
         }
 
@@ -1267,7 +1289,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
         }
         else {
-            Platform.runLater(() -> this.notificationTextField.setText(message));
+            Platform.runLater(() -> this.setNotificationText(message));
         }
 
     }
@@ -1282,7 +1304,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
         }
         else {
-            Platform.runLater(() -> this.notificationTextField.setText(message));
+            Platform.runLater(() -> this.setNotificationText(message));
         }
 
     }
@@ -1304,7 +1326,7 @@ public class GUIController extends NavigationController implements ClientObserve
                 this.localMatchController.confirmLastStandardPendingAction();
 
                 Platform.runLater(() -> {
-                    this.notificationTextField.setText("Your action was performed successfully");
+                    this.setNotificationText("Your action was performed successfully");
                 });
 
 
@@ -1317,7 +1339,7 @@ public class GUIController extends NavigationController implements ClientObserve
         }
         else {
 
-            Platform.runLater(() -> this.notificationTextField.setText(message));
+            Platform.runLater(() -> this.setNotificationText(message));
 
         }
 
@@ -1369,6 +1391,12 @@ public class GUIController extends NavigationController implements ClientObserve
             System.exit(0);
 
         });
+
+    }
+
+    private void setNotificationText(String text) {
+
+        this.notificationTextField.setText(text.replace("\n", ", ").replace("\r", ", "));
 
     }
 
