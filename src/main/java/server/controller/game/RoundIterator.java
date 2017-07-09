@@ -83,6 +83,13 @@ public class RoundIterator implements Iterator<Queue<Player>> {
 
         }
 
+        if (this.match.getCurrentRound() == 1) {
+
+            //Look at council palace order to calculate new order of precedence
+            changePlayerOrder();
+
+        }
+
         return this.resolveRoundOrder();
 
     }
@@ -142,6 +149,29 @@ public class RoundIterator implements Iterator<Queue<Player>> {
 
 
         return roundOrder;
+
+    }
+
+    public void changePlayerOrder(){
+
+        ArrayList <Player> oldPlayerOrder = this.match.getRoundOrder();
+
+        ArrayList <Player> newPlayerOrder = new ArrayList<>();
+
+        for (Player player : this.match.getBoard().getCouncilPalaceOrder()) {
+
+            newPlayerOrder.add(player);
+
+        }
+
+        for (Player player : oldPlayerOrder) {
+
+            if(!newPlayerOrder.contains(player))
+
+                newPlayerOrder.add(player);
+        }
+
+        this.match.setRoundOrder(newPlayerOrder);
 
     }
 

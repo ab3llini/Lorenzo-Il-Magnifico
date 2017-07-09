@@ -36,7 +36,6 @@ import netobject.action.ActionType;
 import netobject.action.BoardSectorType;
 import netobject.action.immediate.ImmediateActionType;
 import netobject.action.immediate.ImmediateChoiceAction;
-import netobject.action.immediate.ImmediatePlacementAction;
 import netobject.action.standard.RollDicesAction;
 import netobject.action.standard.StandardActionType;
 import netobject.action.standard.TerminateRoundStandardAction;

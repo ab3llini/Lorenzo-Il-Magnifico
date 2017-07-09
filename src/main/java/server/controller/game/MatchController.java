@@ -351,13 +351,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             if (this.match.getCurrentRound() == 1) {
 
+                this.notifyAllOfNewOrder();
+
                 //we have to pull dices another time
                 this.boardController.cleanDices();
-
-                //Look at council palace order to calculate new order of precedence
-                changePlayerOrder();
-
-                this.notifyAllOfNewOrder();
 
                 //Update the towers for the current combination of round / turn / period
                 this.boardController.updateTowersForTurn(this.match.getCurrentPeriod().toInt(), this.match.getCurrentTurn());
@@ -538,29 +535,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         this.notifyAll("Player " + belonging.getUsername() + " rejoined the match");
 
-
-    }
-
-    public void changePlayerOrder(){
-
-        ArrayList <Player> oldPlayerOrder = this.match.getRoundOrder();
-
-        ArrayList <Player> newPlayerOrder = new ArrayList<>();
-
-        for (Player player : this.match.getBoard().getCouncilPalaceOrder()) {
-
-            newPlayerOrder.add(player);
-
-        }
-
-        for (Player player : oldPlayerOrder) {
-
-            if(!newPlayerOrder.contains(player))
-
-                newPlayerOrder.add(player);
-        }
-
-        this.match.setRoundOrder(newPlayerOrder);
 
     }
 
@@ -1140,7 +1114,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         }
 
-        this.notifyAll("The player order has changed" + "\n" +newOrder );
+        this.notifyAll("The player order is:" + "\n" +newOrder );
 
     }
 
