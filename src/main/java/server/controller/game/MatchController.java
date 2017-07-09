@@ -1275,7 +1275,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      * @throws NotEnoughResourcesException
      * @throws NotEnoughPointsException
      */
-    public void applyImmediateEffect(Player player, DvptCard card) throws ActionException, NoActionPerformedException, InterruptedException {
+    public void applyImmediateEffect(Player player, DvptCard card) throws NoActionPerformedException, InterruptedException {
 
         StandardPlacementAction action;
 
@@ -1346,10 +1346,20 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     }
                 }
 
+                boolean immediateActionAccepted = false;
 
-                placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+                do {
+                    placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+                    try{
+                        doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+                        immediateActionAccepted = true;
+                    } catch (ActionException e) {
+                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(placementAction,e.getMessage());
+                    }
+                }
+                while(!immediateActionAccepted);
+
 
                 this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
 
@@ -2080,7 +2090,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
     }
 
-    public void applyMultiplier (Player player, Multiplier multiplier) throws NotEnoughResourcesException, NotEnoughPointsException {
+    public void applyMultiplier (Player player, Multiplier multiplier)  {
 
         int bonus = (int) (player.getSizeMultipliedType (multiplier.getWhat()) * multiplier.getCoefficient());
 
