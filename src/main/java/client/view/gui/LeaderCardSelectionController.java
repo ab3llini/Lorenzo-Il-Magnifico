@@ -54,8 +54,11 @@ public class LeaderCardSelectionController extends DialogController {
                         imgView.setImage(new Image("assets/cards/leader/leaders_f_c_" + c.getId() + ".jpg"));
                     }
 
-                    imgView.setFitWidth(100);
+                    imgView.setFitHeight(100);
+                    imgView.setPreserveRatio(true);
                     imgView.setLayoutX(OFFSET * count + FIT);
+
+                    this.container.getChildren().add(imgView);
 
                     imgView.setOnMouseClicked(event -> {
 

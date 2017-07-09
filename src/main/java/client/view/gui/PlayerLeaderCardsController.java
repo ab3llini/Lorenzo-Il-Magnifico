@@ -11,7 +11,7 @@ import netobject.action.standard.LeaderCardActivationAction;
 import server.model.card.leader.LeaderCard;
 
 /**
- * Created by Federico on 03/07/2017.
+ * Created by Alberto on 03/07/2017.
  */
 
 
@@ -21,7 +21,6 @@ public class PlayerLeaderCardsController extends  DialogController {
     private int selection = -1;
 
     private LeaderCard clicked = null;
-
 
     @FXML
     private Label leaderTextField;
