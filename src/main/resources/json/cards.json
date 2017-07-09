@@ -2664,10 +2664,12 @@
     ],
     "effects": {
       "immediate": {
-        "points": {
-          "military": 7
+        "surplus" : {
+          "points": {
+            "military": 7
+          }
         }
-      },
+        },
       "permanent": {
         "vpoints": 6
       }
