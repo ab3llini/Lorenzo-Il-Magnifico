@@ -232,7 +232,7 @@ public class GameEngine implements ServerObserver, LobbyObserver {
         }
         catch (NoSuchLobbyException e) {
 
-            Logger.log(Level.SEVERE, "GameEngine", "Unable to find the lobby to leave!", e);
+            Logger.log(Level.FINEST, "GameEngine", "The client has already left the lobby", e);
 
         }
 

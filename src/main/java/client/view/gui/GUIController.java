@@ -999,7 +999,46 @@ public class GUIController extends NavigationController implements ClientObserve
 
         }
 
+        count = 0;
+
+        for (BanCard banCard : me.getBanCards()) {
+
+            this.createBanImageForMyCards(root, FIT, OFFSET, count, banCard,  2 * FIT + 20);
+
+            count++;
+
+        }
+
         this.allCardsPane.setContent(root);
+
+    }
+
+    private void createBanImageForMyCards(Pane root, double FIT, double OFFSET, int count, BanCard c, double Y) {
+
+        int id = c.getId();
+
+        if (c.getPeriod() == 2) {
+
+            id -= 7;
+
+        }
+        else {
+
+            id -= 14;
+
+        }
+
+        ImageView imageView = new ImageView(new Image("assets/cards/ban/excomm_" + c.getPeriod() + "_" + id + ".png"));
+
+        imageView.setFitHeight(FIT);
+        imageView.setPreserveRatio(true);
+
+        root.getChildren().add(imageView);
+
+        imageView.setLayoutX(OFFSET * count);
+        imageView.setLayoutY(Y);
+
+        imageView.setStyle(" -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0 , 0, 0);");
 
     }
 
@@ -1313,6 +1352,13 @@ public class GUIController extends NavigationController implements ClientObserve
     public void onActionRefused(Client sender, Action action, String message) {
 
         this.showAsynchAlert(Alert.AlertType.WARNING, "Action refused", "The action you tried to perform was refused for the following reason:", message);
+
+        if (action.getActionType() == ActionType.Immediate) {
+
+            //Remove the last immediate action from the stack
+            this.localMatchController.confirmLastPendingImmediateAction();
+
+        }
 
     }
 
