@@ -537,6 +537,15 @@
                         </AnchorPane>
                      </content>
                   </Tab>
+                  <Tab text="My cards">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane fx:id="allCardsPane" layoutX="347.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
                </tabs>
             </TabPane>
             <AnchorPane styleClass="theme-pane">

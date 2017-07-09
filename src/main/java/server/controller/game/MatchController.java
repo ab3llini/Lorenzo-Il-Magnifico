@@ -107,6 +107,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
      */
     private RoundIterator roundIterator;
 
+    private boolean backupEnabled = false;
+
 
     /**
      * Constants
@@ -795,7 +797,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Useful to save it also in the model
         this.match.updateCurrentPlayer(currentPlayer);
 
-        if (!(this.match.getCurrentPeriod() == Period.first && this.match.getCurrentTurn() == 1 && this.match.getCurrentRound() == 1)) {
+        if (backupEnabled) {
             //Save it in order to avoid two consecutive actions for a player that has just terminate his round
             this.save();
         }
@@ -832,6 +834,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                     //Tell the players that the active one can't make any more actions
                     this.notifyAllTurnDisabled(this.currentPlayer);
+
+                    //Turn on backup after first move
+                    if (!backupEnabled) backupEnabled = true;
 
                     //save on database
                     this.save();
