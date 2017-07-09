@@ -11,9 +11,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import netobject.action.immediate.ImmediateChoiceAction;
 import netobject.action.standard.ShuffleLeaderCardStandardAction;
+import server.model.GameSingleton;
 import server.model.board.Player;
 import server.model.card.Deck;
 import server.model.card.leader.LeaderCard;
@@ -40,7 +42,6 @@ public class LeaderCardSelectionController extends DialogController {
 
         selection = clicked;
 
-        //Send the action
         this.client.performAction(new ImmediateChoiceAction(selection, this.client.getUsername()));
 
         //Close the stage
@@ -48,9 +49,11 @@ public class LeaderCardSelectionController extends DialogController {
 
     }
 
-    @FXML
-    public void initialize(){
-        for(Player player : this.localMatchController.getMatch().getPlayers()) {
+    @Override
+    public void setLocalMatchController(LocalMatchController localMatchController) {
+        super.setLocalMatchController(localMatchController);
+        activeLeaderCards = new ArrayList<LeaderCard>();
+        for(Player player : localMatchController.getMatch().getPlayers()) {
             if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
                 activeLeaderCards.addAll(player.getPlayedLeaderCards());
         }
@@ -87,6 +90,5 @@ public class LeaderCardSelectionController extends DialogController {
             this.client.performAction(new ImmediateChoiceAction(0, this.client.getUsername()));
 
         });
-
     }
 }
