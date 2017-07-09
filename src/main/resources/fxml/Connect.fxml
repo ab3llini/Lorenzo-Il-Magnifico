@@ -81,8 +81,8 @@
                                  <children>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                                        <children>
-                                          <PasswordField fx:id="passwordTextField" promptText="password" styleClass="form-input" text="unix" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                          <TextField fx:id="usernameTextField" layoutX="50.0" layoutY="44.0" promptText="username" styleClass="form-input" text="alberto" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <PasswordField fx:id="passwordTextField" promptText="password" styleClass="form-input" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                          <TextField fx:id="usernameTextField" layoutX="50.0" layoutY="44.0" promptText="username" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane GridPane.rowIndex="2">
@@ -112,16 +112,14 @@
                                  <children>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                                        <children>
-                                          <TextField fx:id="usernameTextField1" layoutX="55.0" layoutY="23.0" promptText="pick a username" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                          <TextField fx:id="usernameTextField11" layoutX="65.0" layoutY="33.0" promptText="what's your full name?" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
-                                          <TextField fx:id="usernameTextField12" layoutX="65.0" layoutY="62.0" promptText="how old are you?" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
-                                          <TextField fx:id="usernameTextField13" layoutX="25.0" layoutY="135.0" promptText="chose a password" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0" />
-                                          <TextField fx:id="usernameTextField131" layoutX="66.0" layoutY="209.0" promptText="confirm password" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0" />
+                                          <TextField fx:id="registerUsernameTextField" layoutX="55.0" layoutY="23.0" promptText="pick a username" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <PasswordField fx:id="resgisterPassTextField" layoutX="10.0" layoutY="10.0" promptText="password" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
+                                          <PasswordField fx:id="resgisterPassConfTextField" layoutX="20.0" layoutY="20.0" promptText="confirmation" styleClass="form-input" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="140.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
                                        <children>
-                                          <Button layoutX="231.0" layoutY="16.0" mnemonicParsing="false" onAction="#loginAction" styleClass="form-button" text="Register" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                          <Button layoutX="231.0" layoutY="16.0" mnemonicParsing="false" onAction="#registerAction" styleClass="form-button" text="Register" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>

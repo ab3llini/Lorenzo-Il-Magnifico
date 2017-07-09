@@ -11,9 +11,12 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logger.Level;
 import logger.Logger;
 import netobject.request.auth.LoginRequest;
+import netobject.request.auth.RegisterRequest;
 import singleton.GameConfig;
 
 public class ConnectionController extends NavigationController implements ClientObserver {
@@ -31,25 +34,19 @@ public class ConnectionController extends NavigationController implements Client
     private TextField hostAddressTextField;
 
     @FXML
-    private PasswordField passwordTextField;
-
-    @FXML
     private TextField usernameTextField;
 
     @FXML
-    private TextField usernameTextField1;
+    private PasswordField passwordTextField;
 
     @FXML
-    private TextField usernameTextField11;
+    private TextField registerUsernameTextField;
 
     @FXML
-    private TextField usernameTextField12;
+    private TextField resgisterPassTextField;
 
     @FXML
-    private TextField usernameTextField13;
-
-    @FXML
-    private TextField usernameTextField131;
+    private TextField resgisterPassConfTextField;
 
     private Client client;
 
@@ -77,6 +74,44 @@ public class ConnectionController extends NavigationController implements Client
         } catch (Exception e) {
 
             this.showAlert(Alert.AlertType.ERROR, "Exception raised", "Connection failed", e.getMessage());
+
+        }
+
+
+    }
+
+    @FXML
+    void registerAction(ActionEvent event) {
+
+        ClientType clientSelection = (ClientType) socketRadioSelection.getToggleGroup().getSelectedToggle().getUserData();
+
+
+        if (!this.registerUsernameTextField.getText().equals("")) {
+
+            if (this.resgisterPassTextField.getText().equals(this.resgisterPassConfTextField.getText())) {
+
+                try {
+
+                    this.attemptConnection(clientSelection).registration(new RegisterRequest(this.registerUsernameTextField.getText(), this.resgisterPassTextField.getText()));
+
+                } catch (Exception e) {
+
+                    this.showAlert(Alert.AlertType.ERROR, "Exception raised", "Connection failed", e.getMessage());
+
+                }
+
+            }
+            else {
+
+                this.showAsynchAlert(Alert.AlertType.ERROR, "Registration error", "Password missmatch", "The password must be confirmed");
+
+            }
+
+        }
+        else {
+
+            this.showAsynchAlert(Alert.AlertType.ERROR, "Registration error", "Wrong username", "Pick a valid username");
+
 
         }
 
@@ -151,10 +186,29 @@ public class ConnectionController extends NavigationController implements Client
     @Override
     public void onRegistrationSuccess(Client client) {
 
+        Platform.runLater(() -> ((LobbyController)this.navigateTo(View.Lobby)).setClient(client));
+
+
     }
 
     @Override
     public void onRegistrationFailed(Client client, String reason) {
+
+        this.showAsynchAlert(Alert.AlertType.ERROR, "Authentication", "Registration failed", reason);
+
+
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        super.setStage(stage);
+
+        stage.setOnCloseRequest((WindowEvent e) -> {
+
+            //Terminate the process upon closure
+            System.exit(0);
+
+        });
 
     }
 

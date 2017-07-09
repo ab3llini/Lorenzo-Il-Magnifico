@@ -118,11 +118,15 @@ public class SocketClient extends Client implements Runnable {
 
                 Logger.log(Level.WARNING, "SocketClient::run", "Server might have just closed the connection", e);
 
+                this.notifyDisconnection();
+
                 break;
 
             } catch (IOException e) {
 
                 Logger.log(Level.WARNING, "SocketClient::run", "Connection lost.", e);
+
+                this.notifyDisconnection();
 
                 break;
 

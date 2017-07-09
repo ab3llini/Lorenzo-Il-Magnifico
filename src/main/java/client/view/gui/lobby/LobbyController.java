@@ -12,6 +12,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import netobject.notification.LobbyNotification;
 import netobject.notification.ObserverReadyNotification;
 
@@ -82,6 +84,19 @@ public class LobbyController extends NavigationController implements ClientObser
 
         }
 
+
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        super.setStage(stage);
+
+        stage.setOnCloseRequest((WindowEvent e) -> {
+
+            //Terminate the process upon closure
+            System.exit(0);
+
+        });
 
     }
 
