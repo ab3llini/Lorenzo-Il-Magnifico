@@ -22,7 +22,7 @@ public enum View {
     LeaderCardActivationDiscard("PlayerLeaderCards.fxml", "What do you want to do with the selected leader card ?", 350, 200),
     ActivateHarvest("HarvestActivation.fxml", "Decide if you want to get banned", 300, 200),
     ActivateProduction("ProductionActivation.fxml", "Decide if you want to get banned", 300, 200),
-    LeaderCardSelection("LeaderCardSelection.fxml", "Decide what card do u want to copy", 1020, 450);
+    LeaderCardSelection("LeaderCardSelection.fxml", "Decide what card do you want to copy", 1020, 450);
 
 
 

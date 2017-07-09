@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import netobject.action.immediate.ImmediateChoiceAction;
@@ -26,69 +27,48 @@ import java.util.HashMap;
 public class LeaderCardSelectionController extends DialogController {
 
     @FXML
-    private GridPane leaderCardGrid;
-
-
-    private Integer selection = 0;
-
-    private ArrayList<LeaderCard> activeLeaderCards;
-
-    @FXML
-    void onLeaderCardSelection(MouseEvent event) {
-
-        Integer clicked = GridPane.getColumnIndex((Node) event.getSource());
-
-        if (clicked + 1 > activeLeaderCards.size()) return;
-
-        selection = clicked;
-
-        this.client.performAction(new ImmediateChoiceAction(selection, this.client.getUsername()));
-
-        //Close the stage
-        stage.close();
-
-    }
+    private Pane container;
 
     @Override
     public void setLocalMatchController(LocalMatchController localMatchController) {
+
         super.setLocalMatchController(localMatchController);
-        activeLeaderCards = new ArrayList<LeaderCard>();
+
+        double OFFSET = 20;
+        double FIT = 100;
+
+        int count = 0;
+
         for(Player player : localMatchController.getMatch().getPlayers()) {
+
             if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
-                activeLeaderCards.addAll(player.getPlayedLeaderCards());
-        }
 
-        //Display the cards
-        for (Node node : leaderCardGrid.getChildren()) {
+                for (LeaderCard c : player.getPlayedLeaderCards()) {
 
-            if (node instanceof ImageView) {
+                    ImageView imgView = new ImageView();
 
-                ImageView imgView = (ImageView) node;
-
-                if(activeLeaderCards.size() > GridPane.getColumnIndex(node)){
-
-                    LeaderCard card = activeLeaderCards.get(GridPane.getColumnIndex(node));
-
-                    if(card.getId() < 10){
+                    if(c.getId() < 10){
                         //Assign the image
-                        imgView.setImage(new Image("assets/cards/leader/leaders_f_c_0" + card.getId() + ".jpg"));}
+                        imgView.setImage(new Image("assets/cards/leader/leaders_f_c_0" + c.getId() + ".jpg"));}
                     else{
-                        imgView.setImage(new Image("assets/cards/leader/leaders_f_c_" + card.getId() + ".jpg"));
+                        imgView.setImage(new Image("assets/cards/leader/leaders_f_c_" + c.getId() + ".jpg"));
                     }
 
-                } else {
+                    imgView.setFitWidth(100);
+                    imgView.setLayoutX(OFFSET * count + FIT);
 
-                    imgView.setImage(null);
+                    imgView.setOnMouseClicked(event -> {
+
+                        this.client.performAction(new ImmediateChoiceAction(c.getId(), this.client.getUsername()));
+
+                    });
+
+                    count++;
 
                 }
 
-            }
+
         }
 
-        stage.setOnCloseRequest((WindowEvent e) -> {
-            //We send the first choice always before closing the stage!
-            this.client.performAction(new ImmediateChoiceAction(0, this.client.getUsername()));
-
-        });
     }
 }
