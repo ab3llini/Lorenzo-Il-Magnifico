@@ -2639,8 +2639,10 @@
     ],
     "effects": {
       "immediate": {
-        "points": {
-          "faith": 3
+        "surplus" : {
+          "points": {
+            "faith": 3
+          }
         }
       },
       "permanent": {
