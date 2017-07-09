@@ -37,7 +37,7 @@ public abstract class Client implements RemotePlayer, LocalPlayer {
 
     protected String username;
 
-    protected boolean connected;
+    protected boolean connected = false;
 
     protected boolean authenticated;
 

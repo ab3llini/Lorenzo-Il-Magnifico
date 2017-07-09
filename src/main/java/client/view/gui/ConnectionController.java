@@ -69,11 +69,20 @@ public class ConnectionController extends NavigationController implements Client
 
         try {
 
-            this.attemptConnection(clientSelection).login(new LoginRequest(this.usernameTextField.getText(), this.passwordTextField.getText()));
+            if (this.client != null && this.client.hasConnected()) {
+
+                this.client.login(new LoginRequest(this.usernameTextField.getText(), this.passwordTextField.getText()));
+
+            }
+            else {
+
+                this.attemptConnection(clientSelection).login(new LoginRequest(this.usernameTextField.getText(), this.passwordTextField.getText()));
+
+            }
 
         } catch (Exception e) {
 
-            this.showAlert(Alert.AlertType.ERROR, "Exception raised", "Connection failed", e.getMessage());
+            this.showAsynchAlert(Alert.AlertType.ERROR, "Exception raised", "Connection failed", e.getMessage());
 
         }
 
@@ -92,11 +101,21 @@ public class ConnectionController extends NavigationController implements Client
 
                 try {
 
-                    this.attemptConnection(clientSelection).registration(new RegisterRequest(this.registerUsernameTextField.getText(), this.resgisterPassTextField.getText()));
+                    if (this.client != null && this.client.hasConnected()) {
+
+                        this.client.registration(new RegisterRequest(this.registerUsernameTextField.getText(), this.resgisterPassTextField.getText()));
+
+                    }
+                    else {
+
+                        this.attemptConnection(clientSelection).registration(new RegisterRequest(this.registerUsernameTextField.getText(), this.resgisterPassTextField.getText()));
+
+                    }
+
 
                 } catch (Exception e) {
 
-                    this.showAlert(Alert.AlertType.ERROR, "Exception raised", "Connection failed", e.getMessage());
+                    this.showAsynchAlert(Alert.AlertType.ERROR, "Exception raised", "Connection failed", e.getMessage());
 
                 }
 
@@ -166,7 +185,7 @@ public class ConnectionController extends NavigationController implements Client
 
     @Override
     public void onDisconnection(Client client) {
-        this.showAlert(Alert.AlertType.WARNING, "Disconnection", "You were disconnected from the server", "");
+        this.showAsynchAlert(Alert.AlertType.WARNING, "Disconnection", "You were disconnected from the server", "");
 
     }
 

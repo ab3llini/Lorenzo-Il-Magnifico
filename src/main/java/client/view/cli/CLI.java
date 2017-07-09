@@ -160,7 +160,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         //Set the context
         this.ctx = CliContext.Bootstrap;
 
-        String hostIP ;
+        String hostIP = "localhost";
         String connection;
 
         EnumCommand<ClientType> clientCmd = new EnumCommand<ClientType>(ClientType.class);

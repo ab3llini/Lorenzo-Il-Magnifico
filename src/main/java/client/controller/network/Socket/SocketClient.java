@@ -86,6 +86,8 @@ public class SocketClient extends Client implements Runnable {
 
         new Thread(this).start();
 
+        this.connected = true;
+
         Logger.log(Level.FINE, "SocketClient::connect", "Connected.");
 
     }
