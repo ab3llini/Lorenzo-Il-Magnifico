@@ -1510,11 +1510,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-            //set the dvptCard of the tower to null value because no one can choose or take it now
-            this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
-
             applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
+            //set the dvptCard of the tower to null value because no one can choose or take it now
+            this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
 
         }
 
@@ -1677,11 +1676,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //add to the personal board of the player the building card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-            //set the dvptCard of the tower to null value because no one can choose or take it now
-            this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
-
             applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
+            //set the dvptCard of the tower to null value because no one can choose or take it now
+            this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
 
 
         }
