@@ -26,7 +26,7 @@ public class GUI extends Application {
 
         primaryStage.setTitle("Connect");
 
-        primaryStage.setScene(new Scene(root, 300, 500));
+        primaryStage.setScene(new Scene(root, 400, 650));
 
         primaryStage.show();
 

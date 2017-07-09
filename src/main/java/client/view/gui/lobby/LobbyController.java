@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -18,7 +19,7 @@ import netobject.notification.ObserverReadyNotification;
  * @author  ab3llini
  * @since   29/06/17.
  */
-public class LobbyController extends NavigationController implements LobbyObserver {
+public class LobbyController extends NavigationController implements ClientObserver, LobbyObserver {
 
 
     @FXML
@@ -56,6 +57,7 @@ public class LobbyController extends NavigationController implements LobbyObserv
 
         this.client = client;
         this.client.addLobbyObserver(this);
+        this.client.addClientObserver(this);
         this.client.sendNotification(new ObserverReadyNotification(ObserverType.Lobby));
 
     }
@@ -83,5 +85,31 @@ public class LobbyController extends NavigationController implements LobbyObserv
 
     }
 
+    @Override
+    public void onDisconnection(Client client) {
+
+        this.showAsynchAlert(Alert.AlertType.WARNING, "Connection lost", "Connection lost", "The server might have shut down.");
+
+    }
+
+    @Override
+    public void onLoginFailed(Client client, String reason) {
+
+    }
+
+    @Override
+    public void onLoginSuccess(Client client) {
+
+    }
+
+    @Override
+    public void onRegistrationSuccess(Client client) {
+
+    }
+
+    @Override
+    public void onRegistrationFailed(Client client, String reason) {
+
+    }
 }
 

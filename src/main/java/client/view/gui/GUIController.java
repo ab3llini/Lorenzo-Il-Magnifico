@@ -5,7 +5,6 @@ import exception.NoSuchPlayerException;
 import exception.gui.GuiException;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -1063,6 +1062,9 @@ public class GUIController extends NavigationController implements ClientObserve
     @Override
     public void onDisconnection(Client client) {
 
+        this.showAsynchAlert(Alert.AlertType.WARNING, "Connection lost", "Connection lost", "The server might have shut down.");
+
+
     }
 
     @Override
@@ -1095,8 +1097,6 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @Override
     public void onModelUpdate(Client sender, Match model) {
-
-        Logger.log(Level.FINE, this.toString(), "Model received");
 
         this.localMatchController.setMatch(model);
 
