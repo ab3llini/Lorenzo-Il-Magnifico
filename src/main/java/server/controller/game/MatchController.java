@@ -1348,12 +1348,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                     } catch (ActionException e) {
 
-                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(placementAction, e.getMessage()+ ", you still have"+(4-count)+"attempts");
+                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(placementAction, e.getMessage()+ ", you still have "+(4-count)+" attempts");
                         count++;
 
                     }
                 }
-                while (!immediateActionAccepted || count ==4);
+                while (!immediateActionAccepted || count != 4);
 
                 if (count != 4) {
                     this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
