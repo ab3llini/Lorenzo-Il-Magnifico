@@ -26,7 +26,10 @@ public class FinalStanding implements Serializable {
 
             for (Map.Entry<Player, Integer> entry : playerScores.entrySet()) {
                 if (entry.getValue().equals(score)) {
-                    standings.add(entry.getKey());
+
+                    //in order to avoid problems with 2 player that has the same score
+                    if(!standings.contains(entry.getKey()))
+                        standings.add(entry.getKey());
                     standingsAndPoints.put(entry.getKey(),score);
                 }
 
