@@ -95,7 +95,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
      * The command line interface constructor
      * Initializes the required objects and proceeds with a play phase
      */
-    private CLI() {
+    public CLI() {
 
         //Init blocking queue for user input
         this.inputQueue = new ArrayBlockingQueue<>(1);
@@ -155,7 +155,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
      * Starts the command line interface
      * Requests the server ip address and the connection type
      */
-    private void play() throws InterruptedException {
+    public void play() throws InterruptedException {
 
         //Set the context
         this.ctx = CliContext.Bootstrap;
