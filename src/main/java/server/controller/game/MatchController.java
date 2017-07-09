@@ -1281,9 +1281,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         if(card != null) {
             ImmediateEffect immediateEffect = card.getImmediateEffect();
-            if(player.isPermanentLeaderActive(PermanentLeaderEffectType.ritaEffect)){
-                for(Resource resource: immediateEffect.getSurplus().getResources())
-                    resource.setAmount(resource.getAmount()*2);
+            if (player.isPermanentLeaderActive(PermanentLeaderEffectType.ritaEffect)) {
+                for (Resource resource : immediateEffect.getSurplus().getResources())
+                    resource.setAmount(resource.getAmount() * 2);
             }
 
             ImmediatePlacementAction placementAction;
@@ -1297,49 +1297,36 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     applyMultiplier(player, immediateEffect.getSurplus().getPoints().get(0).getMultiplier());
             }
 
-            if(immediateEffect.getEffectAction().getTarget() != ActionType.unknown){
+            if (immediateEffect.getEffectAction().getTarget() != ActionType.unknown) {
 
-                if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest){
+                if (immediateEffect.getEffectAction().getTarget() == ActionType.harvest) {
 
                     this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateHarvest, this.currentPlayer, "You can do an harvest action with force: " + immediateEffect.getEffectAction().getForce());
 
 
-
-                }
-
-                else if (immediateEffect.getEffectAction().getTarget() == ActionType.production){
+                } else if (immediateEffect.getEffectAction().getTarget() == ActionType.production) {
 
                     this.notifyAllImmediateActionAvailable(ImmediateActionType.ActivateProduction, this.currentPlayer, "You can do a production action with force: " + immediateEffect.getEffectAction().getForce());
 
-                }
-
-                else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
+                } else if (immediateEffect.getEffectAction().getTarget() == ActionType.card) {
 
                     if (immediateEffect.getEffectAction().getType() == null) {
 
                         this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeAnyCard, this.currentPlayer, "You can take a card of any type with force: " + immediateEffect.getEffectAction().getForce());
 
-                    }
-
-                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory){
+                    } else if (immediateEffect.getEffectAction().getType() == DvptCardType.territory) {
 
                         this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeTerritoryCard, this.currentPlayer, "You can take a territory card with force: " + immediateEffect.getEffectAction().getForce());
 
-                    }
-
-                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
+                    } else if (immediateEffect.getEffectAction().getType() == DvptCardType.character) {
 
                         this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeCharacterCard, this.currentPlayer, "You can take a character card with force: " + immediateEffect.getEffectAction().getForce());
 
-                    }
-
-                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.building){
+                    } else if (immediateEffect.getEffectAction().getType() == DvptCardType.building) {
 
                         this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeBuildingCard, this.currentPlayer, "You can take a building card with force: " + immediateEffect.getEffectAction().getForce());
 
-                    }
-
-                    else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture){
+                    } else if (immediateEffect.getEffectAction().getType() == DvptCardType.venture) {
 
                         this.notifyAllImmediateActionAvailable(ImmediateActionType.TakeVentureCard, this.currentPlayer, "You can take a venture card with force: " + immediateEffect.getEffectAction().getForce());
 
@@ -1347,28 +1334,36 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 }
 
                 boolean immediateActionAccepted = false;
+                int count = 0;
 
+                //this mechanism is necessary cause a player can make an immediate action without having necessary resources
+                //the counter is necessary because if a player doesn't have resources to do this immediate action we are in infinite loop
                 do {
                     placementAction = (ImmediatePlacementAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                    try{
-                        doImmediateAction(placementAction,immediateEffect.getEffectAction().getForce(), player);
+                    try {
+
+                        doImmediateAction(placementAction, immediateEffect.getEffectAction().getForce(), player);
                         immediateActionAccepted = true;
+
                     } catch (ActionException e) {
-                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(placementAction,e.getMessage());
+
+                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(placementAction, e.getMessage()+ ", you still have"+(4-count)+"attempts");
+                        count++;
+
                     }
                 }
-                while(!immediateActionAccepted);
+                while (!immediateActionAccepted || count ==4);
 
-
-                this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
+                if (count != 4) {
+                    this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
+                } else {
+                    this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " couldn't perform an immediate action");
+                }
 
             }
-
-
-
-
         }
+
     }
 
     /**
@@ -1515,10 +1510,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-            applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
-
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
+
+            applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+
 
         }
 
@@ -1681,10 +1677,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //add to the personal board of the player the building card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-            applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
-
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
+
+            applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+
 
 
         }
