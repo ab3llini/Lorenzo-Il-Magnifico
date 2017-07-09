@@ -20,8 +20,8 @@ public enum View {
     DraftBonusTiles("BonusTileDraft.fxml", "Select a bonus tile to draft!", 500, 500),
     SelectBanOption("DecideBanOption.fxml", "Decide if you want to get banned", 300, 200),
     LeaderCardActivationDiscard("PlayerLeaderCards.fxml", "What do you want to do with the selected leader card ?", 350, 200),
-    ActivateHarvest("HarvestActivation.fxml", "Decide if you want to get banned", 300, 200),
-    ActivateProduction("ProductionActivation.fxml", "Decide if you want to get banned", 300, 200),
+    ActivateHarvest("HarvestActivation.fxml", "Any additional servants for immediate harvest activation?", 300, 200),
+    ActivateProduction("ProductionActivation.fxml", "Any additional servants for immediate production activation?", 300, 200),
     LeaderCardSelection("LeaderCardSelection.fxml", "Decide what card do you want to copy", 1020, 450);
 
 
