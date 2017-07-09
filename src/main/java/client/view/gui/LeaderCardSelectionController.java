@@ -86,5 +86,5 @@ public class LeaderCardSelectionController extends DialogController {
 
         });
 
+        }
     }
-}

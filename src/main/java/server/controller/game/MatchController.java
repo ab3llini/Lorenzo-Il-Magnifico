@@ -204,21 +204,21 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         for (ClientHandler handler : handlers) {
 
-                Player player = null;
+            Player player = null;
 
-                try {
+            try {
 
-                    player = match.getPlayerFromUsername(handler.getUsername());
+                player = match.getPlayerFromUsername(handler.getUsername());
 
-                    player.setDisabled(false);
+                player.setDisabled(false);
 
-                } catch (NoSuchPlayerException e) {
+            } catch (NoSuchPlayerException e) {
 
-                    Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
+                Logger.log(Level.WARNING, this.toString(), "Player not found!", e);
 
-                }
+            }
 
-                this.remotePlayerMap.put(player, handler);
+            this.remotePlayerMap.put(player, handler);
 
         }
 
@@ -1510,17 +1510,17 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-           try {
-               applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
-           }
-           catch (NoActionPerformedException e){
+            try {
+                applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+            }
+            catch (NoActionPerformedException e){
 
-               //set the dvptCard of the tower to null value because no one can choose or take it now
-               this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
+                //set the dvptCard of the tower to null value because no one can choose or take it now
+                this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
 
-               throw e;
+                throw e;
 
-           }
+            }
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
@@ -1889,7 +1889,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
     /**this method actives a leader effect, activable once a round**/
 
-    public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws NotEnoughLeaderRequirementsException, LeaderCardAlreadyActiveTurnException, InterruptedException, NoActionPerformedException, LeaderCardAlreadyActiveException {
+    public void activateLeaderCard (LeaderCardActivationAction action, Player player) throws ActionException, InterruptedException, NoActionPerformedException {
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
@@ -1973,20 +1973,30 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             }
 
+            ArrayList<LeaderCard> container = new ArrayList<>();
+
+            for(Player player0 : this.getMatch().getPlayers()) {
+                if(!player0.getUsername().equals(player.getUsername()))
+                    container.addAll(player.getPlayedLeaderCards());
+            }
+
             if (leaderCard.getLeaderEffect().getPermanentEffect() == PermanentLeaderEffectType.lorenzoEffect) {
+                if(container.size() >1 ) {
 
-                this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectActiveLeaderCard, this.currentPlayer, "You can select a leader card to copy");
+                    this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectActiveLeaderCard, this.currentPlayer, "You can select a leader card to copy");
 
-                ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
+                    ImmediateChoiceAction choice = (ImmediateChoiceAction) this.waitForAction(ACTION_TIMEOUT * 1000);
 
-                LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
+                    LeaderCard leader = GameSingleton.getInstance().getSpecificLeaderCard(choice.getSelection());
 
-                player.getLeaderCards().add(leader);
-                player.getPlayedLeaderCards().add(leader);
-                player.getLeaderCards().remove(leaderCard);
+                    player.getLeaderCards().add(leader);
+                    player.getPlayedLeaderCards().add(leader);
+                    player.getLeaderCards().remove(leaderCard);
 
-                this.notifyAllActionPerformed(this.currentPlayer, choice,player.getUsername() + " performed an immediate action");
-
+                    this.notifyAllActionPerformed(this.currentPlayer, choice, player.getUsername() + " performed an immediate action");
+                }
+                else
+                    throw new ActionException("There are no active Leader card to copy");
             }
         }
 
@@ -2091,7 +2101,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             for (Resource from : conversionList.get(choose).getFrom().getResources())
                 if(player.hasEnoughRequiredResources(conversionList.get(choose).getFrom().getResources()))
-                player.subtractGenericResource(from.getType(), from.getAmount());
+                    player.subtractGenericResource(from.getType(), from.getAmount());
 
         }
 

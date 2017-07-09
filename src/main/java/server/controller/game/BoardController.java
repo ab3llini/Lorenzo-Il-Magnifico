@@ -10,6 +10,7 @@ import server.model.card.Deck;
 import server.model.card.ban.BanCard;
 import server.model.card.developement.DvptCard;
 import server.model.card.developement.DvptCardType;
+import server.model.card.developement.TerritoryDvptCard;
 import server.model.effect.EffectSurplus;
 import server.utility.DvptCardParser;
 
@@ -173,23 +174,63 @@ public class BoardController {
         //On the contrary, if it is the second round of that period, every tower will contain the second half of his specific deck, according to his authenticationType and period
 
         else {
+            ArrayList<DvptCard> container = new ArrayList<>();
+            for(Player player : board.getPlayers()) {
+                container.addAll(player.getPersonalBoard().getTerritoryCards());
+                container.addAll(player.getPersonalBoard().getBuildingCards());
+                container.addAll(player.getPersonalBoard().getCharacterCards());
+                container.addAll(player.getPersonalBoard().getVentureCards());
+            }
 
-            for (int i = 4; i < 8; i++) {
+            for(int i=0; i<4; i++) {
+                if (board.getTerritoryTower().get(i).getDvptCard() != null)
+                    container.add(board.getTerritoryTower().get(i).getDvptCard());
+                if (board.getCharacterTower().get(i).getDvptCard() != null)
+                    container.add(board.getCharacterTower().get(i).getDvptCard());
+                if (board.getVentureTower().get(i).getDvptCard() != null)
+                    container.add(board.getVentureTower().get(i).getDvptCard());
+                if (board.getBuildingTower().get(i).getDvptCard() != null)
+                    container.add( board.getBuildingTower().get(i).getDvptCard());
+            }
+            for (int i = 0; i < 8; i++) {
+                boolean territoryValidCard = true;
+                for(DvptCard card: container)
+                    if(card.getId() == decks.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
+                            territoryValidCard = false;
+                if(territoryValidCard == true)
+                    temporaryTerritory.add(decks.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
-                temporaryTerritory.add(decks.get(TERRITORY_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                boolean buildingValidCard = true;
+                for(DvptCard card: container)
+                    if(card.getId() == decks.get(BUILDING_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
+                        buildingValidCard = false;
+                if(buildingValidCard == true)
+                    temporaryBuilding.add(decks.get(BUILDING_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+
+                boolean characterValidCard = true;
+                for(DvptCard card: container)
+                    if(card.getId() == decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
+                        characterValidCard = false;
+                if(characterValidCard == true)
+                    temporaryBuilding.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+
+                boolean ventureValidCard = true;
+                for(DvptCard card: container)
+                    if(card.getId() == decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
+                        ventureValidCard = false;
+                if(ventureValidCard == true)
+                    temporaryBuilding.add(decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
             }
 
-            for (int i = 4; i < 8; i++) {
 
-                temporaryBuilding.add(decks.get(BUILDING_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
-
-            }
-
-
-            for (int i = 4; i < 8; i++) {
-
-                temporaryCharacter.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+            for (int i = 0; i < 8; i++) {
+                boolean validCard = true;
+                for(DvptCard card: container)
+                    if(card.getId() == decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
+                        validCard = false;
+                if(validCard == true)
+                    temporaryCharacter.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
             }
 

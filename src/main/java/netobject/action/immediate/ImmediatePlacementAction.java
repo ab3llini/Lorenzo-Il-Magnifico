@@ -42,10 +42,6 @@ public class ImmediatePlacementAction extends Action {
 
     }
 
-    public void increaseBonus(int bonus ) {
-        this.additionalServants += bonus;
-    }
-
     public Integer getPlacementIndex() {
         return placementIndex;
     }
