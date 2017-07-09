@@ -345,7 +345,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         while (roundIterator.hasNext()) {
 
-            if (this.match.getCurrentRound() == 4) {
+
+            //Obtain the next round
+            Queue<Player> currentRound = roundIterator.next();
+
+            if (this.match.getCurrentRound() == 1) {
 
                 //we have to pull dices another time
                 this.boardController.cleanDices();
@@ -354,13 +358,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 changePlayerOrder();
 
                 this.notifyAllOfNewOrder();
-            }
-
-
-            //Obtain the next round
-            Queue<Player> currentRound = roundIterator.next();
-
-            if (this.match.getCurrentRound() == 1) {
 
                 //Update the towers for the current combination of round / turn / period
                 this.boardController.updateTowersForTurn(this.match.getCurrentPeriod().toInt(), this.match.getCurrentTurn());
