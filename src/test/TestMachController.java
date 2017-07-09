@@ -556,6 +556,9 @@ public class TestMachController {
 
         FinalStanding finalStanding = mc.createFinalStanding();
 
+        finalStanding.toNotification();
+        System.out.println(finalStanding.toString());
+
         assertEquals(2 + cards.get(85).getPermanentEffect().getvPoints(),finalStanding.getScore(players.get(0)));
 
     }

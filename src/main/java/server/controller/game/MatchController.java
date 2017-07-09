@@ -414,7 +414,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
             if (this.match.getCurrentPeriod() == Period.third && this.match.getCurrentTurn() == 2 && this.match.getCurrentRound() == 4) {
 
-                this.notifyAllMatchEnded(createFinalStanding(),"The match is ended ...");
+                this.notifyAllMatchEnded(createFinalStanding(), createFinalStanding().toNotification());
 
                 //The match has ended, notify the players!
                 endDatabaseMatch();

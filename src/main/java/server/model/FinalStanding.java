@@ -58,11 +58,37 @@ public class FinalStanding implements Serializable {
 
         finalScore += "THE MATCH IS ENDED! \n";
 
+        finalScore += "THE WINNER IS "+this.standings.get(0).getUsername().toUpperCase()+"\n";
+
         finalScore += "LET'S SEE THE FINAL STANDINGS.. \n";
 
         for (Player player : this.standings){
 
             finalScore += i + "° --> "+player.getUsername()+" "+standingsAndPoints.get(player)+"\n";
+
+            i++;
+
+        }
+
+        return finalScore;
+
+    }
+
+    public String toNotification() {
+
+        String finalScore = "";
+
+        int i=1;
+
+        finalScore += "THE MATCH IS ENDED! ";
+
+        finalScore += " THE WINNER IS "+this.standings.get(0).getUsername().toUpperCase();
+
+        finalScore += " ...LET'S SEE THE FINAL STANDINGS.. ";
+
+        for (Player player : this.standings){
+
+            finalScore += i + "° --> "+player.getUsername()+": "+standingsAndPoints.get(player)+" pt.  ";
 
             i++;
 
