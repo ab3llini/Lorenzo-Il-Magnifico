@@ -56,16 +56,6 @@ public class Match extends NetObject {
         //Assign a random color to the player
         generateRandomColor();
 
-        //TODO
-        try {
-
-             match_id = saveOnDatabase();
-
-        } catch (SQLException e) {
-
-            Logger.log(Level.SEVERE, "Database::save", "Errors in saving match!", e);
-
-        }
 
     }
 
