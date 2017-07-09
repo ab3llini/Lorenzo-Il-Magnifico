@@ -1048,12 +1048,12 @@ public class GUIController extends NavigationController implements ClientObserve
 
         }
 
-        /*if (this.localMatchController.getLastPendingImmediateAction() != null) {
+        if (this.localMatchController.getLastPendingImmediateAction() != null) {
 
             this.showAsynchAlert(Alert.AlertType.ERROR, "Forbidden", "Immediate action pending", "You must complete the immediate action first");
 
             return false;
-        }*/
+        }
 
         return true;
 

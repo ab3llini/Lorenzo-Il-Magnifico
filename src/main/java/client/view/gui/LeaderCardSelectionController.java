@@ -34,16 +34,20 @@ public class LeaderCardSelectionController extends DialogController {
 
         super.setLocalMatchController(localMatchController);
 
-        double OFFSET = 20;
+        double OFFSET = 150;
         double FIT = 100;
 
         int count = 0;
+
+        LeaderCard defaultSelection = null;
 
         for(Player player : localMatchController.getMatch().getPlayers()) {
 
             if(!player.getUsername().equals(localMatchController.getLocalPlayer().getUsername()))
 
                 for (LeaderCard c : player.getPlayedLeaderCards()) {
+
+                    if (count == 0) defaultSelection = c;
 
                     ImageView imgView = new ImageView();
 
@@ -54,7 +58,7 @@ public class LeaderCardSelectionController extends DialogController {
                         imgView.setImage(new Image("assets/cards/leader/leaders_f_c_" + c.getId() + ".jpg"));
                     }
 
-                    imgView.setFitHeight(100);
+                    imgView.setFitHeight(200);
                     imgView.setPreserveRatio(true);
                     imgView.setLayoutX(OFFSET * count + FIT);
 
@@ -64,14 +68,23 @@ public class LeaderCardSelectionController extends DialogController {
 
                         this.client.performAction(new ImmediateChoiceAction(c.getId(), this.client.getUsername()));
 
+                        stage.close();
+
                     });
 
                     count++;
 
                 }
 
-
         }
+
+
+        LeaderCard finalDefaultSelection = defaultSelection;
+        stage.setOnCloseRequest((WindowEvent e) -> {
+            //We send the first choice always before closing the stage!
+            this.client.performAction(new ShuffleLeaderCardStandardAction(finalDefaultSelection.getId(), this.localMatchController.getDraftableLeaderCards(), this.client.getUsername()));
+
+        });
 
     }
 }
