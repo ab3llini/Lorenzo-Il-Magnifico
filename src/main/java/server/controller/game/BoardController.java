@@ -192,6 +192,10 @@ public class BoardController {
                 if (board.getBuildingTower().get(i).getDvptCard() != null)
                     container.add( board.getBuildingTower().get(i).getDvptCard());
             }
+
+            /* To allow persistence and restore cards of the second round of each period it is necessary to esclude the cards played in the previous round from the
+deck used to fill the towers of the second round*/
+
             for (int i = 0; i < 8; i++) {
                 boolean territoryValidCard = true;
                 for(DvptCard card: container)
@@ -212,34 +216,17 @@ public class BoardController {
                     if(card.getId() == decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
                         characterValidCard = false;
                 if(characterValidCard == true)
-                    temporaryBuilding.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                    temporaryCharacter.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
                 boolean ventureValidCard = true;
                 for(DvptCard card: container)
                     if(card.getId() == decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
                         ventureValidCard = false;
                 if(ventureValidCard == true)
-                    temporaryBuilding.add(decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
+                    temporaryVenture.add(decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
 
             }
 
-
-            for (int i = 0; i < 8; i++) {
-                boolean validCard = true;
-                for(DvptCard card: container)
-                    if(card.getId() == decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i).getId())
-                        validCard = false;
-                if(validCard == true)
-                    temporaryCharacter.add(decks.get(CHARACTER_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
-
-            }
-
-
-            for (int i = 4; i < 8; i++) {
-
-                temporaryVenture.add(decks.get(VENTURE_TOWER_INDEX * TOTAL_PERIODS + (period - 1)).getCards().get(i));
-
-            }
 
         }
 

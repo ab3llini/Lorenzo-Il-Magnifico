@@ -1980,8 +1980,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                     container.addAll(player.getPlayedLeaderCards());
             }
 
+            for(LeaderCard card: container)
+                if(card.getLeaderEffect().getPermanentEffect() == PermanentLeaderEffectType.lorenzoEffect)
+                    container.remove(card);
+
             if (leaderCard.getLeaderEffect().getPermanentEffect() == PermanentLeaderEffectType.lorenzoEffect) {
-                if(container.size() >1 ) {
+                if(container.size() >0 ) {
 
                     this.notifyAllImmediateActionAvailable(ImmediateActionType.SelectActiveLeaderCard, this.currentPlayer, "You can select a leader card to copy");
 
