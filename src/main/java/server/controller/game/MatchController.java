@@ -2142,7 +2142,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Randomize the dice values
         for (Dice d : this.match.getBoard().getDices()) {
 
-            d.setValue(random.nextInt(5) + 1);
+            d.setValue(random.nextInt(6) + 1);
 
         }
 
