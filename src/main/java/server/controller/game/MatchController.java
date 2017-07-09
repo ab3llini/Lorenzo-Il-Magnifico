@@ -1867,7 +1867,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             for (BanCard bancard : player.getBanCards()) {
                 if (bancard instanceof ValuableBanCard) {
                     for (Resource resourceMalus : ((ValuableBanCard) bancard).getResources()) {
-                        if (resourceMalus.getType() == resource.getType())
+                        if (resourceMalus.getType() == resource.getType() && resource.getAmount() > 0)
                             resource.setAmount(resource.getAmount() - resourceMalus.getAmount());
                     }
                 }
@@ -1878,7 +1878,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             for (BanCard bancard : player.getBanCards()) {
                 if (bancard instanceof ValuableBanCard) {
                     for (Point pointMalus : ((ValuableBanCard) bancard).getPoints()) {
-                        if (pointMalus.getType() == point.getType())
+                        if (pointMalus.getType() == point.getType() && point.getAmount() > 0)
                             point.setAmount(point.getAmount() - pointMalus.getAmount());
                     }
                 }
@@ -1893,8 +1893,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         LeaderCard leaderCard = GameSingleton.getInstance().getSpecificLeaderCard(action.getLeaderCardIndex());
 
-        //  if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getPlayedLeaderCards().contains(leaderCard))
-        //     throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
+        if(!player.hasEnoughLeaderRequirements(action.getLeaderCardIndex()) && !player.getPlayedLeaderCards().contains(leaderCard))
+             throw new NotEnoughLeaderRequirementsException("Not enough requirements to activate this leader card");
 
         if (player.getPlayedLeaderCards().contains(leaderCard) && leaderCard.getLeaderEffect().getPermanentEffect() != null)
             throw new LeaderCardAlreadyActiveException("You have already played this card!");
