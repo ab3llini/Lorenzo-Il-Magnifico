@@ -1022,7 +1022,7 @@ public class GUIController extends NavigationController implements ClientObserve
             id -= 7;
 
         }
-        else {
+        else if (c.getPeriod() == 3) {
 
             id -= 14;
 
