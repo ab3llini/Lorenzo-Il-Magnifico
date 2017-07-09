@@ -1334,7 +1334,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 }
 
                 boolean immediateActionAccepted = false;
-                int count = 0;
+                int count = 4;
 
                 //this mechanism is necessary cause a player can make an immediate action without having necessary resources
                 //the counter is necessary because if a player doesn't have resources to do this immediate action we are in infinite loop
@@ -1348,14 +1348,14 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
                     } catch (ActionException e) {
 
-                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(placementAction, e.getMessage()+ ", you still have "+(4-count)+" attempts");
-                        count++;
+                        this.remotePlayerMap.get(this.currentPlayer).notifyActionRefused(placementAction, e.getMessage()+ ", you still have "+count+" attempts");
+                        count--;
 
                     }
                 }
-                while (!immediateActionAccepted || count != 4);
+                while (!immediateActionAccepted && count>0);
 
-                if (count != 4) {
+                if (count >0 ) {
                     this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " performed an immediate action");
                 } else {
                     this.notifyAllActionPerformed(player, placementAction, player.getUsername() + " couldn't perform an immediate action");
@@ -1510,7 +1510,17 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //add to the personal board of the player the development card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-            applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+           try {
+               applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+           }
+           catch (NoActionPerformedException e){
+
+               //set the dvptCard of the tower to null value because no one can choose or take it now
+               this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
+
+               throw e;
+
+           }
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
@@ -1676,7 +1686,19 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //add to the personal board of the player the building card set in the tower slot
             player.getPersonalBoard().addCard(this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
 
-            applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+            try {
+
+                applyImmediateEffect(player, this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).getDvptCard());
+
+            }
+            catch (NoActionPerformedException e){
+
+                //set the dvptCard of the tower to null value because no one can choose or take it now
+                this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
+
+                throw e;
+
+            }
 
             //set the dvptCard of the tower to null value because no one can choose or take it now
             this.match.getBoard().getTower(towerType).get(action.getPlacementIndex()).setDvptCard(null);
