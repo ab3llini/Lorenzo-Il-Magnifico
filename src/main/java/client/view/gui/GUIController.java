@@ -35,6 +35,8 @@ import netobject.action.Action;
 import netobject.action.ActionType;
 import netobject.action.BoardSectorType;
 import netobject.action.immediate.ImmediateActionType;
+import netobject.action.immediate.ImmediateChoiceAction;
+import netobject.action.immediate.ImmediatePlacementAction;
 import netobject.action.standard.RollDicesAction;
 import netobject.action.standard.StandardActionType;
 import netobject.action.standard.TerminateRoundStandardAction;
@@ -1355,8 +1357,12 @@ public class GUIController extends NavigationController implements ClientObserve
 
         if (action.getActionType() == ActionType.Immediate) {
 
-            //Remove the last immediate action from the stack
-            this.localMatchController.confirmLastPendingImmediateAction();
+            if (action instanceof ImmediateChoiceAction) {
+
+                //Remove the last immediate action from the stack
+                this.localMatchController.confirmLastPendingImmediateAction();
+
+            }
 
         }
 
