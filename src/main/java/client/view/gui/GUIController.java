@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -146,6 +147,10 @@ public class GUIController extends NavigationController implements ClientObserve
 
     @FXML
     private ImageView thirdBanCard;
+
+    @FXML
+    private ScrollPane allCardsPane;
+
 
     //The reference to the local match controller
     private LocalMatchController localMatchController;
@@ -875,10 +880,13 @@ public class GUIController extends NavigationController implements ClientObserve
         final double FIT = 20;
 
         double startX = 0;
+        double startY = 0;
 
         int count = 0;
 
         for (Player p : model.getRoundOrder()) {
+
+
 
             FamilyMember member = p.getSpecificFamilyMemberInfo(ColorType.Black);
 
@@ -888,22 +896,112 @@ public class GUIController extends NavigationController implements ClientObserve
             imageView.setFitWidth(FIT);
             imageView.setPreserveRatio(true);
 
+            startY = this.playersPane.getHeight() - OFFSET * (model.getRoundOrder().size() - count);
+
             this.playersPane.getChildren().add(imageView);
 
             imageView.setLayoutX(startX);
-            imageView.setLayoutY(OFFSET * count);
+            imageView.setLayoutY(startY);
 
-            Label label = new Label(p.getUsername() + " - " + (count + 1) + "°");
-            label.setStyle("-fx-text-fill: white");
+            Label label;
+
+            if (p.isDisabled()) {
+
+                label = new Label(p.getUsername() + " - disabled");
+
+                label.setStyle("-fx-text-fill: grey");
+
+            }
+            else {
+                label = new Label(p.getUsername() + " - " + (count + 1) + "°");
+
+                if (p.getUsername().equals(this.localMatchController.getMatch().getCurrentPlayer().getUsername())) {
+                    label.setStyle("-fx-text-fill: #03A9F4");
+                }
+                else {
+                    label.setStyle("-fx-text-fill: white");
+                }
+
+            }
 
             this.playersPane.getChildren().add(label);
 
             label.setLayoutX(startX + OFFSET);
-            label.setLayoutY(OFFSET * count);
+            label.setLayoutY(startY);
 
             count++;
 
         }
+
+    }
+
+    private void updateMyCards(Match model) {
+
+        final double FIT = 200;
+        final double UPPER_Y = this.allCardsPane.getHeight() / 4;
+        final double LOWER_Y = this.allCardsPane.getHeight() / 4 * 3;
+
+        final double OFFSET = 160;
+
+        Player me = null;
+        Pane root = new Pane();
+
+        System.out.println(root.getHeight() + " - " +root.getWidth() + " - " + root.getLayoutY());
+
+        root.setLayoutY(UPPER_Y);
+        root.setPrefHeight(LOWER_Y - UPPER_Y);
+        root.setMinHeight(LOWER_Y - UPPER_Y);
+        root.setMaxHeight(LOWER_Y - UPPER_Y);
+
+        System.out.println(root.getHeight() + " - " +root.getWidth() + " - " + root.getLayoutY());
+
+
+        try {
+             me = this.localMatchController.getMatch().getPlayerFromUsername(this.client.getUsername());
+        } catch (NoSuchPlayerException e) {
+            Logger.log(Level.SEVERE, this.toString(), "Unable to find player", e);
+        }
+
+        int count = 0;
+
+        for (CharacterDvptCard c : me.getPersonalBoard().getCharacterCards()) {
+
+            this.createImageForMyCards(root, FIT, OFFSET, count, c, 0);
+
+            count++;
+
+        }
+
+        count = 0;
+
+        for (VentureDvptCard c : me.getPersonalBoard().getVentureCards()) {
+
+            this.createImageForMyCards(root, FIT, OFFSET, count, c, FIT + 20);
+
+            count++;
+
+        }
+
+        this.allCardsPane.setContent(root);
+
+        System.out.println(root.getHeight() + " - " +root.getWidth() + " - " + root.getLayoutY());
+
+
+    }
+
+    private void createImageForMyCards(Pane root, double FIT, double OFFSET, int count, DvptCard c, double Y) {
+
+        ImageView imageView = new ImageView(new Image("assets/cards/dvpt/devcards_f_en_c_" + c.getId() + ".png"));
+
+        imageView.setFitHeight(FIT);
+        imageView.setPreserveRatio(true);
+
+        root.getChildren().add(imageView);
+
+        imageView.setLayoutX(OFFSET * count);
+        imageView.setLayoutY(Y);
+
+        imageView.setStyle(" -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0 , 0, 0);");
 
     }
 
@@ -922,6 +1020,8 @@ public class GUIController extends NavigationController implements ClientObserve
         return 0;
 
     }
+
+
 
     private boolean checkMoveEnabled() {
 
@@ -994,6 +1094,7 @@ public class GUIController extends NavigationController implements ClientObserve
             this.updateLeaderCards(model);
             this.updateBanCard(model);
             this.updatePlayers(model);
+            this.updateMyCards(model);
 
         });
 
@@ -1097,6 +1198,7 @@ public class GUIController extends NavigationController implements ClientObserve
         controller.setLocalMatchController(this.localMatchController);
 
     }
+
     @Override
     public void onImmediateActionAvailable(Client sender, ImmediateActionType actionType, Player player, String message) {
 
