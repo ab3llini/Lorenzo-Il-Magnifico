@@ -1004,7 +1004,7 @@ public class GUIController extends NavigationController implements ClientObserve
 
         for (BanCard banCard : me.getBanCards()) {
 
-            this.createBanImageForMyCards(root, FIT, OFFSET, count, banCard,  2 * FIT + 20);
+            this.createBanImageForMyCards(root, FIT, OFFSET, count, banCard,  2 * FIT + 40);
 
             count++;
 

@@ -218,7 +218,6 @@ public class Database
         //Setup the timeout
         stmt.setQueryTimeout(QUERY_TIMEOUT);
 
-        //TODO finished == 0
         //if finished is 0 the match is not ended
         //we have maximum one not ended match for each player
         //Create the query;

@@ -480,11 +480,7 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
      */
     private void draftLeaderCards() throws InterruptedException {
 
-        System.out.println("Bonus tiles bug finder: waiting for the leader cards..");
-
         this.serverTokenQueue.take();
-
-        System.out.println("Bonus tiles bug finder: token received. going on..");
 
 
         int drafRound = 0;
@@ -523,8 +519,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
                 Cmd.notify("The timeout to take your action has expired.");
 
-                //TODO: Skip further selections cause the player is now disabled
-
                 return;
 
             }
@@ -532,20 +526,13 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
 
             this.client.performAction(new ShuffleLeaderCardStandardAction(Integer.parseInt(choice) - 1, this.localMatchController.getDraftableLeaderCards(), this.client.getUsername()));
 
-            System.out.println("Bonus tiles bug finder: waiting for the leader card selection confirmation..");
-
             //Wait for the action confirmation
             this.serverTokenQueue.take();
 
-            System.out.println("Bonus tiles bug finder: token received. going on..");
-
             if (this.localMatchController.getDraftableLeaderCards().getCards().size() != 1) {
 
-                System.out.println("Bonus tiles bug finder: waiting for the next leader card deck..");
                 //Wait for the next draft request
                 this.serverTokenQueue.take();
-
-                System.out.println("Bonus tiles bug finder: token received. going on..");
 
             }
 
@@ -564,13 +551,8 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
      */
     private void draftBonusTiles() throws InterruptedException {
 
-        System.out.println("Bonus tiles bug finder: Waiting for the bonus tiles ");
-
         //Wait for the next token
         this.serverTokenQueue.take();
-
-        System.out.println("Bonus tiles bug finder: token received. going on..");
-
 
         ArrayCommand<BonusTile> bonusTileSelection = new ArrayCommand<>(this.localMatchController.getDraftableBonusTiles());
 
@@ -597,8 +579,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
         } catch (NoActionPerformedException e) {
 
             Cmd.notify("The timeout to take your action has expired.");
-
-            //TODO: Skip further selections cause the player is now disabled
 
             return;
 
@@ -1672,8 +1652,6 @@ public class CLI implements AsyncInputStreamObserver, ClientObserver, LobbyObser
     }
 
     public void onBonusTileDraftRequest(Client sender, ArrayList<BonusTile> tiles, String message) {
-
-        System.out.println("Bonus tiles received!, size = " + tiles.size());
 
         //Assign the tiles just received
         this.localMatchController.setDraftableBonusTiles(tiles);

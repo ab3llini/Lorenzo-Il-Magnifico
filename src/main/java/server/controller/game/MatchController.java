@@ -305,9 +305,6 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
          */
         this.boardController = new BoardController(this.match.getBoard());
 
-
-        //TODO: DELETE THIS ! DEBUG ONLY
-
         this.match.getBoard().getCathedral().setBanCard(Period.first, new SpecialBanCard(1, Period.first.toInt(), SpecialEffectType.noFirstAction));
         this.match.getBoard().getCathedral().setBanCard(Period.second, new SpecialBanCard(2, Period.second.toInt(), SpecialEffectType.noFirstAction));
         this.match.getBoard().getCathedral().setBanCard(Period.third, new SpecialBanCard(3, Period.third.toInt(), SpecialEffectType.noFirstAction));
