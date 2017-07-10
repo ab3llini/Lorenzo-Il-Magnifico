@@ -562,14 +562,14 @@ public class Board implements Serializable {
 
         board += ("|        CATHEDRAL                                            COUNCIL PALACE             |\n");
 
-        board += ("|     ________________                                       ____________________________|\n");
+        board += ("|     __________________                                       __________________________|\n");
 
         board += printCouncilPalace();
 
         board += printCathedralLine();
-        board += "|     |" + printBannedPlayers(first) + "|" + printBannedPlayers(second) + "|" + printBannedPlayers(third) + "|" + "                                                                   |\n";
+        board += "|     |" + printBannedPlayers(first) + "|" + printBannedPlayers(second) + "|" + printBannedPlayers(third) + "|" + "                                                                |\n";
 
-        board += ("|     |____|____|____|                                                                   |\n");
+        board += ("|     |_____|_____|_____|                                                                |\n");
 
         board += ("|                                                                                        |\n");
 
@@ -696,10 +696,12 @@ public class Board implements Serializable {
             } else
                 board += " ";
         }
-        if(players.size() == 3)
+        if(players.size() == 4)
             board += " ";
-        if(players.size() == 2)
+        if(players.size() == 3)
             board += "  ";
+        if(players.size() == 2)
+            board += "   ";
         return board;
     }
 
@@ -721,7 +723,7 @@ public class Board implements Serializable {
         String id = new String();
         if (card == null)
             id += "  ";
-        else if (card.getId() < 10)
+        else if (card.getId() <= 9)
             id += (" " + card.getId());
         else
             id += (card.getId());
@@ -776,7 +778,7 @@ public class Board implements Serializable {
     public String printCathedralLine() {
         String board = new String();
 
-        board += "|     | " + printBanId(getCathedral().getBanCard(first)) +" | " + printBanId(getCathedral().getBanCard(second)) + " | " + printBanId(getCathedral().getBanCard(third)) + " |                                      |____________________________\n";
+        board += "|     |  " + printBanId(getCathedral().getBanCard(first)) +" |  " + printBanId(getCathedral().getBanCard(second)) + " |  " + printBanId(getCathedral().getBanCard(third)) + " |                                      |__________________________\n";
 
         return board;
     }
@@ -785,7 +787,7 @@ public class Board implements Serializable {
 
     public String printCouncilPalace() {
         String board = new String();
-        board += ("|     |    |    |    |                                      |");
+        board += ("|     |     |     |     |                                      |");
         for(FamilyMember member : getCouncilPalace().getFamilyMembers()) {
             board += (" ");
             board += printFamilyMember(member);

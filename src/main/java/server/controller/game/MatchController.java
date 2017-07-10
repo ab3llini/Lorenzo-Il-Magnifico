@@ -1983,10 +1983,12 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 EffectSurplus effectSurplus = new EffectSurplus(new ArrayList<Resource>(), new ArrayList<Point>(), 1);
                 applyEffectSurplus(player, effectSurplus);
 
-                if(player.getPlayedLeaderCards().contains(leaderCardToDiscard))
-                    player.getPlayedLeaderCards().remove(leaderCardToDiscard);
-                if(player.getTurnActiveLeaderCard().contains(leaderCardToDiscard))
-                    player.getTurnActiveLeaderCard().remove(leaderCardToDiscard);
+                for(LeaderCard leaderCards: player.getLeaderCards()){
+                if(leaderCard.getId() == leaderCardToDiscard.getId())
+                    player.getPlayedLeaderCards().remove(leaderCards);}
+                for(LeaderCard leaderCards: player.getLeaderCards()){
+                    if(leaderCards.getId() == leaderCardToDiscard.getId())
+                        player.getLeaderCards().remove(leaderCards);}
 
                 break;
 
