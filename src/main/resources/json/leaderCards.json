@@ -295,7 +295,7 @@
     "effects" : {
       "onceARound":{
         "points": {
-          "victory": 1
+          "victory": 4
         }
       }
     }
