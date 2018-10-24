@@ -1,4 +1,4 @@
-**GRUPPO DI LAVORO:** 
+**GRUPPO DI LAVORO:**
 LM32
 
 **PARTECIPANTI:**
@@ -51,3 +51,9 @@ Per questo motivo non possono esistere due partite non terminate per un singolo 
 **LIBRERIE ESTERNE:**
 Abbiamo usato GSON per il parsing JSON e JFoenix per un bottone e uno spinner nella GUI.
 Il resto, compreso styling CSS su GUI, Styiling CLI e altro, è stato realizzato a mano.
+
+**NOTE**
+Abbiamo lasciato 3 test che prima di integrare l'interazione con l'utente funzionavano bene, ora si bloccano in attesa.
+Inoltre si segnala che aggiungendo l'uml finale le statistiche di GitHub per Alberto sono state compromesse poichè l'svg ha aggiunto  145,098 righe.
+
+Per correttezza si segnala quindi che le righe effettivamente scritte da Alberto sono : 24,877++ e 12,048--

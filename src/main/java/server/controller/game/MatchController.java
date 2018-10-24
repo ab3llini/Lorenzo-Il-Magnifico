@@ -109,6 +109,11 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
     private boolean backupEnabled = false;
 
+    /**
+     * avoid problems if the match is nearly restored
+     */
+    private boolean restored = false;
+
 
     /**
      * Constants
@@ -194,6 +199,8 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
         //Set the lobby
         this.lobby = lobby;
 
+        this.context = MatchControllerContext.Undefined;
+
         /*
          * Initialize the map
          */
@@ -253,6 +260,10 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
 
         //Init the proper round iterator
         this.roundIterator = new PersistenceRoundIterator(match, currentPlayer);
+
+        //Avoid problems if we are in the first round
+        this.restored = true;
+
 
         /**
          * Pointer fix
@@ -346,7 +357,7 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
             //Obtain the next round
             Queue<Player> currentRound = roundIterator.next();
 
-            if (this.match.getCurrentRound() == 1) {
+            if (this.match.getCurrentRound() == 1 && !restored) {
 
                 this.notifyAllOfNewOrder();
 
@@ -380,6 +391,9 @@ public class MatchController implements Runnable, Observable<MatchControllerObse
                 }
 
             }
+            if(restored)
+              restored = false;
+
 
             Logger.log(Level.FINEST, this.toString(), "New round started (Period = " +this.match.getCurrentPeriod() + " - Turn = " + this.match.getCurrentTurn() + " - Round = " +this.match.getCurrentRound() + ")");
 

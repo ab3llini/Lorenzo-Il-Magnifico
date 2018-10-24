@@ -378,7 +378,8 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
         }
         else {
 
-            if (this.matchController.getContext() != MatchControllerContext.PeristenceResume) {
+          if (this.matchController != null && this.matchController.getContext() != null && this.matchController.getContext() != MatchControllerContext.PeristenceResume) {
+
 
                 switch (this.matchController.getContext()) {
 
@@ -399,6 +400,13 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
                 handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.ResumeGame, "Welcome back to game " + handler.getUsername()));
 
             }
+            else {
+
+              handler.sendLobbyNotification(new LobbyNotification(LobbyNotificationType.MatchStart, "The match is starting now! " + handler.getUsername()));
+
+
+            }
+
 
         }
 
@@ -453,7 +461,7 @@ public class Lobby implements MatchControllerObserver, Observable<LobbyObserver>
         for (ClientHandler c : this.handlers) {
 
             c.sendLobbyNotification(not);
-            
+
         }
 
     }

@@ -8,5 +8,7 @@ public enum MatchControllerContext {
     BonusTileDraft,
     PeristenceResume,
     Playing
+    Playing,
+    Undefined
 
 }
