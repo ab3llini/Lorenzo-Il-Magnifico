@@ -1,59 +1,42 @@
-**GRUPPO DI LAVORO:**
-LM32
+# Lorenzo il Magnifico
 
-**PARTECIPANTI:**
-Alberto Mario Bellini - 827520
-Lorenzo Barcella - 827703
-Federico Di Dio - 827796
+## Developers
+- Alberto Mario Bellini
+- Lorenzo Barcella
+- Federico Di Dio
 
+## Implementation
 
-**IMPLEMENTAZIONE:**
-- Regole complete del gioco
-- RMI
-- Socket
-- GUI
-- CLI
-- 5 giocatore
-- Persistenza
-- Gestione disconnessione, riconnessione.
-- Configurazione completa paramentri gioco, carte ecc tramite file JSON
+These are the core elements that has been implemented and tested.
 
-**AVVIAMENTO:**
-Nel package client c'è il launcher completo che permette di avviare GUI / CLI.
-Per avviare il server, navigare al package server, contrller, game e avviare GameEngine.
+- Complete rules of the game
+- RMI Networking
+- Socket Networking
+- Graphical user interface (GUI)
+- Command line interface (CLI)
+- Fifth player (We extended the basic game rules to account for a fifth player)
+- Game persistence: stop playing and resume later. 
+- Management of network failure: disconnection & reconnection
+- Complete configuration of game parameters, cards etc. via JSON files
 
-**FUNZIONAMENTO:**
-Dopo essersi registrati o loggati, in automatico si entra in una lobby in attesa di altri giocatori.
-Se ci si logga con uno username di un giocatore che era in una partita non terminata, si entra in una lobby speciale detta persistente:
-In questo caso non partono timeout automatici quando si connette il secondo giocatore ma si attende che tutti gli altri giocatori della partita si riconnettano
-per portarla a termine.
-Di default ogni giocatore a 120s per fare una mossa, dopo i quali verrà sospeso e dovrà riconnettersi.
-Sono state gestite eventuali disconnessioni da parte di giocatori: in questo caso al login si rientrerà immediatamente in partita.
-Se la connessione cade mentre si ha il turno, si cede il turno.
-Se il server va offline si riprende immediatamente dall'inizio del turno dell'ultimo giocatore.
+## Starting the game
+In the client package there is the complete launcher that allows to start GUI / CLI. 
+To start the server, navigate to the server package, contrller, game and start GameEngine.
 
+## How does it work
+After registering or logging in, you automatically enter a lobby waiting for other players.
+When there are at least two players, the timeout for the beginning of the match starts.
+If you log in with a username from a player who was in an unfinished game, you enter a persistent lobby: In this case no automatic timeouts start when you join. The game will resume normally after all the others players have joined back the lobby.
 
-**REGOLAMENTO AGGIUNTIVO 5 GIOCATORE :**
-Nel draft si utilizzano tutte le 20 carte leader e anche la bonus tile di 'default' delle regole semplificate.
-Le risorse iniziali del quinto giocatore sono in linea con quelle degli altri (9 monete,2 pietre,2 legni,3 servi).
-La board di gioco non cambia.
-L'algoritmo del lancio dei dadi non è più casuale ma garantisce una somma totale dei 3 dadi che sia almeno di 14, questo pochè il problema principale non è tanto il non saper dove
-mettere i familiari quanto piuttosto il poterli mettere anche in posizioni alte delle torri. Inoltre col quinto giocatore non vale più la regola per la quale in una torre non
-ci possono essere due familiari di uno stesso giocatore(resta tuttavia attivo il prezzo aggiuntivo di 3 monete nel caso di torre occupata). Posizionando tutti e 5 i familiari i giocatori
-'occupano' 20 action place sulla board. Con le nostre regole i posti disponibili in cui metterei familiari anche escludendo i posti azione composti (council palace, harvest & production)
-sono 22 e quindi perfetti per rendere il gioco 'giocabile' (16 posti sulle torri + 4 nel mercato + 2 nei singoli posti azione).
+By default each player has up to 120s to make a move, after which he will be suspended and will have to reconnect. 
+Possible disconnections by the players have been managed: in this case, doing a login will immediately resume the game. 
+If the connection falls while the turn is not over, the turn is given to the next player.
+If the server goes offline it is able to resume immediately from the beginning of the last player's turn.
 
-**PERSISTENZA:**
-Database con 2 tabelle, una per i giocatori e una per le partite.
-Un giocatore quando si connette viene automaticamente aggiunto nella lobby persistent in caso abbia una partita nel database NON terminata.
-Per questo motivo non possono esistere due partite non terminate per un singolo giocatore.
+## Additional rules crafted for the fifth player
+In the draft we use all 20 leader cards and also the 'default' tile bonus of the simplified rules. The initial resources of the fifth player are in line with those of the others (9 coins, 2 stones, 2 woods, 3 servants). The game board does not change. The algorithm of throwing the dice is no longer random but guarantees a total sum of the 3 dice that is at least 14, this because the main problem is not so much not knowing where to put the family members but rather being able to put them in high positions towers. Moreover, with the fifth player the rule is no longer valid for which in a tower there can not be two family members of the same player (the additional price of 3 coins is still active in the case of tower occupied). By placing all 5 family members, the players 'occupy' 20 action places on the board. With our rules the available places in which to put family members even excluding the compound action places (council palace, harvest & production) are 22 and therefore perfect to make the game 'playable' (16 seats on the towers + 4 in the market + 2 in the individual action places).
 
-**LIBRERIE ESTERNE:**
-Abbiamo usato GSON per il parsing JSON e JFoenix per un bottone e uno spinner nella GUI.
-Il resto, compreso styling CSS su GUI, Styiling CLI e altro, è stato realizzato a mano.
+## External libraries
 
-**NOTE**
-Abbiamo lasciato 3 test che prima di integrare l'interazione con l'utente funzionavano bene, ora si bloccano in attesa.
-Inoltre si segnala che aggiungendo l'uml finale le statistiche di GitHub per Alberto sono state compromesse poichè l'svg ha aggiunto  145,098 righe.
-
-Per correttezza si segnala quindi che le righe effettivamente scritte da Alberto sono : 24,877++ e 12,048--
+We used GSON for the JSON and JFoenix parsing for a button and a spinner in the GUI. 
+The rest, including CSS styling on the GUI, Styiling CLI and more, was made by hand.
