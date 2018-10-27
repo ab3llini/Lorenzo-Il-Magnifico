@@ -5,6 +5,10 @@
 - Lorenzo Barcella
 - Federico Di Dio
 
+![Ingame view](/ingame.png?raw=true)
+![Login view](/login.png?raw=true)
+
+
 ## Implementation
 
 These are the core elements that has been implemented and tested.
