@@ -1,4 +1,4 @@
-# Lorenzo il Magnifico
+# Lorenzo il Magnifico [![CodeFactor](https://www.codefactor.io/repository/github/ab3llini/lorenzo-il-magnifico/badge)](https://www.codefactor.io/repository/github/ab3llini/lorenzo-il-magnifico)
 
 ## Developers
 - Alberto Mario Bellini
